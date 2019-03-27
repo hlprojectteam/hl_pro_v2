@@ -1,0 +1,321 @@
+ 
+/* Reset */
+*,
+*:after,
+*:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+/* Clearfix hack by Nicolas Gallagher: http://nicolasgallagher.com/micro-clearfix-hack/ */
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+html, body {
+    height: 100%;
+    background-color: white;
+    background:#edf0f5;
+     font-size: 100%;   
+     padding: 0; 
+     margin: 0;
+}
+html { 
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+.index_current ul{
+    overflow: hidden;
+    padding: 0 10px ;
+    border-bottom: 1px solid #ccc;
+}
+.index_current ul li{
+    float: left;
+    line-height: 50px;
+    color:#666;
+}
+.index_current ul li:nth-of-type(2){
+    margin-left: 30px;
+    color:#fc433f;
+}
+.index_current ul li:nth-of-type(3){
+    float:right;
+}
+/* 第一部分开始 */
+.En_first{
+    padding: 0 10px ; 
+    overflow:hidden;
+    margin-top: 10px;
+} 
+.En_first_left{
+    float:left;
+    width:75%;
+}
+
+.En_first_left dl{
+    float: left;
+    width: 24%;
+    padding: 1.2% 0;
+    margin-right: 1%;
+    background: #fff;
+    border-radius: 5px;
+    position: relative;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.En_first_left dl:hover{
+    box-shadow: 4px 4px 5px #ccc;
+}
+.En_first_left dl dt{
+    float:left;
+    padding: 5px 5px;
+}
+.En_first_left dl dt img{
+    width:2rem;
+}
+.En_first_left dl dd:nth-of-type(2){
+    padding: 12px 20px;
+}
+.En_first_left dl dd:nth-of-type(3){
+    float: right;
+    padding: 8px 0;
+}
+.En_first_left dl dd{
+    float: left;
+    padding-left: 10px; 
+    font-size: 14px;
+}
+.En_first_left dl dd span{ 
+    display: block;
+}
+.En_first i{
+    font-style: normal;
+    font-size: 16px;
+    font-weight: bold;
+} 
+.En_first dl dd span b, strong,.En_first_right dl dt span b, strong,.En_second_left dl dd span b{ 
+    font-weight: normal;
+    padding-top: 2px; 
+    position: absolute;
+    padding-left: 2px;
+}
+.En_first_right{
+    float:right;
+    width:25%; 
+}
+.En_first_right dl{
+    width:48%;
+    float:left;
+    cursor: pointer;
+    background: #fff;
+    padding: 10px 10px; 
+    border-radius: 5px;
+}
+.En_first_right dl:hover{
+    box-shadow: 4px 4px 5px #ccc;
+} 
+.En_first_right dl dt{ 
+    font-size: 14px;
+}
+.En_first_right dl span{
+    display: block;
+}
+.En_first_right dd{
+    text-align: center;
+    margin: 13px 0;
+}
+.En_first_right dl:nth-of-type(1){ 
+    margin-right: 6px;
+}
+.En_first_left dl dd span:nth-of-type(1){
+    color:#666;
+}
+.En_first_right dl span:nth-of-type(1){
+     color:#666;
+}
+/* 第二部分开始 */
+.En_second{
+    padding: 0 10px ; 
+    overflow:hidden; 
+} 
+.En_second_left{
+    float:left;
+    width:25%;
+} 
+.En_second_left dl{
+    float: left;
+    width: 100%;
+    background: #fff;
+    padding: 21px 10px; 
+    border-radius: 5px;
+    margin-right: 7px;
+    position:relative;
+    margin-bottom:10px;
+    cursor: pointer;
+}
+.En_second_left dl:hover{
+    box-shadow: 4px 4px 5px #ccc;
+}
+.En_second_left dl dt{
+    float:left;
+    padding: 5px 5px;
+}
+.En_second_left dl dt img{
+    width:2rem;
+}
+.En_second_left dl dd:nth-of-type(2){
+    padding: 12px 20px;
+}
+.En_second_left dl dd:nth-of-type(3){
+    float: right;
+    padding: 8px 0;
+}
+.En_second_left dl dd{
+    float: left;
+    padding-left: 10px; 
+    font-size: 14px;
+}
+.En_second_left dl dd span{ 
+    display: block;
+}
+.En_second i{
+    font-style: normal;
+    font-size: 16px;
+    font-weight: bold;
+} 
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+ 
+.En_second_left dl dd span:nth-of-type(1){
+    color:#666;
+}
+.Statistics-first{
+    float: left;
+    width: 36.2%;
+    background: #fff;
+    margin: 0 10px;
+    border-radius: 5px;
+    height: 186px;
+    padding: 5px 5px;
+}
+.Statistics-second{
+    float: left;
+    width: 36.2%;
+    background: #fff;
+    padding: 5px 5px;
+    border-radius: 5px;
+    height:186px;
+}
+/* 第三部分开始 */
+.En_thrid{
+    padding: 10px 10px ; 
+    overflow:hidden;
+    margin: 0px 10px;
+    background:#fff;
+     border-radius: 5px;
+} 
+.En_thrid h1{
+    border-bottom:1px solid #eee;
+    font-size: 16px;
+    line-height: 30px;
+    margin-bottom: 10px;
+}
+.En_thrid table{
+    border:1px solid #eee;
+    text-align: center;
+    line-height: 30px;
+    width: 100%;
+}
+.En_thrid th{
+    background: #f4f3f3;
+    font-size: 14px;
+}
+.En_thrid td,th{
+    border: 1px solid #eee; 
+}
+.En_thrid td{
+    font-size: 14px;
+    color:#666;
+}
+.En_thrid th{
+    width:20%;
+}
+.En_thrid td{
+    width:20%;
+}
+.En_thrid tr:nth-of-type(odd) {
+    background:#f8f8f8;
+}
+/* 第四部分开始 */
+.En_four{
+    padding: 0 10px ; 
+    overflow:hidden;
+    margin-top: 10px;
+}  
+.En_four dl{
+    float: left;
+    width: 19.6%;
+    background: #fff;
+    padding: 10px 10px;
+    border-radius: 5px;
+    margin-right: 9px;
+    position: relative;
+    margin-bottom: 10px;
+    cursor: pointer;  
+}
+.En_four dl:hover{
+    box-shadow: 4px 4px 5px #ccc;
+}
+.En_four dl dt{
+    float:left;
+    padding: 5px 5px;
+}
+.En_four dl dt img{
+    width:2rem;
+}
+.En_four dl dd:nth-of-type(2){
+    padding: 12px 20px;
+}
+.En_four dl dd:nth-of-type(3){
+    float: right;
+    padding: 8px 0;
+}
+.En_four dl dd{
+    float: left;
+    padding-left: 10px; 
+    font-size: 14px;
+}
+.En_four dl dd span{ 
+    display: block;
+}
+.En_four i{
+    font-style: normal;
+    font-size: 16px;
+    font-weight: bold;
+} 
+.En_four dl dd span b, strong,.En_four dl dt span b, strong,.En_four dl dd span b{ 
+    font-weight: normal;
+    padding-top: 2px; 
+    position: absolute;
+    padding-left: 2px;
+} 
+.En_four dl dd span:nth-of-type(1){
+    color:#666;
+}  
+
+@media screen and (max-width: 1309px){
+.En_first_left dl{
+    /* width: 23%; */
+}
+}

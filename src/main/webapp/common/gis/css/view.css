@@ -1,0 +1,479 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td { margin:0; padding:0; }
+body { font-size:14px; color:#333; font-family:"微软雅黑";}
+fieldset, img { 
+	border:0;
+	height: 13px;
+}
+ol, ul { list-style:none; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; font-weight:normal;}
+em { font-style:normal; }
+input, button, select, textarea { outline:none; }
+input, button{ border:none;}
+textarea { resize:none; }
+
+a { color: #3C3C3C; text-decoration:none; }
+html,body{
+    font-size: 13px;
+}
+
+tr{
+    background: #fff;
+}
+
+.pop_nodata{
+    margin-top: 60px;
+    text-align: center;
+}
+/* 内容开始 */
+
+
+.center_mark{
+    background: url(../images/popmap/mark.png) no-repeat;
+    width:46px;
+    height:83px;
+    position: absolute;
+    left: -46px;
+    top: 74px;
+}
+.bombWindows-content{
+    width: 550px;
+    height: 530px;
+    position: absolute;
+    left: 5px;
+    top: 14px;
+    background: #fff;
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 1.2em 1.2em 1.2em 1.2em;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.35);
+    overflow: auto;
+    padding:8px;
+}
+
+td[colspan="3"] {
+    text-align: left!important;
+    padding-left: 2%;
+}
+
+.bombWindows-head {
+    overflow: hidden;
+    margin: 0px 30px 0px 10px;
+    color: #000000 !important;
+}
+.bombWindows-head span.center_closed {
+    background: url(../images/popmap/close_24.png) no-repeat;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    float: right;
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    cursor: pointer;
+}
+.popTitleText{
+    font-size: 16px;
+    font-weight: bold;
+}
+.bombWindows-nav{
+    width: 550px;
+    height: 34px;
+    margin-top: 3px;
+    margin-bottom: 8px;
+    background: url(../images/popmap/nav.png) repeat;
+    border-radius: 5px;
+}
+.bombWindows-nav ul{
+    overflow:hidden;
+}
+.bombWindows-nav ul li{
+    width: 25%;
+    height:42px;
+    float:left;
+    text-align: center;
+}
+.bombWindows-nav ul li a{
+    width: 95px;
+    height:36px;
+    color:#fff;
+    font-size: 16px;
+    line-height: 35px;
+    display:inline-block;
+}
+.current{
+    background: url(../images/popmap/hover.png) no-repeat;
+    width: 95px;
+    height:42px;
+
+}
+.center_content{
+    width: 550px;
+}
+.center_select{
+    width: 72px;
+    height:36px;
+    line-height: 36px;
+    border:1px solid #bfbfbf;
+    border-radius: 5px;
+    font-size: 14px;
+    color:#333;
+    padding:0 5px;
+    margin-bottom: 15px;
+}
+td{
+    height:30px;
+    text-align: center;
+    color:#333;
+    font-size: 13px;
+    position:relative;
+}
+tr td:nth-of-type(odd){
+    background:#f7f7f8;
+}
+table{
+    width:550px;
+    color: #76838f;
+}
+
+.isClick{
+    cursor: pointer;
+}
+
+.isClick:hover{
+    color: #1E9FFF;
+}
+
+/* 楼宇信息开始 */
+.imgbox{
+    margin: 5px 0;
+}
+.imgbox img{
+    width:550px;
+    height:140px;
+}
+.center_remind{
+    line-height: 20px;
+    margin-top: 20px;
+    position:relative;
+}
+.center_remind span i{
+    font-style: normal;
+}
+.center_remind span{
+    margin-right: 5px;
+}
+ul.colorRemarks{
+    vertical-align: middle;
+    overflow:hidden;
+}
+ul.colorRemarks li{
+    float: left;
+    width: 65px;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    margin-right: 11px;
+}
+ul.colorRemarks li:nth-last-of-type(1){
+    margin-right: 0;
+}
+ul.colorRemarks li.house{
+    background: #00c92b;
+}
+ul.colorRemarks li.business{
+    background: #00aac9;
+}
+ul.colorRemarks li.unused{
+    background: #ff9304;
+}
+table.buildings-table{
+    width:96%;
+}
+.houseInformation{
+    overflow:hidden;
+    margin-top: 10px;
+}
+.buildings-box{
+    float:left;
+    width:60%;
+}
+.focus{
+    float:right;
+    width:40%;
+}
+table.buildings-table tr td:nth-of-type(1){
+    width:70px;
+}
+table.buildings-table td{
+    width:140px;
+}
+.focus p{
+    text-align: center;
+    line-height: 30px;
+    background: #eee;
+}
+.focus-box{
+    line-height: 26px;
+}
+.focus-box input{
+    margin:0 4px;
+}
+table.buildings-table tr td{
+    background: #fff;
+}
+.serve{
+    margin-top: 10px;
+}
+/* 楼宇信息结束 */
+/* 户信息开始 */
+.household{
+    position:relative;
+    height:450px;
+    margin: 0 auto;
+}
+.householdTitle{
+    text-align: center;
+    margin:10px 0;
+}
+.householdTitle b{
+    display:inline-block;
+    font-size: 16px;
+    margin-right: 20px;
+}
+.householdTitle span{
+    display:inline-block;
+    margin:0 10px;
+}
+.householdTitle span input{
+    margin:0 5px;
+}
+.man{
+    color:#329dff;
+    font-style: normal;
+}
+.women{
+    color:#ff329c;
+    font-style: normal;
+}
+.householdList-title{
+    width: inherit;
+    height: 30px;
+    line-height: 30px;
+    /* border-bottom: 1px solid #d6d5d5; */
+    background: #eee;
+    text-align: center;
+    font-weight: bold;
+}
+.householdList-infor {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-bottom: 1px dashed #E5E5E5;
+}
+.household-list ul li {
+    float: left;
+    height: 30px;
+}
+.household_title1 {
+    width: 55px;
+}
+.household_title2 {
+    width: 85px;
+}
+.household_title3 {
+    width: 110px;
+}
+.household_title4 {
+    width: 90px;
+}
+.household_title5 {
+    width: 105px;
+}
+.household_title6 {
+    width: 105px;
+}
+.household_title7 {
+    width: 150px;
+}
+.infor-page{
+    position:absolute;
+    bottom:0;
+    width: 545px;
+    text-align: center;
+}
+ul.infor-page li {
+    width: 44px;
+    float: left;
+    padding: 4px;
+    border: 1px solid #ccc;
+    text-align: center;
+    border-radius: 2px;
+    margin: 5px;
+    cursor: pointer;
+}
+ul.infor-page li.number{
+    width:20px;
+}
+ul.infor-page li.page-current{
+    background: #209dfb;
+    color:#fff;
+    display:block;
+}
+ul.infor-page li.page-current a{
+    color:#fff;
+}
+/* 户信息结束 */
+/* 人物信息开始 */
+.population {
+    position: relative;
+    height: 450px;
+    margin: 0 auto;
+}
+/* 人物信息结束 */
+/* 内容结束 */
+
+
+/**
+户信息
+ */
+.resident-content{
+    padding: 5px 10px;
+}
+.big-name{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.p-relation{
+    color: #6E6E6E;
+}
+
+/********** 人口详情弹窗内容开始 ***********/
+.PeopleDetailWindows-content{
+
+    padding:0 8px;
+}
+.PeopleDetailWindows-head{
+    overflow: hidden;
+    margin: 0px 30px 0px 10px;
+    color: #000000 !important;
+}
+
+
+/* 导航开始 */
+.PeopleDetailWindows-nav{
+    height: 34px;
+    margin: 8px 0;
+    background: url(../images/popmap/nav.png) repeat;
+    border-radius: 5px;
+}
+.PeopleDetailWindows-nav ul{
+    overflow:hidden;
+}
+.PeopleDetailWindows-nav ul li{
+    width: 16.6%;
+    height:42px;
+    float:left;
+    text-align: center;
+}
+.PeopleDetailWindows-nav ul li a{
+    width: 95px;
+    height:36px;
+    color:#fff;
+    font-size: 16px;
+    line-height: 35px;
+    display:inline-block;
+}
+.PeopleDetailCurrent{
+    background: url(../images/popmap/hover.png) no-repeat;
+    width: 95px;
+    height:42px;
+}
+/*********** 导航结束 ***********/
+/*********** 人口信息开始 ***********/
+table{
+    width:550px;
+    color: #76838f;
+}
+td{
+    height:30px;
+    text-align: center;
+    color:#333;
+    font-size: 14px;
+    position:relative;
+}
+tr {
+    background: #fff;
+}
+#people-photo{
+    background-color: #fff;
+}
+.PeopleInformation-table1 td.head-portrait img{
+    width:140px;
+    height:140px;
+}
+.PeopleInformation-table1 td{
+    height:38px;
+}
+.PeopleInformation-table2{
+    margin-top: -1px;
+}
+.PeopleInformation-table2 tr td:nth-of-type(odd){
+    background:#f7f7f8;
+}
+.table-more{
+    margin-bottom: 10px;
+}
+.PeopleInformation-table1 td span {
+    display: inline-block;
+    vertical-align: middle;
+}
+.PeopleInformation-table1 td i {
+     font-style: normal;
+     margin-right: 10px;
+}
+/*********** 人口信息结束 ***********/
+
+
+
+/** 分页 **/
+.layui-laypage{display: inline-block; *display: inline; *zoom: 1; vertical-align: middle; margin: 10px 0; font-size: 0;}
+.layui-laypage>a:first-child,
+.layui-laypage>a:first-child em{border-radius: 2px 0 0 2px;}
+.layui-laypage>a:last-child,
+.layui-laypage>a:last-child em{border-radius: 0 2px 2px 0;}
+.layui-laypage>*:first-child{margin-left: 0!important;}
+.layui-laypage>*:last-child{margin-right: 0!important;}
+.layui-laypage a,
+.layui-laypage span,
+.layui-laypage input,
+.layui-laypage button,
+.layui-laypage select{border: 1px solid #e2e2e2;}
+.layui-laypage a,
+.layui-laypage span{display: inline-block; *display: inline; *zoom: 1; vertical-align: middle; padding: 0 15px; height: 28px; line-height: 28px; margin: 0 -1px 5px 0; background-color: #fff; color: #333; font-size: 12px;}
+.layui-laypage a:hover{color: #009688;}
+.layui-laypage em{font-style: normal;}
+.layui-laypage .layui-laypage-spr{color:#999; font-weight: 700;}
+.layui-laypage a{ text-decoration: none;}
+.layui-laypage .layui-laypage-curr{position: relative;}
+.layui-laypage .layui-laypage-curr em{position: relative; color: #fff;}
+.layui-laypage .layui-laypage-curr .layui-laypage-em{position: absolute; left: -1px; top: -1px; padding: 1px; width: 100%; height: 100%; background-color: #009688; }
+.layui-laypage-em{border-radius: 2px;}
+.layui-laypage-prev em,
+.layui-laypage-next em{font-family: Sim sun; font-size: 16px;}
+
+.layui-laypage .layui-laypage-count,
+.layui-laypage .layui-laypage-limits,
+.layui-laypage .layui-laypage-skip{margin-left: 10px; margin-right: 10px; padding: 0; border: none;}
+.layui-laypage .layui-laypage-limits{vertical-align: top;}
+.layui-laypage select{height: 22px; padding: 3px; border-radius: 2px; cursor: pointer;}
+.layui-laypage .layui-laypage-skip{height: 30px; line-height: 30px; color: #999;}
+.layui-laypage input, .layui-laypage button{height: 30px; line-height: 30px; border-radius: 2px; vertical-align: top;  background-color: #fff; box-sizing: border-box;}
+.layui-laypage input{display: inline-block; width: 40px; margin: 0 10px; padding: 0 3px; text-align: center;}
+.layui-laypage input:focus,
+.layui-laypage select:focus{border-color: #009688!important;}
+.layui-laypage button{margin-left: 10px; padding: 0 10px; cursor: pointer;}
+.layui-disabled{-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none;}
+
+.layui-box *{box-sizing: content-box;}

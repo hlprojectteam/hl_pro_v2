@@ -1,0 +1,155 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, hr, button, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section , img,a,span{
+    margin: 0;
+    padding: 0;
+}
+li{
+	list-style: none;
+}
+a{
+	text-decoration: none;
+}
+body,html{
+	width:100%;
+
+}
+.main{
+	width:1200px;
+	margin:0 auto;
+
+}
+.tit_cent{
+	margin-top:2rem;
+	
+}
+.hr{
+	width:50%;
+	margin:0 auto;
+	height:3px;
+	background:#FFC605;
+	position:relative;
+
+}
+.tit{
+	padding:0 10px;
+	color:#FFC605;
+	font-size:1.5rem;
+	background:#fff;
+	position:absolute;
+	top:-15px;
+	left:45%;
+}
+.one_team:after{
+	display: block;
+	content:'';
+	clear:both;
+}
+.text{
+	height:3rem;
+}
+.text:after{
+	display: block;
+	content:'';
+	clear:both;
+}
+.one_team{
+	width:100%;
+	margin-top:2rem;
+}
+.blues{
+	display:inline-block;
+	width:3px;
+	height:2rem;
+	background:#0000FF;
+	float:left;
+	
+}
+.preschool{
+	height:2rem;
+	display:inline-block;
+	line-height:2rem;
+	vertical-align: middle;
+	float:left;
+	margin-left:2rem;
+	font-size:1.5rem;
+	font-weight: 700;
+}
+
+/*简介开始*/
+.synopsis:after{
+	display: block;
+	content:'';
+	clear:both;
+}
+.synopsis{
+	width:30%;
+	border:1px solid #eee;
+	float:left;
+	font-size:1rem;
+	padding:1rem 0;
+	margin-right:3%;
+	
+}
+.synopsis > img{
+	width:140px;
+	height:140px;
+}
+.synopsis:hover{
+	box-shadow: 2px 2px 6px #aaa;
+}
+.person{
+	float:right;
+	margin-right:1rem;
+	
+}
+
+.person > li{
+	margin:.5rem 0;
+}
+.mar_right{
+	margin-left:3rem;
+}
+.mar_right > i{
+	color:#FFCC66;
+}
+.p{
+	color:#aaa;
+	font-size: .8rem;
+}
+.be_good_at{
+	font-size:.5rem;
+}
+.be_good_at > p{
+	color:#666;
+}
+.circle{
+	display: inline-block;
+	padding:.3rem;
+	border:1px solid #666;
+	border-radius: 50%;
+
+}
+.hi{
+	width:95%;
+	margin:0 auto;
+	margin-top:1.5rem;
+	font-size: .9rem;
+}
+.btn{
+	width:40%;
+	margin:0 auto;
+	
+}
+.hi button{
+	width:100%;
+	background:#FFCC66;
+	color:#fff;
+	border:none;
+	outline:none;
+	text-align: center;
+	padding:.5rem;
+	border-radius: 5px;
+	margin-top:2rem;
+	font-size:1.1rem;
+	cursor: pointer;
+}
+/*简介结束*/

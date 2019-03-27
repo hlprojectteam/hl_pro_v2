@@ -1,0 +1,206 @@
+.mask {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: .5;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
+.sweet-alert {
+    overflow: hidden;
+    display: block;
+}
+.sweet-alert .icon {
+    width: 80px;
+    height: 80px;
+    border: 4px solid #808080;
+    border-radius: 50%;
+    margin: 20px auto;
+    padding: 0;
+    position: relative;
+    box-sizing: content-box;
+}
+.sweet-alert .icon.error {
+    border-color: #F27474;
+}
+.sweet-alert .icon.error .x-mark {
+    position: relative;
+    display: block;
+}
+.sweet-alert .icon.error .line {
+    position: absolute;
+    height: 5px;
+    width: 47px;
+    background-color: #F27474;
+    display: block;
+    top: 37px;
+    border-radius: 2px;
+}
+.sweet-alert .icon.error .line.left {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    left: 17px;
+}
+.sweet-alert .icon.error .line.right {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    right: 16px;
+}
+.sweet-alert .icon.warning {
+    border-color: #F8BB86;
+}
+.pulseWarning {
+    -webkit-animation: pulseWarning 0.75s infinite alternate;
+    -moz-animation: pulseWarning 0.75s infinite alternate;
+    animation: pulseWarning 0.75s infinite alternate;
+}
+.sweet-alert .icon.warning .body {
+    position: absolute;
+    width: 5px;
+    height: 47px;
+    left: 50%;
+    top: 10px;
+    border-radius: 2px;
+    margin-left: -2px;
+    background-color: #F8BB86;
+}
+.sweet-alert .icon.warning .dot {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-left: -3px;
+    left: 50%;
+    bottom: 10px;
+    background-color: #F8BB86;
+}
+.sweet-alert .icon.success {
+    border-color: #A5DC86;
+}
+.sweet-alert .icon.success .line.tip {
+    width: 25px;
+    left: 14px;
+    top: 46px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-animation: success_short_Animation .65s;
+    -moz-animation: success_short_Animation .65s;
+    animation: success_short_Animation .65s;
+}
+.sweet-alert .icon.success .line {
+    height: 5px;
+    background-color: #A5DC86;
+    display: block;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 2;
+}
+
+.sweet-alert .icon.success .line.long {
+    width: 47px;
+    right: 8px;
+    top: 38px;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.sweet-alert .icon.success .placeholder {
+    width: 80px;
+    height: 80px;
+    border: 4px solid rgba(165, 220, 134, 0.2);
+    border-radius: 50%;
+    box-sizing: content-box;
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    z-index: 2;
+}
+.sweet-alert h2 {
+    color: #333333;
+    font-size: 22px;
+    text-align: center;
+    font-weight: 600;
+    text-transform: none;
+    position: relative;
+    padding: 0;
+    line-height: 25px;
+    display: block;
+}
+.sweet-alert p {
+    color: #999999;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 300;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+}
+.sweet-alert button {
+    background-color: #009983;
+    color: white;
+    border: none;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 8px 32px;
+    margin: 26px 15px 0;
+    cursor: pointer;
+}
+button.cancel, .button.cancel {
+    background-color: #D0D0D0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

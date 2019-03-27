@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:mvc="http://www.springframework.org/schema/mvc"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xmlns:aop="http://www.springframework.org/schema/aop"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans    
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+    http://www.springframework.org/schema/mvc   
+    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<!-- 加载配置文件 -->
+    <context:property-placeholder location="classpath:config/mysql.properties" ignore-unresolvable="true"/>
+    
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">   
+          <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+          <property name="url" value="${jdbc.url}"></property>
+          <property name="username" value="${jdbc.username}"></property> 
+          <property name="password" value="${jdbc.password}"></property>   
+          <property name="initialSize" value="${jdbc.initialSize}"></property> 
+          <property name="maxTotal" value="${jdbc.maxTotal}"></property>   
+          <property name="maxIdle" value="${jdbc.maxIdle}"></property>    
+          <property name="minIdle" value="${jdbc.minIdle}"></property>    
+          <property name="maxWaitMillis" value="${jdbc.maxWaitMillis}"></property> 
+    </bean>  
+    
+    
+     <bean id="sessionFactory"  class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">  
+           <property name="dataSource" ref="dataSource" />
+           <property name="hibernateProperties">  
+               <props>  
+                   <prop key="hibernate.dialect">${hibernate.dialect}</prop><!-- 方言 -->  
+                   <prop key="hibernate.show_sql">${hibernate.show_sql}</prop><!-- 是否显示sql -->
+                   <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop><!-- 更新数据库表 -->
+                   <prop key="hibernate.cache.use_second_level_cache">${hibernate.second_level_cache}</prop>   <!-- 设置缓存机制为二级缓存 -->
+                   <prop key="hibernate.cache.use_query_cache">${hibernate.use_query_cache}</prop> <!-- 启动查询缓存 -->
+                   <prop key="hibernate.cache.region.factory_class">${hibernate.cache.region.factory_class}</prop>  
+               </props>
+           </property>
+        <!-- 实体映射扫描 -->
+		<property name="packagesToScan">
+			<value>com</value>
+		</property>
+   </bean> 
+    
+   	<!-- 配置事务 -->  
+    <bean name="transactionManager"  class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
+        <property name="sessionFactory" ref="sessionFactory"></property>  
+    </bean>  
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+     <!--  声明式容器事务管理 ,transaction-manager指定事务管理器为transactionManager -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+            <tx:method name="submit*" propagation="REQUIRED" />
+            <tx:method name="*" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    
+    <!-- 开启事务 -->
+    <aop:config expose-proxy="true">
+    	<aop:pointcut id="allManagerMethod" expression="execution (* com..*.service..*(..))"/>
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod"/>
+    </aop:config>
+     
+</beans>

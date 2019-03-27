@@ -1,0 +1,231 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td { margin:0; padding:0; }
+body { font-size:14px; color:#333; font-family:"微软雅黑";}
+fieldset, img { border:0; }
+ol, ul { list-style:none; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; font-weight:normal;}
+em { font-style:normal; }
+input, button, select, textarea { outline:none; }
+input, button{ border:none;} 
+textarea { resize:none; }
+
+a { color: #3C3C3C; text-decoration:none; } 
+html,body{
+    width: 100%;
+    height: 100%;
+}
+/* body{
+      background-attachment:fixed;
+       background: url("../images/zhihui.png") repeat;
+       background-size: 100% 100%;
+}  */
+/********** 弹窗内容开始 ***********/
+.GridWindow-content{
+    /* width: 550px;
+    height: 500px;
+    position: absolute; 
+    left: 5px;
+    top: 14px;
+    background: #fff; 
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 1.2em 1.2em 1.2em 1.2em;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.35); */
+    /* overflow: auto; */
+    padding:8px;
+}
+.GridWindow-head{
+    overflow: hidden;
+    margin: 0px 30px 0px 10px;
+    color: #000000 !important;
+}
+.GridWindow-head span.center_closed {
+    background: url(../images/close_24.png) no-repeat;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    float: right;
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    cursor: pointer;
+}
+.GridTitleText{
+    font-size: 16px;
+    font-weight: bold;
+}   
+/*********** 导航开始 ***********/
+.GridWindow-nav{ 
+    height: 34px;
+    margin: 8px 0;
+    background: url(../images/nav.png) repeat;
+    border-radius: 5px;
+}  
+.GridWindow-nav ul{
+    overflow:hidden;
+}
+.GridWindow-nav ul li{
+    width: 20%;
+    height:42px;
+    float:left;
+    text-align: center;
+}
+.GridWindow-nav ul li a{
+    width: 95px;
+    height:36px;
+    color:#fff;
+    font-size: 16px;
+    line-height: 35px;
+    display:inline-block;
+}
+.GridCurrent{
+    background: url(../images/gridnav-hover.png) no-repeat;
+    width: 95px;
+    height:42px; 
+} 
+/*********** 导航结束 ***********/
+/*********** 领导班子开始 ***********/
+.LeaderShip{
+    height:426px;
+    overflow-y: auto;
+}
+.LeaderShip img{
+    width: 548px;
+    height: 413px;
+}
+/*********** 领导班子结束 ***********/
+/*********** 事件概要开始 ***********/
+table{
+    width:550px;
+    color: #76838f;
+ }
+td{
+   height:30px;
+   text-align: center;
+   color:#333;
+   font-size: 14px;
+   position:relative; 
+}
+tr {
+    background: #fff;
+} 
+.GridWindow-Eventtable2{
+    margin-top: -1px;
+}
+.GridWindow-Eventtable1 tr:nth-of-type(1){
+    font-weight: bold;
+    background:#f7f7f8;
+}
+.GridWindow-Eventtable1 tr td:nth-of-type(odd){
+    background:#f7f7f8;
+}
+.GridWindow-Eventtable1 tr td:nth-of-type(odd){
+    width: 120px;
+}
+.GridWindow-Eventtable2 tr:nth-of-type(1),.GridWindow-Eventtable2 tr:nth-of-type(2){
+    background:#f7f7f8;
+    font-weight: bold;
+}  
+
+.NewEvent h1{
+    height:30px;
+    font-weight: bold;
+    color:#333; 
+    background: #f7f7f8; 
+    line-height: 30px;
+    text-align: center;
+    border:0 1px 1px 1px solid #e4eaec;
+}
+.NewEvent ul li{
+    border-top:1px solid #e4eaec;
+    border-left:1px solid #e4eaec;
+    border-right:1px solid #e4eaec;
+    height:30px;
+    line-height: 30px;
+    overflow:hidden;
+}
+.NewEvent ul li span{
+    float:left;
+    display:inline-block;
+    width:29%;
+    text-align: center;
+    border-right:1px solid #e4eaec;
+}
+.NewEvent ul li p{
+    width:65%;
+    float:left;
+    padding:0 10px;
+}
+.NewEvent-list{
+    height:94px;
+    overflow:hidden;
+}
+.NewEvent i.ProcessHandle{
+    color:green;
+}
+.NewEvent i.WaitHandle{
+    color:red;
+} 
+.NewEvent i{
+    font-style: normal;
+}
+
+/*********** 事件概要结束 ***********/
+/*********** 基本概况开始 ***********/
+.GridWindow-Basetable1 th{
+    height:30px;
+    font-weight: bold;
+    color:#333;
+    text-align: center;
+}
+.GridWindow-Basetable1 td:nth-of-type(odd){
+    width: 120px;
+    background:#f7f7f8;
+} 
+.BasicProfile-Text{
+    background: #fff;
+    padding:10px 5px;
+    text-align: left;
+    line-height: 24px;
+    height:110px;
+    overflow-y:auto;
+    border-bottom:1px solid #e4eaec;
+    border-left:1px solid #e4eaec;
+    border-right:1px solid #e4eaec;
+    text-indent: 2em;
+}
+/*********** 基本概况结束 ***********/
+/*********** 服务概要开始 ***********/
+.GridWindow-Servicetable th{
+    height:30px;
+    font-weight: bold;
+    color:#333;
+    text-align: center;
+    background:#f7f7f8;
+}
+.GridWindow-Servicetable td:nth-of-type(odd){
+    width: 120px;
+    background:#f7f7f8;
+} 
+/*********** 服务概要结束 ***********/
+/*********** 弹窗内容结束 ***********/
+
+/************** 滚动条样式 ***************/
+::-webkit-scrollbar {  
+  width: 12px;  
+  height: 14px;  
+}   
+::-webkit-scrollbar-track,  
+::-webkit-scrollbar-thumb {  
+  border-radius: 999px;  
+  border: 5px solid transparent;  
+}   
+::-webkit-scrollbar-track {  
+  box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;  
+}   
+::-webkit-scrollbar-thumb {  
+  min-height: 20px;  
+  background-clip: content-box;  
+  box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;  
+}   
+::-webkit-scrollbar-corner {  
+  background: transparent;  
+} 

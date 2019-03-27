@@ -1,0 +1,111 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td { margin:0; padding:0; }
+body { font-size:14px; color:#333; font-family:"微软雅黑";}
+fieldset, img { border:0; }
+ol, ul { list-style:none; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; font-weight:normal;}
+em { font-style:normal; }
+input, button, select, textarea { outline:none; }
+input, button{ border:none;} 
+textarea { resize:none; }
+
+a { color: #3C3C3C; text-decoration:none; }
+a:hover { color: #41c7f8; text-decoration:none; }
+
+html,body{
+    width: 100%;
+    height: 100%;
+}
+body{
+      background-attachment:fixed;
+       background-size: 100% 100%;
+}
+table{
+    background: #ff9304;
+    width:370px;
+}
+tr{
+    background: #fff;
+}
+td{
+    height:32px;
+    text-align: center;
+    color:#333;
+    font-size: 12px;
+    position:relative;
+ }
+  
+/* content star  */     
+.content{
+    width: 100%;
+    height: 100%;
+    margin:0 auto;  
+    position:absolute;
+     
+}
+/* 第三弹窗 基本资料 开始 */
+.id{
+    width:400px;
+    height:500px;
+    background:#fff; 
+    position:absolute; 
+    top: 50%;
+    margin-top: -250px;
+    border-radius: 5px;
+     
+}
+.id p{
+    background:#00a2ff;
+    cursor:pointer;
+    color:#fff;
+    max-width:380px;
+    height:36px;
+    line-height:36px;
+    border-radius: 5px 5px 0 0;
+    padding:0 10px;
+    position:relative;
+}
+.id p span{float:right;margin-right:5px; }
+.third{
+    width:400px;
+    height:500px;
+    position:absolute; 
+    top: 50%;
+    margin-top: -250px;
+    border-radius: 5px; 
+     
+}
+.third_nav{
+    width:380px;
+    height:34px;
+    margin:15px 10px;
+    background: url(/common/gis/images/popmap/nav.png) repeat;
+    border-radius: 5px;
+}
+.third_nav ul li{
+    width:76px;
+    height:42px;
+    float:left;
+    text-align: center;
+}
+.third_nav ul li a{
+    width:76px;
+    height:42px;
+    color:#fff;
+    font-size: 16px;
+    line-height: 36px;
+    display:inline-block;
+}
+ 
+.head_pic{
+     width:160px;
+     height:160px;
+}
+ .third_span span{
+    width:110px;
+    display:inline-block;
+}
+.second_current {
+	background: url(/common/gis/images/popmap/second_nav.png) no-repeat;
+	width: 76px;
+	height: 42px;
+}

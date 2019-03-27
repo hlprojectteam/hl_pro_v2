@@ -1,0 +1,11 @@
+/**
+ * 自定义css
+ */
+.edit_footer{
+	position: fixed;  
+	bottom: 0;
+	width: 100%;
+	left:0;
+	height: 25px;
+	z-index: 1000;
+}

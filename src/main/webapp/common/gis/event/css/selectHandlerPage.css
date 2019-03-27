@@ -1,0 +1,51 @@
+body {
+    background: url(../images/bg1.jpg) no-repeat center; 
+    background-size:100% 100%; 
+}
+
+.ibox-content {
+    background-color:transparent;
+}
+
+.btnStyle {
+	float: right;
+    margin-right: 2.7%;
+}
+
+
+/* 分页信息字体颜色 */
+.pagination-detail span {
+    color: #fff;
+}
+
+.inputSelect, #grid, #rangeSelect, #chooseUser {
+    color: #fff;   
+    border:1px solid #fff;
+    background-color:transparent;
+}
+
+/* 下拉框滚动条 */
+#rangeSelect, #chooseUser {
+    overflow-y: auto;
+}
+
+.inputSelect:focus, #grid:focus, #rangeSelect:focus, #chooseUser:focus {
+    border:1px solid #fff!important;
+    background-color:transparent!important;
+}
+
+.inputSelect:-webkit-autofill { box-shadow: 0 0 0px 1000px white inset !important;}
+
+
+#grid tr {
+        background-color: transparent!important;
+}
+
+#grid thead tr th {
+    color: #fff;
+    font-weight:bold;
+}
+
+#grid tr:hover {
+    background-color: #81C2DE;
+}

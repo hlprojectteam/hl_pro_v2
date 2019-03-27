@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <!-- 日志公共配置 -->
+	<property resource="config.properties" />	
+    
+	  <!-- 控制台日志记录 -->
+	  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+	  	<Target>System.out</Target>
+	    <encoder>
+	      <pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%level] [%thread] %logger{80} [%file : %line] %msg%n</pattern>
+	    </encoder>
+	    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>INFO</level>
+	    </filter>
+	  </appender>
+  
+	  <!-- 错误日志记录 -->
+	  <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <encoding>UTF-8</encoding>
+	    <Prudent>true</Prudent> <!-- 是否每天产生日志 -->
+	    <encoder>
+	      <pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%level] [%thread] %logger{80} [%file : %line] %msg%n</pattern>
+	    </encoder>
+	    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>ERROR</level>
+	    </filter>
+	    <!-- 设置滚动策略 -->
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+	        <FileNamePattern>${log.path}/error/error_log_%d{yyyyMMdd}_%i.log</FileNamePattern>   
+	        <!--最多保留360天log-->
+	        <MaxHistory>360</MaxHistory>  
+	        <!-- 超过200MB时，触发滚动策略 -->
+	        <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">  
+	            <MaxFileSize>200MB</MaxFileSize>  
+	        </TimeBasedFileNamingAndTriggeringPolicy>  
+	    </rollingPolicy>  
+	  </appender>					
+  
+	  <root level="INFO">
+	    <appender-ref ref="CONSOLE"/>
+	    <appender-ref ref="ERROR_LOG"/>
+	  </root>
+  
+	<!-- #######################################登录日志begin######################################################### -->
+    <appender name="LOGIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<encoding>UTF-8</encoding>
+	    <Prudent>true</Prudent> <!-- 是否每天产生日志 -->
+	    <encoder>
+	    	<pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%level] [%thread] %logger{80} [%file : %line] %msg%n</pattern>
+	    </encoder>
+	    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	    	<level>INFO</level>
+	    </filter>
+	    <!-- 设置滚动策略 -->
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+	        <FileNamePattern>${log.path}/login/login_%d{yyyyMMdd}_%i.log</FileNamePattern>   
+	        <!--最多保留360天log-->
+	        <MaxHistory>360</MaxHistory>  
+	        <!-- 超过200MB时，触发滚动策略 -->
+	        <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">  
+	            <MaxFileSize>200MB</MaxFileSize>  
+	        </TimeBasedFileNamingAndTriggeringPolicy>  
+	    </rollingPolicy>  
+	</appender>
+	<logger name="LOGIN" level="INFO">
+	    <appender-ref ref="LOGIN"/>
+	    <appender-ref ref="ERROR_LOG"/>
+	</logger>
+	<!-- #######################################登录日志end######################################################### -->  
+	
+	<!-- #######################################统一用户管理日志begin######################################################### -->    
+	<appender name="URMS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<encoding>UTF-8</encoding>
+	    <Prudent>true</Prudent> <!-- 是否每天产生日志 -->
+	    <encoder>
+	    	<pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%level] [%thread] %logger{80} [%file : %line] %msg%n</pattern>
+	    </encoder>
+	    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	    	<level>INFO</level>
+	    </filter>
+	    <!-- 设置滚动策略 -->
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+	        <FileNamePattern>${log.path}/urms/urms_%d{yyyyMMdd}_%i.log</FileNamePattern>   
+	        <!--最多保留360天log-->
+	       	 <MaxHistory>360</MaxHistory>  
+	        <!-- 超过200MB时，触发滚动策略 -->
+	        <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">  
+	            <MaxFileSize>200MB</MaxFileSize>  
+	        </TimeBasedFileNamingAndTriggeringPolicy>  
+	    </rollingPolicy>  
+	</appender>
+	<logger name="URMS" level="INFO">
+		<appender-ref ref="URMS"/>
+		<appender-ref ref="ERROR_LOG"/>
+	</logger>
+	<!-- #######################################统一用户管理日志end######################################################### -->      
+  
+  
+  	<!-- #######################################工作流日志begin######################################################### -->    
+  	<appender name="WF" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	   	<encoding>UTF-8</encoding>
+	    <Prudent>true</Prudent> <!-- 是否每天产生日志 -->
+	    <encoder>
+	    	<pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%level] [%thread] %logger{80} [%file : %line] %msg%n</pattern>
+	    </encoder>
+	    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	    	<level>INFO</level>
+	    </filter>
+	    <!-- 设置滚动策略 -->
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+	        <FileNamePattern>${log.path}/wf/wf_%d{yyyyMMdd}_%i.log</FileNamePattern>   
+	        <!--最多保留360天log-->
+	        <MaxHistory>360</MaxHistory>  
+	        <!-- 超过200MB时，触发滚动策略 -->
+	        <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">  
+	            <MaxFileSize>200MB</MaxFileSize>  
+	        </TimeBasedFileNamingAndTriggeringPolicy>  
+	    </rollingPolicy>  
+	</appender>
+  	<logger name="WF" level="INFO">
+    	<appender-ref ref="WF"/>
+    	<appender-ref ref="ERROR_LOG"/>
+  	</logger>
+   	<!-- #######################################工作流日志end######################################################### -->    
+   	
+</configuration>

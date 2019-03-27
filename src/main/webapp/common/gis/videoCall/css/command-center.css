@@ -1,0 +1,336 @@
+/* 
+* @Author: anchen
+* @Date:   2018-05-02 10:13:34
+* @Last Modified by:   anchen
+* @Last Modified time: 2018-05-02 22:54:37
+*/
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td { margin:0; padding:0; }
+body { font-size:14px; color:#333; font-family:"\5b8b\4f53",arial;}
+fieldset, img { border:0; }
+ol, ul { list-style:none; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; font-weight:normal;}
+em { font-style:normal; }
+input, button, select, textarea { outline:none; }
+input, button{ border:none;} 
+textarea { resize:none; }
+
+a { color: #3C3C3C; text-decoration:none; } 
+body, html{
+    max-width: 100%;
+    margin: 0 auto;  
+    position: relative;
+    background-size: cover;
+    height: 100%;
+    overflow:hidden; 
+ } 
+.command-centerpc{
+    background:url(/common/gis/videoCall/images/command-bg.jpg) center center no-repeat;
+    width:100%;
+    height:100%;
+    background-size: cover;
+}
+/* 头部开始 */
+.header-commandpc{
+    background:rgba(255, 255, 255, 0.27);
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 25px 0 20px 0;
+} 
+/* 头部结束 */
+/* 内容开始 */
+.content-commandpc{
+    overflow:hidden;
+    padding:0 20px;
+    height: calc( 100% - 89px - 40px );
+    position:relative;
+}
+.pack-up{
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 13%;
+    z-index: 1;
+    top: 0%;
+    text-align: center;
+    line-height: 40px;
+}
+.pack-up i{
+    color: #fff;
+}
+/* 左侧部分开始 */
+.left-commandpc{
+    float:left;
+    width:15%;
+    background:rgba(255, 255, 255, 0.27);
+    height:100%;
+}
+
+/* 在线用户开始 */
+.left-commandpc-user{
+    height:36%;
+}
+.left-commandpc-user h1{ 
+    position:relative;
+    line-height: 40px;
+    border-bottom: 1px solid #fff;
+    color:#fff;
+    font-weight: bold;
+} 
+
+.left-commandpc-user h1 i{
+    margin-left: 20px;
+    margin-right: 10px;
+    color: #fff;
+}
+.left-commandpc-user ul{
+    padding: 10px 20px;
+    
+}
+.commandpc-user-box{
+    height:78%; 
+}
+.left-commandpc-user ul li {
+    line-height: 33px;
+    color:#fff;
+}
+.left-commandpc-user ul li i{
+    display:inline-block;
+    float:right;
+}
+/*多选自定义样式*/
+.Support_multi_choice ul li {
+    margin-left: 10%;
+    margin-top: 15px;
+}
+.Support_multi_choice ul li span{
+    display: inline-block;
+    vertical-align: top;
+    color: #6a7483;
+}
+.radio-btn input[type="radio"], .check-box input[type="checkbox"] {
+    visibility: hidden;
+}
+.check-box {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: inline-block;
+    margin-right:7px;
+    position: relative;
+    overflow: hidden;
+    background: url(/common/gis/videoCall/images/duoxuan.png) no-repeat left bottom;
+    vertical-align: middle;
+    margin-top: -4px;
+}
+.check-box i {
+    position: absolute;
+    left: 3px;
+    bottom: -16px;
+    width: 16px;
+    height: 16px;
+    opacity: .5;
+}
+.checkedBox {
+    background: url(/common/gis/videoCall/images/duoxuan-ed.png) no-repeat left bottom;
+}
+.checkedBox i {
+    bottom: 2px;
+}
+/* 在线用户结束 */
+/* 按钮开始 */
+.left-commandpc-button{
+    padding: 10px 20px;
+    border-top:1px solid #fff;
+    border-bottom:1px solid #fff;
+    height:34%;
+}
+.left-commandpc-button ul li{
+    line-height: 30px;
+    color: #fff; 
+    border:1px solid #64afeb;
+    margin: 10px 0;
+    border-radius: 5px; 
+    cursor:pointer;
+}
+.left-commandpc-button ul li span{
+    background: rgba(100, 175, 235, 0.47);
+    display:block;
+    padding: 0 10px;
+}
+.left-commandpc-button ul li span.recording3{
+    background:#1273c3;
+    
+} 
+.left-commandpc-button ul li span.videotape3{
+    background:#1273c3;
+    
+} 
+.left-commandpc-button ul li:hover{
+    background:#169bd5;
+}
+.left-commandpc-button ul li i{
+    color:#fff; 
+    padding: 0 10px 0 5px;
+}
+/* 按钮结束 */
+/* 会议日志开始 */
+.left-commandpc-daily{
+    height:27%;
+}
+.left-commandpc-daily h1{ 
+    position:relative;
+    line-height: 40px;
+    border-bottom: 1px solid #fff;
+    color:#fff;
+    font-weight: bold;
+} 
+.left-commandpc-daily h1 i{
+    margin-left: 20px;
+    margin-right: 10px;
+    color: #fff;
+    font-weight: normal;
+}
+.commandpc-daily-box{
+    height: 72%; 
+}
+.left-commandpc-daily ul{
+    padding: 10px 15px;
+}
+.left-commandpc-daily ul li{
+   line-height: 24px;
+   color:#fff;
+
+}
+
+.left-commandpc-daily ul li i{
+    font-family: "黑体";
+    font-style: normal;
+    margin-right: 5px;
+    width: 25%;
+    display:inline-block;
+    font-size: 12px;
+    text-align: right;
+}
+.left-commandpc-daily ul li span{
+    width:65%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    overflow: hidden;
+    vertical-align:top;
+    display:inline-block;
+}
+/* 会议日志结束 */
+/* 左侧结束 */
+/* 右侧开始 */
+.right-commandpc{
+    float:right;
+    width:85%; 
+    height:100%;
+}
+.right-commandpc ul{
+    height:100%; 
+}
+.right-commandpc ul li{
+    float:left;
+    width:48%;
+    height:49%;
+    background:rgba(255, 255, 255, 0.27);
+    margin-bottom: 20px;
+    position:relative;
+    text-align: center;
+}
+.right-commandpc ul li{
+    margin-left:2%;
+}
+.right-commandpc ul li p{
+    line-height: 36px;
+    background: #169bd5;
+    color: #fff;
+    padding: 0 1%;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    width: 98%;
+    text-align: left;
+}
+.right-commandpc ul li img{
+    width:100%;
+    height:100%;
+}
+.right-commandpc ul li span{
+    display:inline-block;
+    float:right;
+}
+.right-commandpc ul li i{
+    padding:0 5px;
+}
+.right-commandpc ul li i.command-close{
+    font-size: 20px;
+    cursor:pointer;
+}
+.right-commandpc ul li i.command-big{
+    font-size: 18px;
+    cursor:pointer;
+}
+/* 右侧结束 */
+/* 弹窗开始 */
+.gray {
+    width: 100%;
+    position: absolute;
+    background: #000;
+    opacity: 0.4;
+    top: 0;
+    height: 100%;
+    position:fixed;
+    z-index: 41;
+   display:none; 
+}
+.commandpc-window_box {
+    width: 400px;
+    position: fixed;
+    z-index: 42;
+    display: block;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    margin-top: -62px;
+    margin-left: -200px;
+    background:#fff;
+    text-align: center;
+    border-radius: 10px;
+    display:none;
+}
+.commandpc-window_box p{
+    text-align: center;
+    line-height: 40px;
+    font-size: 18px;
+    margin-top:2%;
+}
+.commandpc-window_box ul li{
+    border:1px solid #ccc;
+    border-radius: 5px;
+    width: 38%;
+    margin: 5% 5%;
+    float: left;
+    padding: 2% 0;
+    color:#fff;
+    cursor: pointer;
+}
+.commandpc-window_box ul li i{
+    padding:0 3px;
+}
+.commandpc-window_box ul li.button-listen{
+    background:green;
+}
+.commandpc-window_box ul li.button-hangup{
+    background:red;
+}
+/* 弹窗结束 */
+/* 单选样式 */
+input[type="radio"] {margin: 3px 3px 0px 5px;display: none;}
+.commandpc-user-box label {
+    height: 20px;display: inline-block;line-height: 20px;padding-left: 30px;cursor: pointer;background: url(/common/gis/videoCall/images/danxuan.png) no-repeat left bottom; box-sizing: border-box;}
+.commandpc-user-box label.checked  {height: 20px;display: inline-block;line-height: 20px;padding-left: 30px;cursor: pointer;background: url(/common/gis/videoCall/images/danxuan-ed.png) no-repeat left bottom;}

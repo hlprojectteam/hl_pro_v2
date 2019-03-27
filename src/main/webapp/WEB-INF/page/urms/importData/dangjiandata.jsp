@@ -1,0 +1,41 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="menu" uri="/WEB-INF/taglib/menuDefinition.tld"%>
+<jsp:include page="/common/common.jsp"></jsp:include>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>党员导入</title>
+</head>
+<body>
+
+	<div class="ibox-content" style="padding-top: 5px;">
+		<!-- 工具条 -->
+		<menu:definition menuCode="${menuCode }" />
+		<form id="partyMemberForm" name="partyMemberForm" action="submitPartMemberExcel"
+			enctype="multipart/form-data" class="form-horizontal" method="post">
+			<div class="ibox-content">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">党员EXCEL导入</label>
+					<div class="col-sm-4">
+						<input type="file" name="file">
+					</div>
+
+					<div class="col-sm-1">
+						<button type="submit" class="btn btn-success">
+							<i class="fa fa-check"></i>&nbsp;提交
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
+
+	</div>
+
+
+</body>
+<script>
+	
+</script>
+</html>

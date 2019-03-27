@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans    
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+    http://www.springframework.org/schema/mvc   
+    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+    <import resource="spring-hibernate.xml" />
+   <!--  <import resource="spring-quartz.xml" /> -->
+	<!-- Spring MVC配置 -->
+	<context:annotation-config />
+	<!--扫描注解 -->
+	<context:component-scan base-package="com" />
+
+	<!-- 视图 -->
+	<bean id="viewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding" value="UTF-8"/>  
+        <!-- 指定所上传文件的总大小不能超过1G。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->  
+        <!--最大文件不能超过1GB-->
+        <property name="maxUploadSize" value="1073741824"/> 
+   	</bean> 
+   	
+ 	<!-- SpringMVC在超出上传文件限制时，会抛出org.springframework.web.multipart.MaxUploadSizeExceededException -->  
+    <!-- 该异常是SpringMVC在检查上传的文件信息时抛出来的，而且此时还没有进入到Controller方法中 -->  
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+        <property name="exceptionMappings">  
+            <props>  
+                <!-- 遇到MaxUploadSizeExceededException异常时，跳转到/WEB-INF/page/common/error.jsp页面 -->  
+                <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">/WEB-INF/page/common/error.jsp</prop>  
+            </props>  
+        </property>  
+    </bean>
+	
+	<!--定义拦截器有三种方式 1.（近似）总拦截器，拦截所有url 2.（近似） 总拦截器， 拦截匹配的URL 3.HandlerMappint上的拦截器。静态资源就不会被拦截 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/*" /> <!--拦截所有请求 -->
+ 			<mvc:mapping path="/*/*" /> <!-- 拦截所有请求 -->
+ 			<mvc:mapping path="/*/*/*" /><!-- 拦截所有请求 -->
+			<mvc:exclude-mapping path="/indexMain" /> <!--不被拦截的请求 web登录-->
+			<mvc:exclude-mapping path="/indexMain_webSocket" /><!--不被拦截的请求 websocket公共页面 -->
+			<mvc:exclude-mapping path="/favicon.ico" />
+			<mvc:exclude-mapping path="/mobileLogin" /> <!--不被拦截的请求 手机登录-->
+			<mvc:exclude-mapping path="/mobileOrgFrameList" /> <!--不被拦截的请求 手机组织架构请求-->
+			<mvc:exclude-mapping path="/mobileRegister" /> <!--不被拦截的请求 手机注册-->
+			<mvc:exclude-mapping path="/mobile_validateInfo" /> <!--不被拦截的请求 手机注册-->
+			<mvc:exclude-mapping path="/mobile_reset_password" /> <!--不被拦截的请求 手机注册-->
+			<mvc:exclude-mapping path="/app_download" /> <!--不被拦截的请求 手机安装包下载-->
+			<mvc:exclude-mapping path="/app_download_cache" /> <!--不被拦截的请求 手机缓存-->
+			<bean class="com.common.inteceptor.MyInteceptor"></bean><!-- 拦截方法 -->
+			
+			
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!--默认的mvc注解映射的支持 -->
+	<mvc:annotation-driven/>
+
+	<!-- 对静态资源文件的访问 -->
+	<mvc:resources mapping="/favicon.ico" location="/"/>
+
+	 <!--*************** 支持aop **************** -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    
+</beans>

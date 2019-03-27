@@ -1,0 +1,219 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td { margin:0; padding:0; }
+body { font-size:14px; color:#333; font-family:"微软雅黑";}
+fieldset, img { border:0; }
+ol, ul,li{ list-style:none; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; font-weight:normal;}
+em { font-style:normal; }
+input, button, select, textarea { outline:none; }
+input, button{ border:none;} 
+textarea { resize:none; }
+a { color: #3C3C3C; text-decoration:none; }
+
+/*  nav star */
+.nav{
+     height:35px;
+    padding: 0 10px;
+    width: 796px;
+}
+.nav ul li{
+    width:382px;
+    height:60px;
+   
+    text-align: center;
+    line-height: 60px;
+    float:left; 
+    border:1px solid #ccc; 
+    position:relative;
+}
+.nav ul li.current{
+    margin-right: 8px;
+}
+.nav ul li a{
+    font-size: 20px;
+    font-weight: bold;
+   display:inline-block;
+    width:382px;
+    height:60px;
+}
+.nav ul li a img{
+     position:absolute;
+    top: 30%;
+    left: 30%;
+    display:inline-block;
+}
+ 
+/* box star */
+.box {
+    position:relative;
+    width: 800px;
+    height: 600px;
+    margin-top: 30px;
+    background:url(../images/bg2.png) no-repeat;
+}
+
+.box-right {
+    position: absolute;
+    top: 270px;
+    z-index: 990;
+    width: 39px;
+    height: 60px;
+    overflow: hidden;
+}
+.box-right a.next {
+    background: url(../images/icon-btn.png) -39px 0px no-repeat;
+}
+.box-right a {
+    position: relative;
+    width: 39px;
+    height: 60px;
+    display: block;
+    overflow: hidden;
+    opacity: 0.2;
+    -moz-opacity: 0.2;
+    -khtml-opacity: 0.2;
+    filter: alpha(Opacity=20);
+}
+.box-right {
+    right: 2px;
+}
+.box-left {
+    left: 2px;
+}
+.box-left a{
+    opacity: 0.2;
+    position: absolute;
+    top: 270px;
+    z-index: 990;
+    width: 39px;
+    height: 60px;
+    overflow: hidden;
+}
+.box-left a.next {
+    background: url(../images/icon-btn.png) 0px 0px no-repeat;
+}
+.button{
+    position:absolute;
+    height: 45px;
+    margin: 2px 0;
+    bottom: 0;
+    left: 25%;
+    background-color: rgba(255,255,255,0.6);
+}
+.imgbox{
+    position:absolute;
+     bottom: 3px;
+     right: 30px;
+}
+ 
+.button ul li {
+    height: 36px;
+    width: 36px;
+    margin: 4px 20px 2px 20px;
+    cursor: pointer;
+    display: block;
+    float: left;
+}
+.one {
+    background: url(../images/toolbar.png) no-repeat scroll 0 0;
+}
+.two {
+   background: url(../images/toolbar.png) no-repeat scroll -62px 0;
+}
+.three {
+    background: url(../images/toolbar.png) no-repeat scroll -124px 0;
+}
+.four {
+   background: url(../images/toolbar.png) no-repeat scroll -186px 0;
+}
+
+.five{
+    background: url(../images/toolbar.png) no-repeat scroll -248px 0;
+}
+.six {
+   background: url(../images/toolbar.png) no-repeat scroll -310px 0;
+}
+
+ img#click {
+    position: absolute;
+    top: 48px;
+}  
+#img1 {
+    position: absolute;
+}
+.panorama_box{border:1px solid #fff; margin:auto;}
+.image_box{  margin:auto; overflow:hidden;position:relative;}
+.image_box img{position:relative;}
+.toolbar{height:45px;  position: absolute;left: 20%;}
+.toolbar span{height:40px;width:38px;margin:2px 2px 2px 35px;cursor:pointer;display:block;float:left;}
+
+/* introduce star */
+.introduce{
+    
+    height: 600px;
+    margin-top: 30px;
+    background: #fff;
+    padding: 10px;
+    width: 780px;
+}
+.introduce_title{
+    position:relative;
+}
+.introduce_title h1{
+    line-height: 44px;
+    font-size: 22px;
+    padding-left: 5px;
+    font-weight: bold;
+    color:#ff5000;
+    text-shadow: 1px 1px 1px #000;
+}
+.introduce_line{
+    background: url(../images/line.png) no-repeat;
+    width:778px;
+    height:7px;
+    display:block;
+}
+/* introduce_parameter star */
+.introduce_parameter{
+    width:796px;
+    height:330px;
+    padding:10px;
+}
+.parameter_left{
+    width:354px;
+    height:320px;
+    border:1px solid #000;
+    float:left;
+    position:relative;
+    margin-right: 12px;
+}
+.parameter_left span{
+    background: url(../images/1.png) no-repeat;
+    background-size: 50%;
+    display:block;
+    width:800px;
+    height:600px;
+    position:absolute;
+    left: -28px;
+}
+ 
+.parameter_right ul li{
+    font-size: 16px;
+    float:left;
+    width:400px;
+    height:44px;
+    line-height: 44px;
+    border-bottom: 1px dashed #000;
+    font-family: STKaiti;
+}
+.parameter_right ul li i{
+     font-style: normal;
+     color:#0089d8;
+    font-size: 18px;
+}
+.introduce p{
+    text-indent: 1cm;
+    font-size: 18px;
+    margin-top: 20px;
+    font-family: STKaiti;
+}
+ 

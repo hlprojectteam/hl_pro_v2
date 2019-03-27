@@ -1,0 +1,246 @@
+/* 	html,body {margin: 0;padding: 0;height: 100%;overflow: hidden; font-size: 12px;font-family: 鐎瑰缍� } */
+/* 	em { color: #cc0000;font-style: normal;} */
+/* 	p { margin: .5em 0;} */
+/* 	span {background:white;} */
+/* 	a{color:#6e6e6e;} */
+	#taskTrack tr:hover td {background-color: #759DDF;color: #fff;}
+	.csstable {width: 100%;}
+	.csstable tr {line-height: 2;}
+	.csstable tr:nth-child(even) {background-color: #F4F4F4;}
+	.csstable tr:nth-child(odd) {background-color: #EEF1F6;}
+	.csstable th {font-weight: bold;border-bottom: 1px solid #E7A58C;text-align: left;padding-left: .5em;}
+	.csstable td {color: #6E6E6E;border-bottom: 1px solid #CBD8F1;text-align: left;padding-left: .5em;}
+
+	.k-window  div.k-window-content {overflow: hidden;}
+	.k-window-title {font-size: 12px;font-weight: bold;}
+	.turnpage {width: 34px;height: 20px;float: left;margin: 2px 2px}
+	.turnpage a {width: 34px;height: 20px;display: block;line-height: 19px;
+		font-family: "鐎瑰缍�;font-size: 10px;color: #000;text-align: center;
+		background: url(../../images/wangge/btn_gjt_turnpage.gif);}
+	.turnpage a:hover {color: #000;text-decoration: none;background: url(../../images/wangge/btn_gjt_turnpage.gif);}
+
+	#resultTitle { padding: .5em 0;background-color: #f6f6f6;margin-bottom: 10px; }
+	#resultPager { text-align: center;margin-top: 10px; }
+	#resultPager b { margin: 0 .4em;}
+	#resultPager a { display: inline-block;height: 2em;line-height: 2em;padding: 0 .4em;border: 1px solid transparent; }
+	#resultPager a:hover { color: #cc0000;background-color: #f1f1f1;border-color: #ccc;text-decoration: none;}
+
+	.result-list { list-style: none inside none;margin: 0 .5em;padding: 0;overflow-y: auto;}
+	.result-list li { position: relative;min-height: 40px;border: 1px solid #fff;padding-left: 35px;cursor: pointer;
+		background: url("/ui/images/marker_c.png") no-repeat scroll left 5px #fff;}
+	.result-list li:hover,.result-list .active { border-color: #ccc;
+		background-color: #f6f6f6;background-image: url("/ui/images/marker_d.png")}
+	.result-list li .num { position: absolute;left: 0;top: 6px;color: #fff;width: 30px;text-align: center;
+		font-family: verdana;font-weight: bold;font-size: 14px; }
+
+	.main_search_box { margin: 10px auto 0;position: absolute;right: 17px;top: 20px;width: 280px; }
+
+	.s_l { background: url(/images/t_s_l.png) no-repeat;height: 30px; width: 6px; float: left; display: block; }
+	.s_m { background: url(/images/t_s_m.png) repeat-x; height: 30px; width: auto;float: left; }
+	.s_r { background: url(/images/t_s_r.png) no-repeat;height: 30px; width: 6px; float: left; }
+	.s_se { width: 40px; float: left; margin: 8px 0 0 10px;}
+	.s_lat { float: right;margin: 4px 0 0 0;}
+	.s_lat a { background: url(/images/page_ico.png) -29px -16px no-repeat;width: 9px;height: 9px;display: block; }
+	.s_se p { float: left; margin: 0; color: #787878; }
+	.s_jt { width: 18px; height: 18px; float: left; margin: 6px 0 0 0;}
+	.s_jt a { background: url(/images/page_ico.png) -50px -10px no-repeat; width: 18px; height: 18px; display: block }
+	.s_input { width: 114px; height: 26px; float: left; margin: 2px 0 0 4px; }
+	.s_input input { width: 114px; height: 26px; background: none; border: none; line-height: 26px; }
+	.s_input2 { width: 70px; height: 26px; float: left; margin: 2px 0 0 4px; }
+	.s_input2 input { width: 70px; height: 26px; background: none; border: none; line-height: 26px; }
+	.s_btn { float: left;margin: 6px 0 0 5px; }
+	.s_btn a { background: url(/images/page_ico.png) -79px -10px no-repeat; width: 18px; height: 18px; display: block; }
+
+	.tool_box { float: left; width: 60px; }
+	.tool_sj { background: url(/images/tool_sj.png) no-repeat; width: 16px; height: 15px; margin: 0 auto; }
+	.tool_sj2 { background: url(/images/tool_sj2.png) no-repeat; width: 30px; height: 20px;float: right; }
+	.tool_show { background: url(/images/tool_bg.png) repeat; float: left; position: absolute; top: 0px; }
+	.tool_list li { height: 24px; line-height: 24px; width: 60px; }
+	.t_li_80 { width: 80px; }
+	.t_li_80 li { width: 80px; }
+
+	.li_c li { text-align: left; }
+	.tool_list li a { color: #4c4c4c; width: 24px; height: 60px; }
+	.tool_list li:hover { background: #d7f1ff; }
+	.tool-zb-box { height:25px; margin:10px 10px; width:400px;}
+	.tool-zb-box dl { float:left;}
+	.tool-zb-box dl dt{ float:left; border-right:1px solid #c6c6c6; padding-right:5px; height:20px; line-height:20px; margin-top:3px;}
+	.tool-zb-box dl dd { float:left; margin:0 10px; height:20px; line-height:20px; margin-top:3px;}
+	.tool-zb-box dl dt a{color:#4169E1;}
+	.tool-zb-box dl dd a{color:#4169E1;}
+	.zb_ms { float:left; width:23px; height:25px;background:url(/images/page_ico.png) -100px -45px no-repeat; display:block; margin-right:10px;}
+	.zb_jd { float:left; width:23px; height:25px;background:url(/images/page_ico.png) -131px -45px no-repeat; display:block; margin-right:10px;}
+	.zb_yl { float:left; width:25px; height:25px;background:url(/images/page_ico.png) -163px -45px no-repeat; display:block; margin-right:10px;}
+	.zb_bm { float:left; width:25px; height:25px;background:url(/images/page_ico.png) -197px -45px no-repeat; display:block; margin-right:10px;}
+	.w330{width:330px}
+	.selectImg {background: #d7f1ff;}
+	.unselectImg {background: #ffffff;}
+	#mapInfoIframe{ position:absolute; z-index:1001; right:0; top:0; height:100%; }
+
+	.map_menu{
+	list-style-type:none;margin:0;position: absolute;top:0px;z-index: 1;
+	}
+.map_menu li{
+	float:left; margin-right:15px; background:url(/gis/images/front/menu/menu_bg_lfet.png) left center no-repeat; padding:5px 6px;
+	}
+.map_menu li a{
+	background:url(/gis/images/front/menu/menu_bg_middle.png) center right repeat-x; text-decoration:none; display:block; padding:5px 8px 5px 3px; font-size:12px; color:#111;
+	}
+.map_menu li.cuur{
+	float:left; margin-right:15px; background:url(/gis/images/front/menu/menu_a_bg_lfet.png) left center no-repeat; padding:5px 6px;
+	}
+.map_menu li.cuur a{
+	background:url(/gis/images/front/menu/menu_a_bg_middle.png) center right repeat-x; text-decoration:none; display:block; padding:5px 8px 5px 3px; font-size:12px; color:#FFF;
+	}
+.map_menu_pop_box{
+	position:relative;z-index: 2;top:5px;width:350px;
+	}
+.map_menu_pop_box_middle{
+	width:347px; background:url(/gis/images/front/menu/menu_pop_box_middle.png) center top repeat-y; min-height:10px;
+	}
+.map_menu_pop_box_middle ul{
+	list-style-type:none; margin:0; padding:2px 10px; overflow:hidden;
+	}
+.map_menu_pop_box_middle ul li{
+	float:left; margin-right:6px; font-size:12px; line-height:22px;
+	}
+.map_menu_pop_box_middle ul li a{
+	color:#000; text-decoration:none;
+	}
+.map_menu_pop_box_middle ul li a:hover{
+	color:#F60; text-decoration:underline;
+	}
+.map_menu_pop_box_middle ul li b{
+	font-weight:normal; color:#333;
+	}
+
+.o_mapswitch .switch_btn {
+	Z-INDEX: 10; BORDER-BOTTOM: #808080 1px solid; POSITION: absolute; BORDER-LEFT: #808080 1px solid; PADDING-BOTTOM: 2px; PADDING-LEFT: 2px; WIDTH: 45px; PADDING-RIGHT: 2px; ZOOM: 1; BACKGROUND: #fff; HEIGHT: 45px; OVERFLOW: hidden; BORDER-TOP: #808080 1px solid; TOP: 0px; CURSOR: pointer; RIGHT: 5px; BORDER-RIGHT: #808080 1px solid; PADDING-TOP: 2px
+}
+.o_mapswitch .switch_off {
+	CURSOR: default
+}
+.o_mapswitch .switch_img {
+	BORDER-BOTTOM: #808080 1px solid; POSITION: absolute; BORDER-LEFT: #808080 1px solid; WIDTH: 43px; BACKGROUND: url(/common/images/gis/baiduMap/map_switch.png) no-repeat 0px 0px; HEIGHT: 43px; BORDER-TOP: #808080 1px solid; BORDER-RIGHT: #808080 1px solid
+}
+.o_mapswitch .switch_2d .switch_img {
+	BACKGROUND-POSITION: 0px -43px
+}
+.o_mapswitch .switch_3d .switch_img {
+	BACKGROUND-POSITION: 0px 0px;
+}
+.o_mapswitch .switch_1d .switch_img {
+	BACKGROUND-POSITION: 0px -86px
+}
+.o_mapswitch .switch_off .switch_img {
+	BACKGROUND-POSITION: 0px -43px
+}
+.o_mapswitch .switch_txt {
+	Z-INDEX: 1; POSITION: absolute; TEXT-ALIGN: center; LINE-HEIGHT: 16px; WIDTH: 43px; BOTTOM: 3px; FONT-FAMILY: "鐎瑰缍�; HEIGHT: 16px; COLOR: #fff; FONT-SIZE: 12px; LEFT: 3px
+}
+.o_mapswitch .switch_bg {
+	POSITION: absolute; FILTER: alpha(opacity=40); WIDTH: 43px; BOTTOM: 3px; BACKGROUND: #000; HEIGHT: 16px; LEFT: 3px; opacity: .4
+}
+
+.eventcount {
+	/* padding:2px; */
+	float:left;
+	z-index:1000;
+	width:100%;
+	height:38px;
+	margin-left:0px;
+	margin-top:0px;
+	background-color: #000000;filter:alpha(Opacity=54);-moz-opacity:0.54;opacity: 0.54;
+}
+.red {
+	background-color:#ff3350;
+}
+
+
+ html, body, #arcGisMapDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+        #arcGisMapDiv {
+            height: 100%;
+        }
+
+/* 妯℃嫙楣扮溂鏍峰紡 */
+#o_minimapContiner{
+position: absolute;
+    right: 0px;
+    bottom: 0px;
+    z-index: 1000;
+    display: block;
+}
+#o_minimapArea{
+    position: absolute;
+    right: -2px;
+    bottom: 0px;
+    width: 220px;
+    height: 145px;
+}
+.o_yy {
+    position: relative;
+    width: 220px;
+    height: 146px;
+    background: url(/gis/images/yy_bk.png) 0 0 no-repeat scroll transparent;
+    }
+
+    .o_yytog_tl {
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    z-index: 10;
+    width: 22px;
+    height: 22px;
+}
+.o_yytog_tl img {
+    background: url(/gis/images/yy_icon.png) 0 0 no-repeat scroll;
+    height: 22px;
+    width: 20px;
+    cursor: pointer;
+    -moz-user-select: none; /*锟斤拷锟斤拷*/
+   	-webkit-user-select: none;  /*webkit锟斤拷锟斤拷锟斤拷*/
+   	-ms-user-select: none;   /*IE10*/
+   	-khtml-user-select: none; /*锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷*/
+  	user-select: none;
+}
+#o_minimapImg{
+  -moz-user-select: none; /*锟斤拷锟斤拷*/
+  	-webkit-user-select: none;  /*webkit锟斤拷锟斤拷锟斤拷*/
+   	-ms-user-select: none;   /*IE10*/
+   	-khtml-user-select: none; /*锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷*/
+  	user-select: none;
+}
+map {
+    display: inline;
+}
+area {
+    display: inline;
+    cursor: pointer;
+}
+.o_yy_box {
+    position: absolute;
+    z-index: 9;
+    height: 138px;
+    overflow: hidden;
+    left: 6px;
+    top: 6px;
+    width: 212px;
+}
+#o_minimapContentP{
+    position: relative;
+    width: 213px;
+    height: 138px;
+    overflow: hidden;
+}
+#o_minimapContent{
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+    width: 213px;
+    height: 138px;
+    position: absolute;
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+
+	<description>JSTL 1.1 functions library</description>
+	<display-name>JSTL functions sys</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>fns</short-name>
+	<uri>http://java.sun.com/jsp/jstl/functionss</uri>
+<!-- 菜单功能点 -->
+	<function>
+		<description>根据数据字典编码以及key获取对应字典值(单个值)</description>
+		<name>getDictValue</name>
+		<function-class>com.common.utils.tld.DictUtils</function-class>
+		<function-signature>java.lang.String getDictValue(java.lang.String,java.lang.String)</function-signature>
+		<example>${fns:getDictValue(dictCode,key)}</example>
+	</function>
+
+	<function>
+		<description>根据数据字典编码以及key获取对应字典值(多个值,"/"分开)</description>
+		<name>getManyDictValue</name>
+		<function-class>com.common.utils.tld.DictUtils</function-class>
+		<function-signature>java.lang.String getManyDictValue(java.lang.String,java.lang.String)</function-signature>
+		<example>${fns:getManyDictValue(dictCode,key)}</example>
+	</function>
+
+	<function>
+		<description>根据身份证号获取年龄</description>
+		<name>getAgeByIDNo</name>
+		<function-class>com.common.utils.tld.DictUtils</function-class>
+		<function-signature>java.lang.String getAgeByIDNo(java.lang.String)</function-signature>
+		<example>${fns:getAgeByID(idNo)}</example>
+	</function>
+
+	<function>
+		<description>根据数据字典编码以及key获取对应字典值(单个值)</description>
+		<name>getAreaValue</name>
+		<function-class>com.common.utils.tld.DictUtils</function-class>
+		<function-signature>java.lang.String getAreaValue(java.lang.String)</function-signature>
+		<example>${fns:getAreaValue(code)}</example>
+	</function>
+
+	<function>
+		<description>获取时间差</description>
+		<name>getLengthTime</name>
+		<function-class>com.common.utils.tld.DictUtils</function-class>
+		<function-signature>java.lang.String getLengthTime(java.util.Date,java.util.Date)</function-signature>
+		<example>${fns:getLengthTime(data1,data2)}</example>
+	</function>
+</taglib>

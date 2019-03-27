@@ -1,0 +1,215 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td { margin:0; padding:0; }
+body { font-size:14px; color:#333; font-family:"微软雅黑";}
+fieldset, img { border:0; }
+ol, ul { list-style:none; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; font-weight:normal;}
+em { font-style:normal; }
+input, button, select, textarea { outline:none; }
+input, button{ border:none;} 
+textarea { resize:none; }
+
+a { color: #3C3C3C; text-decoration:none; } 
+html,body{
+    width: 100%;
+    height: 100%;
+}
+/* body{
+      background-attachment:fixed;
+      background: url("../images/zhihui.png") repeat;
+      background-size: 100% 100%;
+}  */
+/********** 弹窗内容开始 ***********/
+.clickgrid_content{
+    /* width: 550px;
+    height: 500px;
+    position: absolute; 
+    left: 5px;
+    top: 14px;
+    background: #fff; 
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 1.2em 1.2em 1.2em 1.2em;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.35);
+    overflow: auto; */
+    padding:8px;
+}  
+.clickgrid_head{
+    overflow: hidden;
+    margin: 0px 30px 0px 10px;
+    color: #000000 !important;
+}
+.clickgrid_head span.center_closed {
+    background: url(../images/close_24.png) no-repeat;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    float: right;
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    cursor: pointer;
+}
+.PeopleTitleText{
+    font-size: 16px;
+    font-weight: bold;
+} 
+/***********  导航开始 ********** */
+.clickgrid_nav{ 
+    height: 34px;
+    margin: 8px 0;
+    background: url(../images/nav.png) repeat;
+    border-radius: 5px;
+}  
+.clickgrid_nav ul{
+    overflow:hidden;
+}
+.clickgrid_nav ul li{
+    width: 16.6%;
+    height:42px;
+    float:left;
+    text-align: center;
+}
+.clickgrid_nav ul li a{
+    width: 95px;
+    height:36px;
+    color:#fff;
+    font-size: 16px;
+    line-height: 35px;
+    display:inline-block;
+}
+.gridcurrent{
+    background: url(../images/hover.png) no-repeat;
+    width: 95px;
+    height:42px; 
+} 
+/*********** 导航结束 ***********/
+/*********** 内容开始 ***********/
+.clickgrid_box table{
+    width:100%;
+    color: #76838f;
+ }
+.clickgrid_box td{
+   height:30px;
+   text-align: center;
+   color:#333;
+   font-size: 14px;
+   position:relative; 
+}
+.clickgrid_box tr {
+    background: #fff;
+}
+.peoplegrid_table1 td.head-portrait img{
+    width:140px;
+    height:140px;
+}
+.peoplegrid_table1 td{
+    height:38px;
+}
+.peoplegrid_table1 td i{
+    font-style: normal;
+    margin-right: 10px;
+}
+.peoplegrid_table1 td span{
+    display:inline-block; 
+    vertical-align: middle;
+}
+.peoplegrid_table2{
+    margin-top: -1px;
+}
+.peoplegrid_table2 tr td:nth-of-type(odd){ 
+    background:#f7f7f8; 
+    color:#666;
+} 
+
+.visitsrecord{
+    border-bottom: 1px solid #e4eaec; 
+}
+.visitsrecord ul li {
+    border-top: 1px solid #e4eaec;
+    border-left: 1px solid #e4eaec;
+    border-right: 1px solid #e4eaec;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+}
+.visitsrecord h1 {
+    height: 30px;
+    font-weight: bold;
+    color: #333;
+    background: #f7f7f8;
+    line-height: 30px;
+    text-align: center;
+    border: 0 1px 1px 1px solid #e4eaec;
+}
+.visitsrecord_list {
+    height: 94px;
+    overflow: hidden;
+}
+.visitsrecord_list {
+    height: 94px;
+    overflow: hidden;
+}
+.visitsrecord ul li span {
+    float: left;
+    display: inline-block;
+    width: 29%;
+    text-align: center;
+    border-right: 1px solid #e4eaec;
+    background: #f7f7f8;
+    color:#666;
+    font-size: 12px;
+}
+.visitsrecord ul li p {
+    width: 65%;
+    float: left;
+    padding: 0 10px;
+}
+.inspectionrecord ul li p{
+    width:52%;
+}
+.visitsrecord i.view_track {
+    color: #999;
+    width:14%;
+}
+.visitsrecord i {
+    font-style: normal;
+}
+.clickgrid_box td.worktrack{
+    font-weight: bold;
+    color:#333!important;
+}
+.clickgrid_box td.peoplegrid_td{
+    text-align: left;
+    padding-left: 20px;
+    box-sizing: border-box;
+}
+.clickgrid_box td.data_bg{
+    background:#f7f7f8;
+    color:#666;
+}
+.clickgrid_box td.people_td{
+    color:#666;
+}
+/*********** 内容结束 ***********/
+/*********** 弹窗内容结束 ***********/
+
+/************** 滚动条样式 ***************/
+::-webkit-scrollbar {  
+  width: 12px;  
+  height: 14px;  
+}   
+::-webkit-scrollbar-track,  
+::-webkit-scrollbar-thumb {  
+  border-radius: 999px;  
+  border: 5px solid transparent;  
+}   
+::-webkit-scrollbar-track {  
+  box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;  
+}   
+::-webkit-scrollbar-thumb {  
+  min-height: 20px;  
+  background-clip: content-box;  
+  box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;  
+}   
+::-webkit-scrollbar-corner {  
+  background: transparent;  
+} 

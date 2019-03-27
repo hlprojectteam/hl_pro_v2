@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"  
+         updateCheck="true" monitoring="autodetect"  
+         dynamicConfig="true">  
+	
+	<!-- 硬盘存放路径 不同系统默认路径不一样 -->
+  	<diskStore path="java.io.tmpdir" />
+
+<!-- 默认缓存 -->	
+<defaultCache maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+            maxElementsOnDisk="10000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"/>
+            
+<!-- 系统平台缓存 -->
+<cache name="urms_cache" maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+            maxElementsOnDisk="10000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"/>
+          
+            
+</ehcache>

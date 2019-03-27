@@ -1,0 +1,37 @@
+body .layer-ext-myskin .layui-layer-title{
+    /*padding: 0 80px 0 20px;*/
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+    text-align:center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    border-bottom: none;
+    height: 37px;
+    line-height: 37px;
+    background: -webkit-linear-gradient(#2d5a71, #293b61); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#2d5a71, #293b61); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#2d5a71, #293b61); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #2d5a71, #293b61); /* 标准的语法 */
+}
+body .layer-ext-myskin .layui-layer-ico{
+    background:url(close_24.png) no-repeat;
+    height: 25px;
+    width: 25px;
+}
+body .layer-ext-myskin .layui-layer-setwin{
+    top: 8px;
+    right: 8px;
+}
+body .layer-ext-myskin .layui-layer-content{
+    background: url(/common/povertyAlleviation/images/background1.jpg) no-repeat;
+    border-radius: 0 0 10px 10px;
+}
+body .layer-ext-myskin .layer-ext-myskin{
+    background-color: #0C0C0C;
+    border-radius: 10px;
+}
+body .layer-ext-myskin .layui-layer{
+    background-color: transparent;
+    border-radius: 0;
+}

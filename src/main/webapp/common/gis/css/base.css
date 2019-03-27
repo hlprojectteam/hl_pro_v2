@@ -1,0 +1,325 @@
+/*!
+ * 鍦板浘瀹炰綋銆佺綉鏍煎脊鍑虹獥鍙ｉ〉闈㈡牱寮�
+ */
+
+/*=======CSS reset start=======*/
+body{background:#fff;font-family: Verdana, Geneva, sans-serif; font-size:12px}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td,img{margin:0;padding:0; }
+table{border-collapse:collapse; border-spacing:0;}
+legend{display:none;}
+fieldset,img{border:none;}
+address,caption,cite,code,dfn,em,var{font-style:normal; font-weight:normal;}
+ol,ul,li{list-style-type :none;}
+caption{text-align:left;}
+input{ vertical-align:middle;}
+a{text-decoration:none; color:#333;}
+a:hover{ text-decoration:underline;}
+/*=======CSS reset end=======*/
+ 
+/*==========mapBuilding begin==========*/
+
+ .tr_list{
+	height:25px;
+}
+.td_name{
+	width:100px;
+	background-color:#99caff;
+	border-left:1px solid #2e5ffc;
+	border-right:1px solid #2e5ffc; 
+	border-bottom:1px solid #2e5ffc; 
+	text-align:center;
+	padding:0px 3px
+}
+.td_content{
+	width:150px;
+	border-right:1px solid #2e5ffc; 
+	border-bottom:1px solid #2e5ffc;
+	text-align:center; 
+	padding:0px 3px
+}
+.ly_box {
+    height: 200px;
+    width: 300px;
+}
+.ly_box_wb {
+    float: left;
+    height: auto;
+    width: 29px;
+}
+.ly_box_wb img {
+    display: block;
+}
+.ly_right_box {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #AADEF4 #AADEF4 #AADEF4 -moz-use-text-color;
+    border-image: none;
+    border-style: solid solid solid none;
+    border-width: 1px 1px 1px medium;
+    float: left;
+    height: 398px;
+    width: 515px;
+}
+.ly_title {
+    background: none repeat scroll 0 0 #8AB4E3;
+    height: 22px;
+    width: auto;
+}
+.ly_link {
+    float: left;
+    height: 22px;
+    line-height: 22px;
+    margin-left: 10px;
+    width: 50px;
+}
+.ly_link a {
+    color: #ECF5FE;
+    display: block;
+    text-decoration: underline;
+}
+.ly_name {
+    color: #FFFFFF;
+    float: left;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    width: 75%;
+}
+.ly_close {
+    float: right;
+    height: 13px;
+    margin-right: 5px;
+    margin-top: 3px;
+    width: 12px;
+}
+.btn_bc {
+    float: right;
+    height: 23px;
+    margin-right: 10px;
+    width: 59px;
+}
+.ly_table_btn {
+    background: url("/common/images/gis/mapBuilding/rk_btn_top_bj_normal.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 1px solid #E2E2E2;
+    height: 20px;
+    margin: 5px 10px;
+}
+.ly_table_on {
+    float: left;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    width: 80px;
+}
+.ly_table_on a {
+    background: url("/common/images/gis/mapBuilding/rk_btn_top_bj_hover.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #008DD7;
+    display: block;
+    height: 20px;
+    width: 80px;
+    font-weight: bold;
+}
+.ly_table_on a:hover {
+    background: url("/common/gis/images/mapBuilding/rk_btn_top_bj_hover.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    text-decoration: none;
+}
+.ly_table_off {
+    float: left;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    width: 80px;
+}
+.ly_table_off a {
+    background: url("/common/gis/images/mapBuilding/rk_btn_top_bj_normal.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #607C8C;
+    display: block;
+    height: 20px;
+    width: 80px;
+}
+.ly_table_off a:hover {
+    background: url("/common/gis/images/mapBuilding/rk_btn_top_bj_hover.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #607C8C;
+    text-decoration: none;
+}
+.ly_line {
+    float: left;
+    height: 14px;
+    margin-top: 3px;
+    width: 2px;
+}
+.table_btn {
+    height: 20px;
+    width: 100%;
+}
+.table_btn tr {
+    background: url("/common/gis/images/mapBuilding/rk_btn_top_bj_normal.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 1px solid #E2E2E2;
+    height: 20px;
+    width: 100%;
+}
+.table_btn_on {
+    height: 20px;
+}
+.table_btn_on a {
+    background: url("/common/gis/images/mapBuilding/rk_btn_top_bj_hover.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #FFFFFF;
+    display: block;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
+.table_btn_on a:hover {
+    background: url("/common/gis/images/mapBuilding/rk_btn_top_bj_hover.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    text-decoration: none;
+}
+.table_btn_off {
+    height: 20px;
+}
+.table_btn_off a {
+    display: block;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
+.table_btn_off a:hover {
+    background: url("/common/gis/images/mapBuilding/rk_btn_top_bj_hover.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.ly_content_box {
+    height: auto;
+    width: auto;
+}
+.page_box {
+    display: block;
+    font-family: "微软雅黑";
+    font-size: 12px;
+    height: 25px;
+    margin: 9px auto;
+    width: 65%;
+}
+.ly_gk_top {
+    height: 110px;
+    width: auto;
+}
+.ly_gk_photo {
+    border: 1px solid #B2B2B2;
+    float: left;
+    height: 110px;
+    margin-left: 10px;
+    margin-top: 3px;
+    width: 100px;
+}
+.ly_gk_top_right {
+    display: block;
+    float: left;
+    font-family: "微软雅黑";
+    font-size: 12px;
+    height: 90px;
+    padding: 3px 8px;
+    width: 200px;
+}
+.ly_gk_top_right li {
+    border-bottom: 1px dashed #99ADC4;
+    display: block;
+    height: 18px;
+    margin-top: 5px;
+    width: 200px;
+}
+.ly_gk_bottom {
+    display: block;
+    font-family: "微软雅黑";
+    font-size: 12px;
+    height: 200px;
+    margin: 0 10px;
+    width: auto;
+}
+.ly_rkxx_rb {
+    border: 1px solid #CEE3EE;
+    height: 100px;
+    margin: 0 10px;
+}
+/*==========mapBuilding end==========*/
+
+/*==========listEntityHouse begin==========*/
+.table_title{ 
+	width:auto; 
+	height:25px; 
+	background:#99caff;
+}
+.table_title th{ 
+	height:25px; 
+	line-height:25px; 
+	border-right:1px solid #2e5ffc;
+	border-bottom:1px solid #2e5ffc;
+	font-family:"微软雅黑"; 
+	font-size:12px; 
+	font-weight:100
+}
+.table_list{ 
+	height:25px; 
+	line-height:25px; 
+	border-bottom:1px solid #2e5ffc
+}
+.table_list td{ height:25px;border-right:1px solid #2e5ffc;font-family:"瀹嬩綋"; font-size:12px; }
+.table_list td a{height:25px; line-height:25px; }
+.table_list td a:hover{ color:#2e5ffc; text-decoration:none}
+
+.legend{height:22px; line-height:21px; float:left; margin-left:5px}
+.legend_content{width:50px; height:22px; line-height:21px; float:left; margin-left:0px}
+.legend_content span{width:15px;height:15px;float:left;margin-top:4px}
+.legend_content label{margin-left:5px}
+.sel{ width:auto;float:left;margin-left:5px;}
+.ly_lc{ height:18px; line-height:18px; text-align:center}
+/*==========listEntityHouse end==========*/
+
+/*==========detailEntityHouse begin==========*/
+.fwcx_grxq { width:100%; float:left;}
+.fwcx_grxq_t { background:url(/common/images/gis/mapBuilding/fwcx_grxq_top.png) no-repeat; width:350px; height:34px;}
+.fwcx_grxq_m { background:url(/common/images/gis/mapBuilding/fwcx_grxq_mid.png) repeat-y; width:350px; height:460px;}
+.fwcx_grxq_b { background:url(/common/images/gis/mapBuilding/fwcx_grxq_bot.png) no-repeat; width:350px; height:14px;}
+.fwcx_grxq_tab { height:32px; width:320px; float:left; margin:5px 0 0 5px;}
+.fwcx_grxq_tab_big { height:32px; width:430px; float:left; margin:5px 0 0 5px;}
+.fwcx_grxq_tab_bbig { height:32px; width:500px; float:left; margin:5px 0 0 5px;}
+.fwcx_grxq_tab_l,.fwcx_grxq_tab_m,.fwcx_grxq_tab_r,.fwcx_grxq_tab_mb,.fwcx_grxq_tab_mmb { float:left;}
+.fwcx_grxq_tab_l { background:url(/common/images/gis/mapBuilding/fwcx_grxq_tab_l.png) no-repeat; height:32px; width:9px;}
+.fwcx_grxq_tab_m { background:url(/common/images/gis/mapBuilding/fwcx_grxq_tab_m.png) repeat-x; height:32px; width:298px;}
+.fwcx_grxq_tab_mb { background:url(/common/images/gis/mapBuilding/fwcx_grxq_tab_m.png) repeat-x; height:32px; width:410px;}
+.fwcx_grxq_tab_mmb { background:url(/common/images/gis/mapBuilding/fwcx_grxq_tab_m.png) repeat-x; height:32px; width:480px;}
+.fwcx_grxq_tab_r { background:url(/common/images/gis/mapBuilding/fwcx_grxq_tab_r.png) no-repeat; height:32px; width:9px;}
+.fwcx_grxq_tab_nav { padding:0; margin:0;}
+.fwcx_grxq_tab_nav li {width:48px; float:left; list-style:none; background:url(/common/images/gis/mapBuilding/fwcx_grxq_tab_line.png) no-repeat right center; padding:0 5px 0 5px; line-height:32px; text-align:center;}
+.fwcx_grxq_tab_nav li a { color:#787878; text-decoration:none;}
+.fwcx_grxq_tab_nav li a:hover { color:#F60;}
+.fwcx_grxq_tab_nav_01 { padding:0; margin:0;}
+.fwcx_grxq_tab_nav_01 li {width:48px; float:left; list-style:none; background:url(/common/images/gis/mapBuilding/fwcx_grxq_tab_line.png) no-repeat right center; padding:0 5px 0 5px; line-height:32px; text-align:center;}
+.fwcx_grxq_tab_nav_01 li a { color:#787878; text-decoration:none;}
+.fwcx_grxq_tab_nav_01 li a:hover { color:#F60;}
+.fwcx_grxq_con { margin-top:20px; margin-left:10px; float:left;}
+#hj_content{color:#2a2a2a;}
+#hj_data1{float:left;width:165px;height:120px;margin-left: 10px;}
+#hj_datapop{float:left;width:245px;height:120px;margin-left: 10px;}
+#hj_databig{float:left;width:335px;height:120px;margin-left: 10px;}
+.hj_content_right{height:25px;line-height:28px;border-bottom:1px dashed #b2c7db;}
+#hj_data2{margin:0}
+.hj_content_center{width:99%;border-bottom:1px dashed #b2c7db;height:25px;line-height:28px;}
+.hj_content_center_style1{width:130px;}
+.hj_content_center_style11{float:left;width:180px;margin:-1px;text-align:center;}
+.hj_content_center_style2{float:right;width:110px;margin-top:-28px;margin-right:15px;text-align:center;}
+/*==========detailEntityHouse end==========*/
+
+/*==========listEntityPopulation start==========*/
+.input01{ width:62px; height:24px; float:left; display:block; margin-left:2px; margin-right:2px;*margin-right:2px}
+.input01 input{ width:60px; height:14px; float:left; margin-top:2px; border:1px solid #cee3ee; padding:1px 2px; font-family:"瀹嬩綋"; font-size:12px; color: #666}
+
+.input02{ width:102px; height:24px; float:left; display:block; margin-left:5px;}
+.input02 input{ width:100px; height:14px; float:left; margin-top:2px; border:1px solid #cee3ee; padding:1px 2px; font-family:"瀹嬩綋"; font-size:12px; color: #666}
+
+.ly_rk_cx{ height:24px; display:block; margin:5px 15px;_margin:5px 10px;  font-family:"瀹嬩綋"; font-size:12px }
+.ly_rk_cx li{ width:auto; height:24px; float:left; display:block; line-height:24px}
+.ly_rk_cx li a { width:49px; height:21px; display:block; margin-left:15px;*margin-left:7px; background:url(/common/images/gis/mapBuilding/fwcx_left_btn.png)}
+.ly_rk_cx li a:hover{ background:url(/common/images/gis/mapBuilding/fwcx_left_btn_hover.png)}
+/*==========listEntityPopulation end==========*/

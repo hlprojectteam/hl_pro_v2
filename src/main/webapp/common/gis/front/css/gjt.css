@@ -1,0 +1,142 @@
+/*
+------------------------------- 
+Site:        三位社区网络化管理系统  工具条样式
+Author:      jj
+Updated:     2012-10-24
+Updated by:
+-------------------------------
+*/
+
+.content {
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    width: auto;
+}
+
+/*======工具条20121018——begin======*/
+.gjt_box{ width:380px; height:27px;}
+.git_btn_on{ width:86px; height:27px; float:left; margin:0px 2px }
+.git_btn_on a{ width:86px; height:27px; display:block; line-height:26px; font-family:"宋体"; font-size:12px; color:#FFF; text-align:center;background:url(/gis/images/front/index/btn_gjt_on.gif);}
+.git_btn_on a:hover{text-decoration:none;background:url(/gis/images/front/index/btn_gjt_on.gif);}
+
+.git_btn_off{ width:86px; height:27px; float:left; margin:0px 2px }
+.git_btn_off a{ width:86px; height:27px; display:block; line-height:26px; font-family:"宋体"; font-size:12px; color: #000; text-align:center;background:url(/gis/images/front/index/btn_gjt_normal.gif);}
+.git_btn_off a:hover{ color: #000; text-decoration:none;background:url(/gis/images/front/index/btn_gjt_hover.gif);}
+/*======工具条20121018——end======*/
+
+
+/*======鱼骨下按钮20121026======*/
+.yggjt_box{ width:36px; height:92px;}
+
+.wdwg_btn{ width:36px; height:36px; float:top; margin:5px 0px }
+.wdwg_btn a{ width:36px; height:36px; display:block; text-align:center;background:url(/gis/images/front/index/btn_wdwg_normal.png);}
+.wdwg_btn a:hover{text-decoration:none;background:url(/gis/images/front/index/btn_wdwg_hover.png);}
+.wdwg_btn a:active{text-decoration:none;background:url(/gis/images/front/index/btn_wdwg_on.png);}
+
+.xzsj_btn{ width:36px; height:36px; float:top; margin:5px 0px }
+.xzsj_btn a{ width:36px; height:36px; display:block; text-align:center;background:url(/gis/images/front/index/btn_xzsj02_normal.png);}
+.xzsj_btn a:hover{text-decoration:none;background:url(/gis/images/front/index/btn_xzsj02_hover.png);}
+.xzsj_btn a:active{text-decoration:none;background:url(/gis/images/front/index/btn_xzsj02_on.png);}
+
+/*======20121026——end======*/
+
+
+.close_box{ width:12px; height:auto; float:left;position: absolute;}
+/*
+.close_line{ width:3px; height:auto; float:left; background:url(/gis/images/front/index/close_line.gif) repeat-y}
+*/
+.close_line{ width:3px; height:auto; float:left;}
+.close_btn{ width:13px; height:auto; float:left;}
+.close_btn a{ width:13px ; height:73px; display:block; margin-top:290px; background:url(/gis/images/front/index/btn_close_normal.gif)}
+.close_btn a:hover{ background:url(/gis/images/front/index/btn_close_hover.gif)}
+
+.open_btn{ width:13px; height:auto; float:left;}
+.open_btn a{ width:13px ; height:73px; display:block; margin-top:290px; background:url(/gis/images/front/index/btn_open_normal.gif)}
+.open_btn a:hover{ background:url(/gis/images/front/index/btn_open_hover.gif)}
+
+.close_box1{ width:10px; height:auto; float:right;position: absolute;}
+.close_line1{ width:3px; height:auto; float:left; background:url(/gis/images/front/index/close_line.gif) repeat-y}
+.close_btn1{ width:13px; height:auto; float:right;}
+.close_btn1 a{ width:13px ; height:73px; display:block; margin-top:290px; background:url(/gis/images/front/index/btn_open_normal.gif)}
+.close_btn1 a:hover{ background:url(/gis/images/front/index/btn_open_hover.gif)}
+
+.open_btn1{ width:13px; height:auto; float:right;}
+.open_btn1 a{ width:13px ; height:73px; display:block; margin-top:290px; background:url(/gis/images/front/index/btn_close_normal.gif)}
+.open_btn1 a:hover{ background:url(/gis/images/front/index/btn_close_hover.gif)}
+
+
+
+/*左侧导航*/
+.left_nav{
+	position:absolute; left:0; top:0; bottom:0; z-index:80; width:48px; height:100%; background:#0369BF;
+	}
+.left_nav ul{
+	padding-top:70px;
+	}
+
+.left_nav ul li{
+	margin:10px 0; display:block; text-align:center; width:48px;
+	}
+.left_nav ul li h4{
+	font-size:12px; padding:3px 0; 
+	}	
+.left_nav ul li a{
+	display:block; padding:5px 0;
+	}	
+.left_nav ul li a.cuur{
+	background:#e3e3e3; color:#0066cc;
+	}
+.left_nav ul li a:hover{
+	background:#e3e3e3; color:#0066cc;
+	}		
+.left_nav_me p{
+	margin:0 auto; text-align:center; width:20px; height:20px; background:url(../img/Portal/me.png) left top no-repeat;
+	}
+.left_nav_info p{
+	margin:0 auto; text-align:center; width:20px; height:20px; background:url(../img/Portal/info.png) left top no-repeat;
+	}
+.left_nav_Attention p{
+	margin:0 auto; text-align:center; width:20px; height:20px; background:url(../img/Portal/Attention.png) left top no-repeat;
+	}
+	
+.left_nav_Attentionm p{
+	margin:0 auto; text-align:center; width:30px; height:30px; background:url(/common/login/images/cm.png) left top no-repeat;
+	}
+.left_nav_Attentionj p{
+	margin:0 auto; text-align:center; width:30px; height:30px; background:url(/common/login/images/cj.png) left top no-repeat;
+	}	
+.left_nav_Attentionq p{
+	margin:0 auto; text-align:center; width:30px; height:30px; background:url(/common/login/images/sc.png) left top no-repeat;
+	}
+.left_nav_Attentionj p{
+	margin:0 auto; text-align:center; width:30px; height:30px; background:url(/common/login/images/jwd.png) left top no-repeat;
+	}	
+.left_nav_Attentions p{
+	margin:0 auto; text-align:center; width:30px; height:30px; background:url(/common/login/images/ss.png) left top no-repeat;
+	}	
+.left_nav_Attentione p{
+	margin:0 auto; text-align:center; width:30px; height:30px; background:url(/common/login/images/button_error.png) left top no-repeat;
+	}	
+.left_nav_Attentionbz p{
+	margin:0 auto; text-align:center; width:30px; height:30px; background:url(/common/login/images/bz.png) left top no-repeat;
+	}
+.left_nav_Attention_note p{
+	margin:0 auto; text-align:center; width:30px; height:30px; background:url(/common/login/images/note.png) left top no-repeat;
+	}
+.left_nav_Correction p{
+	margin:0 auto; text-align:center; width:20px; height:20px; background:url(../img/Portal/Correction.png) left top no-repeat;
+	}		
+.left_nav_Notes p{
+	margin:0 auto; text-align:center; width:20px; height:20px; background:url(../img/Portal/Notes.png) left top no-repeat;
+	}		
+.left_nav_share p{
+	margin:0 auto; text-align:center; width:20px; height:20px; background:url(../img/Portal/share.png) left top no-repeat;
+	}	
+	
+.left_nav ul li a.cuur p{
+	background-position:0 -20px;
+	}

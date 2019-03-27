@@ -1,0 +1,586 @@
+/* 
+* @Author: anchen
+* @Date:   2018-04-03 15:59:13
+* @Last Modified by:   anchen
+* @Last Modified time: 2018-04-11 09:31:56
+*/
+body{
+    background: #f4f4f4;
+    max-width: 1920px;
+    margin: 0 auto; 
+    min-width: 320px;
+    height: 100%;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    /* background: #000; */
+}
+ 
+/* 头部开始 */
+.ShareCourse-Header{ 
+    width:100%;
+    margin:0 auto;
+    height:99px;
+    border-bottom: 1px solid #f2f2f2;
+    background: #fff;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    transition: 0.3s;
+    -webkit-animation: gupIn 1s 0.1s both;
+    -moz-animation: gupIn 1s 0.1s both;
+    animation: gupIn 1s 0.1s both;
+    margin-bottom: 8px;  
+}
+.ShareCourse-HeaderIn{
+    max-width:1200px;
+    margin:0 auto; 
+} 
+/* logo开始 */
+a.ShareCourse-logo{
+    display:inline-block;
+    transition: all 0.3s;
+    float:left;
+    margin-top: 1%;
+}
+/* 搜索框开始 */
+.ShareCourse_search {
+    height: 40px;
+    line-height: 40px;
+    border: 2px solid #00b8fc;
+    width:30%; 
+    float: left;
+    position: relative;
+    margin-top:2.5%;
+    margin-left:30px;
+}
+.select {
+    position: relative;
+    float: left;
+}
+.select dt {
+        height: 40px;
+    display: inline-block;
+    border-right: 2px solid #00b8fc;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    width: 96%;
+    padding-right: 15px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    z-index: 66;
+    color: #333;
+    font-size: 16px;
+    background: url(/common/outside/shareClass/index/images/arrow.png) 40px no-repeat;
+    float: left;
+}
+.select dd {
+    position: absolute;
+    left: -2px;
+    top: 40px;
+    border: 2px solid #00b8fc;
+    background-color: #fff;
+    display: none;
+    z-index: 1000;
+    border-top: 0;
+}
+.select dd ul { 
+    width: 62px;
+    max-height: 250px;
+    overflow: auto; 
+    z-index: 15;
+    background-color: #fff;
+}
+.select dd ul li a {
+    line-height: 40px;
+    display: block;
+    padding: 0 8px;
+    color: #666;
+    text-decoration: none;
+}
+.ShareCourse_search .position_txt {
+    float: left;
+    line-height: 40px;
+    height: 40px;
+    font: 14px/50px "Microsoft YaHei";
+    color: #000;
+    text-align: left;
+    border: 0 none;
+    padding: 0 10px;
+    width: 60%;
+    margin-left: 15px;
+}
+.ShareCourse_search span {
+    display: inline-block;
+    background: #00b8fc;
+    width: 15%;
+    text-align: center;
+    height: 40px;
+    color: #333;
+    font-size: 16px;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+}
+.search_button i {
+    background: url(/common/outside/shareClass/index/images/search.png) no-repeat;
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    font-style: normal;
+    position: absolute;
+    top: 10px;
+    right: 18px;
+}
+/* 导航开始 */
+.ShareCourse-nav {
+    /* width: 620px; */
+    margin: auto;
+    text-align: center;
+    position: relative; 
+    float:right;
+}
+.ShareCourse-nav a {
+    display: inline-block;
+    height: 99px;
+    margin: 0 22px;
+    line-height: 99px;
+    text-align: center;
+    font-size: 16px;
+    -webkit-transition: 0.3s, color 0.5s;
+    -moz-transition: 0.3s, color 0.5s;
+    transition: 0.3s, color 0.5s;
+    cursor:pointer;
+}
+.ShareCourse-nav a i{
+    background:url(/common/outside/shareClass/index/images/arrow.png) no-repeat;
+    width:13px;
+    height:7px;
+    display:inline-block;
+    margin-left: 5px;
+}
+.ShareCourse-nav span {
+    width: 100px;
+    height: 2px;
+    background: #00b8fc;
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+.ShareCourse-nav a:hover{
+    color:#00b8fc;
+}
+.PCenter{
+    position: absolute;
+    top: -30px;
+    z-index: 10; 
+    left: -12px;
+}
+.people-center{
+   width: 100px;
+    height: 120px;
+    border: 1px solid #eee;
+    margin: 100px auto; 
+    position: relative;
+    background: #fff;
+    color: #333; 
+    box-shadow: 0 1px 1px #eee;
+}
+#people-center{
+    position:relative;
+}
+/*  .people-center:after {
+  content: "";
+   width: 10px;
+   height: 10px;
+   border-left: 1px solid #eee;
+   border-top: 1px solid #eee;
+   position: absolute;
+   right: 44px;
+   top: -3%;
+   margin-top: -5px;
+   transform: rotate(45deg);
+   background: #eee;
+   z-index: 999;
+}   */
+.people-center li{
+    text-align: center;
+    line-height: 28px;
+} 
+/* 内容开始 */
+#rol {
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    outline: none;
+}
+/*海报图开始*/
+.index-banner, .about-banne a {
+    display: block;
+}
+.index-banner, .about-banner {
+    text-align: center;
+}
+.index-banner, .about-banner {
+    -webkit-animation: gupIn 1s 0.5s both;
+    -moz-animation: gupIn 1s 0.5s both;
+    animation: gupIn 1s 0.5s both;
+    position: relative;
+}   
+.index-banner .pagination {
+    width: 16px;
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    z-index: 10;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.index-banner .pagination span {
+    display: block;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    position: relative;
+    width: 10px;
+    height: 10px;
+}
+.index-banner .pagination span::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    left: 0;
+    top: 0;
+}
+.index-banner .pagination .swiper-active-switch {
+    border-color: #fff;
+}
+.index-banner .pagination .swiper-active-switch::after {
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    -ms-transform: scale(0);
+    -o-transform: scale(0);
+    transform: scale(0);
+}
+.index-banner .swiper-wrapper, .index-banner .swiper-slide, .case-banner .swiper-wrapper, .case-banner .swiper-slide, .service-banner .swiper-wrapper, .service-banner .swiper-slide, .special-ban .swiper-container, .special-ban .swiper-wrapper, .special-ban .swiper-slide {
+    height: auto!important;
+}
+.swiper-wrapper img{
+    width:100%;
+}
+/*海报图结束*/
+/* 课程推荐开始 */
+.CourseRecommend,.HotQuestions,.HotCourseware{
+    background-color: #f4f4f4;
+    -webkit-animation: gupIn 1s 1.2s both;
+    -moz-animation: gupIn 1s 1.2s both;
+    animation: gupIn 1s 1.2s both;
+
+}
+.CourseRecommend-main,.HotQuestions-main,.HotCourseware-main{
+    position: relative;
+    width: 1200px;
+    margin: 10px auto;
+    max-width: 100%;
+    background:#fff;
+}
+.CourseRecommend-header,.HotQuestions-header,.HotCourseware-header{
+    overflow: hidden;
+    padding: 34px 10px 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+.CourseRecommend-title,.HotQuestions-title,.HotCourseware-title{
+    float:left;
+    width:220px;
+}
+.CourseRecommend-title h6,.HotQuestions-title h6,.HotCourseware-title h6{
+    font-size: 24px;
+    font-weight: normal;
+    color: #0d0509;
+    background:url(/common/outside/shareClass/index/images/blue.png) no-repeat;
+    padding-left: 10px;
+}
+.clearfix {
+    zoom: 1;
+}
+.case-hea-list {
+    float: left;
+    padding-top: 7px; 
+}
+.case-hea-list li {
+    float: left;
+    width: 92px;
+    height: 34px;
+    margin-right: 5px;
+}
+.case-hea-list a.on {
+    color: #00b8fc;
+} 
+.case-hea-list li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+    color: #717171;
+    text-align: center;
+    /* line-height: 40px; */
+    position: relative;
+}
+
+.case-hea-list li a:before {
+    position: absolute;
+    content: ' ';
+    top: -8px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #00b8fc;
+    border-radius: 25px;
+    transform: rotateX(90deg);
+    -webkit-transform: rotateX(90deg);
+    -moz-transform: rotateX(90deg);
+    -ms-transform: rotateX(90deg);
+    transition: all .4s linear 0s;
+    -webkit-transition: all .4s linear 0s;
+    -moz-transition: all .4s linear 0s;
+    -ms-transition: all .4s linear 0s;
+    display: none\9;
+}
+.case-hea-list li a.on:before {
+    transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    display: block\9;
+} 
+.case-hea-list li a:hover:before{
+    transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    display: block\9;
+}
+.Course-more{
+    float:right;
+    margin-top: 6px;
+}
+.Course-more span{
+    display:inline-block;
+    background:url(/common/outside/shareClass/index/images/more.png) no-repeat;
+    width:18px;
+    height:18px; 
+    vertical-align: top;
+    margin-left: 6px;
+}
+.CourseRecommend-container,.HotQuestions-container,.HotQuestions-container{
+    overflow:hidden;
+}
+.CourseRecommend-pic,.HotQuestions-pic{
+    float:left;
+}
+.CourseRecommend-box,.HotQuestions-box{
+     overflow:hidden;
+
+}
+.RecommendList{
+    float:left;
+    margin-left: 10px;
+}
+.RecommendList span{
+    display:inline-block;
+    position:relative;
+    background:url(/common/outside/shareClass/index/images/course.png) no-repeat;
+    width:232px;
+    height:154px;
+}
+.RecommendList span i{
+    position:absolute;
+    bottom:0;
+    width: 100%;
+    line-height: 28px;
+    color:#fff;
+    font-style: normal;
+    font-size: 12px;
+    text-align: center;
+}
+.RecommendList span i em{
+    display:inline-block;
+    width:30%;
+    background:#00b8fc;
+}
+.RecommendList span i b{
+    display:inline-block;
+    width:70%;
+    background:rgba(0, 0, 0, 0.61);
+    font-weight: normal;
+}
+.RecommendList-bottom{
+    border:1px solid #eee;
+    border-top: 0;
+    padding:5px;
+}
+.RecommendList-bottom p{
+    font-weight: bold;
+    line-height: 28px;
+}
+.RecommendList-bottom i{
+    text-align: left;
+    font-style: normal;
+    color:#999;
+}
+.RecommendList-bottom b{
+    float: right;
+    color:#999;
+    font-weight: normal;
+}
+/* 热门试题开始 */
+.HotQuestions-box ul{
+   overflow:hidden;
+}
+.HotQuestions-box ul li{
+    width:48%;
+    line-height: 28px;
+    border-bottom: 1px dashed #ccc;
+    padding:8px 0;
+    float:left;
+     margin-left: 1%;
+     cursor: pointer;
+}
+.HotQuestions-box ul li:hover{
+    background:#eee;
+}
+.HotQuestions-box ul li b{
+    width:55%;
+    display:inline-block;
+}
+.HotQuestions-box ul li i{
+    font-style: normal;
+    display:inline-block;
+    width:23%;
+}
+.HotQuestions-box ul li span{
+    font-style: normal;
+    display: inline-block;
+    width: 20%;
+    background: #00b8fc;
+    border-radius: 5px; 
+    color: #fff;
+    box-shadow: 0 5px 2px 3px #eee;
+    text-align: center;
+}
+/* 热门试题结束 */
+/* 热门课件开始 */
+.HotQuestions-List{
+    float: left;
+    margin-left: 10px;
+}
+.HotQuestions-List:nth-of-type(1){
+    margin-left: 0;
+}
+.HotQuestions-List span{
+    background:url(/common/outside/shareClass/index/images/Courseware.png) no-repeat;
+    width:292px;
+    height:194px;
+    display:inline-block;
+    position: relative;
+}
+.QuestionsList-bottom {
+    border: 1px solid #eee;
+    border-top: 0;
+    padding:5px;
+}
+.QuestionsList-bottom p{
+    font-weight: bold;
+    line-height: 28px;
+}
+.QuestionsList-bottom i{
+    text-align: left;
+    font-style: normal;
+    color:#6cc800;
+    font-weight: bold;
+}
+.QuestionsList-bottom b{
+    float: right;
+    color:#999;
+    font-weight: normal;
+}
+.HotQuestions-List span i{
+    position:absolute;
+    bottom:0;
+    width: 100%;
+    line-height: 28px;
+    color:#fff;
+    font-style: normal;
+    font-size: 12px;
+    text-align: center;
+}
+.HotQuestions-List span i em{
+    display:inline-block;
+    width:30%;
+    background:#00b8fc;
+}
+.HotQuestions-List span i b{
+    display:inline-block;
+    width:70%;
+    background:rgba(0, 0, 0, 0.61);
+    font-weight: normal;
+}
+/* 热门课件结束 */
+.CoursePicture{
+    position: relative; 
+    margin: 10px auto;
+    max-width: 100%; 
+}
+.CoursePicture img{
+    width:100%;
+}
+/*尾部开始*/
+.ShareCourse-Footer{
+    width:100%;
+    margin:0 auto; 
+    border-top: 1px solid #00b8fc;
+    background: #fff; 
+}
+.ShareCourse-FooterIn{
+    width:1200px;
+    margin:0 auto;
+    padding:2% 0;
+}
+.ShareCourse-FooterIn ul{
+    overflow:hidden;
+}
+.ShareCourse-FooterIn ul li{
+    width:25%;
+    text-align: center;
+    line-height: 30px;
+    float:left;
+}
+.ShareCourse-FooterIn ul li span{
+    display:block;
+}
+.ShareCourse-FooterIn ul li span i{
+    color:#00b8fc;
+    font-weight: bold;
+    font-style: normal;
+}
+
+@media screen and (max-width: 1280px){
+.ShareCourse-HeaderIn,.CourseRecommend-main,.HotQuestions-main,.HotQuestions-main,.ShareCourse-FooterIn,.ShareCourse-HeaderIn{
+    width: 1000px;
+    max-width: 96%;
+} 
+}

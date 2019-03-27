@@ -1,0 +1,108 @@
+﻿ 
+/*引用字库*/
+@font-face { font-family:'electronicFont'; src: url("../font/DS-DIGIT.TTF"); }
+
+/*主体 - 禁选 - 进场 */
+ 
+@-webkit-keyframes fadeIn{ 0%{opacity:0; } 100%{opacity:1;} } 
+
+  
+/* 顶部大指标 */
+.big-index-1 { position: absolute; left: 50%; margin-left: -410px; top:42px; line-height: 1;  overflow: hidden;     z-index: 750;}
+.big-index-1 li {transition: all 0.1s ease;  cursor: pointer; position: relative; display: inline-block; overflow: hidden; width: 170px; height:60px;     padding: 10px 10px 0 15px; background: url(../images/bg01bigindex.png) 0 0 no-repeat; margin-right: 7px;text-align: center; background-size: 100%;}
+.big-index-1 li strong { display: block; color: #fffc00;font-family:'electronicFont'; font-size:32px; font-weight: normal;}
+.big-index-1 li p { display: block; color: #fff; font-size:20px; padding-bottom:4px; font-weight: bold;}
+.big-index-1 li .animation-1 { -webkit-animation-iteration-count: infinite;   -webkit-animation-name:bounceInLeft1 ; -webkit-animation-duration: 9000ms; position: absolute; left: 12px; bottom:1px; height: 3px;  width: 345px; background: url(../images/bg04bigindex.png) 0 0 repeat-x;}
+.big-index-1 li .animation-2 {position: absolute; right:0; top:1px; height: 16px;  width: 15px; background: url(../images/bg02bigindex.png) 0 0 no-repeat;}
+.big-index-1 li .animation-3 {position: absolute; right:-1px; bottom:-1px; height: 4px;  width: 4px; background: url(../images/bg03bigindex.png) 50% 50% no-repeat;}
+.big-index-1 li:hover .animation-2 { background: url(../images/bg02bigindex_.png) 0 0 no-repeat;}
+.big-index-1 li:hover .animation-3 {  background: url(../images/bg03bigindex_.png) 50% 50% no-repeat;}
+.big-index-1 li:hover .animation-1 {-webkit-animation-iteration-count: infinite;   -webkit-animation-name:bounceInRight1 ; -webkit-animation-duration:4000ms;}
+.big-index-1 li:hover .animation-2, .big-index-1 li:hover .animation-3{ -webkit-animation:flash .2s .2s ease both; -moz-animation:flash .2s .2s ease both;}
+
+@media screen and (max-width: 1366px) {
+   .big-index-1 li:nth-child(6) { display: none;}
+   .big-index-1 li { margin-right: 6px;}
+}
+
+
+/* */
+@-webkit-keyframes flash{  0%,50%,100%{opacity: 1;} 25%,75%{opacity: 0;} }
+@-moz-keyframes flash{ 0%,50%,100%{opacity: 1;} 25%,75%{opacity: 0;} }
+@-webkit-keyframes flash1{ 0%,50%,100%{opacity: 1;} 25%,75%{opacity: .5;} }
+@-moz-keyframes flash1{ 0%,50%,100%{opacity: 1;} 25%,75%{opacity: .5;} }
+@-webkit-keyframes flash2{  0%,50%,100%{opacity: .2;}  25%,75%{opacity: 0;} }
+@-moz-keyframes flash1{ 0%,50%,100%{opacity:.2;}  25%,75%{opacity: 0;} }
+/*左侧移动*/
+h2{
+    -webkit-animation:fadeInLeft 1s .1s ease both;
+    -moz-animation:fadeInLeft 1s .1s ease both;
+
+}
+@-webkit-keyframes fadeInLeft{
+    0%{opacity:0;
+        -webkit-transform:translateX(-1000px)}
+    100%{opacity:1;
+        -webkit-transform:translateX(0)}
+}
+@-moz-keyframes fadeInLeft{
+    0%{opacity:0;
+        -moz-transform:translateX(-1000px)}
+    100%{opacity:1;
+        -moz-transform:translateX(0)}
+}
+
+.big-index-1{
+    -webkit-animation:fadeInDown 1s .2s ease both;
+    -moz-animation:fadeInDown 1s .2s ease both;}
+@-webkit-keyframes fadeInDown{
+    0%{opacity:0;
+        -webkit-transform:translateY(-20px)}
+    100%{opacity:1;
+        -webkit-transform:translateY(0)}
+}
+@-moz-keyframes fadeInDown{
+    0%{opacity:0;
+        -moz-transform:translateY(-20px)}
+    100%{opacity:1;
+        -moz-transform:translateY(0)}
+}
+
+ 
+ 
+ 
+ 
+@-webkit-keyframes bounceInLeft{
+    0%{opacity:0; -webkit-transform:translateX(-50px)}
+    60%{opacity:1; -webkit-transform:translateX(0px)}
+    80%{-webkit-transform:translateX(-10px)}
+    100%{-webkit-transform:translateX(0)}
+}
+@-webkit-keyframes bounceInRight{
+    0%{-webkit-transform:translateX(0)}
+    60%{-webkit-transform:translateX(10px)}
+    80%{opacity:1; -webkit-transform:translateX(0px)}
+    100%{opacity:0; -webkit-transform:translateX(50px)}
+}
+
+@-webkit-keyframes bounceInLeft1{
+    0%{-webkit-transform:translateX(-115px)}
+    100%{-webkit-transform:translateX(0)}
+}
+
+@-webkit-keyframes bounceInRight1{
+    0%{-webkit-transform:translateX(0)}
+    100%{-webkit-transform:translateX(-115px)}
+
+}
+
+@-webkit-keyframes bounceInRight2{
+    0%{-webkit-transform:translateX(400px)}
+    25%{-webkit-transform:translateX(450px)}
+    50%{-webkit-transform:translateX(400px)}
+    75%{-webkit-transform:translateX(420px)}
+    100%{-webkit-transform:translateX(0)}
+
+}
+
+   

@@ -1,0 +1,93 @@
+.num_0,.num_1,.num_2,.num_3,.num_4,.num_5,.num_6,.num_7,.num_8,.num_9,.num_10,.num_11,.num_12,.num_13,.num14 {
+	width: 90px;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	text-align: center;
+	display: inline-block;
+	margin-right: 5px;
+	border: 1px solid #E3E3E3;
+	border-radius: 4px;
+}
+
+.num_9 {
+	width: 180px;
+}
+
+.num_0 p,.num_1 p,.num_2 p,.num_3 p,.num_4 p,.num_5 p,.num_6 p,.num_7 p,.num_8 p,.num_9 p,.num_10 p,.num_11 p,.num_12 p,.num_13 p,.num_14 p {
+	color: #fff;
+	font-size: 15px;
+	line-height: 18px;
+	font-weight: bold;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: 4px 4px 0 0;
+}
+
+.num_0 p {
+	background: #00008B;
+}
+
+.num_1 p {
+	background: #76EE00;
+}
+
+.num_2 p {
+	background: #EE2C2C;
+}
+
+.num_3 p {
+	background: #990099;
+}
+
+.num_4 p {
+	background: #9AC0CD;
+}
+
+.num_5 p {
+	background: #CDCD00;
+}
+
+.num_6 p {
+	background: #8B8B00;
+}
+
+.num_7 p {
+	background: #1C86EE;
+}
+
+.num_8 p {
+	background: #D2B48C;
+}
+
+.num_9 p {
+	background: #f9bd04;
+}
+
+.num_10 p {
+    background: #EEAEEE;
+}
+
+.num_11 p {
+    background: #00E5EE;
+}
+
+.num_12 p {
+    background: #008B00;
+}
+
+.num_13 p {
+    background: #996600;
+}
+
+.num_14 p {
+    background: #ff00ff;
+}
+
+.num_0 h1,.num_1 h1,.num_2 h1,.num_3 h1,.num_4 h1,.num_5 h1,.num_6 h1,.num_7 h1,.num_8 h1,.num_9 h1,.num_10 h1,.num_11 h1,.num_12 h1,.num_13 h1,.num_14 h1 {
+	font-size: 15px;
+	line-height: 5px;
+	color: #333;
+	font-weight: bold;
+}

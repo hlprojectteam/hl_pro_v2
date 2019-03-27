@@ -1,0 +1,40 @@
+/*html, body, div, p, ul,ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, form, input, select, button, textarea, iframe, table, th, td {margin:0;padding:0;font-weight:normal;}*/
+		em,i,cite{font-style:normal;}
+		b{font-weight:normal;}		
+		/*body{font-size:12px;font-family: "Microsoft YaHei";}*/
+		a{text-decoration:none;}
+		.leftmenu{position:absolute;left:0;top:0;bottom:0;width:199px;background:#f8f8f8;border-right:1px solid #e6e6e6;overflow:auto;}
+		.leftmenu a{display:block;height:40px;line-height:40px;border-bottom:1px solid #e6e6e6;text-indent:20px;color:#666}
+		/* 背景颜色#40b450 */
+		.leftmenu a.crently{color:#fff;background:#40b450;}
+		 /* 整个框架 */
+		.rightcontent{position:fixed;left:220px;top:60px;bottom:25px;right:0;overflow:hidden;}
+		.tab_area{width:100%;}
+		
+		.content-tabs{position:relative;height:36px;line-height:36px;overflow:hidden;width:100%;background:#f6f6f6;padding-top:2px;}
+		.content-tabs .roll-nav,.page-tabs-list{position:absolute;width:18px;height:36px;text-align:center;color:#999;z-index:2;bottom:0}	
+		/* 左右箭头的背景颜色 原来是绿色#40b450 先改陈灰色CCCCCC */	
+		.content-tabs button.roll-nav{background:#CCCCCC;color:#fff;border:0;height:36px;width:36px;outline:0;font-family:"宋体"}
+		/* 鼠标移动到的时候背景颜色#63d072 */
+		.content-tabs button.roll-nav:hover{background:#A9A9A9;color:#fff;}
+		.page-tabs{margin-left:36px;width:100000px;height:36px;overflow:hidden}
+		.page-tabs .page-tabs-content{float:left}
+		.page-tabs a{display:block;float:left;padding:0 15px;position:relative;background:#eee;margin-right:4px;color:#777}
+		.page-tabs a i{color:#ccc;width:16px;height:16px;display:inline-block;text-align:center;overflow:hidden;position:relative;vertical-align:middle;margin:-3px -10px 0 0;}
+		.page-tabs a:hover{color:#333;background:#e1e1e1;}
+		.page-tabs a i:hover{color:#c00}
+		
+		/* 原来是绿色#40b450 现在改成在触发下#000黑色  tab在active下的上横杠颜色C0C0C0 */
+		.page-tabs a.active,.page-tabs a.active:hover{background:#fff;color:#000;border-top:2px solid #C0C0C0;height:34px;line-height:34px;}
+		.page-tabs a.active i:hover{color:#fff}
+		.page-tabs a i:after{content:"×";display:block;position:absolute;top:50%;left:0;width:16px;height:16px;text-align:center;margin-top:-8px;border-radius:16px;font-family:"宋体";font-size:12px;line-height:17px;color:#ccc;text-indent:0px;}
+		.page-tabs a.active i:after{color:#e6e6e6;}
+		.page-tabs a i:hover:after{background:#ccc;color:#666;}
+		
+		.content-tabs .roll-nav:hover{color:#777;background:#f2f2f2;cursor:pointer}
+		/* 右边100px */
+		.roll-right.J_tabRight{right:0px}
+		/* 条的高度等 */
+		.J_mainContent{position:absolute;left:0;top:36px;bottom:0;right:0;border-top:1px solid #CCCCCC;}
+		
+

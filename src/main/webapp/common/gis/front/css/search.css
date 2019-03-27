@@ -1,0 +1,912 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td { margin:0; padding:0; }
+body { font-size:14px; color:#333; font-family:"\5b8b\4f53",arial;}
+fieldset, img { border:0; }
+ol, ul { list-style:none; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; font-weight:normal;}
+em { font-style:normal; }
+input, button, select, textarea { outline:none; }
+input, button{ border:none;}
+textarea { resize:none; }
+
+a { color: #3C3C3C; text-decoration:none; }
+body, html{
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-size: cover;
+    height: 100%;
+    overflow:hidden;
+    background:#666;
+}
+div.olMap{
+    width:100%;
+    position:absolute;
+}
+/**************  按钮开始 **************/
+/*.button{*/
+    /*width:400px;*/
+    /*height:34px;*/
+/*}*/
+.button ul li{
+    width:120px;
+    height:34px;
+    float:left;
+    background: #f90;
+    cursor:pointer;
+    margin-right: 20px;
+}
+.button ul li.st{
+    background: url(../../images/front/st.png) no-repeat;
+    width:120px;
+    height:34px;
+}
+.button ul li.dy{
+    background: url(../../images/front/dy.png) no-repeat;
+    width:120px;
+    height:34px;
+}
+.button ul li.gz{
+    background: url(../../images/front/gz.png) no-repeat;
+    width:120px;
+    height:34px;
+}
+.button ul li.gz{
+    margin-right: 0;
+}
+.button ul li.st:hover{
+    background: url(../../images/front/st_hover.png) no-repeat;
+    width:120px;
+    height:34px;
+}
+.button ul li.dy:hover{
+    background: url(../../images/front/dy_hover.png) no-repeat;
+    width:120px;
+    height:34px;
+}
+.button ul li.gz:hover{
+    background: url(../../images/front/gz_hover.png) no-repeat;
+    width:120px;
+    height:34px;
+}
+
+/**************** 搜索内容开始 ****************/
+.search-wrap{
+    width: 400px;
+    height: auto;
+    position: absolute;
+    left: 4%;
+    top: 20px;
+}
+.search-nav{
+    width: 400px;
+    height:auto;
+    position: absolute;
+    background-color: #fff;
+    transition: left 0.5s;
+    transition-property: -webkit-transform,transform,visibility,opacity;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.0,0.0,0.2,1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+    padding: 10px 0;
+
+}
+.menu-button {
+    display: inline-block;
+    cursor: pointer;
+    padding: 2px 10px;
+    position:relative;
+    cursor:pointer;
+}
+.menu-prompts{
+    position:absolute;
+    display: block;
+    padding: 4px 8px;
+    font-size: 11px;
+    line-height: 19px;
+    background: #494949;
+    color: #fff;
+    border-radius: 2px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    transform: translateX(-50%);
+    white-space: nowrap;
+    left: 51%;
+    top: 150%;
+    display:none;
+}
+.icon-sanjiaoxing-up:before {
+    content: "\e78f";
+    color: #494949;
+    position: absolute;
+    bottom: 74%;
+    left: 50%;
+    margin-left: -8px;
+}
+span.icon.iconfont.icon-sanjiaoxing-up.menu-prompts {
+    font-size: 12px;
+}
+.search-input {
+    box-sizing: border-box;
+    border: 0;
+    line-height: 18px;
+    font-size: 14px;
+    color: #333;
+    position: relative;
+    border-radius: 2px 0 0 2px;
+    width: 280px;
+    caret-color:#3385ff;
+    padding-left: 20px;
+}
+/* input:focus{color:#3385ff;} */
+.search-input::placeholder{
+    color:#ccc;
+    font-family:"\5b8b\4f53",arial;
+}
+.search-button{
+    cursor: pointer;
+    padding: 2px 16px;
+    display: inline-block;
+    border-left: 1px solid #ccc;
+}
+.input-box{
+    width: 300px;
+    display: inline-block;
+}
+.icon-box{
+    display: inline-block;
+    color: #000;
+    position: absolute;
+    z-index: 1;
+    color:#ccc;
+}
+.icon-box i{
+    cursor: pointer;
+}
+.input-box i{
+
+    color:#333;
+}
+.Modular-nav{
+    position: absolute;
+    top: 41px;
+    background: #fff;
+    width: 100%;
+    display:none;
+    z-index: 88;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+}
+.Modular-nav ul {
+    overflow:hidden;
+}
+.Modular-nav ul li{
+    float:left;
+    text-align:center;
+    width:25%;
+    display:block;
+    cursor:pointer;
+}
+.Modular-nav ul li span{
+    display:block;
+}
+.Modular-nav ul li i{
+    font-style: normal;
+    line-height: 30px;
+    color:#3385ff;
+}
+.Modular-nav ul li span{
+    font-size: 18px;
+    color:#3385ff;
+    padding: 5px 0;
+}
+.Modular-nav ul li:hover span,.Modular-nav ul li:hover i{
+    color:#fff;
+}
+.Modular-nav ul li:hover{
+    background-color: #3385ff;
+}
+.Modular-nav ul li:nth-of-type(1){
+    background-color: #3385ff;
+}
+.Modular-nav ul li:nth-of-type(1) span,.Modular-nav ul li:nth-of-type(1) i{
+    color:#fff;
+}
+/*************** 菜单开始 ************** */
+.menu-box{
+    position: absolute;
+    top: 50px;
+    background: #fff;
+    width: 100%;
+    height:calc( 100% - 41px );
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+}
+.menu-box .menu-nav{
+    overflow:hidden;
+    position:relative;
+    background-color: #eee;
+    line-height: 32px;
+}
+.menu-box .menu-nav span{
+    width:50%;
+    float:left;
+    text-align: center;
+    cursor:pointer;
+    padding:5px 0;
+    display:inline-block;
+    box-sizing: border-box;
+}
+.menu-box .menu-nav span:nth-of-type(1){
+    border-right: 1px solid #ccc;
+    background-color: #3385ff ;
+}
+.menu-box .menu-nav span:nth-of-type(1) em{
+    color:#fff;
+}
+.menu-box .menu-nav span:nth-of-type(1) i{
+    color:#fff;
+}
+.menu-box .menu-nav span em{
+    vertical-align: middle;
+    padding: 0 4px;
+}
+.menu-box .menu-nav span i{
+    font-style: normal;
+
+}
+.shrink-icon{
+    position:absolute;
+    right:10px;
+    top: 5px;
+    color: #ccc;
+    cursor:pointer;
+}
+.menu-box{
+    animate-duration: 2s;    /* 动画持续时间 */
+    animate-delay: 1s;    /* 动画延迟时间 */
+    animate-iteration-count: 2;    /* 动画执行次数 */
+}
+/*************** 菜单结束 ************** */
+
+/*************** 人口信息搜索开始 ************** */
+.searchcontent{
+    position: absolute;
+    top: 50px;
+    background: #fff;
+    width: 100%;
+    height:calc( 100% - 41px );
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+}
+/* .search-people{
+    position: absolute;
+    top: 41px;
+    background: #fff;
+    width: 100%;
+    height:calc( 100% - 41px );
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+} */
+.search-people h1,.people-information h1{
+    line-height: 30px;
+    padding:0 10px;
+    font-size: 16px;
+    background: #eee;
+    font-weight: bold;
+    position:relative;
+}
+.search-people h1 i,.people-information h1 i{
+    margin: 0 10px 0 5px;
+}
+.search-select{
+    padding: 10px 0;
+}
+
+.search-select span i{
+    width: 27%;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: right;
+    font-style: normal;
+}
+dl.select{
+    vertical-align: middle;
+    display:inline-block;
+    position:relative;
+    margin-left: 10px;
+}
+.select dt {
+    text-align: center;
+    cursor: pointer;
+    width: 82px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    font-size: 14px;
+    background: #3385ff;
+    color:#fff;
+    padding: 0 4px;
+}
+dt.cur {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+}
+.select dd {
+    position: absolute;
+    left: 0px;
+    background-color: #fff;
+    display: none;
+    z-index: 2;
+    border: 1px solid #ccc;
+    border-top: 0;
+    margin-top: -1px;
+}
+.select dd ul {
+    width: 88px;
+    max-height: 250px;
+    overflow: auto;
+    z-index: 1;
+    background-color: #fff;
+}
+.select dd ul li a {
+    line-height: 30px;
+    display: block;
+    padding: 0 8px;
+    color: #666;
+    text-decoration: none;
+}
+.select dd ul li:hover a{
+    background-color: rgba(51, 133, 255, 0.36);
+    color:#fff;
+}
+.search-select span{
+    display:inline-block;
+    width:50%;
+    float:left;
+    line-height: 24px;
+}
+.Multiple_Choice span input[type="radio"] {
+    margin: 3px 3px 0px 5px;
+    display: none;
+}
+.Multiple_Choice span{
+    display:inline-block;
+    margin-right: 10px;
+}
+.Multiple_Choice span label {
+    height: 20px;
+    display: inline-block;
+    line-height: 20px;
+    cursor: pointer;
+    background: url(../../images/front/danxuan.png) no-repeat left center;
+}
+.Multiple_Choice label {
+    width: 100%;
+}
+.Multiple_Choice label {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 14px;
+    margin-left: 10%;
+    color: #666;
+    padding-left: 25px;
+    box-sizing: border-box;
+}
+
+.Multiple_Choice span label.checked {
+    height: 20px;
+    display: inline-block;
+    line-height: 20px;
+    cursor: pointer;
+    background: url(../../images/front/danxuan-ed.png) no-repeat left center;
+}
+.Multiple_Choice{
+    padding:0 25px;
+}
+.Multiple_Choice b{
+    font-weight: normal;
+}
+/*************** 人口信息搜索结束 ************** */
+/*************** 人口信息开始 ***************/
+/*.people-information h1 em{*/
+    /*position:absolute;*/
+    /*right:10px;*/
+    /*font-weight: normal;*/
+/*}*/
+/*.people-information ul li{*/
+    /*border-bottom: 1px dashed #eee;*/
+    /*cursor:pointer;*/
+/*}*/
+/*.people-information ul li:hover{*/
+    /*background-color: #eee;*/
+    /*color:#333;*/
+/*}*/
+/*.people-information ul li:hover span:nth-of-type(4){*/
+    /*color:#e92323;*/
+/*}*/
+/*.people-information ul li:hover .icon_position{*/
+    /*color:#e92323;*/
+/*}*/
+/*.people-information ul li span{*/
+    /*display:inline-block;*/
+    /*text-align: center;*/
+    /*line-height: 30px;*/
+/*}*/
+/*.people-information ul li span:nth-of-type(1){*/
+    /*width:10%;*/
+/*}*/
+/*.people-information ul li span:nth-of-type(2){*/
+    /*width:25%;*/
+/*}*/
+/*.people-information ul li span:nth-of-type(3){*/
+    /*width:40%;*/
+/*}*/
+/*.people-information ul li span:nth-of-type(4){*/
+    /*width:25%;*/
+    /*color:#3385ff;*/
+    /*font-size: 18px;*/
+/*}*/
+/*.people-information ul li .icon_position{*/
+    /*color:#3385ff;*/
+    /*font-size: 18px;*/
+/*}*/
+/*.people-information ul{*/
+    /*max-height: 500px;*/
+    /*overflow-y: auto;*/
+/*}*/
+
+.icon.iconfont.icon-dingwei {
+    color:#3385ff;
+    font-size: 18px;
+}
+.data_list{
+    cursor: pointer;
+}
+.data_list:hover .icon-dingwei{
+    color:#e92323;
+}
+/*************** 人口信息结束 ***************/
+/*************** 搜索框提示开始 ***************/
+.search-remind{
+    position:absolute;
+    top:41px;
+    background-color: #fff;
+    width:100%;
+    z-index: 88;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+}
+.search-remind ul li{
+    line-height: 32px;
+    padding-left: 12px;
+    cursor: pointer;
+}
+.search-remind ul li:hover{
+    background-color: #eee;
+}
+i.icon.iconfont.icon-sousuo5 {
+    /* padding-right: 10px; */
+    margin-right: 10px;
+    vertical-align: top;
+    color: #999;
+}
+/*************** 搜索框提示结束 ***************/
+/***************  地理位置 ************** */
+.address{
+    position:absolute;
+    left:40%;
+    top:30%;
+}
+span.address-position{
+    display:inline-block;
+    width: 160px;
+    height: 50px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    position: relative;
+    background:#fff;
+    text-align: center;
+    line-height: 50px;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+    cursor: pointer;
+}
+span.address-position:after{
+    content:"";
+    width: 20px;
+    height: 20px;
+    border-top: 1px solid #fff;
+    border-right: 1px solid #fff;
+    position: absolute;
+    bottom:-6px;
+    left:50%;
+    margin-top: -5px;
+    transform:rotate(45deg);
+    background:#fff;
+}
+/***************  按钮开始 ************** */
+.button-eve{
+    position:absolute;
+    right:7%;
+    margin: 20px 0;
+}
+.button-eve li{
+    width: 84px;
+    padding: 0 5px;
+    height: 38px;
+    line-height: 38px;
+    float: left;
+    background: #fff;
+    color: #333;
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    border-right: 1px solid #eee;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+    overflow:hidden;
+}
+.button-eve li:nth-last-of-type(1){
+    border-right: 0;
+}
+.button-eve li a.button-name{
+    display:block;
+}
+.button-eve li.button-current{
+    background:#3385ff;
+    overflow:initial;
+}
+.button-box{
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgb(136, 136, 136) 0px 0px 6px;
+    border-radius: 3px;
+    position: absolute;
+    width: 180px;
+    background: #fff;
+    left: -100%;
+    text-align: left;
+    padding: 5px;
+    opacity: 0;
+    z-index: 1;
+}
+.button-box b{
+    position: absolute;
+    right: 122px;
+    top: -12px;
+    width:35px;
+    height: 15px;
+    background: url(../../images/front/arrow.png) no-repeat center center;
+}
+.button-box span em a{
+    font-weight: bold;
+    font-size: 12px;
+    display:block;
+    color:#3385ff;
+}
+.button-box span{
+    display:inline-block;
+}
+.button-box span em{
+    display: inline-block;
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 20px;
+    color: #333;
+    border-right: 1px solid #eee;
+    text-align: center;
+    padding:0 10px;
+    width:36%;
+}
+.button-box span em:nth-of-type(even){
+    border-right:0;
+}
+.button-box span em:hover{
+    background:#3385ff;
+}
+div.butbox-last{
+    left: 1%;
+}
+.butbox-last b.b-last{
+    right: 30px;
+}
+
+
+/***************  工具栏开始 ************** */
+.tools{
+    width: 68px;
+    height: 38px;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+    cursor: pointer;
+    background: #fff;
+    position:absolute;
+    right:1%;
+    margin-top: 20px;
+    line-height: 38px;
+    text-align: center;
+}
+.tools ul{
+    display:none;
+}
+.tools ul li{
+    background: #fff;
+}
+.tools a{
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+.tools i{
+    font-style: normal;
+}
+.tools ul li i{
+    font-size: 12px;
+    font-weight: bold;
+}
+.tools ul li span {
+    float: left;
+    height: 22px;
+    width: 22px;
+    background: url(../../images/front/icon.png) no-repeat;
+    margin-top: 8px;
+    vertical-align: middle;
+}
+.tools ul li span.distance {
+    margin-left: 2px;
+    background-position: 0px -29px;
+}
+.tools ul li span.area {
+    margin-left: 2px;
+    background-position: -41px -29px;
+}
+.tools ul li span.clear {
+    margin-left: 2px;
+    background-position: 0px -61px;
+}
+.toolsbar em {
+    display:inline-block;
+    width: 12px;
+    height: 7px;
+    background: url(../../images/front/icon.png) no-repeat;
+    background-position: -86px -34px;
+    margin-left: 2px;
+}
+.toolsbar a i{
+    float: left;
+    margin-left: 5px;
+}
+/*************** 地区开始 ***************/
+.change-area{
+    width: 68px;
+    height: 38px;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+    cursor: pointer;
+    background: #fff;
+    position:absolute;
+    left:1%;
+    margin-top: 20px;
+    line-height: 38px;
+    text-align: center;
+}
+.change-area ul{
+    background: #eee;
+    height:303px;
+    position:absolute;
+    width:100px;
+    padding:5px;
+    display:none;
+    overflow-y: auto;
+    margin-top: 5px;
+}
+.change-area ul li{
+    text-align: left;
+}
+.change-area ul li a{
+    font-size: 12px;
+}
+.change-area a{
+    display:block;
+}
+.none{
+    display:none;
+}
+.operate li{
+    border-bottom:1px dotted #d2d2d2;
+    display:inline-block;
+    width:100%;
+    position:relative;
+    min-height:43px;
+    _height:43px;
+    z-index:10;
+    zoom:1 ;
+}
+.operate li h4{
+    cursor:pointer;
+    background:url(../../images/front/bg3.png) no-repeat 76px 18px;
+    text-decoration:none;
+    font-size:14px;
+    color:#555;
+    display:block;
+    line-height:43px;
+    font-weight:normal;
+}
+.operate li.selected h4{
+    background-position:76px -37px;
+}
+.operate li .list-item{
+    padding:5px 0;
+    position:relative;
+    zoom:1 ;
+}
+.operate li .list-item p{
+    padding-left:8px;
+}
+.operate li .list-item p.on a{
+    color:#3385ff;
+}
+.operate li .list-item p a{
+    background:url(../../images/front/bg1.png) no-repeat 4px 12px;
+    color:#333333;
+    display:block;
+    height:32px;
+    line-height:32px;
+    margin:0 -1px 0 1px;
+    padding-left:20px;
+    position:relative;
+    text-decoration:none;
+    font-size:12px;
+}
+.operate li .list-item p.hover a{
+    color:#3385ff;
+    text-decoration:none;
+    background-position:42px -14px;
+}
+/*************** 加减号开始 ***************/
+.symbol{
+    position:absolute;
+    bottom:5%;
+    right:1%;
+}
+.symbol span{
+    display:block;
+    width:28px;
+    height:28px;
+    margin:3px 0;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+    cursor: pointer;
+    background: #fff;
+}
+.symbol span em.plus{
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url(../../images/front/icon.png) no-repeat;
+    background-position: -115px -4px;
+    margin-left: 7px;
+    margin-top: 7px;
+}
+.symbol span em.less{
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url(../../images/front/icon.png) no-repeat;
+    background-position: -115px -30px;
+    margin-left: 7px;
+    margin-top: 7px;
+}
+
+
+
+/************** 滚动条样式 ***************/
+::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    border: 5px solid transparent;
+}
+::-webkit-scrollbar-track {
+    box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;
+}
+::-webkit-scrollbar-thumb {
+    min-height: 20px;
+    background-clip: content-box;
+    box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+
+/***************  建筑、生活、人口按钮点击动画效果 ************** */
+/*  Ripple */
+.ripple {
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: #f6faff;
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+    position: absolute;
+    opacity: 1;
+}
+.rippleEffect {
+    -webkit-animation: rippleDrop .6s linear;
+    animation: rippleDrop .6s linear;
+}
+@-webkit-keyframes
+rippleDrop {  100% {
+    -webkit-transform: scale(2);
+    transform: scale(2);
+    opacity: 0;
+}
+}
+@keyframes
+rippleDrop {
+    100% {
+        -webkit-transform: scale(2);
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+
+
+@media screen and (max-width: 1366px){
+    .people-information ul{
+        min-height: 300px;
+    }
+}
+
+
+.infor-page {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+.map_list_title{
+    height: 15px;
+    font-size: 14px;
+    color: #333;
+    padding: 8px;
+}
+.map_list_close{
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    line-height: initial;
+    cursor: pointer;
+}
+
+/*************** 网格列表样式 ***************/
+.Grid-list{
+    padding:10px;
+}
+.Grid-list ul li{
+    line-height: 30px;
+    border-bottom: 1px solid #f3f3f3;
+}
+.Grid-list ul li .grid_checkbox{
+    vertical-align: middle;
+    margin-right: 6px;
+}
+.Grid-list ul li p{
+    display:inline-block;
+    font-size: 16px;
+}
+.Grid-list-title{
+    border-bottom: 1px solid #f3f3f3;
+    padding:5px 0;
+    font-size: 18px;
+}
+.Grid-list-title b img{
+    vertical-align: middle;
+    width:14px;
+    margin-right: 5px;
+}
+.Grid-list-title i{
+    float:right;
+    font-style: normal;
+}
+.Grid-list ul li .grid_checkbox {
+    margin-bottom: 4px;
+}

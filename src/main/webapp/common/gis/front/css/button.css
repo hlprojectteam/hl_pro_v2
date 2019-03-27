@@ -1,0 +1,62 @@
+.button {
+	width: 400px;
+	height: 34px;
+	
+	bottom: 0;
+    left: 5px;
+    margin-top: 135px;
+    pointer-events: auto !important;
+    position: absolute;
+    top: 0;
+    z-index: 750;
+    display:none;
+}
+
+.button ul li {
+	width: 120px;
+	height: 34px;
+	float: left;
+	background: #f90;
+	margin-right: 20px;
+	cursor: pointer;
+}
+
+.button ul li.st {
+	background: url(/common/gis/images/front/st.png) no-repeat;
+	width: 120px;
+	height: 34px;
+}
+
+.button ul li.dy {
+	background: url(/common/gis/images/front/dy.png) no-repeat;
+	width: 120px;
+	height: 34px;
+}
+
+.button ul li.gz {
+	background: url(/common/gis/images/front/gz.png) no-repeat;
+	width: 120px;
+	height: 34px;
+}
+
+.button ul li.gz {
+	margin-right: 0;
+}
+
+.button ul li.st:hover {
+	background: url(/common/gis/images/front/st_hover.png) no-repeat;
+	width: 120px;
+	height: 34px;
+}
+
+.button ul li.dy:hover {
+	background: url(/common/gis/images/front/dy_hover.png) no-repeat;
+	width: 120px;
+	height: 34px;
+}
+
+.button ul li.gz:hover {
+	background: url(/common/gis/images/front/gz_hover.png) no-repeat;
+	width: 120px;
+	height: 34px;
+}

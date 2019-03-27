@@ -1,0 +1,258 @@
+ html,body{
+    width: 100%;
+    height: 100%;
+}
+ 
+table.data{
+    background: #ff9304;
+    width:370px;
+}
+table.data tr{
+    background: #fff;
+}
+table.data td{
+    height:32px;
+    text-align: center;
+    color:#333;
+    font-size: 14px;
+    position:relative;
+ }
+  
+ 
+/* .center satr */
+.center{
+    width: 400px;
+    height: 500px;
+    background: #fff;
+    margin: 0 auto;
+    position: absolute;
+    right: 1%; 
+    top: 20px; 
+    border-radius: 5px;
+    top: 44%;
+    opacity: 0; 
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+
+}
+.center_head{
+    width: 380px;
+    height: 36px;
+    border-radius: 5px 5px 0 0;
+    background: #00a2ff;
+    padding:0 10px;
+    position:relative;
+}
+.center_head h1{
+    float:left;
+    font-size: 18px;
+    line-height: 40px;
+    color:#fff;
+}
+.center_head span.center_closed{
+    background: url(../images/front/close.png) no-repeat;
+    width:11px;
+    height:11px;
+    display:inline-block;
+    float:right;
+    position: absolute;
+    right: 10px;
+    top: 14px;
+    cursor:pointer;
+}
+.center_nav{
+     width:380px;
+   height: 34px;
+    margin:15px 10px;
+     background: url(../images/front/nav.png) repeat;
+    border-radius: 5px;
+}
+.center_nav ul li{
+    width: 95px;
+    height:42px;
+    float:left;
+    text-align: center;
+}
+.center_nav ul li a{
+    width: 95px;
+    height:36px;
+    color:#fff;
+    font-size: 16px;
+    line-height: 35px;
+    display:inline-block;
+}
+ .current{
+    background: url(../images/front/hover.png) no-repeat;
+    width: 95px;
+    height:42px;
+     
+}
+/* .building_information star */
+.center_content{
+    padding:0 10px;
+    width: 350px;
+    height: 394px;
+    padding-right: 40px;
+    padding-left: 10px;
+}
+.center_select{
+    width: 72px;
+    height:36px;
+    line-height: 36px;
+    border:1px solid #bfbfbf;
+    border-radius: 5px;
+    font-size: 14px;
+    color:#333;
+    padding:0 5px;
+    margin-bottom: 15px;
+}
+ 
+ .center_remind{
+    line-height: 20px;
+    margin-top: 20px;
+    position:relative;
+ }  
+ .center_remind span i{
+    font-style: normal;
+    position:absolute;
+    
+ }
+ .center_remind span i.yellow_i{
+    left: 78px;
+ }
+ .center_remind span i.green_i{
+    
+    right: 14px;
+ }
+ .remind_yellow{
+    width:20px;
+    height:20px;
+    background: #fff8c8;
+    display:inline-block;
+    position:absolute;
+    border:1px solid #ffde00;
+ }
+ .remind_green{
+    width:20px;
+    height:20px;
+    background: #eaffe2;
+    border:1px solid #48cb00;
+    display:inline-block;
+    position:absolute;
+    right: 115px;
+ }
+
+ /* .general_situation star */
+
+.center_pic{
+    background: url(../images/front/pic.png) no-repeat;
+    width: 370px; 
+    height:150px;
+}
+.center_detail{
+    background: url(../images/front/details.png) no-repeat;
+    width:90px;
+    height:36px;
+    line-height: 36px;
+    text-align: center;
+    color:#fff;
+    font-size: 16px;
+    margin:20px 0;
+}
+
+
+
+.center_classification i{
+    font-style: normal;
+    font-size: 16px;
+    width:96px;
+    height:36px;
+}
+.center_more{
+   width: 33px;
+    height:36px;
+    border-radius: 5px;
+    background: #c5e2ff;
+    border:1px solid #00a2ff;
+    display:inline-block;
+    line-height: 36px;
+    text-align: center;
+     cursor:pointer;
+}
+.center_i{
+    width: 64px;
+    display:inline-block;
+}
+.center_check{
+   width: 64px;
+    height: 30px;
+    background: #ff6000;
+    border:1px solid #db4300;
+    border-radius: 5px;
+    display:inline-block;
+    
+    line-height: 30px;
+    text-align: center;
+    
+}
+.center_check a{
+    font-size: 16px;
+    color:#fff;
+}
+.center_statistical{
+     background: url(../images/front/statistical.png) no-repeat;
+     width:360px;
+     height:210px;
+    margin: 2px 10px;
+}
+.center_people{
+    background: url(../images/front/details.png) no-repeat;
+    width:80px;
+    height:36px;
+    display:inline-block;
+    cursor:pointer;
+     margin: 10px 140px;
+}
+ 
+ 
+.add_more{
+    width:350px;
+    height:60px;
+    background:#fff;
+    border:1px solid #00a2ff;
+    margin-bottom: 10px;
+ }
+ .btn{
+    background: url(../images/front/btn.png);
+    width:102px;
+    height:38px;
+    margin: 10px 134px;
+    cursor:pointer;
+ }
+.btn a{
+    font-size: 14px;
+}
+
+  
+
+/* banner satr */
+
+.imgbox{ width: 370px; height: 150px; position: relative;}
+.imgbox ul li{ position: absolute; left: 0; top:0; display: none;/*把所有的li都隐藏*/}
+.imgbox ol{ position: absolute; right: 10px; bottom:10px;}
+.imgbox ol li{ width: 30px; height: 20px; text-align: center; line-height: 20px; background: rgba(0,0,0,0.3); float: left; margin: 0 5px; border:1px solid #fff; color: #fff; cursor: pointer;}
+.imgbox ol li:hover{ background: rgba(0,0,0,0.6);}
+ 
+.imgbox ol li.change{ background: rgba(0,0,0,0.6);}
+ 
+  
+
+
+
+
+  
+
+
+ 
+ 
+
+

@@ -1,0 +1,25 @@
+
+td{
+    height:35px;
+    text-align: center;
+    color:#333;
+    font-size: 15px;
+    position:relative;
+    border: 1px solid #d2d2d2;
+}
+tr td:nth-of-type(odd){
+    background:#f7f7f8;
+}
+table{
+    color: #76838f;
+}
+
+.isClick{
+    cursor: pointer;
+}
+
+.isClick:hover{
+    color: #1E9FFF;
+}
+
+/*

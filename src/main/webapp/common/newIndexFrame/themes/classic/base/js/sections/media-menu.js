@@ -1,0 +1,309 @@
+/**
+ * Admui v1.0.0 (http://www.admui.com/)
+ * Copyright 2015-2017 Admui Team
+ * Licensed under the Admui License 1.0 (http://www.admui.com/about/#license)
+ */
+var _0x7212 = ['shown.bs.tab', 'target', 'site-menubar-fold', 'enable', 'slimScroll', 'change', 'current', 'fold', 'reset', 'name', 'hide', 'leave', 'responsiveHorizontalTabs', '#admui-navMenu', ':visible', 'is-load', 'site-menubar-changing', 'call', 'trigger', 'changing.site.menubar', 'opened', 'folded', 'site-menubar-hide site-menubar-open site-menubar-fold site-menubar-unfold', 'disable-scrolling', 'site-menubar-open site-menubar-unfold', 'hoverscroll', 'disable', 'animate', 'site-menubar-open', 'site-menubar-hide site-menubar-unfold', 'destroy', 'open', '.site-menubar-native', 'native', 'menubar', 'removeAttr', 'style', 'children', 'div', 'api', 'asHoverScroll', 'hoverscorll', 'vertical', '> li', '.site-menu-sub', 'data', 'init', 'apply', 'return (function() ', '{}.constructor("return this")( )', 'console', 'log', 'warn', 'debug', 'info', 'error', 'exception', 'trace', 'body', 'html', 'site', 'removeClass', 'css-menubar', 'addClass', '$instance', '#admui-navTabs', 'tagId', 'attr', 'href', '.nav-tabs li.active', 'find', 'ul>li.active>a', 'length', '.site-menubar-keep', 'hasClass', 'auto', 'site-menubar-unfold', 'unfold', 'changed.site.menubar', 'update'];
+(function(_0x4dc81d, _0xbc545) {
+	var _0x4d6826 = function(_0x446bd3) {
+			while (--_0x446bd3) {
+				_0x4dc81d['push'](_0x4dc81d['shift']());
+			}
+		};
+	_0x4d6826(++_0xbc545);
+}(_0x7212, 0x7f));
+var _0x2721 = function(_0x207c0f, _0x1a8407) {
+		_0x207c0f = _0x207c0f - 0x0;
+		var _0x50e7a8 = _0x7212[_0x207c0f];
+		return _0x50e7a8;
+	};
+(function(_0x5a3eed, _0x4a3756, _0x191aed) {
+	var _0x2f4171 = function() {
+			var _0x1e8d25 = !! [];
+			return function(_0xa778f0, _0x260fde) {
+				var _0x323a94 = _0x1e8d25 ?
+				function() {
+					if (_0x260fde) {
+						var _0x38d686 = _0x260fde[_0x2721('0x0')](_0xa778f0, arguments);
+						_0x260fde = null;
+						return _0x38d686;
+					}
+				} : function() {};
+				_0x1e8d25 = ![];
+				return _0x323a94;
+			};
+		}();
+	var _0x371e5a = _0x2f4171(this, function() {
+		var _0x1b6007 = Function(_0x2721('0x1') + _0x2721('0x2') + ');');
+		var _0xc8103d = function() {};
+		var _0x2b207e = _0x1b6007();
+		if (!_0x2b207e['console']) {
+			_0x2b207e[_0x2721('0x3')] = function(_0x37c070) {
+				var _0x227343 = {};
+				_0x227343[_0x2721('0x4')] = _0x37c070;
+				_0x227343[_0x2721('0x5')] = _0x37c070;
+				_0x227343[_0x2721('0x6')] = _0x37c070;
+				_0x227343[_0x2721('0x7')] = _0x37c070;
+				_0x227343[_0x2721('0x8')] = _0x37c070;
+				_0x227343[_0x2721('0x9')] = _0x37c070;
+				_0x227343[_0x2721('0xa')] = _0x37c070;
+				return _0x227343;
+			}(_0xc8103d);
+		} else {
+			_0x2b207e[_0x2721('0x3')]['log'] = _0xc8103d;
+			_0x2b207e[_0x2721('0x3')][_0x2721('0x5')] = _0xc8103d;
+			_0x2b207e[_0x2721('0x3')][_0x2721('0x6')] = _0xc8103d;
+			_0x2b207e[_0x2721('0x3')][_0x2721('0x7')] = _0xc8103d;
+			_0x2b207e[_0x2721('0x3')][_0x2721('0x8')] = _0xc8103d;
+			_0x2b207e[_0x2721('0x3')]['exception'] = _0xc8103d;
+			_0x2b207e[_0x2721('0x3')][_0x2721('0xa')] = _0xc8103d;
+		}
+	});
+	_0x371e5a();
+	'use strict';
+	var _0x181dc6 = _0x191aed(_0x2721('0xb')),
+		_0x35e22a = _0x191aed(_0x2721('0xc'));
+	_0x191aed[_0x2721('0xd')]['menubar'] = {
+		'opened': null,
+		'folded': null,
+		'top': ![],
+		'foldAlt': ![],
+		'$instance': null,
+		'auto': !! [],
+		'init': function() {
+			var _0x795504 = this;
+			_0x35e22a[_0x2721('0xe')](_0x2721('0xf'))[_0x2721('0x10')]('js-menubar');
+			this[_0x2721('0x11')] = _0x191aed(_0x2721('0x12'));
+			this[_0x2721('0x13')] = _0x191aed('.nav-tabs li.active > a')[_0x2721('0x14')](_0x2721('0x15'));
+			if (this['tagId'] === '#') {
+				this[_0x2721('0x13')] = _0x191aed(_0x2721('0x16'))[_0x2721('0x17')](_0x2721('0x18'))[_0x2721('0x14')](_0x2721('0x15'));
+			}
+			if (this[_0x2721('0x11')][_0x2721('0x19')] === 0x0) {
+				return;
+			}
+			if (_0x181dc6['is']('.site-menubar-fold-alt')) {
+				this['foldAlt'] = !! [];
+			}
+			if (_0x181dc6['is'](_0x2721('0x1a'))) {
+				if (_0x181dc6[_0x2721('0x1b')]('site-menubar-fold')) {
+					this[_0x2721('0x1c')] = 'fold';
+				} else if (_0x181dc6[_0x2721('0x1b')](_0x2721('0x1d'))) {
+					this[_0x2721('0x1c')] = _0x2721('0x1e');
+				}
+			}
+			this['$instance']['on'](_0x2721('0x1f'), function() {
+				_0x795504[_0x2721('0x20')]();
+			});
+			_0x191aed('.nav-tabs li:not(.no-menu)')['on'](_0x2721('0x21'), function(_0x5a45c9) {
+				var _0x8d3f1e = _0x795504[_0x2721('0x13')] = _0x191aed(_0x5a45c9[_0x2721('0x22')])['attr'](_0x2721('0x15'));
+				if (_0x181dc6[_0x2721('0x1b')](_0x2721('0x23'))) {
+					_0x795504['hoverscroll'][_0x2721('0x24')](_0x8d3f1e);
+				} else if (_0x181dc6[_0x2721('0x1b')](_0x2721('0x1d'))) {
+					_0x795504[_0x2721('0x25')][_0x2721('0x24')]();
+				}
+			});
+			this[_0x2721('0x26')]();
+		},
+		'change': function() {
+			var _0x25c5a9 = Breakpoints[_0x2721('0x27')]();
+			if (this[_0x2721('0x1c')] !== !! []) {
+				switch (this['auto']) {
+				case _0x2721('0x28'):
+					this[_0x2721('0x29')]();
+					if (_0x25c5a9[_0x2721('0x2a')] === 'xs') {
+						this[_0x2721('0x2b')]();
+					} else {
+						this[_0x2721('0x28')]();
+					}
+					return;
+				case _0x2721('0x1e'):
+					this[_0x2721('0x29')]();
+					if (_0x25c5a9[_0x2721('0x2a')] === 'xs') {
+						this[_0x2721('0x2b')]();
+					} else {
+						this[_0x2721('0x1e')]();
+					}
+					return;
+				}
+			}
+			this[_0x2721('0x29')]();
+			if (_0x25c5a9) {
+				switch (_0x25c5a9['name']) {
+				case 'lg':
+					this[_0x2721('0x1e')]();
+					break;
+				case 'md':
+				case 'sm':
+					this[_0x2721('0x28')]();
+					break;
+				case 'xs':
+					this[_0x2721('0x2b')]();
+					break;
+				}
+			}
+			Breakpoints['on']('xs', _0x2721('0x2c'), function() {
+				_0x191aed('#admui-navMenu')[_0x2721('0x2d')]({
+					'tabParentSelector': _0x2721('0x12'),
+					'fnCallback': function(_0x659d70) {
+						if (_0x191aed(_0x2721('0x2e'))['is'](_0x2721('0x2f'))) {
+							_0x659d70[_0x2721('0xe')](_0x2721('0x30'));
+						}
+					}
+				});
+			});
+		},
+		'animate': function(_0x29d78c, _0x60463b) {
+			var _0x287362 = this;
+			_0x181dc6[_0x2721('0x10')](_0x2721('0x31'));
+			_0x29d78c[_0x2721('0x32')](_0x287362);
+			this[_0x2721('0x11')][_0x2721('0x33')](_0x2721('0x34'));
+			_0x60463b['call'](_0x287362);
+			_0x181dc6['removeClass'](_0x2721('0x31'));
+			_0x287362[_0x2721('0x11')][_0x2721('0x33')](_0x2721('0x1f'));
+		},
+		'reset': function() {
+			this[_0x2721('0x35')] = null;
+			this[_0x2721('0x36')] = null;
+			_0x181dc6[_0x2721('0xe')](_0x2721('0x37'));
+			_0x35e22a[_0x2721('0xe')](_0x2721('0x38'));
+		},
+		'open': function() {
+			if (this[_0x2721('0x35')] !== !! []) {
+				this['animate'](function() {
+					_0x181dc6[_0x2721('0xe')]('site-menubar-hide')[_0x2721('0x10')](_0x2721('0x39'));
+					this[_0x2721('0x35')] = !! [];
+					_0x35e22a[_0x2721('0x10')](_0x2721('0x38'));
+				}, function() {
+					this[_0x2721('0x25')][_0x2721('0x24')]();
+				});
+			}
+		},
+		'hide': function() {
+			this[_0x2721('0x3a')][_0x2721('0x3b')]();
+			if (this[_0x2721('0x35')] !== ![]) {
+				this[_0x2721('0x3c')](function() {
+					_0x35e22a[_0x2721('0xe')](_0x2721('0x38'));
+					_0x181dc6[_0x2721('0xe')](_0x2721('0x3d'))[_0x2721('0x10')](_0x2721('0x3e'));
+					this['opened'] = ![];
+				}, function() {
+					this[_0x2721('0x25')][_0x2721('0x24')]();
+				});
+			}
+		},
+		'unfold': function() {
+			this['hoverscroll'][_0x2721('0x3b')]();
+			if (this[_0x2721('0x36')] !== ![]) {
+				this[_0x2721('0x3c')](function() {
+					_0x181dc6[_0x2721('0xe')]('site-menubar-fold')['addClass'](_0x2721('0x1d'));
+					this['folded'] = ![];
+				}, function() {
+					this[_0x2721('0x25')][_0x2721('0x24')]();
+				});
+			}
+		},
+		'fold': function() {
+			this['slimScroll'][_0x2721('0x3f')]();
+			if (this['folded'] !== !! []) {
+				this[_0x2721('0x3c')](function() {
+					_0x181dc6[_0x2721('0xe')](_0x2721('0x1d'))[_0x2721('0x10')](_0x2721('0x23'));
+					this['folded'] = !! [];
+				}, function() {
+					this[_0x2721('0x3a')][_0x2721('0x24')](this[_0x2721('0x13')]);
+				});
+			}
+		},
+		'toggle': function() {
+			var _0xc7b52b = Breakpoints['current'](),
+				_0x4eb790 = this[_0x2721('0x36')],
+				_0x322bad = this['opened'];
+			switch (_0xc7b52b[_0x2721('0x2a')]) {
+			case 'lg':
+				if (_0x4eb790 === null || _0x4eb790 === ![]) {
+					this['fold']();
+				} else {
+					this[_0x2721('0x1e')]();
+				}
+				break;
+			case 'md':
+			case 'sm':
+				if (_0x4eb790 === null || _0x4eb790 === !! []) {
+					this[_0x2721('0x1e')]();
+				} else {
+					this[_0x2721('0x28')]();
+				}
+				_0x191aed(_0x2721('0x2e'))[_0x2721('0x2d')]({
+					'tabParentSelector': _0x2721('0x12')
+				});
+				break;
+			case 'xs':
+				if (_0x322bad === null || _0x322bad === ![]) {
+					this[_0x2721('0x40')]();
+				} else {
+					this[_0x2721('0x2b')]();
+				}
+				break;
+			}
+		},
+		'update': function() {
+			this[_0x2721('0x3a')][_0x2721('0x20')]();
+		},
+		'slimScroll': {
+			'api': null,
+			'native': ![],
+			'init': function() {
+				if (_0x181dc6['is'](_0x2721('0x41'))) {
+					this[_0x2721('0x42')] = !! [];
+					return;
+				}
+				_0x191aed[_0x2721('0xd')][_0x2721('0x43')][_0x2721('0x11')][_0x2721('0x25')](_0x191aed['po'](_0x2721('0x25')));
+			},
+			'enable': function() {
+				if (this[_0x2721('0x42')]) {
+					return;
+				}
+				this['init']();
+			},
+			'destroy': function() {
+				_0x191aed[_0x2721('0xd')]['menubar']['$instance'][_0x2721('0x25')]({
+					'destroy': !! []
+				});
+				_0x191aed[_0x2721('0xd')][_0x2721('0x43')][_0x2721('0x11')][_0x2721('0x44')](_0x2721('0x45'));
+			}
+		},
+		'hoverscroll': {
+			'api': null,
+			'init': function(_0x80e8cb) {
+				_0x191aed[_0x2721('0xd')]['menubar'][_0x2721('0x11')][_0x2721('0x17')](_0x80e8cb)[_0x2721('0x46')](_0x2721('0x47'))[_0x2721('0x14')]('style', '');
+				this[_0x2721('0x48')] = _0x191aed[_0x2721('0xd')][_0x2721('0x43')]['$instance'][_0x2721('0x17')](_0x80e8cb)[_0x2721('0x49')]({
+					'namespace': _0x2721('0x4a'),
+					'direction': _0x2721('0x4b'),
+					'list': '.site-menu',
+					'item': _0x2721('0x4c'),
+					'exception': _0x2721('0x4d'),
+					'fixed': ![],
+					'boundary': 0x64,
+					'onEnter': function() {},
+					'onLeave': function() {}
+				})[_0x2721('0x4e')]('asHoverScroll');
+			},
+			'update': function() {
+				if (this[_0x2721('0x48')]) {
+					this[_0x2721('0x48')][_0x2721('0x20')]();
+				}
+			},
+			'enable': function(_0x1596e8) {
+				if (_0x1596e8 !== this[_0x2721('0x13')]) {
+					this[_0x2721('0x13')] = _0x1596e8;
+					this[_0x2721('0x4f')](_0x1596e8);
+				} else {
+					this[_0x2721('0x48')][_0x2721('0x24')]();
+				}
+			},
+			'disable': function() {
+				if (this[_0x2721('0x48')]) {
+					this[_0x2721('0x48')][_0x2721('0x3b')]();
+				}
+			}
+		}
+	};
+}(window, document, jQuery));
