@@ -98,6 +98,40 @@
         });
   	}
   	
+	//删除
+  	function on_del(){
+  		var rows = $("#grid").bootstrapTable("getSelections");
+  		if(rows.length>0){
+  			parent.layer.confirm("确定删除所选数据？", {
+  				btn: ["确定","取消"] //按钮
+  			}, function(){
+		  		var ids = [];
+				$.each(rows, function(index, item){
+					ids.push(item.id);
+				});
+				$.ajax({
+					type:"post",
+					async:false,
+					dataType : "json",
+					url: "/dangjian/activitiesLauch_del?ids="+ids,
+					success : function(data){
+						if(data.result){
+							$("#grid").bootstrapTable("refresh",{url:"/dangjian/activitiesLauch_myload"});//加载树下的列表
+							autoMsg("删除成功！",1);
+						}else{
+							autoMsg("删除失败！",1);
+						}
+					},
+					error : function(result){
+						autoAlert("系统出错",5);
+					}
+				});
+  			});
+		}else{
+			autoAlert("请选择删除的记录",5);
+		}
+  	}
+  	
   	
 	//查询
 	function on_search(){

@@ -24,6 +24,7 @@ import com.dangjian.ql.DangjianQl;
 import com.dangjian.service.IActivitiesService;
 import com.dangjian.vo.ActivitiesLaunchVo;
 import com.dangjian.vo.ActivitiesVo;
+import com.news.module.News;
 
 /**
  * 
@@ -184,6 +185,12 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 	@Override
 	public void deleteALEntitys(String ids) {
 		// TODO Auto-generated method stub
+		String[] idz = ids.split(",");
+		for (int i = 0; i < idz.length; i++) {
+			//删除附件
+			this.attachServiceImpl.deleteAttachByFormId(idz[i]);
+			this.delete(ActivitiesLaunch.class, idz[i]);
+		}
 		
 	}
 	@Override

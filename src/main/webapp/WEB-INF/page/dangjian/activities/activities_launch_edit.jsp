@@ -20,27 +20,28 @@
 <body>
 <div id="" class="ibox-content">
 <form id="baseForm" method="post" class="form-horizontal" name="baseForm" action="">
-<input type="hidden" id="id" name="id" value="${activitiesLaunchVo.id}" />		
-<input type="hidden" id="createTime" name="createTime"  value='${activitiesLaunchVo.createTime}'/>
-<input type="hidden" id="creatorId" name="creatorId" value="${activitiesLaunchVo.creatorId}" />	
-<input type="hidden" id="sysCode" name="sysCode" value="${activitiesLaunchVo.sysCode}" />	
-<input type="hidden" id="branchId" name="branchId" value="${activitiesLaunchVo.branchId}" />	
+<input type="hidden" id="id" name="id" value="${alObject.id}" />		
+<input type="hidden" id="createTime" name="createTime" value="<fmt:formatDate value='${alObject.createTime}'  pattern='yyyy-MM-dd HH:mm:ss'/>"/>
+<input type="hidden" id="creatorId" name="creatorId" value="${alObject.creatorId}" />	
+<input type="hidden" id="sysCode" name="sysCode" value="${alObject.sysCode}" />	
+<input type="hidden" id="branchId" name="branchId" value="${alObject.branchId}" />	
 	<%-- 第1行 --%>
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>选择活动</label>
 	    <div class="col-sm-3">
-	       <select id="activityId" name="activityId" value='${activitiesLaunchVo.activityId}' class="form-control m-b required"></select>
+	       <select id="activityId" name="activityId" value='${alObject.activityId}' class="form-control m-b required"></select>
 	    </div>
 	    <label class="col-sm-2 control-label"><span style="color: red">*</span>活动开展时间</label>
 	     <div class="col-sm-3">
-            <input type="text" class="form-control" id="launchDate" name="launchDate" value="<fmt:formatDate value='${activitiesLaunchVo.launchDate}' pattern='yyyy-MM-dd HH:mm:ss'/>" data-rule-required="true" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>    
+            <input type="text" class="form-control" id="launchDate" name="launchDate" value="<fmt:formatDate value='${alObject.launchDate}' pattern='yyyy-MM-dd HH:mm:ss'/>" data-rule-required="true" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>    
         </div>
+
   	</div>
   	<%-- 第2行 --%>
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动开展地点</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="launchAddress" name="launchAddress" placeholder="" value='${activitiesLaunchVo.launchAddress}' data-rule-rangelength="[1,100]"/>
+	      <input type="text" class="form-control" id="launchAddress" name="launchAddress" placeholder="" value='${alObject.launchAddress}' data-rule-rangelength="[1,100]"/>
 	    </div>
   	</div>
 
@@ -49,12 +50,12 @@
   	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>上报人</label>
 	    <div class="col-sm-3">
-	    	<input type="text" class="form-control" id="creatorName" name="creatorName" value='${activitiesLaunchVo.creatorName}' data-rule-rangelength="[1,20]"/>  
+	    	<input type="text" class="form-control" id="creatorName" name="creatorName" value='${alObject.creatorName}' data-rule-rangelength="[1,20]"/>  
 	    </div>
 	    
 	    <label class="col-sm-2 control-label"><span style="color: red">*</span>上报人支部</label>
 	    <div class="col-sm-3">
-			<input type="text" class="form-control" id="order" name="branchName" value='${activitiesLaunchVo.branchName}' readonly="readonly"/>    
+			<input type="text" class="form-control" id="branchName" name="branchName" value='${alObject.branchName}' readonly="readonly"/>    
 		</div>
     </div>
  
@@ -62,12 +63,12 @@
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动描述</label>
 	    <div class="col-sm-10">
-	       <textarea class="form-control" rows="4" cols="" id="launchContent" name="launchContent" >${activitiesLaunchVo.launchContent}</textarea>
+	       <textarea class="form-control" rows="4" cols="" id="launchContent" name="launchContent" >${alObject.launchContent}</textarea>
 	    </div>
   	</div>
   	
   	<%-- 第8行 --%>
-    <label class="col-sm-2 control-label">图片</label>
+    <label class="col-sm-2 control-label"><span style="color: red">*</span>图片</label>
      <div class="col-sm-8">
          <div id="uploaderDiv" class="wu-example">
              <div class="queueList" style="height: 160px;width: 100%">
@@ -123,10 +124,15 @@ function getActivities(){
 		dataType : 'json',
 		url: '/dangjian/activities_load?page=1&&rows=30',
 		success : function(data){
+			var _activityId = '${alObject.activityId}';
 			$("#activityId").append("<option value=''>------请选择------</option>");
 			if(data.rows!=null){
 				 for (var i = 0; i < data.rows.length; i++) {
-					$("#activityId").append("<option value='"+data.rows[i].id+"'>"+data.rows[i].title+"</option>");
+					 if(_activityId==data.rows[i].id){
+						 $("#activityId").append("<option value='"+data.rows[i].id+"' selected='selected'>"+data.rows[i].title+"</option>");
+					 }else{
+						 $("#activityId").append("<option value='"+data.rows[i].id+"'>"+data.rows[i].title+"</option>");
+					 }
 				 }
 			}
 		},
@@ -136,6 +142,10 @@ function getActivities(){
 /**保存*/
 function on_save() {
 	if($("#baseForm").valid()){
+/* 	    if(uploader.getFiles().length<1||uploader.getFiles().length>4){
+	    	autoAlert("请上传1到4张图片", 5);
+	    	return;
+	    } */
 	    $("#onSave").attr("disabled",true);
 	    on_submit();
     }
@@ -147,29 +157,25 @@ function on_submit() {
         type : 'post',
         async : false,
         dataType : 'json',
-        url: '/dangjian/activitiesLauch_saveOrUpdate',
+        url: '/dangjian/activitiesLauchEdit_saveOrUpdate',
         data : $('#baseForm').serialize(),
         success : function(data) {
-            if(uploader.getFiles().length>0){
-                uploader.options.server = '/attach_upload?formId='+data.id +'&attachType=dj_activitiesLaunch';
-                uploader.upload();//上传
-                uploader.on('uploadFinished', function() {
-                    if (data.result) {
-                        autoMsg("提交成功！", 1);
-                        parent.frames[winName].$("#grid").bootstrapTable("refresh", {url : "/dangjian/activitiesLauch_myload"});
-                        parent.layer.close(index);
-                    } else {
-                        autoAlert("提交失败，请检查！", 5);
-                    }
-                });
-            }else{
-                if (data.result) {
-                    autoMsg("提交成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {url : "/dangjian/activitiesLauch_myload"});
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("提交失败，请检查！", 5);
-                }
+        	if(data.result){
+	            if(uploader.getFiles().length>0){
+	                uploader.options.server = '/attach_upload?formId='+data.id +'&attachType=dj_activitiesLaunch';
+	                uploader.upload();//上传
+	                uploader.on('uploadFinished', function() {
+	                        autoMsg("保存成功！",1);
+							iframeIndex.$("#grid").bootstrapTable("refresh",{url:"/dangjian/activitiesLauch_myload"});
+							parent.layer.close(index);
+	                });
+	            }else{
+                    autoMsg("保存成功！",1);
+					iframeIndex.$("#grid").bootstrapTable("refresh",{url:"/dangjian/activitiesLauch_myload"});
+					parent.layer.close(index);
+	            }
+            } else {
+                autoAlert("提交失败，请检查！", 5);
             }
         },
         error : function(XMLHttpRequest, textStatus, errorThrown) {

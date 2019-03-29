@@ -25,7 +25,6 @@ import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
-import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
 import com.dangjian.module.Activities;
 import com.dangjian.module.ActivitiesLaunch;
@@ -305,14 +304,8 @@ public class ActivitiesController extends BaseController{
 					for (Attach attach : attchList) {
 						imgUrls.add(attach.getPathUpload());
 					}
-					alVo.setImgUrls(imgUrls);	//获取上报人上报隐患时提交的图片url
-					
-					JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
-					config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
-					String[] excludes = new String[] {"completionTimes","isReach","frequency","timeQuantum","year"}; // 列表排除信息内容字段，减少传递时间
-					config.setExcludes(excludes);
-					JSONObject alObject=JSONObject.fromObject(alVo, config);
-					request.setAttribute("activitiesLaunchVo", alObject);
+					alVo.setImgUrls(imgUrls);
+					request.setAttribute("alObject", alVo);
 				}
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -329,9 +322,38 @@ public class ActivitiesController extends BaseController{
 				activitiesLaunchVo.setBranchName(branch.getBranchName());
 				activitiesLaunchVo.setBranchId(branchId);
 			}
-			request.setAttribute("activitiesLaunchVo", activitiesLaunchVo);
+			request.setAttribute("alObject", activitiesLaunchVo);
 		}
 		return "/page/dangjian/activities/activities_launch_edit";
+	}
+	
+	@RequestMapping(value="/activitiesLauchEdit_saveOrUpdate")
+	public void activitiesLauchEditSaveOrUpdate(HttpSession httpSession,HttpServletResponse response,ActivitiesLaunchVo activitiesLaunchVo){
+		JsonObject json =new JsonObject();
+		try{
+		    Activities ac=activitiesServiceImpl.getEntityById(Activities.class, activitiesLaunchVo.getActivityId());
+		    if(ac!=null){
+		    	activitiesLaunchVo.setPoints(ac.getPoints());
+		    }
+			ActivitiesLaunch activitiesLaunch = new ActivitiesLaunch();
+			BeanUtils.copyProperties(activitiesLaunchVo, activitiesLaunch);
+			this.activitiesServiceImpl.saveOrUpdateAL(activitiesLaunch);
+			json.addProperty("id", activitiesLaunch.getId());
+			json.addProperty("result", true);
+		}catch (Exception e) {
+			e.printStackTrace();
+			json.addProperty("result", false);
+		}finally{
+			this.print(json.toString());
+		}
+	}
+	
+	@RequestMapping(value="/activitiesLauch_del") 
+	public void activitiesLauchDelete(HttpServletResponse response,String ids) {
+		this.activitiesServiceImpl.deleteALEntitys(ids);
+		JsonObject json = new JsonObject();
+		json.addProperty("result", true);
+		this.print(json.toString());
 	}
 	
 	/**
@@ -646,7 +668,7 @@ public class ActivitiesController extends BaseController{
 					String[] excludes = new String[] {"completionTimes","isReach","frequency","timeQuantum","year"}; // 列表排除信息内容字段，减少传递时间
 					config.setExcludes(excludes);
 					JSONObject alObject=JSONObject.fromObject(alVo, config);
-					request.setAttribute("activitiesLaunchVo", alObject);
+					request.setAttribute("alObject", alObject);
 				}
 			}catch (Exception e) {
 				e.printStackTrace();

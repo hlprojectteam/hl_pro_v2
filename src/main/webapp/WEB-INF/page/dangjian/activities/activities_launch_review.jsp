@@ -23,24 +23,24 @@
 <body>
 <div id="" class="ibox-content">
 <form id="baseForm" method="post" class="form-horizontal" name="baseForm" action="">
-<input type="hidden" id="id" name="id" value="${activitiesLaunchVo.id}" />		
-<input type="hidden" id="createTime" name="createTime"  value='${activitiesLaunchVo.createTime}'/>
-<input type="hidden" id="creatorId" name="creatorId" value="${activitiesLaunchVo.creatorId}" />	
-<input type="hidden" id="sysCode" name="sysCode" value="${activitiesLaunchVo.sysCode}" />	
-<input type="hidden" id="branchId" name="branchId" value="${activitiesLaunchVo.branchId}" />	
-<input type="hidden" id="activityId" name="activityId" value="${activitiesLaunchVo.activityId}" />		
+<input type="hidden" id="id" name="id" value="${alObject.id}" />		
+<input type="hidden" id="createTime" name="createTime" value="<fmt:formatDate value='${alObject.createTime}'  pattern='yyyy-MM-dd HH:mm:ss'/>"/>
+<input type="hidden" id="creatorId" name="creatorId" value="${alObject.creatorId}" />	
+<input type="hidden" id="sysCode" name="sysCode" value="${alObject.sysCode}" />	
+<input type="hidden" id="branchId" name="branchId" value="${alObject.branchId}" />	
+<input type="hidden" id="activityId" name="activityId" value="${alObject.activityId}" />		
 	<%-- 第1行 --%>
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动标题</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="title" name="title" placeholder="输入活动标题" value='${activitiesLaunchVo.title}' data-rule-required="true" data-rule-rangelength="[1,50]" readonly="readonly"/>
+	      <input type="text" class="form-control" id="title" name="title" placeholder="输入活动标题" value='${alObject.title}' data-rule-required="true" data-rule-rangelength="[1,50]" readonly="readonly"/>
 	    </div>
   	</div>
   	<%-- 第2行 --%>
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动开展地点</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="launchAddress" name="launchAddress" placeholder="" value='${activitiesLaunchVo.launchAddress}' readonly="readonly"/>
+	      <input type="text" class="form-control" id="launchAddress" name="launchAddress" placeholder="" value='${alObject.launchAddress}' readonly="readonly"/>
 	    </div>
   	</div>
   	
@@ -48,7 +48,7 @@
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动开展时间</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="launchDate" name="launchDate" placeholder="" value='${activitiesLaunchVo.launchDate}' readonly="readonly"/>
+	      <input type="text" class="form-control" id="launchDate" name="launchDate" placeholder="" value='${alObject.launchDate}' readonly="readonly"/>
 	    </div>
   	</div>
   	
@@ -56,12 +56,12 @@
   	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>上报人</label>
 	    <div class="col-sm-3">
-	    	<input type="text" class="form-control" id="creatorName" name="creatorName" value='${activitiesLaunchVo.creatorName}' readonly="readonly"/>  
+	    	<input type="text" class="form-control" id="creatorName" name="creatorName" value='${alObject.creatorName}' readonly="readonly"/>  
 	    </div>
 	    
 	    <label class="col-sm-2 control-label"><span style="color: red">*</span>上报人支部</label>
 	    <div class="col-sm-3">
-			<input type="text" class="form-control" id="order" name="branchName" value='${activitiesLaunchVo.branchName}' readonly="readonly"/>    
+			<input type="text" class="form-control" id="branchName" name="branchName" value='${alObject.branchName}' readonly="readonly"/>    
 		</div>
     </div>
   	
@@ -69,7 +69,7 @@
   	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动开展频率</label>
 	    <div class="col-sm-3">
-	      <opt:select dictKey="dj_activities_frequency" classStyle="form-control" id="frequency" name="frequency"  value="${activitiesLaunchVo.frequency}" disabled="true"/>
+	      <opt:select dictKey="dj_activities_frequency" classStyle="form-control" id="frequency" name="frequency"  value="${alObject.frequency}" disabled="true"/>
 	    </div>
 
     </div>
@@ -78,7 +78,7 @@
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动描述</label>
 	    <div class="col-sm-10">
-	       <textarea class="form-control" rows="4" cols="" id="launchContent" name="launchContent"  readonly="readonly">${activitiesLaunchVo.launchContent}</textarea>
+	       <textarea class="form-control" rows="4" cols="" id="launchContent" name="launchContent"  readonly="readonly">${alObject.launchContent}</textarea>
 	    </div>
   	</div>
   	
@@ -86,16 +86,16 @@
   	<div class="form-group">
 	    <label class="col-sm-2 control-label"><span style="color: red">*</span>活动最终得分</label>
 	    <div class="col-sm-1">
-			<input type="text" class="form-control" id="points" name="points" value='${activitiesLaunchVo.points}' data-rule-required="true" data-rule-rangelength="[1,2]"/>    
+			<input type="text" class="form-control" id="points" name="points" value='${alObject.points}' data-rule-required="true" data-rule-rangelength="[1,2]"/>    
 		</div>
     </div>
   	
   	<%-- 第8行 --%>
     <label class="col-sm-2 control-label">图片</label>
     <div class="col-sm-4" style="width: 80%;left:-10px;margin-bottom: 10px;" >
-			<c:if test="${not empty activitiesLaunchVo.imgUrls}">
+			<c:if test="${not empty alObject.imgUrls}">
 				<div id="uploaderDiv" class="wu-example dowebok">
-					<c:forEach items="${activitiesLaunchVo.imgUrls}" var="imgUrl" varStatus="">
+					<c:forEach items="${alObject.imgUrls}" var="imgUrl" varStatus="">
                         <img data-original="${imgUrl}"  height="200px" width="200px" src="${imgUrl}" alt="" />
                     </c:forEach>
 				</div> 
