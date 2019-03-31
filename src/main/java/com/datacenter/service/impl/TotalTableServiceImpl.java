@@ -6,7 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.common.utils.cache.Cache;
+import com.datacenter.module.Brief;
 import com.datacenter.module.TransferRegistration;
+import com.datacenter.vo.BriefVo;
 import com.datacenter.vo.TransferRegistrationVo;
 import com.urms.dataDictionary.module.CategoryAttribute;
 import org.apache.commons.lang.StringUtils;
@@ -196,7 +198,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		HSSFCellStyle mainStyle_center = wb.createCellStyle();
 		mainStyle_center.cloneStyleFrom(mainStyle);
 		mainStyle_center.setAlignment(HorizontalAlignment.CENTER);
-		//基础样式 水平靠右
+		//基础样式 水平靠左
 		HSSFCellStyle mainStyle_left = wb.createCellStyle();
 		mainStyle_left.cloneStyleFrom(mainStyle);
 		mainStyle_left.setAlignment(HorizontalAlignment.LEFT);
@@ -225,10 +227,22 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		r2_font.setBold(true);						//字体加粗
 		r2_style.setFont(r2_font);
 
-		//工作简报
+		//1.工作简报
 		getBriefData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//交接班
-		/*getTransferRegistrationData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);*/
+		//2.交接班
+		getTransferRegistrationData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
+		//3.监控巡检
+		//4.涉路施工
+		//5.设备运行情况统计表
+		//6.营运数据
+		//7.拯救作业
+		//8.清障保洁
+		//9.营运异常记录
+		//10.交通事故
+		//11.信息通传
+		//12.顾客意见反馈
+		//13.交通阻塞
+		//14.外勤作业
 
 
 		return wb;
@@ -249,66 +263,171 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook getBriefData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		BriefVo briefVo = new BriefVo();
+		briefVo.setTtId(ttId);
+		List<Brief> brList = this.briefServiceImpl.queryEntityList(briefVo);
+		Brief brief = new Brief();
+		if(brList != null && brList.size()>0){
+			brief = brList.get(0);					//工作简报只取当天最新一条数据
+		}
+
+		//创建sheet
+		HSSFSheet sheet1 = wb.createSheet("运营控制指挥中心每日简报");
+
+		//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+		sheet1.addMergedRegion(new CellRangeAddress(0, 0, 0, 4));
+		sheet1.addMergedRegion(new CellRangeAddress(1, 1, 0, 4));
+		sheet1.addMergedRegion(new CellRangeAddress(3, 3, 1, 4));
+		sheet1.addMergedRegion(new CellRangeAddress(4, 4, 1, 4));
+		sheet1.addMergedRegion(new CellRangeAddress(5, 5, 1, 4));
+
+		//设置列宽
+		for (int i = 0; i < 5; i++) {
+			if(i != 4){
+				sheet1.setColumnWidth(i, sheet1.getColumnWidth(i)*3);
+			}else{
+				sheet1.setColumnWidth(i, sheet1.getColumnWidth(i)*6);
+			}
+		}
+
+
+		//创建行（第一行）
+		HSSFRow row0 = sheet1.createRow(0);
+		//设置行的高度
+		row0.setHeightInPoints(30);
+		//创建单元格 并 设置单元格内容
+		if(brList != null && brList.size() > 0){
+			row0.createCell(0).setCellValue(brief.getTitle());
+		}else{
+			row0.createCell(0).setCellValue("环龙运营控制指挥中心工作简报");
+		}
+		//设置单元格样式
+		row0.getCell(0).setCellStyle(r0_style);
+
+
+		//第二行
+		HSSFRow row1 = sheet1.createRow(1);
+		row1.createCell(0).setCellValue("表单编号：HLZXRBB-01");
+		row1.getCell(0).setCellStyle(r1_style);
+
+		//第三行
+		HSSFRow row2 = sheet1.createRow(2);
+		row2.setHeightInPoints(40);
+		row2.createCell(0).setCellValue("常务副总经理：" + brief.getCwfzjl());
+		row2.getCell(0).setCellStyle(mainStyle_center);
+		row2.createCell(1).setCellValue("主管副总经理：" + brief.getZgfzjl());
+		row2.getCell(1).setCellStyle(mainStyle_center);
+		row2.createCell(2).setCellValue("中心副主任：" + brief.getZxfzr());
+		row2.getCell(2).setCellStyle(mainStyle_center);
+		row2.createCell(3).setCellValue("复核：" + brief.getFhry());
+		row2.getCell(3).setCellStyle(mainStyle_center);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		row2.createCell(4).setCellValue("简报生成时间：" + sdf.format(brief.getCreateTime()));
+		row2.getCell(4).setCellStyle(mainStyle_center);
+
+		//第四行
+		HSSFRow row3 = sheet1.createRow(3);
+		row3.setHeightInPoints(50);			//设置行的高度
+		row3.createCell(0).setCellValue("营运数据");
+		row3.getCell(0).setCellStyle(mainStyle_center);
+		row3.createCell(1).setCellValue(brief.getOperatingData());
+		row3.getCell(1).setCellStyle(mainStyle_left);
+
+		//第五行
+		HSSFRow row4 = sheet1.createRow(4);
+		row4.setHeightInPoints(180);			//设置行的高度
+		row4.createCell(0).setCellValue("交通运行情况");
+		row4.getCell(0).setCellStyle(mainStyle_center);
+		row4.createCell(1).setCellValue(brief.getTrafficOperation());
+		row4.getCell(1).setCellStyle(mainStyle_left);
+
+		//第六行
+		HSSFRow row5 = sheet1.createRow(5);
+		row5.setHeightInPoints(250);			//设置行的高度
+		row5.createCell(0).setCellValue("设备运行情况");
+		row5.getCell(0).setCellStyle(mainStyle_center);
+		row5.createCell(1).setCellValue(brief.getEquipmentOperation());
+		row5.getCell(1).setCellStyle(mainStyle_left);
+
+		return wb;
+	}
+
+
+	/**
+	 * @intruduction 获取交接班登记表数据
+	 * @param wb excel文档对象
+	 * @param ttId 主表id
+	 * @param mainStyle_center
+	 * @param mainStyle_left
+	 * @param r0_style
+	 * @param r1_style
+	 * @param r2_style
+	 * @return HSSFWorkbook
+	 * @author xuezb
+	 * @Date 2019年3月28日
+	 */
+	public HSSFWorkbook getTransferRegistrationData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TransferRegistrationVo transferRegistrationVo = new TransferRegistrationVo();
 		transferRegistrationVo.setTtId(ttId);
 		List<TransferRegistration> trList = this.transferRegistrationServiceImpl.queryEntityList(transferRegistrationVo);
 
 		//创建sheet
-		HSSFSheet sheet1 = wb.createSheet("交接班");
+		HSSFSheet sheet2 = wb.createSheet("交接班");
 
 		//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
-		sheet1.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
-		sheet1.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
+		sheet2.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+		sheet2.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
 
-		//创建行
-		HSSFRow row0 = sheet1.createRow(0);
-		row0.setHeightInPoints(30);			//设置行的高度
-		HSSFRow row1 = sheet1.createRow(1);
+		//创建行（第一行）
+		HSSFRow row0 = sheet2.createRow(0);
+		//设置行的高度
+		row0.setHeightInPoints(30);
 		//创建单元格 并 设置单元格内容
-		HSSFCell r0_0 = row0.createCell(0);
-		r0_0.setCellStyle(r0_style);
 		if(trList != null && trList.size() > 0){
-			r0_0.setCellValue(trList.get(0).getTitle());
+			row0.createCell(0).setCellValue(trList.get(0).getTitle());
 		}else{
-			r0_0.setCellValue("环龙运营控制指挥中心交接班登记表");
+			row0.createCell(0).setCellValue("环龙运营控制指挥中心交接班登记表");
 		}
-		HSSFCell r1_0 = row1.createCell(0);
-		r1_0.setCellStyle(r1_style);
-		r1_0.setCellValue("表单编号：HLZXRBB-02");
+		//设置单元格样式
+		row0.getCell(0).setCellStyle(r0_style);
 
 
-		HSSFRow row2 = sheet1.createRow(2);
-		row2.setHeightInPoints(30);			//设置行的高度
+		//第二行
+		HSSFRow row1 = sheet2.createRow(1);
+		row1.createCell(0).setCellValue("表单编号：HLZXRBB-02");
+		row1.getCell(0).setCellStyle(r1_style);
+
+
+		//第三行
+		HSSFRow row2 = sheet2.createRow(2);
+		row2.setHeightInPoints(30);		//行高
 		HSSFCell cell = null;
 		String[] title = {"班次","天气","本班次值班人员","值班时间","上班次值班人员","交接时间","交接事项","接班异常情况"};
 		for(int i=0;i<title.length;i++){
-			cell = row2.createCell(i);
-			cell.setCellValue(title[i]);
-			cell.setCellStyle(r2_style);
+			cell = row2.createCell(i);		//创建单元格
+			cell.setCellValue(title[i]);	//设置单元格内容
+			cell.setCellStyle(r2_style);	//设置单元格样式
 
-			sheet1.autoSizeColumn(i);
+			//列宽自适应（该方法在老版本的POI中效果不佳）
+			sheet2.autoSizeColumn(i);
+			//设置列宽
 			if(i == 6){
-				sheet1.setColumnWidth(i, sheet1.getColumnWidth(i)*4);
+				sheet2.setColumnWidth(i, sheet2.getColumnWidth(i)*4);
 			}else{
-				sheet1.setColumnWidth(i, sheet1.getColumnWidth(i)*5/2);
+				sheet2.setColumnWidth(i, sheet2.getColumnWidth(i)*5/2);
 			}
 		}
 
+		//第四行 及 之后的行
 		HSSFRow row = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		String[][] content = new String[trList.size()][];
 		for (int i = 0; i < trList.size(); i++) {
-			row = sheet1.createRow(i + 3);
-			row.setHeightInPoints(60);
+			row = sheet2.createRow(i + 3);	//创建行
+			row.setHeightInPoints(60);					//设置行高
 			for (int j = 0; j < title.length; j++) {
-				cell = row.createCell(j);
-				int k = 6;
-				if(j == k){
-					cell.setCellStyle(mainStyle_left);
-				}else{
-					cell.setCellStyle(mainStyle_center);
-				}
-
+				cell = row.createCell(j);				//创建单元格
+				//设置单元格内容
 				switch (j){
 					case 0:	cell.setCellValue(getValueByDictAndKey("dc_shift", trList.get(i).getShift().toString())); break;
 					case 1: cell.setCellValue(getValueByDictAndKey("dc_weather", trList.get(i).getWeather().toString()));	break;
@@ -324,11 +443,18 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 6: cell.setCellValue(trList.get(i).getHandoverMatters()); break;
 					case 7: cell.setCellValue(trList.get(i).getException()); break;
 				}
+				//设置单元格样式
+				int k = 6;
+				if(j == k){
+					cell.setCellStyle(mainStyle_left);
+				}else{
+					cell.setCellStyle(mainStyle_center);
+				}
 			}
 		}
+
 		return wb;
 	}
-
 
 
 

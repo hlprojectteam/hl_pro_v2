@@ -77,4 +77,28 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 		return list.size();
 	}
 
+	@Override
+	public List<Brief> queryEntityList(BriefVo briefVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from Brief where 1 = 1 ");
+		if(StringUtils.isNotBlank(briefVo.getTtId())){
+			objectList.add(briefVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(briefVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(briefVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(briefVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(briefVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序
+		hql.append(" order by dutyDate desc ");
+
+		List<Brief> trList = this.briefDaoImpl.queryEntityHQLList(hql.toString(), objectList, Brief.class);
+		return trList;
+	}
+
 }
