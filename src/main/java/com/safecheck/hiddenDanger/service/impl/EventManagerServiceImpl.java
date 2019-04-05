@@ -855,11 +855,15 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			process5.setEpNextNode("10");						//第五个过程的下一节点编码 (即第十个过程的当前节点编码)
 			process5.setEpNextRole(Common.fgldRoleCode);		//第五个过程的下一个节点的处理角色编码 (即第十个过程的当前处理角色编码)
 			process5.setEpNextRoleName(Common.fgldRoleName);	//第五个过程的下一个节点的处理角色名称 (即第十个过程的当前处理角色名称)
+		    /*#######################################################################################################################*/
+			process5.setEpNextPersonId(eventInfoVo.getEpNextPersonId());	//第五个过程的下一个节点的处理人id (即第十个过程的当前处理人id)
+			process5.setEpNextPersonName(eventInfoVo.getEpNextPersonName());//第五个过程的下一个节点的处理人姓名 (即第十个过程的当前处理人姓名)
+		    /*#######################################################################################################################*/
 			
 			process5.setEpDealState(3);									//第五个过程的处理状态
 			process5.setEpDealWay(eventInfoVo.getDataSource());			//第五个过程的处理端 (1电脑，2APP，3微信，4其它)
-			process5.setEpAttachId(eventInfoVo.getEpAttachId());		//部门安全员拍摄的附件图片ID(如果部门安全员也上传提交附件的话)
-			process5.setEpDealContent(eventInfoVo.getEpDealContent());	//部门安全员给出的处理意见
+			process5.setEpAttachId(eventInfoVo.getEpAttachId());		//安保办主任拍摄的附件图片ID(如果安保办主任也上传提交附件的话)
+			process5.setEpDealContent(eventInfoVo.getEpDealContent());	//安保办主任给出的处理意见
 			
 			this.eventManagerDaoImpl.update(process5);		/* ** 安保办主任	对此事件向上级	分管领导   后更新第八个事件过程   ** */
 			saveEventHandle(process5);		//新增经办事件
@@ -874,10 +878,14 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			process10.setEpUpRoleName(process5.getEpNowRoleName()); 				//第十个过程的上一节点的处理角色名称 (即第五个过程当前节点的处理角色名称)
 			process10.setEpUpPersonId(process5.getEpNowPersonId()); 				//第十个过程的上一节点的处理人id (即第五个过程当前节点的处理人id)
 			process10.setEpUpPersonName(process5.getEpNowPersonName()); 			//第十个过程的上一节点的处理人姓名 (即第五个过程当前节点的处理人姓名)
-			
+
 			process10.setEpNowNode(process5.getEpNextNode());			//第十个过程的当前节点编码 (即第五个过程的下一节点编码)
 			process10.setEpNowRole(process5.getEpNextRole());			//第十个过程的当前节点的处理角色编码 (即第五个过程的下一个节点的处理角色编码)
 			process10.setEpNowRoleName(process5.getEpNextRoleName());	//第十个过程的当前节点的处理角色名称 (即第五个过程的下一个节点的处理角色名称)
+		    /*#######################################################################################################################*/
+		    process10.setEpNowPersonId(process5.getEpNextPersonId());	//第六个过程的当前节点的处理人id (即第五个过程的下一个节点的处理人id)
+		    process10.setEpNowPersonName(process5.getEpNextPersonName());//第六个过程的当前节点的处理人姓名 (即第五个过程的下一个节点的处理人姓名)
+		    /*#######################################################################################################################*/
 			
 			process10.setEpNowNodeArriveTime(new Date());				//第十个过程当前节点的到达时间
 			process10.setEpDealState(1);									//第十个过程的处理状态

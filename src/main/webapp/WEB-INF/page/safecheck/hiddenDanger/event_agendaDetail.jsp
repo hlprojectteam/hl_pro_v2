@@ -175,13 +175,13 @@
 	                    <%-- 当前节点     为5、10(安保办主任、分管领导), 则显示该隐患是否向上级请示,默认不请示   --%>
 	                    <c:if test="${eventInfoVo.epNowNode == '5' || eventInfoVo.epNowNode == '10'}">
 		                    <div class="form-group whether goUpstairs">
-	                            <label class="control-label" style="width: 20%;">是否向上级请示：</label>
+	                            <label class="control-label">是否向上级请示：</label>
 	                            <div class="col-sm-3">
 	                                <opt:select dictKey="isNot" classStyle="form-control" id="isGoUpstairs" name="isGoUpstairs" value="0" isDefSelect="false" />
 	                            </div>
 	                        </div>
                         </c:if>
-                        
+
                         <%-- 当前节点是  2、3、4、5、8(部门安全员、部门负责人、安保办安全员、安保办主任)时,都可将隐患直接完结, 默认未办结    --%>
                         <c:if test="${eventInfoVo.epNowNode == '2' || eventInfoVo.epNowNode == '3' || eventInfoVo.epNowNode == '4' || eventInfoVo.epNowNode == '5' || eventInfoVo.epNowNode == '8'}">
                             <div class="form-group whether isWhetherFinish">
@@ -224,14 +224,25 @@
                                 </div> 
                             </c:if>
                         </li>
-                        
+
+                        <%-- 当前节点是   5(安保办主任) 且 向上级请示, 则显示隐藏的分管领导选择  --%>
+                        <c:if test="${eventInfoVo.epNowNode == '5'}">
+                            <li class="opiniondb selectFgld"  style="display: none;">
+                                <div>
+                                    <span>分管领导：</span>
+                                    <button type="button" class="btn btn-info" onclick="on_selectFgld()">选择分管领导</button>
+                                    <span class="role">已选择分管领导(所在部门)：</span><em id="nextPersonName_fgld"></em>
+                                </div>
+                            </li>
+                        </c:if>
+
                         <%-- 当前节点是   5(安保办主任) 且   不向上级请示, 则显示该隐患的分派信息(部门负责人  和  处理时限) --%>
                         <c:if test="${eventInfoVo.epNowNode == '5'}">
                             <li class="opiniondb paiqian1">
                                 <div>
                                     <span>部门负责人：</span>
                                     <button type="button" class="btn btn-info" onclick="on_selectHandDepart()">选择部门负责人</button>
-                                    <span class="role">已选择部门负责人(所在部门)：</span><em id="nextPersonName"></em>
+                                    <span class="role">已选择部门负责人(所在部门)：</span><em id="nextPersonName_yhclr"></em>
                                 </div>
                                 <div class="process-limited">
                                     <span>处理时限：</span>
@@ -246,7 +257,7 @@
                                 <div>
                                     <span>处理人：</span>
                                     <button type="button" class="btn btn-info" onclick="on_selectEventHandler()">选择处理人</button>
-                                    <span class="role">已选择处理人(所在部门)：</span><em id="nextPersonName"></em>
+                                    <span class="role">已选择处理人(所在部门)：</span><em id="nextPersonName_yhclr"></em>
                                 </div>
                                 <div class="process-limited">
                                     <span>处理时限：</span>
@@ -502,7 +513,7 @@
     
     
     //(节点5:安保办主任) 是否向上级请示   (默认不请示)
-    //根据是否向上级请示来决定是否显示      该隐患的分派信息(部门负责人 和  处理时限) 和  是否办结
+    //根据是否向上级请示来决定是否显示      该隐患的分派信息(部门负责人 和  处理时限) 和  是否办结  /*################ 以及   选择分管领导信息  ####################*/
     $("#isGoUpstairs").change(function(){
         changeGoUpstairsStatus();
     });
@@ -511,11 +522,36 @@
         if(isGoUpstairs != 1){           //不请示
             $(".paiqian1").show();          //显示分派信息
             $(".isWhetherFinish").show();   //显示是否办结
+
+            /*#################################################################################################*/
+            $(".selectFgld").hide();          //隐藏分管领导信息
+            /*#################################################################################################*/
         }else{                           //请示
             $(".paiqian1").hide();            //隐藏分派信息
             $(".isWhetherFinish").hide();     //隐藏是否办结
+
+            /*#################################################################################################*/
+            $(".selectFgld").show();          //显示分管领导信息
+            /*#################################################################################################*/
         }
     }
+
+    /*#########################################################################################################*/
+    //选择要请示的     分管领导
+    function on_selectFgld(){
+        parent.layer.open({
+            type: 2,
+            title: "选择分管领导",
+            shadeClose: true,//打开遮蔽
+            shade: 0.6,
+            maxmin: true, //开启最大化最小化按钮
+            area: ["50%", "80%"],
+            content: "/safecheck/hiddenDanger/event_selectFgld?winName="+winName
+        });
+    }
+    /*#########################################################################################################*/
+
+
    
     
     //根据隐患是否退回来决定是否显示退回理由(退回则显示,否则不显示)

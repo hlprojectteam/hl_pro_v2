@@ -15,6 +15,7 @@
 <div class="ibox-content">
     <form id="baseForm" method="post" class="form-horizontal" name="baseForm" action="" >
 	    <input type="hidden" id="dpId" name="dpId" value="${dpId}" />
+        <input type="hidden" id="sign" name="sign" value="yhclrPage" />
         <div class="form-group">
             <div class="col-sm-3" style="display: inline-block;">
                 <input type="text" class="form-control" id="userName" name="userName" value="" />
@@ -143,7 +144,7 @@
 	    
 	    parent.frames[winName].$("#epNextPersonId").val(ids.substring(0,ids.indexOf(",")));
 	    parent.frames[winName].$("#epNextPersonName").val(names.substring(0,names.indexOf("(")));
-	    parent.frames[winName].$("#nextPersonName").text(names.substring(0,names.indexOf(",")));
+	    parent.frames[winName].$("#nextPersonName_yhclr").text(names.substring(0,names.indexOf(",")));
 	    parent.layer.close(index);//关闭
 	}
 	
@@ -155,8 +156,8 @@
 		if(parent.frames[winName].$("#epNextPersonId").val() != null && parent.frames[winName].$("#epNextPersonId").val() != ""){
 			ids = parent.frames[winName].$("#epNextPersonId").val();
 		}
-		if(parent.frames[winName].$("#nextPersonName").text() != null && parent.frames[winName].$("#nextPersonName").text() != ""){
-			names = parent.frames[winName].$("#nextPersonName").text();
+		if(parent.frames[winName].$("#nextPersonName_yhclr").text() != null && parent.frames[winName].$("#nextPersonName_yhclr").text() != ""){
+			names = parent.frames[winName].$("#nextPersonName_yhclr").text();
 		}
 	    if(ids!=null&&ids!=""){
 	        var idz = ids.split(",");

@@ -797,8 +797,20 @@ public class EventManagerController extends BaseController{
 			this.print(json.toString());
 		}
 	}
-	
-	
+
+	/*############################################################################################*/
+	/**
+	 * @Description 跳转到	选择分管领导页面
+	 * @return
+	 * @author xuezb
+	 * @Date 2018年5月30日
+	 */
+	@RequestMapping(value="/event_selectFgld")
+	public String selectFgld(HttpServletRequest request, String winName) {
+		this.getRequest().setAttribute("winName", winName);
+		return "/page/safecheck/hiddenDanger/event_selectFgld";
+	}
+	/*############################################################################################*/
 	
 	/**
 	 * @Description 跳转到	选择派遣对象页面	部门负责人
@@ -824,7 +836,9 @@ public class EventManagerController extends BaseController{
 		this.getRequest().setAttribute("winName", winName);
 		return "/page/safecheck/hiddenDanger/event_selectEventHandler";
 	}
-	
+
+
+	/*###########################################修改过#########################################################*/
 	/**
 	 * @Description 隐患处理人列表		加载
 	 * @param response
@@ -833,10 +847,12 @@ public class EventManagerController extends BaseController{
 	 * @Daten 2019年1月8日
 	 */
 	@RequestMapping(value = "/loadUserList")
-	public void loadUserList(HttpServletResponse response, String dpId, String userName) {
+	public void loadUserList(HttpServletResponse response, String dpId, String userName, String sign) {
 		List<User> userList = new ArrayList<>();
 		if(StringUtils.isNotBlank(dpId)){
 			userList= this.eventManagerServiceImpl.getUserListByRoleCode(Common.yhclrRoleCode, dpId, userName);
+		}else if(sign.equals("fgldPage")){
+			userList= this.eventManagerServiceImpl.getUserListByRoleCode(Common.fgldRoleCode, dpId, userName);
 		}else{
 			userList = this.eventManagerServiceImpl.getUserListByRoleCode(Common.bmfzrRoleCode, dpId, userName);
 		}
@@ -863,7 +879,8 @@ public class EventManagerController extends BaseController{
 		json.put("userList", JSONArray.fromObject(userVoList,config));
 		this.print(json);
 	}
-	
+	/*###########################################修改过#########################################################*/
+
 	
 	
 	/**
