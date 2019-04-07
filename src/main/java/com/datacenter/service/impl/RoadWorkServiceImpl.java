@@ -77,4 +77,28 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 		return list.size();
 	}
 
+	@Override
+	public List<RoadWork> queryEntityList(RoadWorkVo roadWorkVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from RoadWork where 1 = 1 ");
+		if(StringUtils.isNotBlank(roadWorkVo.getTtId())){
+			objectList.add(roadWorkVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(roadWorkVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(roadWorkVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(roadWorkVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(roadWorkVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序，进场时间顺序排序
+		hql.append(" order by dutyDate desc,approachTime asc ");
+
+		List<RoadWork> rwList = this.roadWorkDaoImpl.queryEntityHQLList(hql.toString(), objectList, RoadWork.class);
+		return rwList;
+	}
+
 }

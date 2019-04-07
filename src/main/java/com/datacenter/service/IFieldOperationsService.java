@@ -1,11 +1,12 @@
 package com.datacenter.service;
 
-import java.util.Date;
-
 import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.FieldOperations;
 import com.datacenter.vo.FieldOperationsVo;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description 外勤作业 service接口
@@ -52,5 +53,14 @@ public interface IFieldOperationsService extends IBaseService{
 	 * @Date 2019年2月19日
 	 */
 	public int updateDutyDate(String ttId, Date dutyDate);
+
+	/**
+	 * 外勤作业	list
+	 * @param fieldOperationsVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public List<FieldOperations> queryEntityList(FieldOperationsVo fieldOperationsVo);
 	
 }

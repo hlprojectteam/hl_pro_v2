@@ -77,4 +77,28 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 		return list.size();
 	}
 
+	@Override
+	public List<TrafficAccident> queryEntityList(TrafficAccidentVo trafficAccidentVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from TrafficAccident where 1 = 1 ");
+		if(StringUtils.isNotBlank(trafficAccidentVo.getTtId())){
+			objectList.add(trafficAccidentVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(trafficAccidentVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(trafficAccidentVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(trafficAccidentVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(trafficAccidentVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序，接报时间顺序排序
+		hql.append(" order by dutyDate desc,receiptTime asc ");
+
+		List<TrafficAccident> trList = this.trafficAccidentDaoImpl.queryEntityHQLList(hql.toString(), objectList, TrafficAccident.class);
+		return trList;
+	}
+
 }

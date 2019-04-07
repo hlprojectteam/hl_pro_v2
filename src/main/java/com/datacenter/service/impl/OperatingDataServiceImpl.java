@@ -77,4 +77,28 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		return list.size();
 	}
 
+	@Override
+	public List<OperatingData> queryEntityList(OperatingDataVo operatingDataVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from OperatingData where 1 = 1 ");
+		if(StringUtils.isNotBlank(operatingDataVo.getTtId())){
+			objectList.add(operatingDataVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(operatingDataVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(operatingDataVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(operatingDataVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(operatingDataVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序，收费站顺序排序
+		hql.append(" order by dutyDate desc,tollGate asc ");
+
+		List<OperatingData> odList = this.operatingDataDaoImpl.queryEntityHQLList(hql.toString(), objectList, OperatingData.class);
+		return odList;
+	}
+
 }

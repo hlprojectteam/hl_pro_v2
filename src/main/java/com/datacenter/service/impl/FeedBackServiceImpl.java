@@ -77,4 +77,28 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 		return list.size();
 	}
 
+	@Override
+	public List<FeedBack> queryEntityList(FeedBackVo feedBackVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from FeedBack where 1 = 1 ");
+		if(StringUtils.isNotBlank(feedBackVo.getTtId())){
+			objectList.add(feedBackVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(feedBackVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(feedBackVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(feedBackVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(feedBackVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序，接报时间顺序排序
+		hql.append(" order by dutyDate desc,receiptTime asc ");
+
+		List<FeedBack> fbList = this.feedBackDaoImpl.queryEntityHQLList(hql.toString(), objectList, FeedBack.class);
+		return fbList;
+	}
+
 }

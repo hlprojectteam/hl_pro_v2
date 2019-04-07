@@ -1,6 +1,7 @@
 package com.datacenter.service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
@@ -52,5 +53,14 @@ public interface IOperatingDataService extends IBaseService{
 	 * @Date 2019年2月19日
 	 */
 	public int updateDutyDate(String ttId, Date dutyDate);
+
+	/**
+	 * 营运数据	list
+	 * @param operatingDataVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年4月3日
+	 */
+	public List<OperatingData> queryEntityList(OperatingDataVo operatingDataVo);
 		
 }

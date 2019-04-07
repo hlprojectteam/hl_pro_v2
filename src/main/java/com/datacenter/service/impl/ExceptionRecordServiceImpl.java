@@ -77,4 +77,28 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 		return list.size();
 	}
 
+	@Override
+	public List<ExceptionRecord> queryEntityList(ExceptionRecordVo exceptionRecordVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from ExceptionRecord where 1 = 1 ");
+		if(StringUtils.isNotBlank(exceptionRecordVo.getTtId())){
+			objectList.add(exceptionRecordVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(exceptionRecordVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(exceptionRecordVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(exceptionRecordVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(exceptionRecordVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序,异常类型顺序排序
+		hql.append(" order by dutyDate desc,exceptionType asc ");
+
+		List<ExceptionRecord> erList = this.exceptionRecordDaoImpl.queryEntityHQLList(hql.toString(), objectList, ExceptionRecord.class);
+		return erList;
+	}
+
 }

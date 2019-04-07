@@ -77,4 +77,28 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 		return list.size();
 	}
 
+	@Override
+	public List<SurveillanceInspection> queryEntityList(SurveillanceInspectionVo surveillanceInspectionVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from SurveillanceInspection where 1 = 1 ");
+		if(StringUtils.isNotBlank(surveillanceInspectionVo.getTtId())){
+			objectList.add(surveillanceInspectionVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(surveillanceInspectionVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(surveillanceInspectionVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(surveillanceInspectionVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(surveillanceInspectionVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序，巡检时间Start顺序排序
+		hql.append(" order by dutyDate desc,inspectionTimeStart asc ");
+
+		List<SurveillanceInspection> siList = this.surveillanceInspectionDaoImpl.queryEntityHQLList(hql.toString(), objectList, SurveillanceInspection.class);
+		return siList;
+	}
+
 }

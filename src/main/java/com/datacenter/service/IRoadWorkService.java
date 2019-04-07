@@ -1,6 +1,7 @@
 package com.datacenter.service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
@@ -52,5 +53,14 @@ public interface IRoadWorkService extends IBaseService{
 	 * @Date 2019年2月19日
 	 */
 	public int updateDutyDate(String ttId, Date dutyDate);
+
+	/**
+	 * 涉路施工	list
+	 * @param roadWorkVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年4月2日
+	 */
+	public List<RoadWork> queryEntityList(RoadWorkVo roadWorkVo);
 		
 }

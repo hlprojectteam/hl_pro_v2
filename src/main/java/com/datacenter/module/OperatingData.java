@@ -1,16 +1,14 @@
 package com.datacenter.module;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import com.common.base.module.BaseModule;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.common.base.module.BaseModule;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @Description 营运数据
@@ -29,8 +27,8 @@ public class OperatingData extends BaseModule{
 	private Integer tollGate;         //收费站		(数据字典：dc_tollGate)
 	private Integer totalTraffic;     //出口车流量_总车流
 	private Integer ytkTraffic;       //出口车流量_其中粤通卡车流
-	private double generalIncome;     //收费额_总收费额		(精确度小数点后两位)
-	private double ytkIncome;         //收费额_其中粤通卡收入	(精确度小数点后两位)
+	private Double generalIncome;     //收费额_总收费额		(精确度小数点后两位)
+	private Double ytkIncome;         //收费额_其中粤通卡收入	(精确度小数点后两位)
 	private String ttId;              //主表id
 	
 	
@@ -81,20 +79,20 @@ public class OperatingData extends BaseModule{
 	public void setYtkTraffic(Integer ytkTraffic) {
 		this.ytkTraffic = ytkTraffic;
 	}
-	
+
 	@Column(name = "general_Income")
-	public double getGeneralIncome() {
+	public Double getGeneralIncome() {
 		return generalIncome;
 	}
-	public void setGeneralIncome(double generalIncome) {
+	public void setGeneralIncome(Double generalIncome) {
 		this.generalIncome = generalIncome;
 	}
 	
 	@Column(name = "ytk_Income")
-	public double getYtkIncome() {
+	public Double getYtkIncome() {
 		return ytkIncome;
 	}
-	public void setYtkIncome(double ytkIncome) {
+	public void setYtkIncome(Double ytkIncome) {
 		this.ytkIncome = ytkIncome;
 	}
 	

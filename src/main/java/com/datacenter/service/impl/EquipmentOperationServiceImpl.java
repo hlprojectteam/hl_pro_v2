@@ -77,4 +77,28 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		return list.size();
 	}
 
+	@Override
+	public List<EquipmentOperation> queryEntityList(EquipmentOperationVo equipmentOperationVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from EquipmentOperation where 1 = 1 ");
+		if(StringUtils.isNotBlank(equipmentOperationVo.getTtId())){
+			objectList.add(equipmentOperationVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(equipmentOperationVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(equipmentOperationVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(equipmentOperationVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(equipmentOperationVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序，部门(收费站)顺序排序
+		hql.append(" order by dutyDate desc,tollGate asc ");
+
+		List<EquipmentOperation> eoList = this.equipmentOperationDaoImpl.queryEntityHQLList(hql.toString(), objectList, EquipmentOperation.class);
+		return eoList;
+	}
+
 }
