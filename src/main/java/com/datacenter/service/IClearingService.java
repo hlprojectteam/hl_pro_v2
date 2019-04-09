@@ -1,11 +1,12 @@
 package com.datacenter.service;
 
-import java.util.Date;
-
 import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.Clearing;
 import com.datacenter.vo.ClearingVo;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description 清障保洁 service接口
@@ -52,5 +53,14 @@ public interface IClearingService extends IBaseService{
 	 * @Date 2019年2月19日
 	 */
 	public int updateDutyDate(String ttId, Date dutyDate);
+
+	/**
+	 * 清障保洁	list
+	 * @param clearingVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public List<Clearing> queryEntityList(ClearingVo clearingVo);
 
 }

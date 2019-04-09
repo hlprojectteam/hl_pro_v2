@@ -1,11 +1,12 @@
 package com.datacenter.service;
 
-import java.util.Date;
-
 import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.TrafficJam;
 import com.datacenter.vo.TrafficJamVo;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description 交通阻塞 service接口
@@ -52,5 +53,14 @@ public interface ITrafficJamService extends IBaseService{
 	 * @Date 2019年2月19日
 	 */
 	public int updateDutyDate(String ttId, Date dutyDate);
+
+	/**
+	 * 工作简报	list
+	 * @param trafficJamVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public List<TrafficJam> queryEntityList(TrafficJamVo trafficJamVo);
 		
 }

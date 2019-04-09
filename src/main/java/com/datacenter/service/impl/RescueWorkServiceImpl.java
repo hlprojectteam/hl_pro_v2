@@ -77,4 +77,28 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 		return list.size();
 	}
 
+	@Override
+	public List<RescueWork> queryEntityList(RescueWorkVo rescueWorkVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from RescueWork where 1 = 1 ");
+		if(StringUtils.isNotBlank(rescueWorkVo.getTtId())){
+			objectList.add(rescueWorkVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(rescueWorkVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(rescueWorkVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(rescueWorkVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(rescueWorkVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序,接报时间顺序排序
+		hql.append(" order by dutyDate desc,receiptTime asc ");
+
+		List<RescueWork> rwList = this.rescueWorkDaoImpl.queryEntityHQLList(hql.toString(), objectList, RescueWork.class);
+		return rwList;
+	}
+
 }

@@ -77,4 +77,28 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 		return list.size();
 	}
 
+	@Override
+	public List<InfoThrough> queryEntityList(InfoThroughVo infoThroughVo) {
+		List<Object> objectList = new ArrayList<Object>();
+
+		StringBuffer hql = new StringBuffer("from InfoThrough where 1 = 1 ");
+		if(StringUtils.isNotBlank(infoThroughVo.getTtId())){
+			objectList.add(infoThroughVo.getTtId());
+			hql.append(" and ttId = ? ");
+		}
+		if(infoThroughVo.getDutyDateStart() != null){		//日期Start
+			objectList.add(infoThroughVo.getDutyDateStart());
+			hql.append(" and dutyDate >= ? ");
+		}
+		if(infoThroughVo.getDutyDateEnd() != null){		//日期End
+			objectList.add(infoThroughVo.getDutyDateEnd());
+			hql.append(" and dutyDate <= ? ");
+		}
+		//排序, 根据日期倒序排序,通报时间顺序排序
+		hql.append(" order by dutyDate desc,throughTime asc ");
+
+		List<InfoThrough> itList = this.infoThroughDaoImpl.queryEntityHQLList(hql.toString(), objectList, InfoThrough.class);
+		return itList;
+	}
+
 }

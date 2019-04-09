@@ -47,25 +47,25 @@
 			</div>
         </div>
 	  	
-	  	<div class="form-group">
-	  		<label class="col-sm-2 control-label"><span style="color: red">*</span>接报时间</label>
+	  	<div class="form-group  isNotShow" style="display: none;">
+	  		<label class="col-sm-2 control-label">接报时间</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="receiptTime" name="receiptTime" value="<fmt:formatDate value='${exceptionRecordVo.receiptTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" data-rule-required="true"  />
+	            <input type="text" class="form-control" id="receiptTime" name="receiptTime" value="<fmt:formatDate value='${exceptionRecordVo.receiptTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" />
 	        </div>
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告部门 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="reportedDp" name="reportedDp" value="${exceptionRecordVo.reportedDp}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
+			<label class="col-sm-2 control-label">报告方式</label>
+			<div class="col-sm-3">
+				<opt:select dictKey="dc_reportedWay_ER" classStyle="form-control" name="reportedWay" id="reportedWay" value="${exceptionRecordVo.reportedWay}" isDefSelect="true" />
 			</div>
 		</div>
 	 
 	    <div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>报告部门 </label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="reportedDp" name="reportedDp" value="${exceptionRecordVo.reportedDp}" data-rule-required="true" data-rule-rangelength="[1,20]" />
+			</div>
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告人员 </label>
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="reportedPerson" name="reportedPerson" value="${exceptionRecordVo.reportedPerson}" data-rule-required="true" data-rule-rangelength="[1,30]" />    
-			</div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>报告方式</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_reportedWay_ER" classStyle="form-control required" name="reportedWay" id="reportedWay" value="${exceptionRecordVo.reportedWay}" isDefSelect="true" />
 			</div>
 		</div>
 		
@@ -115,6 +115,21 @@
 <script type="text/javascript">
 	var winName = "${winName}";
 	var URLStr = "/datecenter/exceptionRecord/exceptionRecord_";
+
+
+	//异常类型切换
+    $("#exceptionType").change(function(){
+        changeExceptionType();
+    });
+    function changeExceptionType(){
+        var exceptionType = $("#exceptionType").val();      //异常类型( 1:营运异常; 2:其他异常)
+        if(exceptionType != 1){
+			$(".isNotShow").show();		//显示 接报时间、报告方式
+        }else{
+            $(".isNotShow").hide();		//隐藏 接报时间、报告方式
+        }
+    }
+
 
 	//新增或编辑
 	function on_save(){
