@@ -481,6 +481,7 @@ public class ActivitiesController extends BaseController{
 	public String activitiesLauchCollect(HttpServletRequest request,ActivitiesLaunchVo activitiesLaunchVo){
 		try{
 			JSONArray arrayAl=new JSONArray();
+			Branch branch=this.branchServiceImpl.getEntityById(Branch.class, activitiesLaunchVo.getBranchId());
 			List<Activities> atList= activitiesServiceImpl.getAllEntity(Activities.class,Order.asc("order"));
 			if(atList!=null){
 				arrayAl=activitiesServiceImpl.collectAL(activitiesLaunchVo,atList);
@@ -493,6 +494,7 @@ public class ActivitiesController extends BaseController{
 			request.setAttribute("atList", atArray);
 			request.setAttribute("alList", arrayAl);
 			request.setAttribute("year", activitiesLaunchVo.getYear());
+			request.setAttribute("branchName", branch.getBranchName());
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

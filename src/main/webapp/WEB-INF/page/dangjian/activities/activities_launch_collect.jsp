@@ -83,9 +83,10 @@ $().ready(function() {
 	var atList = '${atList}';
 	var alList = '${alList}';
 	var year = '${year}';
+	var branchName = '${branchName}';
 	
 	var htmlStr='';
-	htmlStr+='<tr class="tit-bor"><td rowspan="2" class="col-10">月份</td><td class="" colspan="10">'+year+'年各月工作计划及实施</td></tr>';
+	htmlStr+='<tr class="tit-bor"><td rowspan="2" class="col-10">月份</td><td class="" colspan="10">'+year+'年'+branchName+'各月工作计划及实施</td></tr>';
 	
 	htmlStr+= initTitle(atList);
 	htmlStr+= initActivitiesLaunch(alList);
