@@ -36,6 +36,8 @@ public class Common {
 
 
 	public static final String SYSCODE = getProperty("sysCode");//子系统编码
+	
+	public static final String CategoryCode = getProperty("categoryCode");//移动端需要的下拉键值
 
 
 

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,13 @@ import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
 import com.common.utils.Common;
-import com.common.utils.VisitUtil;
+import com.common.utils.helper.JsonDateValueProcessor;
 import com.google.gson.Gson;
 import com.urms.loginLog.module.LoginLog;
 import com.urms.loginLog.service.ILoginLogService;
 import com.urms.orgFrame.dao.IOrgFrameDao;
 import com.urms.orgFrame.module.OrgFrame;
 import com.urms.orgFrame.service.IOrgFrameService;
-import com.urms.orgFrame.vo.OrgFrameVo;
 import com.urms.role.module.Role;
 import com.urms.subsystem.service.ISubsystemService;
 import com.urms.user.module.User;
@@ -156,18 +156,33 @@ public class MobileLoginController extends BaseController{
 			}
 			//传送角色id值
 			Set<Role> roleSet= u.getRoles();
-			String ids="";
+			StringBuffer roleIds = new StringBuffer();
+			StringBuffer roleCode = new StringBuffer();
+			String rolesIdstr = "";
+			String rolesCodestr = "";
 			if(roleSet.size()>0){
 				for (Role role : roleSet) {
-					String rid=role.getId();
-					ids+=rid+",";
+					roleIds.append(role.getId()+",");
+					roleCode.append(role.getRoleCode()+",");
 				}
-				ids=ids.substring(0, ids.length()-1);
+				if(roleIds.length() > 0){
+					rolesIdstr = roleIds.substring(0, roleIds.length()-1);
+		        }
+				if(roleCode.length() > 0){
+					rolesCodestr = roleCode.substring(0, roleCode.length()-1);
+		        }
 			}
-			json.put("roleIds",ids);
+			json.put("roleIds",rolesIdstr);
+			json.put("roleCodes",rolesCodestr);
 			if(StringUtils.isNotBlank(url)){
 				json.put("avatar", url);
 			}
+			JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
+			config.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor()); // 格式化日期
+			String[] excludes = new String[] {"orgFrame","roles"
+					,"avatarPathUpload","sysCode","loginIp","lastLoginTime","loginTimes"}; // 列表排除信息内容字段，减少传递时间
+			config.setExcludes(excludes);
+			json=JSONObject.fromObject(json, config);
 		} catch (Exception e) {
 			logger.error("错误："+e.getMessage()+"，时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 		}

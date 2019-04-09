@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.common.base.controller.BaseController;
+import com.common.utils.Common;
 import com.urms.dataDictionary.module.Category;
 import com.urms.dataDictionary.module.CategoryAttribute;
 import com.urms.dataDictionary.service.IDataDictionaryService;
@@ -29,7 +30,8 @@ public class MobileAppSetController extends BaseController{
 	    return "/app";
 	}
 	@RequestMapping(value="/app_download_cache")
-	public void list(HttpServletRequest request,HttpServletResponse response,String categoryCode){
+	public void list(HttpServletRequest request,HttpServletResponse response){
+		String categoryCode = Common.CategoryCode;
 		JSONObject json = new JSONObject();
 		JSONArray result=new JSONArray();
 		json.put("result", false);

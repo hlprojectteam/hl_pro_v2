@@ -20,11 +20,13 @@ import com.common.utils.helper.Pager;
 import com.dangjian.dao.IActivitesDao;
 import com.dangjian.module.Activities;
 import com.dangjian.module.ActivitiesLaunch;
+import com.dangjian.module.ActivitiesLaunchReview;
 import com.dangjian.ql.DangjianQl;
 import com.dangjian.service.IActivitiesService;
+import com.dangjian.vo.ActivitiesLaunchReviewVo;
 import com.dangjian.vo.ActivitiesLaunchVo;
 import com.dangjian.vo.ActivitiesVo;
-import com.news.module.News;
+import com.urms.role.service.IRoleService;
 
 /**
  * 
@@ -40,6 +42,8 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 	public IActivitesDao activitesDaoImpl;
 	@Autowired
 	public IAttachService attachServiceImpl;
+	@Autowired
+	public IRoleService roleServiceImpl;
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows,
 			ActivitiesVo activitiesVo) {
@@ -189,6 +193,18 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 		for (int i = 0; i < idz.length; i++) {
 			//删除附件
 			this.attachServiceImpl.deleteAttachByFormId(idz[i]);
+			
+			//判断是否亮点工作，如果是，则要删除它的评审记录
+			ActivitiesLaunch al=this.getEntityById(ActivitiesLaunch.class, idz[i]);
+			if(al!=null){
+				Activities ac=this.getEntityById(Activities.class, al.getActivityId());
+				if(ac!=null){
+					//如果是亮点工作
+					if(ac.getFrequency()==7){
+						this.deleteALRByFormAlId(al.getId());
+					}
+				}
+			}
 			this.delete(ActivitiesLaunch.class, idz[i]);
 		}
 		
@@ -217,12 +233,45 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 		if(StringUtils.isNotBlank(activitiesLaunchVo.getCreatorId())){
 			criterionsList.add(Restrictions.eq("creatorId", activitiesLaunchVo.getCreatorId()));
 		}
-		if(activitiesLaunchVo.getPoints()!=null){
-			criterionsList.add(Restrictions.eq("points", activitiesLaunchVo.getPoints()));
+		if(activitiesLaunchVo.getStatus()!=null){
+			criterionsList.add(Restrictions.eq("status", activitiesLaunchVo.getStatus()));
 		}
 
 		return this.activitesDaoImpl.queryEntityList(page, rows, criterionsList, Order.desc("createTime"), ActivitiesLaunch.class);
 	}
+	
+	@Override
+	public Pager queryALByStatusPager(Integer page, Integer rows,Integer[] Status,String userId) {
+		List<Object> objectList = new ArrayList<Object>();
+		String sql = "";
+	    if(Status.length==1){
+	    	sql=DangjianQl.MySql.activitiesFC;
+	    	objectList.add(userId);
+	    }else if(Status.length>1){
+	    	sql=DangjianQl.MySql.activitiesCS;
+	    	objectList.add(Status[0]);
+	    	objectList.add(Status[1]);
+	    }
+	    Pager pager= activitesDaoImpl.queryEntitySQLList(page, rows, sql, objectList);
+	    if(pager!=null){
+	    	List<ActivitiesLaunchVo> list = new ArrayList<ActivitiesLaunchVo>();
+	    	for (int i = 0; i < pager.getPageList().size(); i++) {
+	    		Object[] obj = (Object[])pager.getPageList().get(i);
+	    		ActivitiesLaunchVo alVo = new ActivitiesLaunchVo();
+	    		if(obj[0]!=null) alVo.setId(obj[0].toString());
+	    		if(obj[1]!=null) alVo.setTitle(obj[1].toString());
+	    		if(obj[2]!=null) alVo.setLaunchDate(DateUtil.getDateFromString(obj[2].toString()));
+	    		if(obj[3]!=null) alVo.setPoints(Integer.parseInt(obj[3].toString()));
+	    		if(obj[4]!=null) alVo.setCreatorName(obj[4].toString());
+	    		if(obj[5]!=null) alVo.setBranchName(obj[5].toString());
+	    		if(obj[6]!=null) alVo.setStatus(Integer.parseInt(obj[6].toString()));
+	    		list.add(alVo);
+	    	}
+	    	pager.setPageList(list);
+	    }
+		return pager;
+	}
+	
 	@Override
 	public JSONArray collectAL(ActivitiesLaunchVo activitiesLaunchVo,List<Activities> atList) {
 		String[] months={"01","02","03","04","05","06","07","08","09","10","11","12"};
@@ -258,8 +307,15 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 									String _alId= (obj[2]!=null)?obj[2].toString():"";//开展活动的ID
 									String _alpoint=(obj[3]!=null)?obj[3].toString():"0";//得分
 									String _alFrequency=(obj[4]!=null)?obj[4].toString():"";//频率
+									String _status=(obj[5]!=null)?obj[5].toString():"";//评审状态
 									if(atTitle.equals(_atTitle)){
-										listAtSpan.add(_atTime+"|"+_alId+"|"+_alpoint+"|"+_alFrequency);
+										if(_alFrequency.equals("7")){
+											if(_status.equals("3")){
+												listAtSpan.add(_atTime+"|"+_alId+"|"+_alpoint+"|"+_alFrequency);
+											}
+										}else{
+											listAtSpan.add(_atTime+"|"+_alId+"|"+_alpoint+"|"+_alFrequency);
+										}
 									}
 								}
 							}
@@ -301,6 +357,67 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 		}
 		return listVo;
 	}
+	@Override
+	public void saveOrUpdateALR(ActivitiesLaunchReview activitiesLaunchReview) {
+		if(StringUtils.isBlank(activitiesLaunchReview.getId())){
+			this.save(activitiesLaunchReview);
+		}else{
+			this.update(activitiesLaunchReview);
+		}
+	}
+	@Override
+	public List<ActivitiesLaunchReview> queryALREntityList(
+			ActivitiesLaunchReviewVo activitiesLaunchReviewVo) {
+		// TODO Auto-generated method stub
+		List<Criterion> criterionsList = new ArrayList<Criterion>();
+		if(StringUtils.isNotBlank(activitiesLaunchReviewVo.getActivitiesLaunchId())){
+			criterionsList.add(Restrictions.eq("activitiesLaunchId", activitiesLaunchReviewVo.getActivitiesLaunchId()));
+		}
+		if(StringUtils.isNotBlank(activitiesLaunchReviewVo.getUserId())){
+			criterionsList.add(Restrictions.eq("userId", activitiesLaunchReviewVo.getUserId()));
+		}
+
+		return activitesDaoImpl.queryEntityList(criterionsList, Order.desc("createTime"), ActivitiesLaunchReview.class);
+	}
+	@Override
+	public Pager queryALREntityListPager(Integer page, Integer rows,
+			ActivitiesLaunchReviewVo activitiesLaunchReviewVo) {
+		// TODO Auto-generated method stub
+		List<Criterion> criterionsList = new ArrayList<Criterion>();
+		if(StringUtils.isNotBlank(activitiesLaunchReviewVo.getActivitiesLaunchId())){
+			criterionsList.add(Restrictions.eq("activitiesLaunchId", activitiesLaunchReviewVo.getActivitiesLaunchId()));
+		}
+		if(StringUtils.isNotBlank(activitiesLaunchReviewVo.getUserId())){
+			criterionsList.add(Restrictions.eq("userId", activitiesLaunchReviewVo.getUserId()));
+		}
+		return this.activitesDaoImpl.queryEntityList(page, rows, criterionsList, Order.desc("createTime"), ActivitiesLaunchReview.class);
+	}
+	@Override
+	public boolean isAllCheck(ActivitiesLaunchReviewVo activitiesLaunchReviewVo) {
+		boolean flag=true;
+		List<ActivitiesLaunchReview> listALR= this.queryALREntityList(activitiesLaunchReviewVo);
+		if(listALR!=null){
+			for (ActivitiesLaunchReview activitiesLaunchReview : listALR) {
+				if(activitiesLaunchReview.getIsPass()==null){
+					flag=false;
+				}
+			}
+		}
+		return flag;
+	}
+	@Override
+	public void deleteALRByFormAlId(String activitiesLaunchId) {
+		ActivitiesLaunchReviewVo alrVo=new ActivitiesLaunchReviewVo();
+		alrVo.setActivitiesLaunchId(activitiesLaunchId);
+		List<ActivitiesLaunchReview> list = this.queryALREntityList(alrVo);
+		if(list!=null){
+			for (ActivitiesLaunchReview activitiesLaunchReview : list) {
+				this.delete(activitiesLaunchReview);
+			}
+		}
+	}
+	
+	
 	
 
 

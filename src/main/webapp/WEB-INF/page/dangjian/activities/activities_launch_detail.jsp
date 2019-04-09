@@ -87,7 +87,7 @@
 			<c:if test="${not empty alObject.imgUrls}">
 				<div id="uploaderDiv" class="wu-example dowebok">
 					<c:forEach items="${alObject.imgUrls}" var="imgUrl" varStatus="">
-                        <img data-original="${imgUrl}"  height="200px" width="200px" src="${imgUrl}" alt="" />
+                        <img data-original="${imgUrl}"  height="100px" width="100px" src="${imgUrl}" alt="" />
                     </c:forEach>
 				</div> 
             </c:if>

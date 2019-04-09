@@ -28,6 +28,7 @@ public class ActivitiesLaunch extends BaseModule{
 	private String launchAddress ;		//开展的活动地点
 	private String launchContent ;		//开展的活动描述
 	private Integer points;             //开展活动的得分
+	private Integer status;             //活动的评审状态 字典：dj_activity_status  0未评审 1初审 2复审 3审定通过 4审定不通过（只有亮点工作才要评审）
 	
 	@Column(name = "BRANCH_ID" ,length=32)
 	public String getBranchId() {
@@ -70,6 +71,13 @@ public class ActivitiesLaunch extends BaseModule{
 	}
 	public void setPoints(Integer points) {
 		this.points = points;
+	}
+	@Column(name = "LAUNCH_STATUS" ,length=2)
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 	

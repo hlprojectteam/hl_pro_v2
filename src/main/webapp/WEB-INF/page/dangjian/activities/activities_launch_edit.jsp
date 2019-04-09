@@ -25,6 +25,7 @@
 <input type="hidden" id="creatorId" name="creatorId" value="${alObject.creatorId}" />	
 <input type="hidden" id="sysCode" name="sysCode" value="${alObject.sysCode}" />	
 <input type="hidden" id="branchId" name="branchId" value="${alObject.branchId}" />	
+<input type="hidden" id="status" name="status" value="${alObject.status}" />	
 	<%-- 第1行 --%>
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>选择活动</label>
@@ -148,6 +149,7 @@ function on_save() {
 	    } */
 	    $("#onSave").attr("disabled",true);
 	    on_submit();
+	    //addActivitiesLauchReview('123123');
     }
 }
 
@@ -183,6 +185,7 @@ function on_submit() {
         }
     });
 }
+
 
 </script>
 </html>

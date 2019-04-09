@@ -24,18 +24,26 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
+import com.common.message.MessageJpush;
+import com.common.message.module.Message;
+import com.common.message.service.IMessageService;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.Pager;
 import com.dangjian.module.Activities;
 import com.dangjian.module.ActivitiesLaunch;
+import com.dangjian.module.ActivitiesLaunchReview;
 import com.dangjian.module.Branch;
 import com.dangjian.module.PartyMember;
 import com.dangjian.service.IActivitiesService;
 import com.dangjian.service.IBranchService;
 import com.dangjian.service.IPartyMemberService;
+import com.dangjian.vo.ActivitiesLaunchReviewVo;
 import com.dangjian.vo.ActivitiesLaunchVo;
 import com.dangjian.vo.ActivitiesVo;
 import com.google.gson.JsonObject;
+import com.urms.role.module.Role;
+import com.urms.role.service.IRoleService;
+import com.urms.role.vo.RoleVo;
 import com.urms.user.module.User;
 import com.urms.user.service.IUserService;
 import com.urms.user.vo.UserVo;
@@ -61,6 +69,11 @@ public class ActivitiesController extends BaseController{
 	public IUserService userServiceImpl;
 	@Autowired
 	public IPartyMemberService partyMemberServiceImpl;
+	@Autowired
+	public IRoleService roleServiceImpl;
+	@Autowired
+	public IMessageService messageServiceImpl;
+	
 	
 	/***********************活动方法 start*******************************/
 	/**
@@ -321,24 +334,67 @@ public class ActivitiesController extends BaseController{
 				Branch branch= branchServiceImpl.getEntityById(Branch.class, branchId);
 				activitiesLaunchVo.setBranchName(branch.getBranchName());
 				activitiesLaunchVo.setBranchId(branchId);
+				activitiesLaunchVo.setStatus(0);//默认为0
 			}
 			request.setAttribute("alObject", activitiesLaunchVo);
 		}
 		return "/page/dangjian/activities/activities_launch_edit";
 	}
 	
+	/**
+	 * 
+	 * @方法：@param httpSession
+	 * @方法：@param response
+	 * @方法：@param activitiesLaunchVo
+	 * @描述：活动发布保存
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年3月31日
+	 */
 	@RequestMapping(value="/activitiesLauchEdit_saveOrUpdate")
 	public void activitiesLauchEditSaveOrUpdate(HttpSession httpSession,HttpServletResponse response,ActivitiesLaunchVo activitiesLaunchVo){
 		JsonObject json =new JsonObject();
 		try{
-		    Activities ac=activitiesServiceImpl.getEntityById(Activities.class, activitiesLaunchVo.getActivityId());
-		    if(ac!=null){
-		    	activitiesLaunchVo.setPoints(ac.getPoints());
-		    }
-			ActivitiesLaunch activitiesLaunch = new ActivitiesLaunch();
-			BeanUtils.copyProperties(activitiesLaunchVo, activitiesLaunch);
-			this.activitiesServiceImpl.saveOrUpdateAL(activitiesLaunch);
-			json.addProperty("id", activitiesLaunch.getId());
+			if(StringUtils.isBlank(activitiesLaunchVo.getId())){
+				//新增活动情况
+				Activities ac=activitiesServiceImpl.getEntityById(Activities.class, activitiesLaunchVo.getActivityId());
+			    if(ac!=null){
+			    	activitiesLaunchVo.setPoints(ac.getPoints());
+			    }
+				ActivitiesLaunch activitiesLaunch = new ActivitiesLaunch();
+				BeanUtils.copyProperties(activitiesLaunchVo, activitiesLaunch);
+				this.activitiesServiceImpl.saveOrUpdateAL(activitiesLaunch);
+				if(ac.getFrequency()==7){
+					//如果活动类型是亮点工作，则同时在活动评审表预插入对应的角色的评审记录，等待评审
+					//查找所有的党委委员用户
+					RoleVo roleVo=new RoleVo();
+					roleVo.setRoleCode("dangjian_dwwy");
+					Role role= roleServiceImpl.getRole(roleVo);
+					List<User> userList = new ArrayList<>(role.getUsers());
+					if(userList!=null){
+						//插入
+						for (User user : userList) {
+							ActivitiesLaunchReview alr=new ActivitiesLaunchReview();
+							alr.setActivitiesLaunchId(activitiesLaunch.getId());
+							alr.setUserId(user.getId());
+							this.activitiesServiceImpl.saveOrUpdateALR(alr);
+						}
+					}
+					//发送给“党委委员-初审”角色初审
+					sendJpushMsg("党建通知","亮点工作评审",null,"dangjian_dwwy_cs");
+				}
+				json.addProperty("id", activitiesLaunch.getId());
+			}else{
+				//更新活动情况
+				ActivitiesLaunch activitiesLaunch=this.activitiesServiceImpl.getEntityById(ActivitiesLaunch.class, activitiesLaunchVo.getId());
+				Activities ac=activitiesServiceImpl.getEntityById(Activities.class, activitiesLaunchVo.getActivityId());
+			    if(ac!=null){
+			    	activitiesLaunchVo.setPoints(ac.getPoints());
+			    }
+				BeanUtils.copyProperties(activitiesLaunchVo, activitiesLaunch);
+				this.activitiesServiceImpl.saveOrUpdateAL(activitiesLaunch);
+				json.addProperty("id", activitiesLaunch.getId());
+			}
 			json.addProperty("result", true);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -347,6 +403,7 @@ public class ActivitiesController extends BaseController{
 			this.print(json.toString());
 		}
 	}
+	
 	
 	@RequestMapping(value="/activitiesLauch_del") 
 	public void activitiesLauchDelete(HttpServletResponse response,String ids) {
@@ -601,18 +658,22 @@ public class ActivitiesController extends BaseController{
 		JSONObject json = new JSONObject();
 		json.put("result",false);
 		try {
-			Pager pager = this.activitiesServiceImpl.queryALEntityListPager(page, rows, activitiesLaunchVo);
-			List<ActivitiesLaunch> listAL=pager.getPageList();
-			List<ActivitiesLaunchVo> listAlVo=new ArrayList<>();
-			for (ActivitiesLaunch activitiesLaunch : listAL) {
-				ActivitiesLaunchVo alVo=new ActivitiesLaunchVo();
-				BeanUtils.copyProperties(activitiesLaunch, alVo);
-				Activities at=this.activitiesServiceImpl.getEntityById(Activities.class, activitiesLaunch.getActivityId()); 
-				alVo.setTitle(at.getTitle());
-				Branch branch= branchServiceImpl.getEntityById(Branch.class, activitiesLaunch.getBranchId());
-				alVo.setBranchName(branch.getBranchName());
-				listAlVo.add(alVo);
+			User user=this.getSessionUser();
+			List<Role> roleList = new ArrayList<>(user.getRoles());
+			boolean isCS=false;//是否初审角色
+			for (Role role : roleList) {
+				if(role.getRoleCode().equals("dangjian_dwwy_cs"))
+					isCS=true;
 			}
+			Integer[] status=null;
+			if(isCS){
+				//初审角色，查询两个状态的活动记录
+				status=new Integer[]{0,2};
+			}else{
+				status=new Integer[]{1};
+			}
+			Pager pager = activitiesServiceImpl.queryALByStatusPager(page, rows, status,user.getId());
+			List<ActivitiesLaunchVo> listAlVo=pager.getPageList();
 			json.put("total", pager.getRowCount());
 			JsonConfig config = new JsonConfig();
 			String[] excludes = new String[] {"createTime","activityId","branchId","completionTimes","creatorId",
@@ -623,7 +684,7 @@ public class ActivitiesController extends BaseController{
 			json.put("rows", JSONArray.fromObject(listAlVo,config));
 			json.put("result",true);
 		} catch (Exception e) {
-			// TODO: handle exception
+			json.put("err",e.getMessage());
 		}
 		this.print(json);
 	}
@@ -633,7 +694,7 @@ public class ActivitiesController extends BaseController{
 	 * @方法：@param request
 	 * @方法：@param activitiesLaunchVo
 	 * @方法：@return
-	 * @描述：活动评审
+	 * @描述：加载活动评审页面
 	 * @return
 	 * @author: qinyongqian
 	 * @date:2019年2月27日
@@ -663,12 +724,27 @@ public class ActivitiesController extends BaseController{
 					}
 					alVo.setImgUrls(imgUrls);	//获取上报人上报隐患时提交的图片url
 					
-					JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
-					config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
-					String[] excludes = new String[] {"completionTimes","isReach","frequency","timeQuantum","year"}; // 列表排除信息内容字段，减少传递时间
-					config.setExcludes(excludes);
-					JSONObject alObject=JSONObject.fromObject(alVo, config);
-					request.setAttribute("alObject", alObject);
+					//查询此活动评审记录
+					ActivitiesLaunchReviewVo alrVo=new ActivitiesLaunchReviewVo();
+					alrVo.setActivitiesLaunchId(activitiesLaunchVo.getId());
+					List<ActivitiesLaunchReview> listAlr= activitiesServiceImpl.queryALREntityList(alrVo);
+					StringBuffer str=new StringBuffer();
+					for (ActivitiesLaunchReview activitiesLaunchReview : listAlr) {
+						if(activitiesLaunchReview.getIsPass()!=null){
+							String isPass=activitiesLaunchReview.getIsPass()==1?"通过":"不通过";
+							User user=this.userServiceImpl.getEntityById(User.class, activitiesLaunchReview.getUserId());
+							String opinion= activitiesLaunchReview.getOpinion();
+							str.append(user.getUserName()+" ");
+							str.append(isPass+" ");
+							str.append(opinion);
+							str.append("\n");
+						}
+					}
+					if(str.length()>0){
+						//str.setLength(str.length()-1);
+					}
+					alVo.setExOpinion(str.toString());
+					request.setAttribute("alObject", alVo);
 				}
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -682,17 +758,63 @@ public class ActivitiesController extends BaseController{
 	 * @方法：@param httpSession
 	 * @方法：@param response
 	 * @方法：@param activitiesLaunchVo
-	 * @描述：保存编辑活动
+	 * @描述：评审保存
 	 * @return
 	 * @author: qinyongqian
 	 * @date:2019年3月26日
 	 */
-	@RequestMapping(value="/activitiesLauch_saveOrUpdate",method = RequestMethod.POST)
-	public void activitiesLauchSaveOrUpdate(HttpSession httpSession,HttpServletResponse response,ActivitiesLaunchVo activitiesLaunchVo){
+	@RequestMapping(value="/activitiesLauchReview_Save",method = RequestMethod.POST)
+	public void activitiesLauchReviewSave(HttpSession httpSession,HttpServletResponse response,ActivitiesLaunchVo activitiesLaunchVo){
 		JsonObject json =new JsonObject();
+		json.addProperty("result", false);
 		try{
-			ActivitiesLaunch activitiesLaunch = new ActivitiesLaunch();
-			BeanUtils.copyProperties(activitiesLaunchVo, activitiesLaunch);
+			User user=this.getSessionUser();
+			ActivitiesLaunch activitiesLaunch = this.activitiesServiceImpl.getEntityById(ActivitiesLaunch.class, activitiesLaunchVo.getId());
+			if(activitiesLaunch.getStatus()==2){
+				//复审通过
+				activitiesLaunch.setPoints(activitiesLaunchVo.getPoints());
+				if(activitiesLaunchVo.getIsPass()==0){
+					//初审未通过
+					activitiesLaunch.setStatus(4);
+				}else if(activitiesLaunchVo.getIsPass()==1){
+					//初审通过
+					activitiesLaunch.setStatus(3);
+				}
+			}else{
+				//未评审、初审通过情况
+				ActivitiesLaunchReviewVo alrVo=new ActivitiesLaunchReviewVo();
+				alrVo.setUserId(user.getId());
+				alrVo.setActivitiesLaunchId(activitiesLaunchVo.getId());
+				List<ActivitiesLaunchReview> listAlr= activitiesServiceImpl.queryALREntityList(alrVo);
+				if(listAlr!=null){
+					ActivitiesLaunchReview alr=listAlr.get(0);
+					alr.setReviewTime(new Date());
+					alr.setOpinion(activitiesLaunchVo.getOpinion());
+					alr.setIsPass(activitiesLaunchVo.getIsPass());
+					if(activitiesLaunch.getStatus()==0){
+						//未评审
+						if(activitiesLaunchVo.getIsPass()==0){
+							//初审未通过
+							activitiesLaunch.setStatus(4);
+						}else{
+							//初审通过
+							activitiesLaunch.setStatus(1);
+						}
+						alr.setStatusNode(1);
+					}else if(activitiesLaunch.getStatus()==1){
+						//初审通过
+						alr.setStatusNode(2);
+						//检查是否所有党委委员都评审过
+						ActivitiesLaunchReviewVo alrVo2=new ActivitiesLaunchReviewVo();
+						alrVo2.setActivitiesLaunchId(activitiesLaunchVo.getId());
+						if(this.activitiesServiceImpl.isAllCheck(alrVo2)){
+							//所有通过
+							activitiesLaunch.setStatus(2);
+						}
+					}
+					this.activitiesServiceImpl.saveOrUpdateALR(alr);
+				}
+			}
 			this.activitiesServiceImpl.update(activitiesLaunch);
 			json.addProperty("id", activitiesLaunch.getId());
 			json.addProperty("result", true);
@@ -733,5 +855,35 @@ public class ActivitiesController extends BaseController{
 	
 	
 	/***********************活动开展方法 end*******************************/
+	
+	/**
+	 * 
+	 * @param noticeTitle 通知的提示标题
+	 * @param noticeContent 通知的简要内容
+	 * @param userIds 给谁发通知，用户ID的集合，用","分隔
+	 * @param tags 给哪一类人发通知，如角色的集合，用","分隔
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年4月8日
+	 */
+	private void sendJpushMsg(String noticeTitle,String noticeContent, String userIds,String tags){
+		try {
+			Message msg = new Message();
+			msg.setTitle(noticeTitle);
+			msg.setContent(noticeContent);
+			msg.setAlias(userIds);
+			msg.setType(5); //消息类型 3 为事件
+			msg.setTags(tags);
+			msg.setSender(this.getSessionUser().getUserName());
+			msg.setCreatorId(this.getSessionUser().getId());
+			msg.setCreatorName(this.getSessionUser().getUserName());
+			msg.setSysCode(this.getSessionUser().getSysCode());
+			this.messageServiceImpl.saveOrUpdate(msg);
+			MessageJpush.sendCommonMsg(noticeTitle, msg);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
 	
 }

@@ -116,8 +116,14 @@ public class RoleServiceImpl extends BaseServiceImpl implements IRoleService{
 	@Override
 	public Pager queryRelationUser(int page,int rows,RoleVo roleVo){
 		List<Object> attr = new ArrayList<Object>();
-		attr.add(roleVo.getId());
-		return roleDaoImpl.queryEntityHQLList(page, rows, RoleQL.HQL.RelationUser, attr);
+		if(StringUtils.isNotBlank(roleVo.getId())){
+			attr.add(roleVo.getId());
+			return roleDaoImpl.queryEntityHQLList(page, rows, RoleQL.HQL.RelationUser, attr);
+		}else if(StringUtils.isNotBlank(roleVo.getRoleCode())){
+			attr.add(roleVo.getRoleCode());
+			return roleDaoImpl.queryEntityHQLList(page, rows, RoleQL.HQL.RelationUserByRoleCode, attr);
+		}
+		return null;
 	}
 	
 	@Override

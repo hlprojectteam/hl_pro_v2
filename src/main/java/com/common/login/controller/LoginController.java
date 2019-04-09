@@ -73,20 +73,45 @@ public class LoginController extends BaseController{
 			if(StringUtils.isNotBlank(loginName)){
 				user = userServiceImpl.login(loginName, password,null);
 				if(user!=null){
-					if(user.getState()==1){//正常账号
-						if(Common.SingleLogin.equals("1")){//配置 只能一个账号登陆
-							boolean chk = false;
-							List<User> users = SystemWebSocketHandler.users;
-							for (User u : users) {
-								if(u.getId().indexOf(user.getId())>-1){//用户已经登陆
-									chk = true;
-									break;
+					if(user.getState()!=null){
+						if(user.getState()==1){//正常账号
+							if(Common.SingleLogin.equals("1")){//配置 只能一个账号登陆
+								boolean chk = false;
+								List<User> users = SystemWebSocketHandler.users;
+								for (User u : users) {
+									if(u.getId().indexOf(user.getId())>-1){//用户已经登陆
+										chk = true;
+										break;
+									}
 								}
-							}
-							if(chk){
-								this.getHttpSession().setAttribute("msg", "该账号已经在其他地方登陆！");
-								return returnLoginJsp;
-							}else{
+								if(chk){
+									this.getHttpSession().setAttribute("msg", "该账号已经在其他地方登陆！");
+									return returnLoginJsp;
+								}else{
+									user.setLoginTimes(user.getLoginTimes()+1);//登录次数
+									user.setLastLoginTime(new Date());//最后一次登录时间
+									user.setLoginIp(request.getRemoteAddr());//登录id
+									userServiceImpl.update(user);
+									//写入session
+									this.getHttpSession().setAttribute("user", user);
+									//获得用户菜单
+									List<List<Menu>> list = this.getMenu(user);
+									if(list.get(0)!=null)
+										this.getHttpSession().setAttribute("firstList", list.get(0));
+									if(list.get(1)!=null)
+										this.getHttpSession().setAttribute("secondList", list.get(1));
+									if(list.get(2)!=null)
+										this.getHttpSession().setAttribute("thirdList", list.get(2));
+									List<Attach> attachList = attachServiceImpl.queryAttchListByFormId(user.getId());
+									for (int i = 0; i < attachList.size(); i++) {
+										this.getHttpSession().setAttribute("attachPhoto", attachList.get(0));//头像路径加入缓存
+									}
+									logger.debug("用户:"+user.getLoginName()+" 登录系统，时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+									//地图菜单
+									this.getHttpSession().setAttribute("firstMapList", list.get(3));
+									return returnUrl;
+								}
+							}else{//一个账户多浏览器登录
 								user.setLoginTimes(user.getLoginTimes()+1);//登录次数
 								user.setLastLoginTime(new Date());//最后一次登录时间
 								user.setLoginIp(request.getRemoteAddr());//登录id
@@ -110,31 +135,11 @@ public class LoginController extends BaseController{
 								this.getHttpSession().setAttribute("firstMapList", list.get(3));
 								return returnUrl;
 							}
-						}else{//一个账户多浏览器登录
-							user.setLoginTimes(user.getLoginTimes()+1);//登录次数
-							user.setLastLoginTime(new Date());//最后一次登录时间
-							user.setLoginIp(request.getRemoteAddr());//登录id
-							userServiceImpl.update(user);
-							//写入session
-							this.getHttpSession().setAttribute("user", user);
-							//获得用户菜单
-							List<List<Menu>> list = this.getMenu(user);
-							if(list.get(0)!=null)
-								this.getHttpSession().setAttribute("firstList", list.get(0));
-							if(list.get(1)!=null)
-								this.getHttpSession().setAttribute("secondList", list.get(1));
-							if(list.get(2)!=null)
-								this.getHttpSession().setAttribute("thirdList", list.get(2));
-							List<Attach> attachList = attachServiceImpl.queryAttchListByFormId(user.getId());
-							for (int i = 0; i < attachList.size(); i++) {
-								this.getHttpSession().setAttribute("attachPhoto", attachList.get(0));//头像路径加入缓存
-							}
-							logger.debug("用户:"+user.getLoginName()+" 登录系统，时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-							//地图菜单
-							this.getHttpSession().setAttribute("firstMapList", list.get(3));
-							return returnUrl;
+						}else{//冻结
+							this.getHttpSession().setAttribute("msg", "该账号已经被冻结！");
+							return returnLoginJsp;
 						}
-					}else{//冻结
+					}else{//状态为空，视频为冻结
 						this.getHttpSession().setAttribute("msg", "该账号已经被冻结！");
 						return returnLoginJsp;
 					}

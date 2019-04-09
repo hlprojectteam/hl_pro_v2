@@ -32,7 +32,7 @@ public class DangjianQl {
 		//查党建活动开展情况，以全年为基准，看活动是否开展，开展的次数
 		public static final String activitiesYearNum="SELECT a.TITLE,a.FREQUENCY,count(t.ID) as al_count,'##年',##"
 					+" FROM p_dj_activities_launch t,p_dj_activities a WHERE t.ACTIVITY_ID = a.ID AND t.BRANCH_ID = '@@' AND t.ACTIVITY_ID = '?'"
-					+" AND DATE_FORMAT(t.LAUNCH_DATE, '%Y') = '##'";
+					+" AND DATE_FORMAT(t.LAUNCH_DATE, '%Y') = '##' AND t.LAUNCH_STATUS=3 ";
 		
 		//
 		public static final String collectActivitiesLanuch="SELECT al.atName,al.alId,al.alTime, uc.CALENDAR_NAME,uc.CALENDAR_NUM from um_calendar_month uc LEFT JOIN "
@@ -41,7 +41,7 @@ public class DangjianQl {
 				    +" AND a.ID = '?') al ON (uc.CALENDAR_NUM=al.mm) ORDER BY uc.CALENDAR_NUM";
 		
 		//活动汇总，查某支部，某年度，某月份的记录
-		public static final String collectActivitiesLanuch2="SELECT ats.TITLE,al.LAUNCH_DATE,al.ID,al.LAUNCH_POINTS,ats.FREQUENCY from p_dj_activities ats LEFT JOIN p_dj_activities_launch al "
+		public static final String collectActivitiesLanuch2="SELECT ats.TITLE,al.LAUNCH_DATE,al.ID,al.LAUNCH_POINTS,ats.FREQUENCY,al.LAUNCH_STATUS  from p_dj_activities ats LEFT JOIN p_dj_activities_launch al "
 					+" ON (ats.ID=al.ACTIVITY_ID) WHERE al.BRANCH_ID='@@'  AND DATE_FORMAT(al.LAUNCH_DATE, '%Y') = '##' AND  DATE_FORMAT(al.LAUNCH_DATE, '%m') = '?' ORDER by ats.ORDER_ ";
 						
 		
@@ -75,6 +75,19 @@ public class DangjianQl {
                      +" SELECT al.BRANCH_ID as b_id,SUM(al.LAUNCH_POINTS) AS points from p_dj_activities_launch al  "
                      +" where DATE_FORMAT(al.LAUNCH_DATE, '%Y') = '##' GROUP BY al.BRANCH_ID "
 					 +" ) alt on (db.ID=alt.b_id) ORDER BY alt.points desc ";
+		
+		//查党建活动未审记录 或 复审通过记录
+		public static final String activitiesCS="SELECT a.id,c.TITLE, a.LAUNCH_DATE,a.LAUNCH_POINTS,a.CREATOR_NAME,d.BRANCH_NAME,a.LAUNCH_STATUS "
+                     +" FROM `p_dj_activities_launch` a, p_dj_activities c,p_dj_branch d ,p_dj_partymember e  "
+                     +" where   a.ACTIVITY_ID=c.ID and a.CREATOR_ID=e.USER_ID and d.ID=e.BRANCH_ID  AND c.FREQUENCY=7 "
+					 +" and (a.LAUNCH_STATUS=? or a.LAUNCH_STATUS=?) ORDER BY A.LAUNCH_DATE DESC ";
+		
+		//查党建活动要复审的记录
+		public static final String activitiesFC="SELECT a.id,c.TITLE, a.LAUNCH_DATE,a.LAUNCH_POINTS,a.CREATOR_NAME,d.BRANCH_NAME,a.LAUNCH_STATUS "
+                     +" FROM `p_dj_activities_launch` a,p_dj_activities_launch_review b,p_dj_activities c,p_dj_branch d ,p_dj_partymember e  "
+                     +" where a.ID=b.AC_LAUNCH_ID AND a.ACTIVITY_ID=c.ID and a.CREATOR_ID=e.USER_ID and d.ID=e.BRANCH_ID and a.LAUNCH_STATUS =1 "
+					 +" and b.USER_ID=? and b.IS_PASS is null ORDER BY A.LAUNCH_DATE DESC ";
+		
 				                   
 				
 		

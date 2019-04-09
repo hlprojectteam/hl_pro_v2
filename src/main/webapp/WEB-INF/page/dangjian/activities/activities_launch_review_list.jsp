@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>党建活动开展列表</title>
+    <title>党建活动评审列表</title>
 </head>
 <body>
 <div class="ibox-content" style="padding-top:5px;">
@@ -46,7 +46,7 @@
     //加载列表
     function loadGrid() {
     	$("#grid").bootstrapTable({
-    		url: "/dangjian/activitiesLauch_reviewload?points=0",
+    		url: "/dangjian/activitiesLauch_reviewload",
     		dataType:"json",
     		method:"post",
     		queryParamsType: "limit",//服务器分页必须
@@ -67,6 +67,9 @@
 		              {title: "积分",field: "points",width: 50,align:"center"}, 
 		              {title: "上报人",field: "creatorName",width: 50,align:"center"}, 
 		              {title: "上报支部",field: "branchName",width: 50,align:"center"}, 
+		              {title: "评审状态", field: "status", width: 50,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dj_activity_status",value);
+		              }},
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){
     					  var json = JSON.stringify(row);
     					  var tb = table_button.split("&nbsp;&nbsp;");

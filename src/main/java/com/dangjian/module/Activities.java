@@ -18,7 +18,7 @@ import com.common.base.module.BaseModule;
 public class Activities extends BaseModule{
 	
 	private String title ;		    //活动标题，名称
-	private Integer frequency ;     //活动频率   数据字典：dj_activities_frequency
+	private Integer frequency ;     //活动频率   数据字典：dj_activities_frequency 1一周次 2一月次 3一个季度一次 4半年一次 5一个季度或者半年一次 6一年一次 7无限制
 	private Integer points ;        //活动分值
 	private String cover;           //缩略图
 	private String content;         //描述

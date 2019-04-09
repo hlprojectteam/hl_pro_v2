@@ -23,6 +23,9 @@ public class ActivitiesLaunchVo extends ActivitiesLaunch{
 	private Integer isReach ;       //周期内是否达标     
 	private String branchName;      //开展的部门名称
 	private List<String> imgUrls;		//图片附件的url
+	private Integer isPass;      //评审是否通过
+	private String opinion;      //活动评审的意见
+	private String exOpinion;      //活动评审的意见记录
 	
 	public List<String> getImgUrls() {
         return imgUrls;
@@ -102,6 +105,30 @@ public class ActivitiesLaunchVo extends ActivitiesLaunch{
 
 	public void setTimeQuantumValue(String timeQuantumValue) {
 		this.timeQuantumValue = timeQuantumValue;
+	}
+
+	public String getOpinion() {
+		return opinion;
+	}
+
+	public void setOpinion(String opinion) {
+		this.opinion = opinion;
+	}
+
+	public Integer getIsPass() {
+		return isPass;
+	}
+
+	public void setIsPass(Integer isPass) {
+		this.isPass = isPass;
+	}
+
+	public String getExOpinion() {
+		return exOpinion;
+	}
+
+	public void setExOpinion(String exOpinion) {
+		this.exOpinion = exOpinion;
 	}
 
 

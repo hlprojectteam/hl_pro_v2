@@ -30,6 +30,7 @@ import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
 import com.dangjian.module.Activities;
 import com.dangjian.module.ActivitiesLaunch;
+import com.dangjian.module.ActivitiesLaunchReview;
 import com.dangjian.module.Branch;
 import com.dangjian.module.Introduction;
 import com.dangjian.module.PartyMember;
@@ -37,12 +38,16 @@ import com.dangjian.service.IActivitiesService;
 import com.dangjian.service.IBranchService;
 import com.dangjian.service.IIntroductionService;
 import com.dangjian.service.IPartyMemberService;
+import com.dangjian.vo.ActivitiesLaunchReviewVo;
 import com.dangjian.vo.ActivitiesLaunchVo;
 import com.dangjian.vo.ActivitiesVo;
 import com.dangjian.vo.IntroductionVo;
 import com.dangjian.vo.PartyMemberVo;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.urms.role.module.Role;
+import com.urms.role.service.IRoleService;
+import com.urms.role.vo.RoleVo;
 import com.urms.user.module.User;
 import com.urms.user.service.IUserService;
 import com.urms.user.vo.UserVo;
@@ -70,6 +75,8 @@ public class MobileDangJianController extends BaseController{
 	public IIntroductionService introductionServiceImpl;
 	@Autowired
 	public IAttachService attachServiceImpl;
+	@Autowired
+	public IRoleService roleServiceImpl;
 	
 	@RequestMapping(value="/activities_list")
 	public void mobileNewsList(HttpServletRequest request,HttpServletResponse response,
@@ -125,11 +132,29 @@ public class MobileDangJianController extends BaseController{
 		    if(ac!=null){
 		    	alVo.setPoints(ac.getPoints());
 		    }
+		    alVo.setStatus(0);//默认状态
 			ActivitiesLaunch al=new ActivitiesLaunch();
 			BeanUtils.copyProperties(alVo, al);
 			al.setLaunchDate(DateUtil.getDateFromString(alVo.getLaunchDateStr()));
 			
 			this.activitiesServiceImpl.saveOrUpdateAL(al);
+			if(ac.getFrequency()==7){
+				//如果活动类型是亮点工作，则同时在活动评审表预插入对应的角色的评审记录，等待评审
+				//查找所有的党委委员用户
+				RoleVo roleVo=new RoleVo();
+				roleVo.setRoleCode("dangjian_dwwy");
+				Role role= roleServiceImpl.getRole(roleVo);
+				List<User> userList = new ArrayList<>(role.getUsers());
+				if(userList!=null){
+					//插入
+					for (User user : userList) {
+						ActivitiesLaunchReview alr=new ActivitiesLaunchReview();
+						alr.setActivitiesLaunchId(al.getId());
+						alr.setUserId(user.getId());
+						this.activitiesServiceImpl.saveOrUpdateALR(alr);
+					}
+				}
+			}
 			json.put("result", true);
 			json.put("msg", "");
 			json.put("ActivitiesLaunchId", al.getId());
@@ -157,6 +182,7 @@ public class MobileDangJianController extends BaseController{
 	public void partyMemberList(HttpServletRequest request,HttpServletResponse response,PartyMemberVo partyMemberVo,
 			Integer page,Integer rows){
 		Pager pager = this.partyMemberServiceImpl.queryPartyMemberEntityList(page, rows, partyMemberVo);
+		@SuppressWarnings("unchecked")
 		List<PartyMemberVo> listVo=pager.getPageList();
 		
 		JSONObject json = new JSONObject();
@@ -333,6 +359,7 @@ public class MobileDangJianController extends BaseController{
 	public void activitiesLauchList(HttpServletRequest request,HttpServletResponse response,ActivitiesLaunchVo activitiesLaunchVo,
 			Integer page,Integer rows){
 		Pager pager = this.activitiesServiceImpl.queryALEntityListPager(page, rows, activitiesLaunchVo);
+		@SuppressWarnings("unchecked")
 		List<ActivitiesLaunch> list= pager.getPageList();
 		List<ActivitiesLaunchVo> listVo=new ArrayList<>();
 		for (ActivitiesLaunch activitiesLaunch : list) {
@@ -424,25 +451,70 @@ public class MobileDangJianController extends BaseController{
 	 * @方法：@param httpSession
 	 * @方法：@param response
 	 * @方法：@param activitiesLaunchVo
-	 * @描述：评审活动，打分
+	 * @描述：加载活动评审页面
 	 * @return
 	 * @author: qinyongqian
-	 * @date:2019年3月25日
+	 * @date:2019年4月23日
 	 */
 	@RequestMapping(value="/activitiesLauch_review",method = RequestMethod.POST)
 	public void activitiesLauchSaveOrUpdate(HttpSession httpSession,HttpServletResponse response,ActivitiesLaunchVo activitiesLaunchVo){
-		JsonObject json =new JsonObject();
+		JSONObject json = new JSONObject();
+		json.put("result", false);
 		try{
-			ActivitiesLaunch activitiesLaunch = this.activitiesServiceImpl.getEntityById(ActivitiesLaunch.class, activitiesLaunchVo.getId());
-			activitiesLaunch.setPoints(activitiesLaunchVo.getPoints());
-			this.activitiesServiceImpl.update(activitiesLaunch);
-			json.addProperty("id", activitiesLaunch.getId());
-			json.addProperty("result", true);
+			ActivitiesLaunch al=activitiesServiceImpl.getEntityById(ActivitiesLaunch.class, activitiesLaunchVo.getId());
+			ActivitiesLaunchVo alVo=new ActivitiesLaunchVo();
+			if(al!=null){
+				BeanUtils.copyProperties(al, alVo);
+				
+				String branchId=al.getBranchId();
+				Branch branch= branchServiceImpl.getEntityById(Branch.class, branchId);
+				alVo.setBranchName(branch.getBranchName());
+				
+				String activityId=al.getActivityId();
+				Activities activities= activitiesServiceImpl.getEntityById(Activities.class, activityId);
+				alVo.setTitle(activities.getTitle());
+				alVo.setFrequency(activities.getFrequency());
+				
+				List<Attach> attchList = this.attachServiceImpl.queryAttchListByFormId(activitiesLaunchVo.getId());
+				List<String> imgUrls = new ArrayList<String>();
+				for (Attach attach : attchList) {
+					imgUrls.add(attach.getPathUpload());
+				}
+				alVo.setImgUrls(imgUrls);	//获取上报人上报隐患时提交的图片url
+				
+				//查询此活动评审记录
+				ActivitiesLaunchReviewVo alrVo=new ActivitiesLaunchReviewVo();
+				alrVo.setActivitiesLaunchId(activitiesLaunchVo.getId());
+				List<ActivitiesLaunchReview> listAlr= activitiesServiceImpl.queryALREntityList(alrVo);
+				StringBuffer str=new StringBuffer();
+				for (ActivitiesLaunchReview activitiesLaunchReview : listAlr) {
+					if(activitiesLaunchReview.getIsPass()!=null){
+						String isPass=activitiesLaunchReview.getIsPass()==1?"通过":"不通过";
+						User user=this.userServiceImpl.getEntityById(User.class, activitiesLaunchReview.getUserId());
+						String opinion= activitiesLaunchReview.getOpinion();
+						str.append(user.getUserName()+" ");
+						str.append(isPass+" ");
+						str.append(opinion);
+						str.append("\n");
+					}
+				}
+				if(str.length()>0){
+					//str.setLength(str.length()-1);
+				}
+				alVo.setExOpinion(str.toString());
+				
+				JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
+				config.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor()); // 格式化日期
+				String[] excludes = new String[] {"branchId","completionTimes","createTime","creatorId","isReach","launchDateStr",
+						"sysCode","timeQuantum","timeQuantumValue","year"}; // 列表排除信息内容字段，减少传递时间
+				config.setExcludes(excludes);
+				json.put("object", JSONObject.fromObject(alVo, config));
+				json.put("result", true);
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
-			json.addProperty("result", false);
 		}finally{
-			this.print(json.toString());
+			this.print(json);
 		}
 	}
 	

@@ -28,7 +28,8 @@
 <input type="hidden" id="creatorId" name="creatorId" value="${alObject.creatorId}" />	
 <input type="hidden" id="sysCode" name="sysCode" value="${alObject.sysCode}" />	
 <input type="hidden" id="branchId" name="branchId" value="${alObject.branchId}" />	
-<input type="hidden" id="activityId" name="activityId" value="${alObject.activityId}" />		
+<input type="hidden" id="activityId" name="activityId" value="${alObject.activityId}" />
+<input type="hidden" id="status" name="status" value="${alObject.status}" />		
 	<%-- 第1行 --%>
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动标题</label>
@@ -48,7 +49,7 @@
 	<div class="form-group">
 	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动开展时间</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="launchDate" name="launchDate" placeholder="" value='${alObject.launchDate}' readonly="readonly"/>
+	      <input type="text" class="form-control" id="launchDate" name="launchDate" placeholder="" value="<fmt:formatDate value='${alObject.launchDate}'  pattern='yyyy-MM-dd HH:mm:ss'/>"  readonly="readonly"/>
 	    </div>
   	</div>
   	
@@ -84,23 +85,50 @@
   	
   	<%-- 第7行 --%>
   	<div class="form-group">
+	    <label class="col-sm-2 control-label">图片</label>
+	    <div class="col-sm-4" style="width: 80%;left:-10px;margin-bottom: 10px;" >
+			<c:if test="${not empty alObject.imgUrls}">
+				<div id="uploaderDiv" class="wu-example dowebok">
+					<c:forEach items="${alObject.imgUrls}" var="imgUrl" varStatus="">
+                        <img data-original="${imgUrl}"  height="100px" width="100px" src="${imgUrl}" alt="" />
+                    </c:forEach>
+				</div> 
+            </c:if>
+	    </div>
+    </div>
+  	
+  	<%-- 第9行 --%>
+  	<div class="form-group">
+	    <label class="col-sm-2 control-label"><span style="color: red">*</span>评审状态</label>
+	    <div class="col-sm-3">
+			<opt:select dictKey="dj_activity_status" classStyle="form-control" id="status1" name="status1" value="${alObject.status}" disabled="true"/>
+		</div>
+    </div>
+  	
+  	
+     <%-- 第9行 --%>
+  	<div class="form-group" id="div_exOpinion">
+	    <label class="col-sm-2 control-label">评审记录</label>
+		<div class="col-sm-10">
+	       <textarea class="form-control" rows="4" cols="" id="exOpinion" name="exOpinion" readonly="readonly">${alObject.exOpinion}</textarea>
+	    </div>
+    </div>
+    <%-- 第9行 --%>
+  	<div class="form-group" id="div_opinion">
+	    <label class="col-sm-2 control-label">评审意见</label>
+	    <div class="col-sm-10">
+			<input type="text" class="form-control" id="opinion" name="opinion" value='${alObject.opinion}' data-rule-rangelength="[1,100]"/>    
+		</div>
+    </div>
+    <%-- 第9行 --%>
+  	<div class="form-group" id="div_points">
 	    <label class="col-sm-2 control-label"><span style="color: red">*</span>活动最终得分</label>
 	    <div class="col-sm-1">
 			<input type="text" class="form-control" id="points" name="points" value='${alObject.points}' data-rule-required="true" data-rule-rangelength="[1,2]"/>    
 		</div>
     </div>
   	
-  	<%-- 第8行 --%>
-    <label class="col-sm-2 control-label">图片</label>
-    <div class="col-sm-4" style="width: 80%;left:-10px;margin-bottom: 10px;" >
-			<c:if test="${not empty alObject.imgUrls}">
-				<div id="uploaderDiv" class="wu-example dowebok">
-					<c:forEach items="${alObject.imgUrls}" var="imgUrl" varStatus="">
-                        <img data-original="${imgUrl}"  height="200px" width="200px" src="${imgUrl}" alt="" />
-                    </c:forEach>
-				</div> 
-            </c:if>
-    </div>
+  	
     <br>
   
   	<div class="form-group">
@@ -112,7 +140,8 @@
 <!-- 底部按钮 -->
 <div class="footer edit_footer">
 <div class="pull-right">
-<button class="btn btn-primary " type="button" onclick="on_save()"><i class="fa fa-check"></i>&nbsp;保存</button>
+<button class="btn btn-primary " type="button" onclick="on_pass()"><i class="fa fa-check"></i>&nbsp;同意</button>
+<button class="btn btn-danger " type="button" onclick="on_notPass()"><i class="fa fa-close"></i>&nbsp;不同意</button>
 <button class="btn btn-danger " type="button" onclick="on_close()"><i class="fa fa-close"></i>&nbsp;关闭</button>
 </div>
 </div>
@@ -121,12 +150,43 @@
 <script src="/common/gis/event/js/viewer.min.js"></script>
 <script src="/common/gis/event/js/viewer-jquery.min.js"></script>
 <script type="text/javascript">
+var _isPass;
 $().ready(function() {
+	var _status = '${alObject.status}';
+	if(_status==0){
+		//未评审
+		document.getElementById("div_exOpinion").style.display="none"; 
+		document.getElementById("div_points").style.display="none"; 
+	}else if(_status==1){
+		//初审通过
+		document.getElementById("div_points").style.display="none"; 
+	}else if(_status==2){
+		//复审通过
+		document.getElementById("div_opinion").style.display="none"; 
+	}
+	
 });
-//新增保存更新
-function on_save(){
+//同意
+function on_pass(){
+	_isPass=1;
 	if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。  
-        on_submit();//提交表单.  
+		parent.layer.confirm("操作是否确定？", {
+				btn: ["确定","取消"] //按钮
+			}, function(){
+			on_submit();//提交表单.  
+		});
+       
+    } 
+}
+//不同意
+function on_notPass(){
+	_isPass=0;
+	if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。  
+        parent.layer.confirm("操作是否确定？", {
+				btn: ["确定","取消"] //按钮
+			}, function(){
+			on_submit();//提交表单.  
+		});
     } 
 }
 
@@ -135,7 +195,7 @@ function on_submit(){
 		type : 'post',
 		async:false,
 		dataType : 'json',
-		url: '/dangjian/activitiesLauch_saveOrUpdate',
+		url: '/dangjian/activitiesLauchReview_Save?isPass='+_isPass,
 		data:$('#baseForm').serialize(),
 		success : function(data){
 			if(data.result){
