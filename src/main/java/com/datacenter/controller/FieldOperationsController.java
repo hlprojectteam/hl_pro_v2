@@ -1,5 +1,6 @@
 package com.datacenter.controller;
 
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,6 +14,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,9 @@ public class FieldOperationsController extends BaseController{
 
 	@Autowired
 	private IFieldOperationsService fieldOperationsServiceImpl;
+
+	@Autowired
+	private TotalTableController totalTableController;
 	
 	
 	/**
@@ -155,4 +160,34 @@ public class FieldOperationsController extends BaseController{
 			this.print(json.toString());
 		}
 	}
+
+	/**
+	 * 导出Excel
+	 * @param request
+	 * @param response
+	 * @param fieldOperationsVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	@RequestMapping(value="/fieldOperations_export")
+	public void export(HttpServletRequest request, HttpServletResponse response, FieldOperationsVo fieldOperationsVo){
+		//excel文件名
+		String fileName = "外勤作业汇总";
+
+		//获取excle文档对象
+		HSSFWorkbook wb = this.fieldOperationsServiceImpl.export(fieldOperationsVo);
+
+		//将文件存到指定位置
+		try {
+			this.totalTableController.setResponseHeader(response, fileName);
+			OutputStream os = response.getOutputStream();
+			wb.write(os);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

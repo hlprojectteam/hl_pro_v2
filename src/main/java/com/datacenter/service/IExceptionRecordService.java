@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.ExceptionRecord;
 import com.datacenter.vo.ExceptionRecordVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 营运异常记录 service接口
@@ -62,5 +63,14 @@ public interface IExceptionRecordService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<ExceptionRecord> queryEntityList(ExceptionRecordVo exceptionRecordVo);
+
+	/**
+	 * 营运异常记录	导出Excel
+	 * @param exceptionRecordVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(ExceptionRecordVo exceptionRecordVo);
 	
 }

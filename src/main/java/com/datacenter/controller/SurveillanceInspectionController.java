@@ -1,5 +1,6 @@
 package com.datacenter.controller;
 
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,6 +14,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,8 +39,12 @@ public class SurveillanceInspectionController extends BaseController{
 
 	@Autowired
 	private ISurveillanceInspectionService surveillanceInspectionServiceImpl;
-	
-	
+
+	@Autowired
+	private TotalTableController totalTableController;
+
+
+
 	/**
 	 * 监控巡检	列表页面
 	 * @param httpSession
@@ -155,4 +161,34 @@ public class SurveillanceInspectionController extends BaseController{
 			this.print(json.toString());
 		}
 	}
+
+	/**
+	 * 导出Excel
+	 * @param request
+	 * @param response
+	 * @param surveillanceInspectionVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	@RequestMapping(value="/surveillanceInspection_export")
+	public void export(HttpServletRequest request, HttpServletResponse response, SurveillanceInspectionVo surveillanceInspectionVo){
+		//excel文件名
+		String fileName = "监控巡检汇总";
+
+		//获取excle文档对象
+		HSSFWorkbook wb = this.surveillanceInspectionServiceImpl.export(surveillanceInspectionVo);
+
+		//将文件存到指定位置
+		try {
+			this.totalTableController.setResponseHeader(response, fileName);
+			OutputStream os = response.getOutputStream();
+			wb.write(os);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

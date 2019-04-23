@@ -4,6 +4,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.Clearing;
 import com.datacenter.vo.ClearingVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.util.Date;
 import java.util.List;
@@ -62,5 +63,14 @@ public interface IClearingService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<Clearing> queryEntityList(ClearingVo clearingVo);
+
+	/**
+	 * 清障保洁	导出Excel
+	 * @param clearingVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(ClearingVo clearingVo);
 
 }

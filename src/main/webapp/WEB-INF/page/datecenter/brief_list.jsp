@@ -33,6 +33,7 @@
 	                <input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 	            </div>
 				<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
+				  <button class="btn btn-primary" type="button" onclick="on_export()"><i class="fa fa-file-excel-o"></i>&nbsp;导出Excle</button>
 			  </div>
 		  </c:if>
 		  <c:if test="${empty menuCode}">
@@ -72,7 +73,7 @@
     	              {title: "序号",field: "id",align:"center",width:50,formatter:function(value,row,index){
 		           	  		return index+1;
 		              }},
-    	              {title: "标题", field: "title",width: 250,align:"center"}, 
+    	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
     	              {title: "日期", field: "dutyDate",width: 100,align:"center"},
     	              {title: "常务副总经理", field: "cwfzjl",width: 100,align:"center"},
     	              {title: "主管副总经理", field: "zgfzjl",width: 80,align:"center"},
@@ -97,7 +98,7 @@
             shade: 0.6, 
             maxmin: true, //开启最大化最小化按钮
             area: ["80%", "80%"],
-            content: URLStr + "edit?winName="+winName+"&ttId="+ttId+"&dutyDateStr="+dutyDateStr
+            content: URLStr + "edit?winName="+winName+"&ttId="+ttId+"&dutyDateStr="+dutyDateStr + "&sign=brief"
         });
   	}
   	
@@ -144,7 +145,7 @@
             shade: 0.6, 
             maxmin: true, //开启最大化最小化按钮
             area: ["80%", "80%"],
-            content: URLStr + "edit?winName="+winName+"&id="+id
+            content: URLStr + "edit?winName="+winName+"&id="+id + "&sign=brief"
         });
   	}
   	
@@ -153,6 +154,15 @@
 		$("#grid").bootstrapTable("refresh");
 	}
 
+
+	//导出Excel
+	function on_export(){
+  	    if($("#dutyDateStart").val() == null || $("#dutyDateStart").val() == "" || $("#dutyDateEnd").val() == null || $("#dutyDateEnd").val() == ""){
+            autoAlert("注意：导出Excel时筛选条件不能为空!",5);
+		}else{
+			window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()
+		}
+	}
 </script>
 </body>
 </html>

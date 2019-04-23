@@ -4,6 +4,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.FieldOperations;
 import com.datacenter.vo.FieldOperationsVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.util.Date;
 import java.util.List;
@@ -62,5 +63,13 @@ public interface IFieldOperationsService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<FieldOperations> queryEntityList(FieldOperationsVo fieldOperationsVo);
-	
+
+	/**
+	 * 外勤作业	导出Excel
+	 * @param fieldOperationsVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(FieldOperationsVo fieldOperationsVo);
 }

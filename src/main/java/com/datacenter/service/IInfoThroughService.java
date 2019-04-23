@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.InfoThrough;
 import com.datacenter.vo.InfoThroughVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 信息通传 service接口
@@ -62,4 +63,13 @@ public interface IInfoThroughService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<InfoThrough> queryEntityList(InfoThroughVo infoThroughVo);
+
+	/**
+	 * 信息通传	导出Excel
+	 * @param infoThroughVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(InfoThroughVo infoThroughVo);
 }

@@ -43,6 +43,10 @@
 	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${roadWorkVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" disabled="disabled"  />
 	            <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${roadWorkVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
 	        </div>
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>施工单位名称</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="unitName" name="unitName" value="${roadWorkVo.unitName}" data-rule-required="true" data-rule-rangelength="[1,50]" />
+			</div>
         </div>
 	  	
 	  	<div class="form-group">
@@ -57,14 +61,15 @@
 		</div>
 	 
 	    <div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>施工单位名称</label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="unitName" name="unitName" value="${roadWorkVo.unitName}" data-rule-required="true" data-rule-rangelength="[1,50]" />    
-			</div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>现场负责人及联系方式</label>
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>现场负责人</label>
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="relationPerson" name="relationPerson" value="${roadWorkVo.relationPerson}" data-rule-required="true" data-rule-rangelength="[1,50]" />    
 			</div>
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>负责人电话</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="relationPhone" name="relationPhone" value="${roadWorkVo.relationPhone}" data-rule-required="true" data-rule-phone="true" />
+			</div>
+
 		</div>
 		
 		<div class="form-group">
@@ -145,7 +150,7 @@
 		if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。  
 	        on_submit();//提交表单.  
 	    }else{
-            autoAlert("信息提交不正确，请检查！", 5);
+            autoMsg("信息提交不正确，请检查！", 5);
         }
 	}
 

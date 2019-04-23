@@ -39,7 +39,7 @@ public class TrafficAccident extends BaseModule{
 	private Integer minorInjuryNum;       //轻伤人数
 	private Integer seriousInjuryNum;     //重伤人数
 	private Integer deathNum;             //死亡人数
-	private Integer laneClosedNum;        //封闭车道
+	private Integer laneClosedNum;        //封闭车道	(数据字典: dc_laneClosedNum; 1：0； 2：0.5； 3：1； 4：2 ； 5：3； 6：4 )
 	private String roadLoss;              //路产损失
 	private double roadIndemnity;         //路产赔偿
 	private String claimNote;             //索赔单号

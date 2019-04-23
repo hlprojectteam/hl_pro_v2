@@ -113,8 +113,8 @@
 				<input type="text" class="form-control" id="deathNum" name="deathNum" value="${trafficAccidentVo.deathNum}" data-rule-required="true" data-rule-digits=="true" data-rule-rangelength="[1,3]" />    
 			</div>
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>封闭车道</label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="laneClosedNum" name="laneClosedNum" value="${trafficAccidentVo.laneClosedNum}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" />    
+			<div class="col-sm-3">
+				<opt:select dictKey="dc_laneClosedNum" classStyle="form-control required" name="laneClosedNum" id="laneClosedNum" value="${trafficAccidentVo.laneClosedNum}" isDefSelect="false" />
 			</div>
 		</div>
 		
@@ -170,7 +170,7 @@
 		if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。  
 	        on_submit();//提交表单.  
 	    }else{
-            autoAlert("信息提交不正确，请检查！", 5);
+            autoMsg("信息提交不正确，请检查！", 5);
         }
 	}
 

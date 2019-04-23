@@ -4,6 +4,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.TrafficJam;
 import com.datacenter.vo.TrafficJamVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.util.Date;
 import java.util.List;
@@ -55,12 +56,21 @@ public interface ITrafficJamService extends IBaseService{
 	public int updateDutyDate(String ttId, Date dutyDate);
 
 	/**
-	 * 工作简报	list
+	 * 交通阻塞	list
 	 * @param trafficJamVo
 	 * @return
 	 * @author xuezb
 	 * @Date 2019年3月5日
 	 */
 	public List<TrafficJam> queryEntityList(TrafficJamVo trafficJamVo);
+
+	/**
+	 * 交通阻塞	导出Excel
+	 * @param trafficJamVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(TrafficJamVo trafficJamVo);
 		
 }

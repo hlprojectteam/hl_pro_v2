@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.RescueWork;
 import com.datacenter.vo.RescueWorkVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 拯救作业 service接口
@@ -62,5 +63,14 @@ public interface IRescueWorkService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<RescueWork> queryEntityList(RescueWorkVo rescueWorkVo);
+
+	/**
+	 * 拯救作业	导出Excel
+	 * @param rescueWorkVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(RescueWorkVo rescueWorkVo);
 		
 }

@@ -882,7 +882,7 @@ public class ActivitiesController extends BaseController{
 			msg.setCreatorName(this.getSessionUser().getUserName());
 			msg.setSysCode(this.getSessionUser().getSysCode());
 			this.messageServiceImpl.saveOrUpdate(msg);
-			MessageJpush.sendCommonMsg(noticeTitle, msg);
+			/*MessageJpush.sendCommonMsg(noticeTitle, msg);*/
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

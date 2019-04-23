@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.TransferRegistration;
 import com.datacenter.vo.TransferRegistrationVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 交接班登记表 service接口
@@ -62,5 +63,14 @@ public interface ITransferRegistrationService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<TransferRegistration> queryEntityList(TransferRegistrationVo transferRegistrationVo);
+
+	/**
+	 * 交接班登记表	导出Excel
+	 * @param transferRegistrationVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(TransferRegistrationVo transferRegistrationVo);
 		
 }

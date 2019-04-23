@@ -36,7 +36,8 @@ public class SurveillanceInspection extends BaseModule{
 	private String inspectionDetails;     //巡检情况描述
 	private String followMeasure;         //跟进措施	(可以为空)
 	private String ttId;                  //主表id
-	
+
+	private Integer failureEquipment;	  //故障设备	(数据字典: dc_failureEquipment,	1、无; 2、路面摄像枪; 3、收费站广场摄像枪; 4、情报板系统; 5、其它)
 	
 	
 	@Column(name = "inspection_Time_Start")
@@ -126,6 +127,12 @@ public class SurveillanceInspection extends BaseModule{
 	public void setTtId(String ttId) {
 		this.ttId = ttId;
 	}
-	
 
+	@Column(name = "failure_Equipment")
+	public Integer getFailureEquipment() {
+		return failureEquipment;
+	}
+	public void setFailureEquipment(Integer failureEquipment) {
+		this.failureEquipment = failureEquipment;
+	}
 }

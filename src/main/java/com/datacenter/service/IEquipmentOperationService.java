@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.EquipmentOperation;
 import com.datacenter.vo.EquipmentOperationVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 设备运行情况 service接口
@@ -62,6 +63,15 @@ public interface IEquipmentOperationService extends IBaseService{
 	 * @Date 2019年4月3日
 	 */
 	public List<EquipmentOperation> queryEntityList(EquipmentOperationVo equipmentOperationVo);
+
+	/**
+	 * 设备运行情况	导出Excel
+	 * @param equipmentOperationVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(EquipmentOperationVo equipmentOperationVo);
 
 }
 
