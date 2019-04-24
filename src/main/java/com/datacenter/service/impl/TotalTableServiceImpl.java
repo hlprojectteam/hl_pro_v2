@@ -871,7 +871,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				Integer value = 0;
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getTollGate().toString()));	break;
+					case 0:	cell.setCellValue(getValueByDictAndKey("dc_tollGate", eoList.get(i).getTollGate().toString()));	break;
 					case 1:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getCdgqzp().toString()));	break;
 					case 2:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getZdfkj().toString()));	break;
 					case 3:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getMtcckcd().toString()));	break;
@@ -963,9 +963,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				//设置单元格样式
 				if(j == 8){
 					cell.setCellStyle(mainStyle_left);
-				}else if(j == 1){
-
-                }else{
+				}else{
 					cell.setCellStyle(mainStyle_center);
 				}
 			}

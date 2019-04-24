@@ -169,7 +169,7 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		//列宽自适应（该方法在老版本的POI中效果不佳）
 		/*sheet.autoSizeColumn(i);*/
 		//设置列宽
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 11; i++) {
 			if(i == 9){
 				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*5);
 			}else{
@@ -228,7 +228,13 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 					case 7: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getEtcckcd().toString()));	break;
 					case 8: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getJzcd().toString()));	break;
 					case 9: cell.setCellValue(eoList.get(i).getRemark());	break;
-					case 10: cell.setCellValue(sdf.format(eoList.get(i).getDownTimeStart()) + "--" + sdf.format(eoList.get(i).getDownTimeEnd()));	break;
+					case 10:
+					if(eoList.get(i).getDownTimeStart() != null && eoList.get(i).getDownTimeEnd() != null){
+						 cell.setCellValue(sdf.format(eoList.get(i).getDownTimeStart()) + "--" + sdf.format(eoList.get(i).getDownTimeEnd()));	break;
+					}else{
+						 cell.setCellValue("");	break;
+					}
+
 				}
 				//设置单元格样式
 				if(j == 9) {
