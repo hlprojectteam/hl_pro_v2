@@ -56,9 +56,16 @@ public class PartyMemberServiceImpl extends BaseServiceImpl implements IPartyMem
 			sql.append(" and u.USER_NAME like ? ");						
 			paramList.add("%"+partyMemberVo.getUserName()+"%");
 		}
+		if(StringUtils.isNotBlank(partyMemberVo.getUserId())){		
+			sql.append(" and u.ID = ? ");						
+			paramList.add(partyMemberVo.getUserId());
+		}
 		sql.append(" ORDER by u.USER_NAME ");
 
 		Pager pager = this.partyMemberDaoImpl.queryEntitySQLList(page, rows, sql.toString(), paramList);
+		if(pager==null){
+			return null;
+		}
 		List<PartyMemberVo> list = new ArrayList<PartyMemberVo>();
 		
 		for (int i = 0; i < pager.getPageList().size(); i++) {

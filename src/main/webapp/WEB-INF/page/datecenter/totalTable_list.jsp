@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+		<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="menu" uri="/WEB-INF/taglib/menuDefinition.tld" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
 <%@ taglib prefix="opt" uri="/WEB-INF/taglib/option.tld" %>
@@ -155,6 +155,20 @@
             content: URLStr + "relation?ttId="+obj.id +"&dutyDateStr="+obj.dutyDate
         });
 	}
+
+
+    //工作简报
+    function on_brief(obj){
+        parent.layer.open({
+            type: 2,
+            title: "工作简报编辑页面",
+            shadeClose: true,//打开遮蔽
+            shade: 0.6,
+            maxmin: true, //开启最大化最小化按钮
+            area: ["80%", "80%"],
+            content: "/datecenter/brief/brief_edit?ttId="+obj.id +"&dutyDateStr="+obj.dutyDate + "&winName=" + window.name + "&sign=totalTable"
+        });
+    }
 
 </script>
 </body>

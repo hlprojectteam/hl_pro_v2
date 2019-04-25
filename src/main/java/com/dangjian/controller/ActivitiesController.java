@@ -27,6 +27,8 @@ import com.common.base.controller.BaseController;
 import com.common.message.MessageJpush;
 import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
+import com.common.utils.Common;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.Pager;
 import com.dangjian.module.Activities;
@@ -361,6 +363,10 @@ public class ActivitiesController extends BaseController{
 			    if(ac!=null){
 			    	activitiesLaunchVo.setPoints(ac.getPoints());
 			    }
+				if(ac.getFrequency()!=7){
+					//如果不是亮点工作，则状态默认为通过
+					activitiesLaunchVo.setStatus(3);
+				}
 				ActivitiesLaunch activitiesLaunch = new ActivitiesLaunch();
 				BeanUtils.copyProperties(activitiesLaunchVo, activitiesLaunch);
 				this.activitiesServiceImpl.saveOrUpdateAL(activitiesLaunch);
@@ -381,7 +387,7 @@ public class ActivitiesController extends BaseController{
 						}
 					}
 					//发送给“党委委员-初审”角色初审
-					sendJpushMsg("党建通知","亮点工作评审",null,"dangjian_dwwy_cs");
+					this.messageServiceImpl.sendMsg(Common.msgTitle_DJ_ldgz,"亮点工作评审",null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
 				}
 				json.addProperty("id", activitiesLaunch.getId());
 			}else{
@@ -427,6 +433,10 @@ public class ActivitiesController extends BaseController{
 	@RequestMapping(value="/activitiesLauch_list")
 	public String activitiesLauchList(HttpSession httpSession,HttpServletResponse response,String menuCode){
 		this.getRequest().setAttribute("menuCode", menuCode);
+		ActivitiesLaunchVo alVo=new ActivitiesLaunchVo();
+		String year=DateUtil.getDateFormatString(new Date(), "YYYY");
+		alVo.setYear(year);
+		this.getRequest().setAttribute("activitiesLaunchVo", alVo);
 	    return "/page/dangjian/activities/activities_launch_list";
 	}
 	
@@ -772,15 +782,20 @@ public class ActivitiesController extends BaseController{
 		try{
 			User user=this.getSessionUser();
 			ActivitiesLaunch activitiesLaunch = this.activitiesServiceImpl.getEntityById(ActivitiesLaunch.class, activitiesLaunchVo.getId());
+			String msgConent= "日期为"+DateUtil.getDateFormatString(activitiesLaunch.getLaunchDate(),"yyyy-mm-dd")+"的亮点工作";
 			if(activitiesLaunch.getStatus()==2){
 				//复审通过
-				activitiesLaunch.setPoints(activitiesLaunchVo.getPoints());
 				if(activitiesLaunchVo.getIsPass()==0){
-					//初审未通过
+					//不同意给分，流程结束
 					activitiesLaunch.setStatus(4);
+					//发送活动提交者
+					this.messageServiceImpl.sendMsg(Common.msgTitle_DJ_ldgz,msgConent+"评审未通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
 				}else if(activitiesLaunchVo.getIsPass()==1){
-					//初审通过
+					//同意给分，流程结束
 					activitiesLaunch.setStatus(3);
+					activitiesLaunch.setPoints(activitiesLaunchVo.getPoints());
+					//发送活动提交者
+					this.messageServiceImpl.sendMsg(Common.msgTitle_DJ_ldgz,msgConent+"评审通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
 				}
 			}else{
 				//未评审、初审通过情况
@@ -798,9 +813,30 @@ public class ActivitiesController extends BaseController{
 						if(activitiesLaunchVo.getIsPass()==0){
 							//初审未通过
 							activitiesLaunch.setStatus(4);
+							//发送活动提交者
+							this.messageServiceImpl.sendMsg(Common.msgTitle_DJ_ldgz,msgConent+"评审未通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
 						}else{
 							//初审通过
 							activitiesLaunch.setStatus(1);
+							//初审通过后，通知其它党委委员进行复审
+							RoleVo roleVo=new RoleVo();
+							roleVo.setRoleCode("dangjian_dwwy");
+							Role role= roleServiceImpl.getRole(roleVo);
+							List<User> userList = new ArrayList<>(role.getUsers());
+							StringBuffer userIds=new StringBuffer();
+							if(userList!=null){
+								//插入
+								for (User userDwwy : userList) {
+									if(!userDwwy.getId().equals(user.getId())){
+										//因为其中一个党委委员是也是初审的角色,即当前user，所以这里要排除这个userId
+										userIds.append(userDwwy.getId());
+										userIds.append(",");
+									}
+								}
+								String sendUserIds=userIds.substring(0, userIds.length()-1);
+								//发送给复审的党委委员
+								this.messageServiceImpl.sendMsg(Common.msgTitle_DJ_ldgz,msgConent+"等待评审",sendUserIds,null,Common.msgDJ,this.getSessionUser());
+							}
 						}
 						alr.setStatusNode(1);
 					}else if(activitiesLaunch.getStatus()==1){
@@ -812,6 +848,8 @@ public class ActivitiesController extends BaseController{
 						if(this.activitiesServiceImpl.isAllCheck(alrVo2)){
 							//所有通过
 							activitiesLaunch.setStatus(2);
+							//发送给党委委员打分
+							this.messageServiceImpl.sendMsg(Common.msgTitle_DJ_ldgz,msgConent+"等待评审打分",null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
 						}
 					}
 					this.activitiesServiceImpl.saveOrUpdateALR(alr);
@@ -856,36 +894,18 @@ public class ActivitiesController extends BaseController{
 	}
 	
 	
+	
+	
 	/***********************活动开展方法 end*******************************/
 	
-	/**
-	 * 
-	 * @param noticeTitle 通知的提示标题
-	 * @param noticeContent 通知的简要内容
-	 * @param userIds 给谁发通知，用户ID的集合，用","分隔
-	 * @param tags 给哪一类人发通知，如角色的集合，用","分隔
-	 * @描述：
-	 * @return
-	 * @author: qinyongqian
-	 * @date:2019年4月8日
-	 */
-	private void sendJpushMsg(String noticeTitle,String noticeContent, String userIds,String tags){
-		try {
-			Message msg = new Message();
-			msg.setTitle(noticeTitle);
-			msg.setContent(noticeContent);
-			msg.setAlias(userIds);
-			msg.setType(5); //消息类型 3 为事件
-			msg.setTags(tags);
-			msg.setSender(this.getSessionUser().getUserName());
-			msg.setCreatorId(this.getSessionUser().getId());
-			msg.setCreatorName(this.getSessionUser().getUserName());
-			msg.setSysCode(this.getSessionUser().getSysCode());
-			this.messageServiceImpl.saveOrUpdate(msg);
-			MessageJpush.sendCommonMsg(noticeTitle, msg);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+	@RequestMapping(value="/testJpush")
+	public void testJpush(HttpSession httpSession,HttpServletResponse response){
+		this.messageServiceImpl.sendMsg("IOS.....","IOS开发证书提示mobileprovision和开发证书重新？",
+				"40284a8d586759f801588b19159100a7",null,Common.msgAQ,this.getSessionUser());
+//		this.sendJpushMsg("IOS.....","IOS开发证书提示mobileprovision和开发证书重新？",
+//				"40284a8d586759f801588b19159100a7",null,Common.msgAQ);
+		this.print("sendSuccess");
 	}
+
 	
 }

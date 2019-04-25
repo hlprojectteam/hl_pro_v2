@@ -25,8 +25,10 @@
 		    </div>
 		  	<label class="col-sm-1 control-label">年份</label>
 		    <div class="col-sm-2">
-		      	<input type="text" class="form-control" id="year" name="year" value="<fmt:formatDate value='${activitiesLaunchVo.year}' pattern='yyyy'/>" onfocus="this.blur()" data-rule-required="true" onclick="WdatePicker({dateFmt:'yyyy'})"/>    
-		    </div>
+		      	<%-- <input type="text" class="form-control" id="year" name="year"  value='${activitiesLaunchVo.year}'/>     --%>
+		    
+		      	 <input type="text" class="form-control" id="year" name="year"  value='${activitiesLaunchVo.year}'  onfocus="this.blur()" data-rule-required="true" onclick="WdatePicker({dateFmt:'yyyy'})"/>    
+		     </div>
 			<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
 			&nbsp&nbsp&nbsp&nbsp<button class="btn btn-danger" type="button" onclick="on_collect()"><i class="fa fa-search"></i>&nbsp;查看汇总</button>
 		  </div>

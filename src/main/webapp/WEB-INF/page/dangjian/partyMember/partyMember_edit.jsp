@@ -11,67 +11,75 @@
 <body>
 <div id="" class="ibox-content">
 <form id="baseForm" method="post" class="form-horizontal" name="baseForm" action="">
-<input type="hidden" id="cover" name="cover" value="${partyMemberVo.cover}" />
+<input type="hidden" id="photo" name="photo" value="${partyMemberVo.photo}" />
 <input type="hidden" id="id" name="id" value="${partyMemberVo.id}" />
 <input type="hidden" id="createTime" name="createTime" value="<fmt:formatDate value='${partyMemberVo.createTime}'  pattern='yyyy-MM-dd HH:mm:ss'/>"/>
 <input type="hidden" id="creatorId" name="creatorId" value="${partyMemberVo.creatorId}" />	
-<input type="hidden" id="creatorName" name="creatorName" value="${partyMemberVo.creatorName}" />			
+<input type="hidden" id="creatorName" name="creatorName" value="${partyMemberVo.creatorName}" />
+<input type="hidden" id="userId" name="userId" value="${partyMemberVo.userId }">			
 	<%-- 第1行 --%>
 	<div class="form-group">
-	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动标题</label>
-	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="title" name="title" placeholder="输入活动标题" value='${partyMemberVo.title}' data-rule-required="true" data-rule-rangelength="[1,50]" />
+	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>姓名</label>
+	    <div class="col-sm-3">
+	      <input type="text" class="form-control" id="userName" name="userName" placeholder="输入姓名" value='${partyMemberVo.userName}' data-rule-required="true" data-rule-rangelength="[1,10]"  readonly="readonly"/>
+	    </div>
+	    <div class="col-sm-1">
+	    	<button class="btn btn-primary" type="button"  style="display: none;" onclick="choose_user('userId','userName','single')" id="btn_selUser">选择用户</button>
 	    </div>
   	</div>
   	
   	<%-- 第2行 --%>
-  	<div class="form-group">
-	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>频率</label>
+	<div class="form-group">
+	    <label class="col-sm-2 control-label"><span style="color: red">*</span>党支部</label>
 	    <div class="col-sm-3">
-	      <opt:select dictKey="dj_activities_frequency" classStyle="form-control" id="frequency" name="frequency"  value="${partyMemberVo.frequency}" />
+	      	 <select id="branchSelect" name="branchId" value='${partyMemberVo.branchId}' class="form-control m-b required" data-rule-required="true"></select>
 	    </div>
-    </div>
+  	</div>
+  	
+  
     
     <%-- 第3行 --%>
   	<div class="form-group">
-	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动积分值</label>
-	    <div class="col-sm-3">
-			<input type="text" class="form-control" id="points" name="points" placeholder="积分值为1-100之间" value='${partyMemberVo.points}' data-rule-required="true" data-rule-rangelength="[1,2]" oninput="value=value.replace(/[^\d]/g,'')"/>    
-		</div>
-	</div>
- 
+	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>党内职务</label>
+	     <div class="col-sm-3">
+	     	<opt:select dictKey="dj_partyMember_duty" isDefSelect="true" id="memberDuty" name="memberDuty" value="${partyMemberVo.memberDuty }" classStyle="form-control m-b"/>
+	     </div>
+	     <label class="col-sm-2 control-label">职务描述</label>
+	     <div class="col-sm-3">
+	     	 <input type="text" class="form-control" id="duties" name="duties" placeholder="输入职务描述" value='${partyMemberVo.duties}' data-rule-rangelength="[1,30]" />
+	     </div>
+    </div>
+    
     <%-- 第4行 --%>
-	<div class="form-group">
-	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>活动描述</label>
-	    <div class="col-sm-10">
-	       <textarea class="form-control" rows="4" cols="" id="content" name="content" placeholder="描述你的活动，长度为1000字"  data-rule-required="true" data-rule-rangelength="[1,1000]" >${partyMemberVo.content}</textarea>
-	    </div>
-  	</div>
-	
-	
-	<label class="col-sm-2 control-label">缩略图</label>
-    <div class="col-sm-4" style="width: 80%;left:-10px;margin-bottom: 10px;" >
-    	<%-- 照片 --%>
-			<!-- <div id="uploaderDiv" class="wu-example" style="width:251px;">
-				<div class="queueList">
-					<div id="dndArea" class="placeholder"> 
-					    <div id="filePicker" style="padding: 30px 80px;margin: -20px -40px 0"></div>
-						图片列表
-					</div>
-				</div>
-			</div> -->
-		<%-- 照片 --%>	
-		
-		<%-- 照片 --%>
-				<div id="uploaderDiv" class="wu-example">
-					<div class="queueList">
-						<div id="dndArea" class="placeholder"> 
-						    <div id="filePicker"></div>
-							<!-- 图片列表 -->
-						</div>
-					</div>
-				</div>
-			<%-- 照片 --%>	
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span style="color: red">*</span>入党时间</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="joininTime" name="joininTime" value="<fmt:formatDate value='${partyMemberVo.joininTime}' pattern='yyyy-MM-dd'/>" data-rule-required="true" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>    
+        </div>
+        <label class="col-sm-2 control-label"><span style="color: red">*</span>转正时间</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="changeRegularTime" name="changeRegularTime" value="<fmt:formatDate value='${partyMemberVo.changeRegularTime}' pattern='yyyy-MM-dd'/>" data-rule-required="true" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>    
+        </div>
+    </div>
+    
+    <%-- 第4行 --%>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span style="color: red">*</span>增加时间</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="increaseTime" name="increaseTime" value="<fmt:formatDate value='${partyMemberVo.increaseTime}' pattern='yyyy-MM-dd'/>" data-rule-required="true" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>    
+        </div>
+        <label class="col-sm-2 control-label"><span style="color: red">*</span>党员增加方式</label>
+        <div class="col-sm-3">
+            <opt:select dictKey="memberIncreaseType" isDefSelect="true" id="increaseType" name="increaseType" value="${partyMemberVo.increaseType }" classStyle="form-control m-b"/>
+	     </div>
+    </div>
+    
+     <%-- 第3行 --%>
+  	<div class="form-group">
+	     <label class="col-sm-2 control-label">组织关系所在单位</label>
+	     <div class="col-sm-8">
+	     	 <input type="text" class="form-control" id="orgRelationshipUnit" name="orgRelationshipUnit" placeholder="输入组织关系所在单位" value='${partyMemberVo.orgRelationshipUnit}' data-rule-rangelength="[1,30]" />
+	     </div>
     </div>
     <br>
   
@@ -95,13 +103,45 @@
 <script src="/common/plugins/webUploader/webuploader.js"></script>
 <script src="/common/js/attach.js"></script>
 <script type="text/javascript">
+var mBranchId=null;
 $().ready(function() {
 	var id = '${partyMemberVo.id}';
+	mBranchId = '${partyMemberVo.branchId}';
 	if(id!=null&&id!=""){
 		//getAttach(id);//获得照片
-		queryAttachByType('dj_activities_cover');
+		//queryAttachByType('dj_activities_cover');
+		$("#userName").val('${partyMemberVo.userName }');
+	}else{
+		document.getElementById("btn_selUser").style.display="block"; 
 	}
+	getBranch();//加载党支部下拉
 });
+
+//获得党支部下拉选项
+function getBranch(){
+	$.ajax({
+		type:'post',
+		async:false,
+		dataType : 'json',
+		url: '/dangjian/branch_loadAll',
+		success : function(data){
+			$("#branchSelect").append("<option value=''>------请选择------</option>");
+			if(data.rows!=null){
+				
+				 for (var i = 0; i < data.rows.length; i++) {
+					 if(data.rows[i].id==mBranchId){
+						 $("#branchSelect").append("<option value='"+data.rows[i].id+"' selected='selected'>"+data.rows[i].branchName+"</option>");
+					 }else{
+						$("#branchSelect").append("<option value='"+data.rows[i].id+"'>"+data.rows[i].branchName+"</option>");
+						 
+					 }
+				 }
+			}
+		},
+	});
+}
+
+
 //新增保存更新
 function on_save(){
 	if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。  
@@ -114,7 +154,7 @@ function on_submit(){
 		type : 'post',
 		async:false,
 		dataType : 'json',
-		url: '/dangjian/activities_saveOrUpdate',
+		url: '/dangjian/partyMember_saveOrUpdate',
 		data:$('#baseForm').serialize(),
 		success : function(data){
 			if(data.result){
@@ -124,16 +164,16 @@ function on_submit(){
 					uploader.on( 'uploadSuccess', function( file ) {
 						setEntityImgPath(data.id);
 						autoMsg("保存成功！",1);
-						iframeIndex.$("#grid").bootstrapTable("refresh",{url:"/dangjian/activities_load"});//加载树下的列表
+						iframeIndex.$("#grid").bootstrapTable("refresh",{url:"/dangjian/partyMember_load"});//加载树下的列表
 						parent.layer.close(index);
 					});
 				}else{
 					autoMsg("保存成功！",1);
-					iframeIndex.$("#grid").bootstrapTable("refresh",{url:"/dangjian/activities_load"});//加载树下的列表
+					iframeIndex.$("#grid").bootstrapTable("refresh",{url:"/dangjian/partyMember_load"});//加载树下的列表
 					parent.layer.close(index);
 				}
 			}else{
-				autoAlert("保存失败，请检查！",5);
+				autoAlert(data.msg,5);
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {

@@ -40,11 +40,12 @@
 <body style="overflow-y: hidden">	<!--表示去掉竖直滚动条。 -->
 		<div class="left">
 			<ul>
-				<li class="brief" onclick="pageSwitch('brief')"  style="border-top: none; background-color: lightgray;">工作简报</li>
+				<%--<li class="brief" onclick="pageSwitch('brief')"  style="border-top: none; background-color: lightgray;">工作简报</li>--%>
 				<li class="transferRegistration" onclick="pageSwitch('transferRegistration')">交接登记表</li>
 				<li class="surveillanceInspection" onclick="pageSwitch('surveillanceInspection')">监控巡检</li>
 				<li class="roadWork" onclick="pageSwitch('roadWork')">涉路施工</li>
 				<li class="equipmentOperation" onclick="pageSwitch('equipmentOperation')">设备运行情况统计表</li>
+				<li class="equipmentStatus" onclick="pageSwitch('equipmentStatus')">联网设备日常检查表</li>
 				<li class="operatingData" onclick="pageSwitch('operatingData')">营运数据</li>
 				<li class="rescueWork" onclick="pageSwitch('rescueWork')">拯救作业</li>
 				<li class="clearing" onclick="pageSwitch('clearing')">清障保洁</li>
@@ -57,7 +58,7 @@
 			</ul>
 		</div>
 		<div class="right">
-			<iframe name="iframe_WinName" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="yes" src="/datecenter/brief/brief_list?ttId=${ttId}&dutyDateStr=${dutyDateStr}"></iframe>
+			<iframe name="iframe_WinName" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="yes" src="/datecenter/transferRegistration/transferRegistration_list?ttId=${ttId}&dutyDateStr=${dutyDateStr}"></iframe>
 		</div>
 		<!-- frameborder：是否显示边框（0无边框 1有边框）；	scrolling：是否有滚动条（yes有滚动条 no无滚动条）； allowtransparency:背景是否透明（yes透明 no不透明）-->
 
@@ -79,6 +80,9 @@
 			case "equipmentOperation":
 				changeIframeSrc("/datecenter/equipmentOperation/equipmentOperation_list?ttId="+ttId+"&dutyDateStr="+dutyDateStr);
 				break;
+            case "equipmentStatus":
+                changeIframeSrc("/datecenter/equipmentStatus/equipmentStatus_list?ttId="+ttId+"&dutyDateStr="+dutyDateStr);
+                break;
 			case "exceptionRecord":
 				changeIframeSrc("/datecenter/exceptionRecord/exceptionRecord_list?ttId="+ttId+"&dutyDateStr="+dutyDateStr);
 				break;

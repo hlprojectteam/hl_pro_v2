@@ -27,6 +27,7 @@ public class MessageJpush {
 	protected static final Logger LOG = LoggerFactory.getLogger(MessageJpush.class);
 	private static final String appKey ="a8f6b37186cce1b9892f44af";
 	private static final String masterSecret = "bdac3ff2111dc46c27f4c634";
+	
     /**
      * 
      * @ClassName:MessageJpush.java
@@ -56,6 +57,8 @@ public class MessageJpush {
 	     PushPayload payload = null;
 	     Builder builder= PushPayload.newBuilder();
 	     builder.setPlatform(Platform.android_ios())
+//	     builder.setPlatform(Platform.ios())
+//	     builder.setPlatform(Platform.android())
 	     		.setNotification(Notification.newBuilder()
 		                		.addPlatformNotification(AndroidNotification.newBuilder()
 	                				.setAlert(title)

@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.FeedBack;
 import com.datacenter.vo.FeedBackVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 顾客意见反馈 service接口
@@ -62,5 +63,14 @@ public interface IFeedBackService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<FeedBack> queryEntityList(FeedBackVo feedBackVo);
+
+	/**
+	 * 顾客意见反馈	导出Excel
+	 * @param feedBackVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(FeedBackVo feedBackVo);
 	
 }

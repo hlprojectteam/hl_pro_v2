@@ -24,6 +24,7 @@ public class Suggest extends BaseModule{
 	private String content;		//内容
 	private String reback;		//反馈内容
 	private String rebackUserId;		//反馈人ID
+	private Integer type;               //建议类型 (数据字典:suggest_type) 1 建议，2投诉
 	private Integer moduleClass;       //模块分类 (数据字典:suggest_moduleclass) 1 安全管理，2党建
 	private Integer status;	        //状态	(数据字典:suggest_Status) 1 未阅，2已阅，3已反馈
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")	
@@ -79,6 +80,13 @@ public class Suggest extends BaseModule{
 	}
 	public void setRebackDate(Date rebackDate) {
 		this.rebackDate = rebackDate;
+	}
+	@Column(name = "suggest_type",length=2)
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
 	}
 	
 	

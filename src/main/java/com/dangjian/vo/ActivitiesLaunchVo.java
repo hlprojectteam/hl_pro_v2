@@ -17,6 +17,7 @@ public class ActivitiesLaunchVo extends ActivitiesLaunch{
 	private Integer frequency ;     //活动频率   数据字典：dj_activities_frequency
 	private String launchDateStr="";
 	private String year="";          //周期年
+	private String month="";          //周期月
 	private Integer completionTimes ; //周期内完成次数     
 	private String timeQuantum="";          //时间段  一个月，一个季度，半年，一年
 	private String timeQuantumValue="";          //时间段的值   一个月：01，一个季度：1，半年：1，一年：2019
@@ -129,6 +130,14 @@ public class ActivitiesLaunchVo extends ActivitiesLaunch{
 
 	public void setExOpinion(String exOpinion) {
 		this.exOpinion = exOpinion;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
 

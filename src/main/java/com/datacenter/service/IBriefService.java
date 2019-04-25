@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.Brief;
 import com.datacenter.vo.BriefVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 工作简报 service接口
@@ -62,5 +63,14 @@ public interface IBriefService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<Brief> queryEntityList(BriefVo briefVo);
+
+	/**
+	 * 工作简报	导出Excel
+	 * @param briefVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(BriefVo briefVo);
 
 }

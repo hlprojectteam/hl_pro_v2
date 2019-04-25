@@ -222,22 +222,55 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 	@Override
 	public Pager queryALEntityListPager(Integer page, Integer rows,
 			ActivitiesLaunchVo activitiesLaunchVo) {
-		// TODO Auto-generated method stub
-		List<Criterion> criterionsList = new ArrayList<Criterion>();
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("SELECT t.ID,t.LAUNCH_DATE,t.BRANCH_ID,t.ACTIVITY_ID,t.CREATOR_NAME,t.LAUNCH_POINTS,t.LAUNCH_STATUS FROM `p_dj_activities_launch` t where 1=1 ");
 		if(StringUtils.isNotBlank(activitiesLaunchVo.getBranchId())){
-			criterionsList.add(Restrictions.eq("branchId", activitiesLaunchVo.getBranchId()));
+			sql.append(" and t.BRANCH_ID = ? ");		
+			paramList.add(activitiesLaunchVo.getBranchId());
 		}
 		if(StringUtils.isNotBlank(activitiesLaunchVo.getActivityId())){
-			criterionsList.add(Restrictions.eq("activityId", activitiesLaunchVo.getActivityId()));
+			sql.append(" and t.ACTIVITY_ID = ? ");		
+			paramList.add(activitiesLaunchVo.getActivityId());
 		}
 		if(StringUtils.isNotBlank(activitiesLaunchVo.getCreatorId())){
-			criterionsList.add(Restrictions.eq("creatorId", activitiesLaunchVo.getCreatorId()));
+			sql.append(" and t.CREATOR_ID = ? ");		
+			paramList.add(activitiesLaunchVo.getCreatorId());
 		}
 		if(activitiesLaunchVo.getStatus()!=null){
-			criterionsList.add(Restrictions.eq("status", activitiesLaunchVo.getStatus()));
+			sql.append(" and t.LAUNCH_STATUS = ? ");		
+			paramList.add(activitiesLaunchVo.getStatus());
 		}
-
-		return this.activitesDaoImpl.queryEntityList(page, rows, criterionsList, Order.desc("createTime"), ActivitiesLaunch.class);
+		if(StringUtils.isNotBlank(activitiesLaunchVo.getYear())){
+			sql.append(" and DATE_FORMAT(t.LAUNCH_DATE, '%Y') = ? ");		
+			paramList.add(activitiesLaunchVo.getYear());
+		}
+		if(StringUtils.isNotBlank(activitiesLaunchVo.getMonth())){
+			sql.append(" and date_format(t.LAUNCH_DATE, '%m')= ? ");		
+			paramList.add(activitiesLaunchVo.getMonth());
+		}
+		sql.append(" ORDER BY t.LAUNCH_DATE DESC");
+	    Pager pager= activitesDaoImpl.queryEntitySQLList(page, rows, sql.toString(), paramList);
+	    if(pager!=null){
+	    	List<ActivitiesLaunch> list = new ArrayList<ActivitiesLaunch>();
+	    	for (int i = 0; i < pager.getPageList().size(); i++) {
+	    		Object[] obj = (Object[])pager.getPageList().get(i);
+	    		ActivitiesLaunch alVo = new ActivitiesLaunch();
+	    		if(obj[0]!=null) alVo.setId(obj[0].toString());
+	    		if(obj[1]!=null) alVo.setLaunchDate(DateUtil.getDateFromString(obj[1].toString()));
+	    		if(obj[2]!=null) alVo.setBranchId(obj[2].toString());
+	    		if(obj[3]!=null) alVo.setActivityId(obj[3].toString());
+	    		if(obj[4]!=null) alVo.setCreatorName(obj[4].toString());
+	    		if(obj[5]!=null) alVo.setPoints(Integer.parseInt(obj[5].toString()));
+	    		if(obj[6]!=null) alVo.setStatus(Integer.parseInt(obj[6].toString()));
+	    		list.add(alVo);
+	    	}
+	    	pager.setPageList(list);
+	    }
+	    return pager;
+		
+		
 	}
 	
 	@Override
@@ -309,11 +342,7 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 									String _alFrequency=(obj[4]!=null)?obj[4].toString():"";//频率
 									String _status=(obj[5]!=null)?obj[5].toString():"";//评审状态
 									if(atTitle.equals(_atTitle)){
-										if(_alFrequency.equals("7")){
-											if(_status.equals("3")){
-												listAtSpan.add(_atTime+"|"+_alId+"|"+_alpoint+"|"+_alFrequency);
-											}
-										}else{
+										if(_status.equals("3")){
 											listAtSpan.add(_atTime+"|"+_alId+"|"+_alpoint+"|"+_alFrequency);
 										}
 									}

@@ -10,7 +10,7 @@
 	<title>工作简报编辑</title>
 </head>
 <body>
-<div id="" class="ibox-content">
+<div class="ibox-content">
 	<form id="baseForm" method="post" class="form-horizontal" name="baseForm" action="">
 		<%-- baseModule start --%>
 	    <input type="hidden" id="id" name="id" value="${briefVo.id}" />
@@ -22,6 +22,7 @@
 	    
 	    <input type="hidden" id="ttId" name="ttId" value="${briefVo.ttId}" />
 	    <input type="hidden" id="formNumber" name="formNumber" value="HLZXRBB-01" />
+		<input type="hidden" id="status" name="status" value="${briefVo.status}" />
 		
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>标题</label>
@@ -92,6 +93,7 @@
 <!-- 底部按钮 -->
 <div class="footer edit_footer">
 	<div class="pull-right">
+	<button class="btn btn-primary " type="button" onclick="on_reload()"><i class="fa fa-refresh"></i>&nbsp;重新加载数据</button>
 	<button class="btn btn-primary " type="button" onclick="on_save()"><i class="fa fa-check"></i>&nbsp;保存</button>
 	<button class="btn btn-danger " type="button" onclick="on_close()"><i class="fa fa-close"></i>&nbsp;关闭</button>
 	</div>
@@ -101,18 +103,29 @@
 	var winName = "${winName}";
 	var URLStr = "/datecenter/brief/brief_";
 
+    var sign = "${sign}";
+
 	//新增或编辑
 	function on_save(){
 		if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。
 
 	        on_submit();//提交表单.  
 	    }else{
-            autoAlert("信息提交不正确，请检查！", 5);
+            autoMsg("信息提交不正确，请检查！", 5);
         }
 	}
 
 	//提交表单
-	function on_submit(){  
+	function on_submit(){
+
+        let url = "";
+	    if(sign == "brief"){
+            url = URLStr;
+		}else{
+            url = "/datecenter/totalTable/totalTable_";
+		}
+
+
 		$.ajax({
 			type : 'post',
 			async:false,
@@ -123,7 +136,7 @@
                 if (data.result) {
                     autoMsg("保存成功！", 1);
                     parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
+                        url : url + "load"
                     });//加载树下的列表
                     parent.layer.close(index);
                 } else {
@@ -135,6 +148,33 @@
             }
 		});
 	}
+
+
+    //重新加载数据
+    function on_reload(){
+        parent.layer.confirm("重新加载数据会将原有数据清除，确定重新加载吗？", {
+            btn: ["确定","取消"] //按钮
+        }, function(index, layero){
+            $.ajax({
+                type:"post",
+                async:false,
+                dataType : "json",
+                url: URLStr + "reload?ttId="+ $("#ttId").val(),
+                success : function(data){
+                    if(data.result){
+                        $("#trafficOperation").val(data.trafficOperation);
+                        $("#equipmentOperation").val(data.equipmentOperation);
+                    }else{
+                        autoMsg("数据重新加载失败！",5);
+                    }
+                },
+                error : function(result){
+                    autoAlert("系统出错",5);
+                }
+            });
+            parent.layer.close(index);
+        });
+    }
 
 </script>
 </html>

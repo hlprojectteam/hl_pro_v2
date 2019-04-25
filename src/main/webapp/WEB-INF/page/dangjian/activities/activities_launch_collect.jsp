@@ -69,6 +69,8 @@
 		<span style="margin-left: 20px;">活动总积分:</span><span style="color: red;" id="point"></span>
 		<span style="margin-left: 20px;">（其中亮点工作得分：</span><span style="color: red;" id="ldpoint"></span><span>）</span>
 	</div>
+
+
 	<table border="1px solid #333" cellspacing="0" cellpadding="0" id="tableconent">
 		
 	</table>

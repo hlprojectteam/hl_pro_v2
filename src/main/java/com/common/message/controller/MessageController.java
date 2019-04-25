@@ -1,5 +1,7 @@
 package com.common.message.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,6 +22,7 @@ import com.common.message.MessageJpush;
 import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.message.vo.MessageVo;
+import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.Pager;
 import com.google.gson.JsonObject;
 import com.urms.role.module.Role;
@@ -57,6 +60,8 @@ public class MessageController extends BaseController{
 	 */
 	@RequestMapping(value="/message_load")
 	public void load(HttpServletRequest request,HttpServletResponse response,MessageVo messageVo,Integer page,Integer rows){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
 		User user = this.getSessionUser();
 		messageVo.setAlias(user.getId());
 		try{
@@ -64,19 +69,24 @@ public class MessageController extends BaseController{
 				if(user.getRoles() !=null && user.getRoles().size()>0){
 					StringBuffer tags = new StringBuffer();
 					for(Role role : user.getRoles()){
-						tags.append(role.getId()+",");
+						tags.append(role.getRoleCode()+",");
 					}
 					messageVo.setTags(tags.deleteCharAt(tags.length()-1).toString());
 				}
 			}
+			Pager pager = this.messageServiceImpl.queryEntityList(page, rows, messageVo);
+			json.put("total", pager.getRowCount());
+			JsonConfig config = new JsonConfig();
+			String[] excludes = new String[] {"alias","creatorId","creatorName","sender","sysCode",
+					"tags"}; // 列表排除信息内容字段，减少传递时间
+			config.setExcludes(excludes);
+			config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
+			json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
+			json.put("result", true);
 		}catch(Exception e){
 			e.printStackTrace();
+			json.put("result", false);
 		}
-		Pager pager = this.messageServiceImpl.queryEntityList(page, rows, messageVo);
-		JSONObject json = new JSONObject();
-		json.put("total", pager.getRowCount());
-		JsonConfig config = new JsonConfig();
-		json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
 		this.print(json);
 	}
 	/**
@@ -157,11 +167,9 @@ public class MessageController extends BaseController{
 	
 	private void sendMsg(final Message msg){
 		new Thread(new Runnable() {
-			@SuppressWarnings("static-access")
 			@Override
 			public void run() {
-				MessageJpush msgJpush = new MessageJpush();
-				msgJpush.sendCommonMsg(msg.getTitle(), msg);
+				MessageJpush.sendCommonMsg(msg.getTitle(), msg);
 			}
 		}).run();
 	}

@@ -41,11 +41,18 @@
 	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${surveillanceInspectionVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" disabled="disabled"  />
 	            <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${surveillanceInspectionVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
 	        </div>
-	        <label class="col-sm-2 control-label"><span style="color: red">*</span>天气</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_weather" classStyle="form-control" name="weather" id="weather" value="${surveillanceInspectionVo.weather}" isDefSelect="false" />
-			</div>
         </div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label"><span style="color: red">*</span>天气</label>
+				<div class="col-sm-3">
+					<opt:select dictKey="dc_weather" classStyle="form-control" name="weather" id="weather" value="${surveillanceInspectionVo.weather}" isDefSelect="false" />
+				</div>
+				<label class="col-sm-2 control-label"><span style="color: red">*</span>故障设备</label>
+				<div class="col-sm-3">
+					<opt:select dictKey="dc_failureEquipment" classStyle="form-control" name="failureEquipment" id="failureEquipment" value="${surveillanceInspectionVo.failureEquipment}" isDefSelect="false" />
+				</div>
+			</div>
 	  	
 	  	<div class="form-group">
 	  		<label class="col-sm-2 control-label"><span style="color: red">*</span>巡检时间开始</label>
@@ -79,7 +86,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">跟进措施</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="3" cols="" id="followMeasure" name="followMeasure" data-rule-required="true" data-rule-rangelength="[0,100]" >${surveillanceInspectionVo.followMeasure}</textarea>
+		       <textarea class="form-control" rows="3" cols="" id="followMeasure" name="followMeasure"  data-rule-rangelength="[0,100]" >${surveillanceInspectionVo.followMeasure}</textarea>
 		    </div>
 	  	</div>
 	  	
@@ -100,10 +107,17 @@
 
 	//新增或编辑
 	function on_save(){
-		if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。  
-	        on_submit();//提交表单.  
+		if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。
+
+		    var failureEquipment = $("#failureEquipment").val();
+            var followMeasure = $("#followMeasure").val();
+		    if(failureEquipment != 1 && followMeasure == ""){
+                autoMsg("当存在故障设备时，跟进措施不能为空，请检查！", 5);
+			}else{
+                on_submit();//提交表单.
+			}
 	    }else{
-            autoAlert("信息提交不正确，请检查！", 5);
+            autoMsg("信息提交不正确，请检查！", 5);
         }
 	}
 

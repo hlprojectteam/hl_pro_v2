@@ -24,6 +24,8 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
+import com.common.message.service.IMessageService;
+import com.common.utils.Common;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.JsonDateValueProcessor;
@@ -44,7 +46,6 @@ import com.dangjian.vo.ActivitiesVo;
 import com.dangjian.vo.IntroductionVo;
 import com.dangjian.vo.PartyMemberVo;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.urms.role.module.Role;
 import com.urms.role.service.IRoleService;
 import com.urms.role.vo.RoleVo;
@@ -77,6 +78,8 @@ public class MobileDangJianController extends BaseController{
 	public IAttachService attachServiceImpl;
 	@Autowired
 	public IRoleService roleServiceImpl;
+	@Autowired
+	public IMessageService messageServiceImpl;
 	
 	@RequestMapping(value="/activities_list")
 	public void mobileNewsList(HttpServletRequest request,HttpServletResponse response,
@@ -132,7 +135,11 @@ public class MobileDangJianController extends BaseController{
 		    if(ac!=null){
 		    	alVo.setPoints(ac.getPoints());
 		    }
-		    alVo.setStatus(0);//默认状态
+		    if(ac.getFrequency()==7){
+		    	alVo.setStatus(0);//未评审状态
+		    }else{
+		    	alVo.setStatus(3);//默认通过状态
+		    }
 			ActivitiesLaunch al=new ActivitiesLaunch();
 			BeanUtils.copyProperties(alVo, al);
 			al.setLaunchDate(DateUtil.getDateFromString(alVo.getLaunchDateStr()));
@@ -154,6 +161,8 @@ public class MobileDangJianController extends BaseController{
 						this.activitiesServiceImpl.saveOrUpdateALR(alr);
 					}
 				}
+				//发送给“党委委员-初审”角色初审
+				this.messageServiceImpl.sendMsg(Common.msgTitle_DJ_ldgz,"亮点工作评审",null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
 			}
 			json.put("result", true);
 			json.put("msg", "");
@@ -358,35 +367,49 @@ public class MobileDangJianController extends BaseController{
 	@RequestMapping(value="/activitiesLauchList")
 	public void activitiesLauchList(HttpServletRequest request,HttpServletResponse response,ActivitiesLaunchVo activitiesLaunchVo,
 			Integer page,Integer rows){
-		Pager pager = this.activitiesServiceImpl.queryALEntityListPager(page, rows, activitiesLaunchVo);
-		@SuppressWarnings("unchecked")
-		List<ActivitiesLaunch> list= pager.getPageList();
-		List<ActivitiesLaunchVo> listVo=new ArrayList<>();
-		for (ActivitiesLaunch activitiesLaunch : list) {
-			ActivitiesLaunchVo alVo=new ActivitiesLaunchVo();
-			BeanUtils.copyProperties(activitiesLaunch, alVo);
-			
-			String branchId=activitiesLaunch.getBranchId();
-			Branch branch= branchServiceImpl.getEntityById(Branch.class, branchId);
-			alVo.setBranchName(branch.getBranchName());
-			
-			String activityId=activitiesLaunch.getActivityId();
-			Activities activities= activitiesServiceImpl.getEntityById(Activities.class, activityId);
-			alVo.setTitle(activities.getTitle());
-			
-			listVo.add(alVo);
-		}
-		
 		JSONObject json = new JSONObject();
-		JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
-		config.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor()); // 格式化日期
-		String[] excludes = new String[] {"createTime","createUserId"
-				,"sysCode","branchId","completionTimes","isReach","frequency","timeQuantum","year"}; // 列表排除信息内容字段，减少传递时间
-		config.setExcludes(excludes);
-		json.put("total", pager.getRowCount());
-		json.put("curPageSize", pager.getPageList().size());
-		json.put("rows", JSONArray.fromObject(listVo, config));
-		json.put("result", true);
+		json.put("result", false);
+		try {
+			Pager pager = this.activitiesServiceImpl.queryALEntityListPager(page, rows, activitiesLaunchVo);
+			@SuppressWarnings("unchecked")
+			List<ActivitiesLaunch> list= pager.getPageList(); 
+			List<ActivitiesLaunchVo> listVo=new ArrayList<>();
+			for (ActivitiesLaunch activitiesLaunch : list) {
+				ActivitiesLaunchVo alVo=new ActivitiesLaunchVo();
+				BeanUtils.copyProperties(activitiesLaunch, alVo);
+				
+				String branchId=activitiesLaunch.getBranchId();
+				Branch branch= branchServiceImpl.getEntityById(Branch.class, branchId);
+				alVo.setBranchName(branch.getBranchName());
+				
+				String activityId=activitiesLaunch.getActivityId();
+				Activities activities= activitiesServiceImpl.getEntityById(Activities.class, activityId);
+				alVo.setTitle(activities.getTitle());
+				
+				List<Attach> listAttach= this.attachServiceImpl.queryAttchByFormIdAndType(activitiesLaunch.getId(), "dj_activitiesLaunch");
+				if(listAttach!=null){
+					List<String> imgUrls=new ArrayList<>();
+					for (Attach attach : listAttach) {
+						imgUrls.add(attach.getPathUpload());
+					}
+					alVo.setImgUrls(imgUrls);
+				}
+				listVo.add(alVo);
+			}
+			JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
+			config.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor()); // 格式化日期
+			String[] excludes = new String[] {"createTime","createUserId","creatorId"
+					,"sysCode","branchId","completionTimes","isReach","frequency","timeQuantum","year","month"
+					,"activityId","exOpinion","isPass","launchAddress","launchDateStr","opinion"
+					,"points","status","timeQuantumValue"}; // 列表排除信息内容字段，减少传递时间
+			config.setExcludes(excludes);
+			json.put("total", pager.getRowCount());
+			json.put("curPageSize", pager.getPageList().size());
+			json.put("rows", JSONArray.fromObject(listVo, config));
+			json.put("result", true);
+		} catch (Exception e) {
+			json.put("result", false);
+		}
 		this.print(json);
 	}
 	

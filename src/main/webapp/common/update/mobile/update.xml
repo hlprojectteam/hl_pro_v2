@@ -1,11 +1,10 @@
 <root>
-	<versionCode>26</versionCode>
-	<versionName>2.0.6</versionName>
-	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/05aa3a8642407507b6b03c58d6f8434e_d</androidUrl>
+	<versionCode>29</versionCode>
+	<versionName>2.0.9</versionName>
+	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/95677fe5d911cf321d0da9c79d5fbb31_d</androidUrl>
 	<iosUrl>https://itunes.apple.com/cn/app/huan-long-ying-yun-tong/id1170974616?mt=8</iosUrl>
 	<updateLog>
-		更新版本 2.0.6
-		1、添加党建审核功能
-		2、安全模块流程有所修改
+		更新版本 2.0.9
+		1、党建活动排版，党建审批通知
   	</updateLog>
 </root>

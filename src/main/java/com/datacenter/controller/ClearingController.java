@@ -1,23 +1,5 @@
 package com.datacenter.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.common.base.controller.BaseController;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.Pager;
@@ -25,6 +7,23 @@ import com.datacenter.module.Clearing;
 import com.datacenter.service.IClearingService;
 import com.datacenter.vo.ClearingVo;
 import com.google.gson.JsonObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @Description 清障保洁	控制层
@@ -37,6 +36,9 @@ public class ClearingController extends BaseController{
 
 	@Autowired
 	private IClearingService clearingServiceImpl;
+
+	@Autowired
+	private TotalTableController totalTableController;
 	
 	
 	/**
@@ -155,4 +157,34 @@ public class ClearingController extends BaseController{
 			this.print(json.toString());
 		}
 	}
+
+	/**
+	 * 导出Excel
+	 * @param request
+	 * @param response
+	 * @param clearingVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	@RequestMapping(value="/clearing_export")
+	public void export(HttpServletRequest request, HttpServletResponse response, ClearingVo clearingVo){
+		//excel文件名
+		String fileName = "清障保洁汇总";
+
+		//获取excle文档对象
+		HSSFWorkbook wb = this.clearingServiceImpl.export(clearingVo);
+
+		//将文件存到指定位置
+		try {
+			this.totalTableController.setResponseHeader(response, fileName);
+			OutputStream os = response.getOutputStream();
+			wb.write(os);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

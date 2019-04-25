@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.RoadWork;
 import com.datacenter.vo.RoadWorkVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 涉路施工 service接口
@@ -62,5 +63,15 @@ public interface IRoadWorkService extends IBaseService{
 	 * @Date 2019年4月2日
 	 */
 	public List<RoadWork> queryEntityList(RoadWorkVo roadWorkVo);
+
+	/**
+	 * 涉路施工	导出Excel
+	 * @param roadWorkVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(RoadWorkVo roadWorkVo);
+
 		
 }

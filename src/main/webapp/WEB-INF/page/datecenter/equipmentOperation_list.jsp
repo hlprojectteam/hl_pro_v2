@@ -18,6 +18,7 @@
 		<div class="row" style="padding:0px 10px 5px 10px;">
 			<button class="btn btn-primary " id="add" style="margin-left: 5px;" type="button" onclick="on_add()"><i class="fa fa-plus"></i>&nbsp;新增</button>
 			<button class="btn btn-danger " id="del" style="margin-left: 5px;" type="button" onclick="on_del()"><i class="fa fa-remove"></i>&nbsp;删除</button>
+			<button class="btn btn-primary " id="addMany" style="margin-left: 5px;" type="button" onclick="on_addMany()"><i class="fa fa-plus"></i>&nbsp;批量新增</button>
 		</div>
 	</c:if>
 	<div class="row ibox-content" style="padding:5px 0 5px 0;">
@@ -33,6 +34,7 @@
 	                <input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 	            </div>
 				<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
+				  <button class="btn btn-primary" type="button" onclick="on_export()"><i class="fa fa-file-excel-o"></i>&nbsp;导出Excle</button>
 			  </div>
 		  </c:if>
 		  <c:if test="${empty menuCode}">
@@ -72,7 +74,7 @@
     	              {title: "序号",field: "id",align:"center",width:50,formatter:function(value,row,index){
 		           	  		return index+1;
 		              }},
-    	              {title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "title",align:"center"}, 
+    	              /*{title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "title",align:"center"}, */
     	              {title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "dutyDate",align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(0,10);
 		              }},
@@ -80,25 +82,68 @@
 		           	  		return changeDataDictByKey("dc_tollGate",value);
 		              }},
 		              {title: "车道高清抓拍", field: "cdgqzp",align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_equipmentStatus",value);
+                              if(value == 1){
+                                  return "<i style='color: green;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else if(value == 2){
+                                  return "<i style='color: yellow;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else{
+                                  return "<i style='color: red;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }
+		           	  		/*return changeDataDictByKey("dc_equipmentStatus",value);*/
 		              }},
 		              {title: "自动发卡机", field: "zdfkj",align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_equipmentStatus",value);
+                              if(value == 1){
+                                  return "<i style='color: green;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else if(value == 2){
+                                  return "<i style='color: yellow;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else{
+                                  return "<i style='color: red;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }
 		              }},
 		              {title: "MTC出口车道", field: "mtcckcd",align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_equipmentStatus",value);
+                              if(value == 1){
+                                  return "<i style='color: green;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else if(value == 2){
+                                  return "<i style='color: yellow;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else{
+                                  return "<i style='color: red;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }
 		              }},
 		              {title: "ETC出口车道", field: "etcckcd",align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_equipmentStatus",value);
+                              if(value == 1){
+                                  return "<i style='color: green;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else if(value == 2){
+                                  return "<i style='color: yellow;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else{
+                                  return "<i style='color: red;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }
 		              }},
 		              {title: "MTC入口车道", field: "mtcrkcd",align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_equipmentStatus",value);
+                              if(value == 1){
+                                  return "<i style='color: green;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else if(value == 2){
+                                  return "<i style='color: yellow;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else{
+                                  return "<i style='color: red;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }
 		              }},
 		              {title: "ETC入口车道", field: "etcrkcd",align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_equipmentStatus",value);
+                              if(value == 1){
+                                  return "<i style='color: green;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else if(value == 2){
+                                  return "<i style='color: yellow;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else{
+                                  return "<i style='color: red;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }
 		              }},
 		              {title: "计重车道", field: "jzcd",align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_equipmentStatus",value);
+                              if(value == 1){
+                                  return "<i style='color: green;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else if(value == 2){
+                                  return "<i style='color: yellow;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }else{
+                                  return "<i style='color: red;' class='fa fa-circle' aria-hidden='true'></i>"
+                              }
 		              }},
     	              {title: "车道停用时间开始", field: "downTimeStart",align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
@@ -128,6 +173,33 @@
             content: URLStr + "edit?winName="+winName+"&ttId="+ttId+"&dutyDateStr="+dutyDateStr
         });
   	}
+
+    //批量新增
+    function on_addMany(){
+        parent.layer.confirm("确定批量新增数据？", {
+            btn: ["确定","取消"] //按钮
+        }, function(){
+            $.ajax({
+                type:"post",
+                async:false,
+                dataType : "json",
+                url: URLStr + "addMany?ttId="+ttId+"&dutyDateStr="+dutyDateStr,
+                success : function(data){
+                    if(data.result){
+                        $("#grid").bootstrapTable("refresh",{url: URLStr + "load"});//加载树下的列表
+                        autoMsg("批量新增成功！",1);
+                    }else{
+                        autoMsg("批量新增失败！",5);
+                    }
+                },
+                error : function(result){
+                    autoAlert("系统出错",5);
+                }
+            });
+        });
+
+    }
+
   	
   	//删除
   	function on_del(){
@@ -181,6 +253,14 @@
 		$("#grid").bootstrapTable("refresh");
 	}
 
+    //导出Excel
+    function on_export(){
+        if($("#dutyDateStart").val() == null || $("#dutyDateStart").val() == "" || $("#dutyDateEnd").val() == null || $("#dutyDateEnd").val() == ""){
+            autoAlert("注意：导出Excel时筛选条件不能为空!",5);
+        }else{
+            window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()
+        }
+    }
 </script>
 </body>
 </html>

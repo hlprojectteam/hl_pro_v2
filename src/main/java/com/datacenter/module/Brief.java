@@ -32,10 +32,13 @@ public class Brief extends BaseModule{
 	private String fhry;                    //复核人员
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date riseTime;                  //简报生成时间(打印文件时的当前时间)
+
 	private String operatingData;           //营运数据
 	private String trafficOperation;        //交通运行情况
 	private String equipmentOperation;      //设备运行情况
 	private String ttId;                    //主表id
+
+	private Integer status;					//状态  0初始 1修订
 	
 	
 	@Column(name = "title_", length=50)
@@ -133,5 +136,12 @@ public class Brief extends BaseModule{
 	public void setTtId(String ttId) {
 		this.ttId = ttId;
 	}
-	
+
+	@Column(name = "status_")
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 }

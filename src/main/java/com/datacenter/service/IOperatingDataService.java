@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.OperatingData;
 import com.datacenter.vo.OperatingDataVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 营运数据 service接口
@@ -62,5 +63,15 @@ public interface IOperatingDataService extends IBaseService{
 	 * @Date 2019年4月3日
 	 */
 	public List<OperatingData> queryEntityList(OperatingDataVo operatingDataVo);
-		
+
+	/**
+	 * 营运数据	导出Excel
+	 * @param operatingDataVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(OperatingDataVo operatingDataVo);
+
+
 }

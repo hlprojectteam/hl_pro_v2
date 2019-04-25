@@ -31,7 +31,8 @@ public class RoadWork extends BaseModule{
 	@DateTimeFormat(pattern="HH:mm")
 	private Date departureTime;               //撤场时间
 	private String unitName;                  //施工单位名称
-	private String relationPerson;            //现场负责人及联系方式
+	private String relationPerson;            //现场负责人
+	private String relationPhone;			  //联系方式
 	private Integer positionAttributes;       //位置属性	(数据字典：dc_positionAttributes, 1:主线	2：收费站)
 	private String specificLocation;          //具体位置
 	private String constructionContent;       //施工内容
@@ -199,5 +200,13 @@ public class RoadWork extends BaseModule{
 	public void setY(double y) {
 		this.y = y;
 	}
-	
+
+	@Column(name = "relation_Phone")
+	public String getRelationPhone() {
+		return relationPhone;
+	}
+
+	public void setRelationPhone(String relationPhone) {
+		this.relationPhone = relationPhone;
+	}
 }

@@ -10,7 +10,9 @@ import com.datacenter.vo.*;
 import com.urms.dataDictionary.module.CategoryAttribute;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -65,6 +67,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	private ITrafficJamService trafficJamServiceImpl;
 	@Autowired
 	private ITransferRegistrationService transferRegistrationServiceImpl;
+	@Autowired
+	private IEquipmentStatusService equipmentStatusServiceImpl;
 
 
 
@@ -126,6 +130,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		this.trafficAccidentServiceImpl.updateDutyDate(ttId, newDutyDate);
 		this.trafficJamServiceImpl.updateDutyDate(ttId, newDutyDate);
 		this.transferRegistrationServiceImpl.updateDutyDate(ttId, newDutyDate);
+		this.equipmentStatusServiceImpl.updateDutyDate(ttId, newDutyDate);
 	}
 
 
@@ -150,6 +155,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				this.trafficAccidentServiceImpl.deleteByTtId(ttId);
 				this.trafficJamServiceImpl.deleteByTtId(ttId);
 				this.transferRegistrationServiceImpl.deleteByTtId(ttId);
+				this.equipmentStatusServiceImpl.deleteByTtId(ttId);
 			}
 			//删除主表数据
 			this.delete(TotalTable.class, ids);
@@ -236,7 +242,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		getTrafficJamData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 		//14.外勤作业
 		getFieldOperationsData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-
+		//15.联网设备日常检查表
+		getEquipmentStatusData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 
 		return wb;
 	}
@@ -345,6 +352,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		row3.getCell(0).setCellStyle(mainStyle_center);
 		row3.createCell(1).setCellValue(brief.getOperatingData());
 		row3.getCell(1).setCellStyle(mainStyle_left);
+		row3.createCell(2).setCellStyle(mainStyle_left);
+		row3.createCell(3).setCellStyle(mainStyle_left);
+		row3.createCell(4).setCellStyle(mainStyle_left);
 
 		//第五行
 		HSSFRow row4 = sheet1.createRow(4);
@@ -498,9 +508,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		HSSFSheet sheet3 = wb.createSheet("监控巡检");
 
 		//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
-		sheet3.addMergedRegion(new CellRangeAddress(0, 0, 0, 4));
-		sheet3.addMergedRegion(new CellRangeAddress(1, 1, 0, 4));
-		sheet3.addMergedRegion(new CellRangeAddress(2, 2, 0, 4));
+		sheet3.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
+		sheet3.addMergedRegion(new CellRangeAddress(1, 1, 0, 5));
+		sheet3.addMergedRegion(new CellRangeAddress(2, 2, 0, 5));
 
 
 		//创建行（第一行）
@@ -538,7 +548,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		HSSFRow row3 = sheet3.createRow(3);
 		row3.setHeightInPoints(40);		//行高
 		HSSFCell cell = null;
-		String[] title = {"巡检起止时间段","值班主任","巡检位置","巡检情况描述","跟进措施"};
+		String[] title = {"巡检起止时间段","值班主任","巡检位置","故障设备","巡检情况描述","跟进措施"};
 		for(int i=0;i<title.length;i++){
 			cell = row3.createCell(i);		//创建单元格
 			cell.setCellValue(title[i]);	//设置单元格内容
@@ -547,9 +557,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//列宽自适应（该方法在老版本的POI中效果不佳）
 			/*sheet3.autoSizeColumn(i);*/
 			//设置列宽
-			if(i == 3){
+			if(i == 4){
 				sheet3.setColumnWidth(i, sheet3.getColumnWidth(i)*7);
-			}else if(i == 4){
+			}else if(i == 5){
 				sheet3.setColumnWidth(i, sheet3.getColumnWidth(i)*4);
 			}else{
 				sheet3.setColumnWidth(i, sheet3.getColumnWidth(i)*3/2);
@@ -570,11 +580,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 0:	cell.setCellValue(sdf.format(siList.get(i).getInspectionTimeStart()) + "--" + sdf.format(siList.get(i).getInspectionTimeEnd()));	break;
 					case 1: cell.setCellValue(siList.get(i).getShiftSupervisor());	break;
 					case 2: cell.setCellValue(getValueByDictAndKey("dc_inspectionlocation", siList.get(i).getInspectionlocation().toString()));	break;
-					case 3: cell.setCellValue(siList.get(i).getInspectionDetails());	break;
-					case 4: cell.setCellValue(siList.get(i).getFollowMeasure());	break;
+					case 3: cell.setCellValue(getValueByDictAndKey("dc_failureEquipment", siList.get(i).getFailureEquipment().toString()));	break;
+					case 4: cell.setCellValue(siList.get(i).getInspectionDetails());	break;
+					case 5: cell.setCellValue(siList.get(i).getFollowMeasure());	break;
 				}
 				//设置单元格样式
-				if(j == 3){
+				if(j == 4){
 					cell.setCellStyle(mainStyle_left);
 				}else{
 					cell.setCellStyle(mainStyle_center);
@@ -689,6 +700,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		String[] title2 = {"单位名称","现场负责人联系方式","位置属性","具体位置","施工内容","占道情况","检查时间","检查人员","施工现场情况简要描述","整改措施"};
         row3.createCell(0).setCellStyle(r2_style);
         row3.createCell(1).setCellStyle(r2_style);
+		row3.createCell(2).setCellStyle(r2_style);
+		row3.createCell(13).setCellStyle(r2_style);
 		for(int i=0;i<title2.length;i++){
 			cell = row3.createCell(i + 3);		//创建单元格
 			cell.setCellValue(title2[i]);	//设置单元格内容
@@ -712,7 +725,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 1: cell.setCellValue(sdf2.format(rwList.get(i).getApproachTime()));	break;
 					case 2: cell.setCellValue(sdf2.format(rwList.get(i).getDepartureTime()));	break;
 					case 3: cell.setCellValue(rwList.get(i).getUnitName());	break;
-					case 4: cell.setCellValue(rwList.get(i).getRelationPerson());	break;
+					case 4: cell.setCellValue(rwList.get(i).getRelationPerson() + rwList.get(i).getRelationPhone());	break;
 					case 5: cell.setCellValue(getValueByDictAndKey("dc_positionAttributes", rwList.get(i).getPositionAttributes().toString()));	break;
 					case 6: cell.setCellValue(rwList.get(i).getSpecificLocation()); break;
 					case 7: cell.setCellValue(rwList.get(i).getConstructionContent()); break;
@@ -817,7 +830,36 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			cell.setCellStyle(r2_style);	//设置单元格样式
 		}
 
-		//第五行 及 之后的行
+       /* //画图的顶级管理器，一个sheet只能获取一个（一定要注意这点）
+        HSSFPatriarch drawingPatriarch = sheet5.createDrawingPatriarch();
+        // anchor主要用于设置图片的属性
+        HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 1023, 250, (short) 1, 1+i*10, (short) 5, 8+i*10);
+        // 插入图片
+        drawingPatriarch.createPicture(anchor, wb.addPicture(byteArrayOut.toByteArray(), HSSFWorkbook.PICTURE_TYPE_JPEG));*/
+
+        HSSFCellStyle greenStyle = wb.createCellStyle();
+        HSSFCellStyle yellowStyle = wb.createCellStyle();
+        HSSFCellStyle redStyle = wb.createCellStyle();
+        greenStyle.cloneStyleFrom(mainStyle_center);
+        yellowStyle.cloneStyleFrom(mainStyle_center);
+        redStyle.cloneStyleFrom(mainStyle_center);
+
+        HSSFFont greenFont = wb.createFont();
+        HSSFFont yellowFont = wb.createFont();
+        HSSFFont redFont = wb.createFont();
+        greenFont.setColor((short)64);
+        greenFont.setFontHeightInPoints((short)28);	//字体大小
+        redFont.setColor(Font.COLOR_RED);
+		redFont.setFontHeightInPoints((short)28);	//字体大小
+        yellowFont.setColor((short)9);
+		yellowFont.setFontHeightInPoints((short)28);	//字体大小
+
+        greenStyle.setFont(greenFont);
+        yellowStyle.setFont(yellowFont);
+        redStyle.setFont(redFont);
+
+
+        //第五行 及 之后的行
 		HSSFRow row = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		String[][] content = new String[eoList.size()][];
@@ -826,16 +868,95 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			row.setHeightInPoints(65);					//设置行高
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
+				Integer value = 0;
 				//设置单元格内容
 				switch (j){
 					case 0:	cell.setCellValue(getValueByDictAndKey("dc_tollGate", eoList.get(i).getTollGate().toString()));	break;
-					case 1: cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getCdgqzp().toString()));	break;
-					/*case 2: eoList.get(i).getZdfkj().toString();
-					case 3: eoList.get(i).getMtcckcd().toString();
-					case 4: eoList.get(i).getEtcckcd().toString();
-					case 5: eoList.get(i).getMtcrkcd().toString();
-					case 6: eoList.get(i).getEtcckcd().toString();
-					case 7: eoList.get(i).getJzcd().toString();*/
+					case 1:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getCdgqzp().toString()));	break;
+					case 2:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getZdfkj().toString()));	break;
+					case 3:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getMtcckcd().toString()));	break;
+					case 4:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getEtcckcd().toString()));	break;
+					case 5:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getMtcrkcd().toString()));	break;
+					case 6:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getEtcckcd().toString()));	break;
+					case 7:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getJzcd().toString()));	break;
+
+					/*case 1:
+                        cell.setCellValue("●");
+                        value = eoList.get(i).getCdgqzp();
+                        if(value == 1){
+                            cell.setCellStyle(greenStyle);
+                        }else if(value == 2){
+                            cell.setCellStyle(yellowStyle);
+                        }else{
+                            cell.setCellStyle(redStyle);
+                        }
+                        break;
+					case 2:
+						cell.setCellValue("●");
+						value = eoList.get(i).getZdfkj();
+						if(value == 1){
+							cell.setCellStyle(greenStyle);
+						}else if(value == 2){
+							cell.setCellStyle(yellowStyle);
+						}else{
+							cell.setCellStyle(redStyle);
+						}
+						break;
+					case 3:
+						cell.setCellValue("●");
+						value = eoList.get(i).getMtcckcd();
+						if(value == 1){
+							cell.setCellStyle(greenStyle);
+						}else if(value == 2){
+							cell.setCellStyle(yellowStyle);
+						}else{
+							cell.setCellStyle(redStyle);
+						}
+						break;
+					case 4:
+						cell.setCellValue("●");
+						value = eoList.get(i).getEtcckcd();
+						if(value == 1){
+							cell.setCellStyle(greenStyle);
+						}else if(value == 2){
+							cell.setCellStyle(yellowStyle);
+						}else{
+							cell.setCellStyle(redStyle);
+						}
+						break;
+					case 5:
+						cell.setCellValue("●");
+						value = eoList.get(i).getMtcrkcd();
+						if(value == 1){
+							cell.setCellStyle(greenStyle);
+						}else if(value == 2){
+							cell.setCellStyle(yellowStyle);
+						}else{
+							cell.setCellStyle(redStyle);
+						}
+						break;
+					case 6:
+						cell.setCellValue("●");
+						value = eoList.get(i).getEtcckcd();
+						if(value == 1){
+							cell.setCellStyle(greenStyle);
+						}else if(value == 2){
+							cell.setCellStyle(yellowStyle);
+						}else{
+							cell.setCellStyle(redStyle);
+						}
+						break;
+					case 7:
+						cell.setCellValue("●");
+						value = eoList.get(i).getJzcd();
+						if(value == 1){
+							cell.setCellStyle(greenStyle);
+						}else if(value == 2){
+							cell.setCellStyle(yellowStyle);
+						}else{
+							cell.setCellStyle(redStyle);
+						}
+						break;*/
 					case 8: cell.setCellValue(eoList.get(i).getRemark());	break;
 					case 9: cell.setCellValue(sdf.format(eoList.get(i).getDownTimeStart()) + "--" + sdf.format(eoList.get(i).getDownTimeEnd()));	break;
 				}
@@ -2573,7 +2694,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第六
 			HSSFRow row5 = sheet13.createRow(5);
 			row5.setHeightInPoints(50);
-			row5.createCell(0).setCellValue("情况简述");
+			row5.createCell(0).setCellValue("阻塞原因");
 			row5.getCell(0).setCellStyle(r2_style);
 			for (int i = 1; i < 10; i++) {
 				row5.createCell(i).setCellStyle(r2_style);
@@ -2582,7 +2703,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第七行
 			HSSFRow row6 = sheet13.createRow(6);
 			row6.setHeightInPoints(50);
-			row6.createCell(0).setCellValue("处理结果");
+			row6.createCell(0).setCellValue("处理情况");
 			row6.getCell(0).setCellStyle(r2_style);
 			for (int i = 1; i < 10; i++) {
 				row6.createCell(i).setCellStyle(r2_style);
@@ -2835,6 +2956,164 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			for (int i = 1; i < 8; i++) {
 				row7.createCell(i).setCellStyle(r2_style);
 			}
+		}
+
+		return wb;
+	}
+
+
+	/**
+	 * @intruduction 获取联网设备日常检查表数据
+	 * @param wb excel文档对象
+	 * @param ttId 主表id
+	 * @param mainStyle_center
+	 * @param mainStyle_left
+	 * @param r0_style
+	 * @param r1_style
+	 * @param r2_style
+	 * @return HSSFWorkbook
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook getEquipmentStatusData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		EquipmentStatusVo equipmentStatusVo = new EquipmentStatusVo();
+		equipmentStatusVo.setTtId(ttId);
+		List<EquipmentStatus> esList = this.equipmentStatusServiceImpl.queryEntityList(equipmentStatusVo);
+
+
+		//创建sheet
+		HSSFSheet sheet15 = wb.createSheet("联网设备日常检查表");
+
+		//设置列宽
+		for (int i = 0; i < 10; i++) {
+			sheet15.setColumnWidth(i, sheet15.getColumnWidth(i)*2);
+		}
+
+
+		//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+		sheet15.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
+		sheet15.addMergedRegion(new CellRangeAddress(1, 1, 0, 9));
+		sheet15.addMergedRegion(new CellRangeAddress(2, 2, 2, 3));
+		sheet15.addMergedRegion(new CellRangeAddress(2, 2, 5, 8));
+
+		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 0, 0));
+		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 1, 1));
+		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 9, 9));
+
+
+		//创建行（第一行）
+		HSSFRow row0 = sheet15.createRow(0 );
+		//设置行的高度
+		row0.setHeightInPoints(30);
+		//创建单元格 并 设置单元格内容
+		row0.createCell(0).setCellValue("联网关键设备运行状态日常检查表");
+		//设置单元格样式
+		row0.getCell(0).setCellStyle(r0_style);
+
+		//第二行
+		HSSFRow row1 = sheet15.createRow(1);
+		row1.createCell(0).setCellValue("表单编号：HLZXRBB-15");
+		row1.getCell(0).setCellStyle(r1_style);
+
+		//第三行
+		HSSFRow row2 = sheet15.createRow(2);
+		row2.setHeightInPoints(25);
+		row2.createCell(0).setCellValue("日期");
+		row2.createCell(1);
+		row2.createCell(2).setCellValue("RFID");
+		row2.createCell(3);
+		row2.createCell(4).setCellValue("5.8G");
+		row2.createCell(5).setCellValue("高清卡口");
+		for (int i = 6; i < 9; i++) {
+			row2.createCell(i);
+		}
+		row2.createCell(9).setCellValue("备注");
+		for (int i = 0; i < 10; i++) {
+			row2.getCell(i).setCellStyle(r2_style);	//设置单元格样式
+		}
+
+		//第四行
+		HSSFRow row3 = sheet15.createRow(3);
+		row3.setHeightInPoints(25);
+		row3.createCell(0);
+		row3.createCell(1);
+		row3.createCell(2).setCellValue("R1");
+		row3.createCell(3).setCellValue("R2");
+		row3.createCell(4).setCellValue("E1");
+		row3.createCell(5).setCellValue("10306");
+		row3.createCell(6).setCellValue("10307");
+		row3.createCell(7).setCellValue("10308");
+		row3.createCell(8).setCellValue("10309");
+		row3.createCell(9);
+		for (int i = 0; i < 10; i++) {
+			row3.getCell(i).setCellStyle(r2_style);	//设置单元格样式
+		}
+
+
+		//数据展示
+		if(esList != null && esList.size() > 0){
+
+			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+
+			for(int tb = 0; tb < esList.size(); tb++){
+
+				//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+				sheet15.addMergedRegion(new CellRangeAddress(4 + tb*3,  6 + tb*3, 0, 0));
+
+
+				HSSFRow row4 = sheet15.createRow(4 + tb*3);
+				row4.setHeightInPoints(25);
+				row4.createCell(0).setCellValue(sdf1.format(esList.get(tb).getDutyDate()));
+				row4.createCell(1);
+				row4.createCell(2).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR1().toString()));
+				row4.createCell(3).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR2().toString()));
+				row4.createCell(4).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusE1().toString()));
+				row4.createCell(5).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusA().toString()));
+				row4.createCell(6).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusB().toString()));
+				row4.createCell(7).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusC().toString()));
+				row4.createCell(8).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusD().toString()));
+				row4.createCell(9).setCellValue(sdf2.format(esList.get(tb).getCheckTime()));
+				for (int i = 0; i < 10; i++) {
+					row4.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
+				}
+
+
+				HSSFRow row5 = sheet15.createRow(5 + tb*3);
+				row5.setHeightInPoints(25);
+				row5.createCell(0);
+				row5.createCell(1).setCellValue("标识成功率");
+				row5.createCell(2).setCellValue(esList.get(tb).getSuccessRateR1() + "%");
+				row5.createCell(3).setCellValue(esList.get(tb).getSuccessRateR2() + "%");
+				row5.createCell(4).setCellValue(esList.get(tb).getSuccessRateE1() + "%");
+				row5.createCell(5).setCellValue(esList.get(tb).getSuccessRateA() + "%");
+				row5.createCell(6).setCellValue(esList.get(tb).getSuccessRateB() + "%");
+				row5.createCell(7).setCellValue(esList.get(tb).getSuccessRateC() + "%");
+				row5.createCell(8).setCellValue(esList.get(tb).getSuccessRateD() + "%");
+				row5.createCell(9).setCellValue(esList.get(tb).getRemark());
+				for (int i = 0; i < 10; i++) {
+					row5.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
+				}
+
+
+				HSSFRow row6 = sheet15.createRow(6 + tb*3);
+				row6.setHeightInPoints(25);
+				row6.createCell(0);
+				row6.createCell(1).setCellValue("误标数量");
+				row6.createCell(2).setCellValue(esList.get(tb).getMislabelNumR1());
+				row6.createCell(3).setCellValue(esList.get(tb).getMislabelNumR2() + "%");
+				row6.createCell(4).setCellValue(esList.get(tb).getMislabelNumE1() + "%");
+				row6.createCell(5).setCellValue(esList.get(tb).getMislabelNumA() + "%");
+				row6.createCell(6).setCellValue(esList.get(tb).getMislabelNumB() + "%");
+				row6.createCell(7).setCellValue(esList.get(tb).getMislabelNumC() + "%");
+				row6.createCell(8).setCellValue(esList.get(tb).getMislabelNumD() + "%");
+				row6.createCell(9);
+				for (int i = 0; i < 10; i++) {
+					row6.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
+				}
+
+			}
+
 		}
 
 		return wb;

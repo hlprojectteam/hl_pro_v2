@@ -85,4 +85,16 @@ public class Common {
 	public static final String cwfzjlRoleCode = (String) Cache.getSysConfig.get("cwfzjlRoleCode");
 	public static final String cwfzjlRoleName = (String) Cache.getSysConfig.get("cwfzjlRoleName");
 	
+	//消息分类
+	public static final int msgJY = 1;
+	public static final int msgDT = 2;
+	public static final int msgZD = 3;
+	public static final int msgAQ = 4;
+	public static final int msgDJ = 5;
+	public static final int msgKQ = 6;
+	
+	//消息标题
+	public static final String msgTitle_DJ_ldgz="党建活动亮点工作";
+	public static final String msgTitle_DJ_yjfk="党建意见反馈";
+	
 }

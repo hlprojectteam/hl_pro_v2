@@ -1,5 +1,6 @@
 package com.datacenter.controller;
 
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,6 +14,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,9 @@ public class TransferRegistrationController extends BaseController{
 
 	@Autowired
 	private ITransferRegistrationService transferRegistrationServiceImpl;
+
+	@Autowired
+	private TotalTableController totalTableController;
 	
 	
 	/**
@@ -131,6 +136,66 @@ public class TransferRegistrationController extends BaseController{
 			this.print(json.toString());
 		}
 	}
+
+
+	/**
+	 * 交接班登记表	批量新增
+	 * @param response
+	 * @param ttId
+	 * @param dutyDateStr
+	 * @author xuezb
+	 * @Date 2019年2月19日
+	 */
+	@RequestMapping(value="/transferRegistration_addMany")
+	public void addMany(HttpServletResponse response, String ttId, String dutyDateStr){
+		JsonObject json = new JsonObject();
+		try {
+			if (StringUtils.isNotBlank(ttId) && StringUtils.isNotBlank(dutyDateStr)){
+				SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+				Date dutyDate = fmt.parse(dutyDateStr);
+				SimpleDateFormat fmt1 = new SimpleDateFormat("HH:mm");
+				SimpleDateFormat fmt2 = new SimpleDateFormat("yyyy年MM月dd日");
+
+				TransferRegistrationVo transferRegistrationVo = new TransferRegistrationVo();
+
+				for (int i = 1; i <= 3; i++) {
+					transferRegistrationVo.setTtId(ttId);
+					transferRegistrationVo.setDutyDate(dutyDate);
+
+					transferRegistrationVo.setTitle(fmt2.format(dutyDate) + "环龙运营控制指挥中心交接班登记表");
+					transferRegistrationVo.setFormNumber("HLZXRBB-02");
+					transferRegistrationVo.setShift(i);
+					transferRegistrationVo.setWeather(1);
+					transferRegistrationVo.setHandoverMatters("1、设备运情况：正常；\n2、交通运行情况：正常\n3、其它事项：无");
+					transferRegistrationVo.setException("无");
+					if(i == 1){
+						transferRegistrationVo.setWatchTimeStart(fmt1.parse("08:00"));
+						transferRegistrationVo.setWatchTimeEnd(fmt1.parse("16:00"));
+						transferRegistrationVo.setHandoverTime(fmt1.parse("08:00"));
+					}else if(i == 2){
+						transferRegistrationVo.setWatchTimeStart(fmt1.parse("16:00"));
+						transferRegistrationVo.setWatchTimeEnd(fmt1.parse("23:00"));
+						transferRegistrationVo.setHandoverTime(fmt1.parse("16:00"));
+					}else{
+						transferRegistrationVo.setWatchTimeStart(fmt1.parse("23:00"));
+						transferRegistrationVo.setWatchTimeEnd(fmt1.parse("08:00"));
+						transferRegistrationVo.setHandoverTime(fmt1.parse("23:00"));
+					}
+
+					this.transferRegistrationServiceImpl.saveOrUpdate(transferRegistrationVo);
+				}
+
+				json.addProperty("result", true);
+			}else{
+				json.addProperty("result", false);
+			}
+		} catch (Exception e) {
+			json.addProperty("result", false);
+			logger.error(e.getMessage(), e);
+		}finally{
+			this.print(json.toString());
+		}
+	}
 	
 	
 	/**
@@ -155,4 +220,34 @@ public class TransferRegistrationController extends BaseController{
 			this.print(json.toString());
 		}
 	}
+
+	/**
+	 * 导出Excel
+	 * @param request
+	 * @param response
+	 * @param transferRegistrationVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	@RequestMapping(value="/transferRegistration_export")
+	public void export(HttpServletRequest request, HttpServletResponse response, TransferRegistrationVo transferRegistrationVo){
+		//excel文件名
+		String fileName = "交接班登记表汇总";
+
+		//获取excle文档对象
+		HSSFWorkbook wb = this.transferRegistrationServiceImpl.export(transferRegistrationVo);
+
+		//将文件存到指定位置
+		try {
+			this.totalTableController.setResponseHeader(response, fileName);
+			OutputStream os = response.getOutputStream();
+			wb.write(os);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

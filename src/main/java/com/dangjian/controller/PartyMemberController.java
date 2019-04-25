@@ -116,6 +116,8 @@ public class PartyMemberController extends BaseController{
 			try{
 				PartyMember partyMember = this.partyMemberServiceImpl.getEntityById(PartyMember.class, partyMemberVo.getId());
 				BeanUtils.copyProperties(partyMember, partyMemberVo);
+				User user=this.userServiceImpl.getEntityById(User.class, partyMember.getUserId());
+				partyMemberVo.setUserName(user.getUserName());
 				request.setAttribute("partyMemberVo", partyMemberVo);
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -157,15 +159,38 @@ public class PartyMemberController extends BaseController{
 	@RequestMapping(value="/partyMember_saveOrUpdate",method = RequestMethod.POST)
 	public void saveOrUpdate(HttpSession httpSession,HttpServletResponse response,PartyMemberVo partyMemberVo){
 		JsonObject json =new JsonObject();
+		json.addProperty("result", false);
 		try{
-			PartyMember partyMember = new PartyMember();
-			BeanUtils.copyProperties(partyMemberVo, partyMember);
-			this.partyMemberServiceImpl.saveOrUpdatePartyMember(partyMember);
-			json.addProperty("id", partyMember.getId());
-			json.addProperty("result", true);
+			if(StringUtils.isBlank(partyMemberVo.getId())){
+				//添加
+				PartyMemberVo pVo=new PartyMemberVo();
+				pVo.setUserId(partyMemberVo.getUserId());
+				Pager pager= this.partyMemberServiceImpl.queryPartyMemberEntityList(1, 1, pVo);
+				if(pager!=null){
+					if(pager.getRowCount()>0){
+						//些用户已经是党员
+						json.addProperty("msg", "该用户已经是党员");
+					}else{
+						//添加
+						PartyMember partyMember = new PartyMember();
+						BeanUtils.copyProperties(partyMemberVo, partyMember);
+						this.partyMemberServiceImpl.saveOrUpdatePartyMember(partyMember);
+						json.addProperty("id", partyMember.getId());
+						json.addProperty("result", true);
+					}
+				}
+			}else{
+				//更新
+				PartyMember partyMember = new PartyMember();
+				BeanUtils.copyProperties(partyMemberVo, partyMember);
+				this.partyMemberServiceImpl.saveOrUpdatePartyMember(partyMember);
+				json.addProperty("id", partyMember.getId());
+				json.addProperty("result", true);
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 			json.addProperty("result", false);
+			json.addProperty("msg", "保存失败");
 		}finally{
 			this.print(json.toString());
 		}

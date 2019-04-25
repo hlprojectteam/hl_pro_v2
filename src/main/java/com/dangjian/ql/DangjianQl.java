@@ -67,7 +67,7 @@ public class DangjianQl {
 		   
 		//查党建活动开展列表，以全年范围查询，如2019年内的活动
 		public static final String activitiesYearList="SELECT ats.TITLE, al.LAUNCH_DATE,al.CREATOR_NAME,al.ID FROM `p_dj_activities_launch` al,p_dj_activities ats  "
-                     +" where al.ACTIVITY_ID=ats.ID  and al.BRANCH_ID = '@@' AND al.ACTIVITY_ID = '?' "
+                     +" where al.ACTIVITY_ID=ats.ID  and al.BRANCH_ID = '@@' AND al.ACTIVITY_ID = '?' AND al.LAUNCH_STATUS=3 "
                      +" AND DATE_FORMAT(al.LAUNCH_DATE, '%Y') = '##'";
 		
 		//查党建活动积分排名

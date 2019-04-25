@@ -7,6 +7,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.SurveillanceInspection;
 import com.datacenter.vo.SurveillanceInspectionVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @Description 监控巡检 service接口
@@ -62,6 +63,15 @@ public interface ISurveillanceInspectionService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public List<SurveillanceInspection> queryEntityList(SurveillanceInspectionVo surveillanceInspectionVo);
+
+	/**
+	 * 监控巡检	导出Excel
+	 * @param surveillanceInspectionVo
+	 * @return
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook export(SurveillanceInspectionVo surveillanceInspectionVo);
 
 
 }

@@ -13,6 +13,7 @@ public class PartyMemberVo extends PartyMember{
 	
 	private String branchName; //所属支部名称
 	private Integer sex;// 性别
+	private Integer nation;// 民族 数据字典key:national
 	private String userName;   //姓名
 	private String mobilePhone;   //电话
 	
@@ -47,6 +48,14 @@ public class PartyMemberVo extends PartyMember{
 
 	public void setMobilePhone(String mobilePhone) {
 		this.mobilePhone = mobilePhone;
+	}
+
+	public Integer getNation() {
+		return nation;
+	}
+
+	public void setNation(Integer nation) {
+		this.nation = nation;
 	}
 
 }
