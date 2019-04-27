@@ -68,6 +68,7 @@
 	<div style=" height:60px; line-height: 60px;">
 		<span style="margin-left: 20px;">活动总积分:</span><span style="color: red;" id="point"></span>
 		<span style="margin-left: 20px;">（其中亮点工作得分：</span><span style="color: red;" id="ldpoint"></span><span>）</span>
+		<button class="btn btn-primary" type="button" onclick="on_export()"><i class="fa fa-file-excel-o"></i>&nbsp;导出Excle</button>
 	</div>
 
 
@@ -178,6 +179,14 @@ function on_detail(_href){
             content: _href
         });
 		
+}
+
+
+//导出Excel
+function on_export(){
+    var year = '${year}';
+    var branchId = '${branchId}';
+	window.location.href = "/dangjian/activitiesLauch_export?year="+ year + "&branchId=" + branchId
 }
 
 </script>
