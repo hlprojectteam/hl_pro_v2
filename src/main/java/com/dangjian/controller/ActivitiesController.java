@@ -1,5 +1,7 @@
 package com.dangjian.controller;
 
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,11 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.common.utils.cache.Cache;
+import com.urms.dataDictionary.module.CategoryAttribute;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +33,7 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
+import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.DateUtil;
@@ -489,8 +499,8 @@ public class ActivitiesController extends BaseController{
 	public String activitiesLauchCollect(HttpServletRequest request,ActivitiesLaunchVo activitiesLaunchVo){
 		try{
 			JSONArray arrayAl=new JSONArray();
-			Branch branch=this.branchServiceImpl.getEntityById(Branch.class, activitiesLaunchVo.getBranchId());
-			List<Activities> atList= activitiesServiceImpl.getAllEntity(Activities.class,Order.asc("order"));
+			Branch branch=this.branchServiceImpl.getEntityById(Branch.class, activitiesLaunchVo.getBranchId());				//党支部
+			List<Activities> atList= activitiesServiceImpl.getAllEntity(Activities.class,Order.asc("order"));				//活动集合
 			if(atList!=null){
 				arrayAl=activitiesServiceImpl.collectAL(activitiesLaunchVo,atList);
 			}
@@ -503,11 +513,220 @@ public class ActivitiesController extends BaseController{
 			request.setAttribute("alList", arrayAl);
 			request.setAttribute("year", activitiesLaunchVo.getYear());
 			request.setAttribute("branchName", branch.getBranchName());
+			request.setAttribute("branchId", branch.getId());
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "/page/dangjian/activities/activities_launch_collect";
 	}
+
+
+	/**
+	 * 党建活动汇总表	导出
+	 * @param request
+	 * @param response
+	 * @param activitiesLaunchVo
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	@RequestMapping(value="/activitiesLauch_export")
+	public void export(HttpServletRequest request, HttpServletResponse response, ActivitiesLaunchVo activitiesLaunchVo){
+		try{
+			Branch branch = this.branchServiceImpl.getEntityById(Branch.class, activitiesLaunchVo.getBranchId());
+
+			//excel文件名
+			String fileName = activitiesLaunchVo.getYear() + branch.getBranchName() + "党建活动汇总表";
+
+			//创建HSSFWorkbook
+			HSSFWorkbook wb = new HSSFWorkbook();
+
+			//创建sheet
+			HSSFSheet sheet = wb.createSheet("党建活动汇总表");
+
+
+			//字体样式
+			//标题字体
+			HSSFFont font1 = wb.createFont();
+			font1.setBold(true);						//字体加粗
+			font1.setFontHeightInPoints((short)12);		//字体大小
+			//普通数据字体
+			HSSFFont font2 = wb.createFont();
+			font2.setFontHeightInPoints((short)10);		//字体大小
+
+			//基础样式
+			HSSFCellStyle mainStyle = wb.createCellStyle();
+			mainStyle.setBorderBottom(BorderStyle.THIN); 	//下边框
+			mainStyle.setBorderLeft(BorderStyle.THIN);		//左边框
+			mainStyle.setBorderTop(BorderStyle.THIN);		//上边框
+			mainStyle.setBorderRight(BorderStyle.THIN);		//右边框
+			mainStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+			mainStyle.setAlignment(HorizontalAlignment.CENTER);		 //水平居中
+			mainStyle.setWrapText(true);					//设置自动换行
+
+
+			//标题样式
+			HSSFCellStyle style1 = wb.createCellStyle();
+			style1.cloneStyleFrom(mainStyle);
+			style1.setFont(font1);
+			//普通数据样式
+			HSSFCellStyle style2 = wb.createCellStyle();
+			style2.cloneStyleFrom(mainStyle);
+			style2.setFont(font2);
+			//第一行样式
+			HSSFCellStyle style0 = wb.createCellStyle();
+			style0.cloneStyleFrom(style1);
+			style0.setAlignment(HorizontalAlignment.LEFT);
+			//style0.setBorderBottom(BorderStyle.NONE); 	//下边框
+			style0.setBorderLeft(BorderStyle.NONE);		//左边框
+			style0.setBorderTop(BorderStyle.NONE);		//上边框
+			style0.setBorderRight(BorderStyle.NONE);	//右边框
+
+
+			JSONArray arrayAl = new JSONArray();
+			List<Activities> atList = activitiesServiceImpl.getAllEntity(Activities.class,Order.asc("order"));
+			if(atList != null){
+				arrayAl = activitiesServiceImpl.collectAL(activitiesLaunchVo,atList);
+			}
+			JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
+			String[] excludes = new String[] {"createTime","creatorId","creatorName","createUserId","cover"
+					,"id","order","points","sysCode","content"}; // 列表排除信息内容字段，减少传递时间
+			config.setExcludes(excludes);
+			JSONArray atArray = JSONArray.fromObject(atList,config);
+
+
+			//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, atList.size()));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 0, 0));
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 1, atList.size()));
+
+			//设置列宽
+			for (int i = 0; i < atList.size()+1; i++) {
+				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*3);
+			}
+
+
+			//创建第一行
+			HSSFRow row0 = sheet.createRow(0);
+			row0.setHeightInPoints(40);
+			//创建单元格  并  设置单元格内容
+			for (int i = 0; i < atList.size()+1; i++) {
+				row0.createCell(0).setCellStyle(style0);
+			}
+
+
+
+			//第二行
+			HSSFRow row1 = sheet.createRow(1);
+			row1.setHeightInPoints(40);
+			row1.createCell(0).setCellValue("月份");
+			row1.createCell(1).setCellValue(activitiesLaunchVo.getYear() + branch.getBranchName() + "各月工作计划及实施");
+			for (int i = 2; i < atList.size()+1; i++) {
+				row1.createCell(i);
+			}
+			for (int i = 0; i < atList.size()+1; i++) {
+				row1.getCell(i).setCellStyle(style1);
+			}
+
+			//第三行
+			HSSFRow row2 = sheet.createRow(2);
+			row2.setHeightInPoints(60);
+			row2.createCell(0);
+			for (int i = 0; i < atList.size(); i++) {
+				row2.createCell(i + 1).setCellValue(atList.get(i).getTitle() + "\n" + "( 频率：" + getValueByDictAndKey("dj_activities_frequency", atList.get(i).getFrequency().toString()) + " )");
+			}
+			for (int i = 0; i < atList.size()+1; i++) {
+				row2.getCell(i).setCellStyle(style2);
+			}
+
+
+			int mPoints = 0;	//活动总积分
+			int mLDPoints = 0;	//亮点工作的积分
+
+			//数据行（）
+			for (int i = 0; i < arrayAl.size(); i++) {
+				HSSFRow row = sheet.createRow(i+3);
+				row.setHeightInPoints(30);
+				row.createCell(0).setCellValue(((JSONObject)arrayAl.get(i)).get("month").toString());
+				List<Object> listTimeMonth = (List<Object>) ((JSONObject) arrayAl.get(i)).get("atList");
+				for (int j = 0; j < listTimeMonth.size(); j++) {
+					if(((JSONArray) listTimeMonth.get(j)).size() > 0){
+						/*row.createCell(j+1).setCellValue(listTimeMonth.get(j).toString().substring(2,12));*/
+						String tt = "";
+						for (int k = 0; k < ((JSONArray) listTimeMonth.get(j)).size(); k++) {
+							String str = ((JSONArray) listTimeMonth.get(j)).get(k).toString();
+							String[] spanArr = str.replace("|",",").split(",");
+							tt += spanArr[0] + "\n";
+							if(Integer.parseInt(spanArr[3]) == 7){
+								mLDPoints += Integer.parseInt(spanArr[2].toString());
+							}else{
+								mPoints += Integer.parseInt(spanArr[2].toString());
+							}
+							/*tt += str.substring(0, 10) + "\n";*/
+						}
+						row.createCell(j+1).setCellValue(tt);
+					}else{
+						row.createCell(j+1).setCellValue("");
+					}
+				}
+
+				//设置普通数据样式
+				for (int j = 0; j < listTimeMonth.size()+1; j++) {
+					row.getCell(j).setCellStyle(style2);
+				}
+			}
+
+			row0.getCell(0).setCellValue("        活动总积分：" + mPoints + "          （其中亮点工作得分：" + mLDPoints + "）");
+
+
+			//将文件存到指定位置
+			this.setResponseHeader(response, fileName);
+			OutputStream os = response.getOutputStream();
+			wb.write(os);
+			os.flush();
+			os.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	//发送响应流方法
+	public void setResponseHeader(HttpServletResponse response, String fileName) {
+		try {
+			try {
+				fileName = new String(fileName.getBytes(),"ISO8859-1");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			response.setContentType("application/octet-stream;charset=ISO8859-1");
+			response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xls");	//要保存的文件名
+			response.addHeader("Pargam", "no-cache");
+			response.addHeader("Cache-Control", "no-cache");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	/**
+	 * @intruduction 通过 字典名称dict 和 字典key 获得 value
+	 * @param dict 字典名称
+	 * @param key 字典key
+	 * @return  value
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public String getValueByDictAndKey(String dict,String key){
+		String value = "";
+		for (CategoryAttribute ca : Cache.getDictByCode.get(dict)) {
+			if(ca.getAttrKey().equals(key)){
+				value = ca.getAttrValue();
+				break;
+			}
+		}
+		return value;
+	}
+
+
 	
 	/**
 	 * 
@@ -895,6 +1114,36 @@ public class ActivitiesController extends BaseController{
 	
 	
 	/***********************活动开展方法 end*******************************/
+	
+	/**
+	 * 
+	 * @param noticeTitle 通知的提示标题
+	 * @param noticeContent 通知的简要内容
+	 * @param userIds 给谁发通知，用户ID的集合，用","分隔
+	 * @param tags 给哪一类人发通知，如角色的集合，用","分隔
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年4月8日
+	 */
+	private void sendJpushMsg(String noticeTitle,String noticeContent, String userIds,String tags){
+		try {
+			Message msg = new Message();
+			msg.setTitle(noticeTitle);
+			msg.setContent(noticeContent);
+			msg.setAlias(userIds);
+			msg.setType(5); //消息类型 3 为事件
+			msg.setTags(tags);
+			msg.setSender(this.getSessionUser().getUserName());
+			msg.setCreatorId(this.getSessionUser().getId());
+			msg.setCreatorName(this.getSessionUser().getUserName());
+			msg.setSysCode(this.getSessionUser().getSysCode());
+			this.messageServiceImpl.saveOrUpdate(msg);
+			/*MessageJpush.sendCommonMsg(noticeTitle, msg);*/
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
 	
 	@RequestMapping(value="/testJpush")
 	public void testJpush(HttpSession httpSession,HttpServletResponse response){
