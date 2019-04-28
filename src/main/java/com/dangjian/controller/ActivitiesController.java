@@ -604,6 +604,8 @@ public class ActivitiesController extends BaseController{
 				row0.createCell(0).setCellStyle(style0);
 			}
 
+
+
 			//第二行
 			HSSFRow row1 = sheet.createRow(1);
 			row1.setHeightInPoints(40);
