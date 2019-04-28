@@ -24,8 +24,6 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
-import com.common.message.MessageJpush;
-import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.DateUtil;

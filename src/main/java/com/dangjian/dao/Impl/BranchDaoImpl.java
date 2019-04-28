@@ -1,7 +1,7 @@
 package com.dangjian.dao.Impl;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.common.base.dao.impl.BaseDaoImpl;
 import com.dangjian.dao.IBranchDao;
@@ -14,8 +14,7 @@ import com.dangjian.dao.IBranchDao;
  *
  */
 @SuppressWarnings("unchecked")
-@Component("branchDaoImpl")
-@Scope("prototype")
+@Repository("branchDaoImpl")
 public class BranchDaoImpl extends BaseDaoImpl implements IBranchDao{
 
 }

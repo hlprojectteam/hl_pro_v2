@@ -12,6 +12,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.common.attach.service.IAttachService;
 import com.common.base.service.impl.BaseServiceImpl;
@@ -35,7 +36,7 @@ import com.urms.role.service.IRoleService;
  * @date 2018年12月29日
  *
  */
-@Repository("activitiesServiceImpl")
+@Service("activitiesServiceImpl")
 public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitiesService{
 
 	@Autowired

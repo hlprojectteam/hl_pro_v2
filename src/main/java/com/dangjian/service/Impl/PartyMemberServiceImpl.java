@@ -19,7 +19,6 @@ import com.dangjian.module.PartyMember;
 import com.dangjian.ql.DangjianQl;
 import com.dangjian.service.IPartyMemberService;
 import com.dangjian.vo.PartyMemberVo;
-import com.safecheck.hiddenDanger.vo.EventInfoVo;
 import com.urms.user.vo.UserVo;
 
 /**
