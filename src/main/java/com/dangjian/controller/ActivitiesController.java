@@ -33,7 +33,6 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
-import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.DateUtil;
@@ -289,7 +288,8 @@ public class ActivitiesController extends BaseController{
 				json.put("result",true);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			json.put("result",false);
+			json.put("msg",e.getMessage());
 		}
 		this.print(json);
 	}
@@ -479,7 +479,6 @@ public class ActivitiesController extends BaseController{
 				json.put("result",true);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			json.put("msg",e.getMessage());
 		}
 		this.print(json);
@@ -761,7 +760,6 @@ public class ActivitiesController extends BaseController{
 				json.put("result",true);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			json.put("msg",e.getMessage());
 		}
 		this.print(json);
@@ -845,7 +843,6 @@ public class ActivitiesController extends BaseController{
 				json.put("result",true);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			json.put("msg",e.getMessage());
 		}
 		this.print(json);
@@ -1114,37 +1111,6 @@ public class ActivitiesController extends BaseController{
 	
 	
 	/***********************活动开展方法 end*******************************/
-	
-	/**
-	 * 
-	 * @param noticeTitle 通知的提示标题
-	 * @param noticeContent 通知的简要内容
-	 * @param userIds 给谁发通知，用户ID的集合，用","分隔
-	 * @param tags 给哪一类人发通知，如角色的集合，用","分隔
-	 * @描述：
-	 * @return
-	 * @author: qinyongqian
-	 * @date:2019年4月8日
-	 */
-	private void sendJpushMsg(String noticeTitle,String noticeContent, String userIds,String tags){
-		try {
-			
-			Message msg = new Message();
-			msg.setTitle(noticeTitle);
-			msg.setContent(noticeContent);
-			msg.setAlias(userIds);
-			msg.setType(5); //消息类型 3 为事件
-			msg.setTags(tags);
-			msg.setSender(this.getSessionUser().getUserName());
-			msg.setCreatorId(this.getSessionUser().getId());
-			msg.setCreatorName(this.getSessionUser().getUserName());
-			msg.setSysCode(this.getSessionUser().getSysCode());
-			this.messageServiceImpl.saveOrUpdate(msg);
-			/*MessageJpush.sendCommonMsg(noticeTitle, msg);*/
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
 	
 	@RequestMapping(value="/testJpush")
 	public void testJpush(HttpSession httpSession,HttpServletResponse response){
