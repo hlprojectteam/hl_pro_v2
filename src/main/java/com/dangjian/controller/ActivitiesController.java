@@ -1128,6 +1128,7 @@ public class ActivitiesController extends BaseController{
 	 */
 	private void sendJpushMsg(String noticeTitle,String noticeContent, String userIds,String tags){
 		try {
+			
 			Message msg = new Message();
 			msg.setTitle(noticeTitle);
 			msg.setContent(noticeContent);
