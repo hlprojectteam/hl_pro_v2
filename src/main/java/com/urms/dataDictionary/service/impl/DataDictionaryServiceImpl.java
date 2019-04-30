@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.MathUtil;
 import com.common.utils.cache.Cache;
 import com.common.utils.helper.Pager;
 import com.urms.dataDictionary.dao.IDataDictionaryDao;
@@ -28,8 +29,6 @@ import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Repository("dataDictionaryServiceImpl")
 public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataDictionaryService{
@@ -485,6 +484,35 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataD
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public String addCategoryAttributesByCode(String CategoryCode,
+			String CategoryAttributesValue) {
+		String CategoryAttributesKey="";
+		Category category = this.getCategoryByCode(CategoryCode);
+		List<Criterion> criterionsList = new ArrayList<Criterion>();
+		criterionsList.add(Restrictions.eq("category", category));
+		List<CategoryAttribute> categoryAttributeList = dataDictionaryDaoImpl.queryList(criterionsList, Order.desc("attrKey") ,CategoryAttribute.class);
+		if(categoryAttributeList!=null){
+			CategoryAttribute ca=categoryAttributeList.get(0);
+			if(MathUtil.isInt(ca.getAttrKey())){
+				//找到key值为数字，且数值最大
+				int maxkey=Integer.parseInt(ca.getAttrKey());
+				CategoryAttributesKey=String.valueOf(maxkey+1);
+			}else{
+				CategoryAttributesKey=ca.getAttrKey()+"1";
+			}
+			int maxOrder=ca.getOrder();
+			CategoryAttribute caNew=new CategoryAttribute();
+			caNew.setAttrKey(CategoryAttributesKey);
+			caNew.setAttrValue(CategoryAttributesValue);
+			caNew.setCategory(category);
+			caNew.setIsDefault(0);
+			caNew.setOrder(maxOrder+1);
+			this.saveOrUpdateCategoryAttr(caNew);
+		}
+		return CategoryAttributesKey;
 	}
 
 
