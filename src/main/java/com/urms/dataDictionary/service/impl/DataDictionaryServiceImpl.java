@@ -185,9 +185,19 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataD
 	 */
 	public void deleteCategoryAttr(String ids){
 		String[] idsZ = ids.split(",");
-		for (int i = 0; i < idsZ.length; i++) {
-			CategoryAttribute categoryAttr = this.getEntityById(CategoryAttribute.class, idsZ[i]);
-			dataDictionaryDaoImpl.delete(categoryAttr);
+		List<CategoryAttribute> listDel=new ArrayList<>();
+		Category category = null;
+		if(idsZ.length>0){
+			CategoryAttribute categoryAttr = this.getEntityById(CategoryAttribute.class, idsZ[0]);
+			category = this.getEntityById(Category.class, categoryAttr.getCategory().getId());
+			for (int i = 0; i < idsZ.length; i++) {
+				CategoryAttribute ca = this.getEntityById(CategoryAttribute.class, idsZ[i]);
+				dataDictionaryDaoImpl.delete(ca);
+				listDel.add(ca);
+			}
+		}
+		if(listDel.size()>0&&category!=null){
+			refreshCategoryAfterDel(category,listDel); //刷新数据字典
 		}
 	}
 	
@@ -231,9 +241,50 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataD
 		if(dictMap!=null)
 			dictMap.clear();
 		Map<String,String> map = new LinkedHashMap<String,String>();
+		boolean isHaveNewAttributes=false;
 		for (CategoryAttribute ca : category.getCategoryAttributes()) {//使用了延时加载 故不能删掉
+			if(ca.getAttrKey().equals(categoryAttribute.getAttrKey())){
+				isHaveNewAttributes=true;
+			}
 			map.put(ca.getAttrKey(), ca.getAttrValue());
-		} 
+		}
+		if(!isHaveNewAttributes){
+			//要是没有新的categoryAttribute，要在这里插入，因为SAVE后有可能不能及时查到新的categoryAttribute
+			category.getCategoryAttributes().add(categoryAttribute);
+			//如果不包括新的字典key，则加入到Map里；
+			map.put(categoryAttribute.getAttrKey(), categoryAttribute.getAttrValue());
+		}
+		Cache.getDictByCode.put(category.getCategoryCode(), category.getCategoryAttributes());//带默认值
+		Cache.getDictByCodeMap.put(category.getCategoryCode(), map);
+	}
+	
+	/**
+	 * 
+	 * @方法：@param category 字典，如性别
+	 * @方法：@param categoryAttributeList 要删除的字典选项，如人妖、中性
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年4月30日
+	 */
+	private void refreshCategoryAfterDel(Category category,List<CategoryAttribute> categoryAttributeList){
+		Map<String,String> dictMap = Cache.getDictByCodeMap.get(category.getCategoryCode());
+		if(dictMap!=null)
+			dictMap.clear();
+		Map<String,String> map = new LinkedHashMap<String,String>();
+		List<CategoryAttribute> listDel=new ArrayList<>();
+		for (CategoryAttribute ca : categoryAttributeList) {
+			for (CategoryAttribute ca2 : category.getCategoryAttributes()) {//使用了延时加载 故不能删掉
+				if(ca2.getAttrKey().equals(ca.getAttrKey())){
+					listDel.add(ca2);
+				}else{
+					map.put(ca.getAttrKey(), ca.getAttrValue());
+				}
+			}
+		}
+		if(listDel.size()>0){
+			category.getCategoryAttributes().removeAll(listDel);
+		}
 		Cache.getDictByCode.put(category.getCategoryCode(), category.getCategoryAttributes());//带默认值
 		Cache.getDictByCodeMap.put(category.getCategoryCode(), map);
 	}
