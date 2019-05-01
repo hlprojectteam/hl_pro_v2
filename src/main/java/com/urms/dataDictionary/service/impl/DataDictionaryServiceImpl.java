@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.common.base.service.impl.BaseServiceImpl;
-import com.common.utils.MathUtil;
 import com.common.utils.cache.Cache;
 import com.common.utils.helper.Pager;
 import com.urms.dataDictionary.dao.IDataDictionaryDao;
@@ -486,33 +485,48 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataD
 		}
 	}
 
+
 	@Override
-	public String addCategoryAttributesByCode(String CategoryCode,
-			String CategoryAttributesValue) {
+	public String findMaxCategoryAttributesKey(Category category) {
 		String CategoryAttributesKey="";
-		Category category = this.getCategoryByCode(CategoryCode);
+		if(category==null)
+			return null;
 		List<Criterion> criterionsList = new ArrayList<Criterion>();
 		criterionsList.add(Restrictions.eq("category", category));
 		List<CategoryAttribute> categoryAttributeList = dataDictionaryDaoImpl.queryList(criterionsList, Order.desc("attrKey") ,CategoryAttribute.class);
 		if(categoryAttributeList!=null){
 			CategoryAttribute ca=categoryAttributeList.get(0);
-			if(MathUtil.isInt(ca.getAttrKey())){
-				//找到key值为数字，且数值最大
-				int maxkey=Integer.parseInt(ca.getAttrKey());
-				CategoryAttributesKey=String.valueOf(maxkey+1);
-			}else{
-				CategoryAttributesKey=ca.getAttrKey()+"1";
-			}
-			int maxOrder=ca.getOrder();
-			CategoryAttribute caNew=new CategoryAttribute();
-			caNew.setAttrKey(CategoryAttributesKey);
-			caNew.setAttrValue(CategoryAttributesValue);
-			caNew.setCategory(category);
-			caNew.setIsDefault(0);
-			caNew.setOrder(maxOrder+1);
-			this.saveOrUpdateCategoryAttr(caNew);
+			CategoryAttributesKey=ca.getAttrKey();
 		}
 		return CategoryAttributesKey;
+	}
+
+	@Override
+	public Integer findMaxCategoryAttributesOrder(Category category) {
+		Integer CategoryAttributesOrder=null; 
+		if(category==null)
+			return null;
+		//找到最大的order
+		String sql="SELECT MAX(t.ORDER_) FROM `um_categoryattribute` t where t.CATEGORY_ID='##' ";
+		sql = sql.replace("##", category.getId());
+		List<Object> listCa=dataDictionaryDaoImpl.queryBySql(sql);
+		if(listCa!=null){
+			if(listCa.size()>0){
+				Object obj = (Object)listCa.get(0);
+				if(obj!=null){
+					CategoryAttributesOrder=Integer.parseInt(obj.toString());
+					
+//					//如果字典选项中有“其它”或者“其他”的选项，则将它的order设置为最大，即上同在查到的order+1
+//					sql="UPDATE `um_categoryattribute` t set t.ORDER_=@@ where t.CATEGORY_ID='##' and "; 
+//			        sql+=" (t.ATTR_VALUE='其它' or t.ATTR_VALUE='其他')";
+//			    	sql = sql.replace("##", category.getId());
+//			    	int newMaxOrder=CategoryAttributesOrder+1;
+//			    	sql = sql.replace("@@",String.valueOf(newMaxOrder));
+//			        dataDictionaryDaoImpl.excuteBySql(sql); 
+				}
+			}
+		}
+		return CategoryAttributesOrder;
 	}
 
 

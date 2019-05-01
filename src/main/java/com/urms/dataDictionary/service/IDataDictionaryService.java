@@ -10,9 +10,6 @@ import com.urms.dataDictionary.module.Category;
 import com.urms.dataDictionary.module.CategoryAttribute;
 import com.urms.dataDictionary.vo.CategoryVo;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 public interface IDataDictionaryService extends IBaseService{
 	
 	/**
@@ -121,17 +118,28 @@ public interface IDataDictionaryService extends IBaseService{
 	 */
 	void getAreaCodeAndName();
 	
+	
 	/**
 	 * 
-	 * @方法：@param CategoryCode 字典Code,如“sex”
-	 * @方法：@param CategoryAttributesValue 新加的字典选项value，如"中性"
-	 * @方法：@return 新加的字典选项key
-	 * @描述：如性别要加一个值，调用  addCategoryAttributesByCode("sex","中性")  返回 key 为3
+	 * @方法：@param category
+	 * @方法：@return
+	 * @描述：获取字典下选项最大的选项的key，如找到性别下“女”的key是最大值，为2
 	 * @return
 	 * @author: qinyongqian
-	 * @date:2019年4月30日
+	 * @date:2019年5月1日
 	 */
-	public String addCategoryAttributesByCode(String CategoryCode,String CategoryAttributesValue);
+	public String findMaxCategoryAttributesKey(Category category);
+	
+	/**
+	 * 
+	 * @方法：@param category
+	 * @方法：@return
+	 * @描述：获取字典下选项最大的order
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年5月1日
+	 */
+	public Integer findMaxCategoryAttributesOrder(Category category);
 
 	/**
 	 * @intruduction 行政区划五级联动所需数据

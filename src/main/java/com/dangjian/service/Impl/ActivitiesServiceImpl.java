@@ -11,7 +11,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.common.attach.service.IAttachService;
@@ -27,6 +26,7 @@ import com.dangjian.service.IActivitiesService;
 import com.dangjian.vo.ActivitiesLaunchReviewVo;
 import com.dangjian.vo.ActivitiesLaunchVo;
 import com.dangjian.vo.ActivitiesVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
 import com.urms.role.service.IRoleService;
 
 /**
@@ -45,6 +45,8 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 	public IAttachService attachServiceImpl;
 	@Autowired
 	public IRoleService roleServiceImpl;
+	@Autowired
+	public IDataDictionaryService dataDictionaryServiceImpl;
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows,
 			ActivitiesVo activitiesVo) {
