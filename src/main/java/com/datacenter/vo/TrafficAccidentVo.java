@@ -19,6 +19,11 @@ public class TrafficAccidentVo extends TrafficAccident{
 	private Date dutyDateEnd;               	 //日期End
 	
 	private String dutyDateStr;				//日期字符串
+
+	private String dictValue;				//新增字典值_接报方式
+	private String dictValue2;				//新增字典值_消息来源
+	private String dictValue3;				//新增字典值_事故类型
+	private String dictValue4;				//新增字典值_车辆类型
 	
 	
 	public String getDutyDateStr() {
@@ -40,4 +45,35 @@ public class TrafficAccidentVo extends TrafficAccident{
 		this.dutyDateEnd = dutyDateEnd;
 	}
 
+	public String getDictValue() {
+		return dictValue;
+	}
+
+	public void setDictValue(String dictValue) {
+		this.dictValue = dictValue;
+	}
+
+	public String getDictValue2() {
+		return dictValue2;
+	}
+
+	public void setDictValue2(String dictValue2) {
+		this.dictValue2 = dictValue2;
+	}
+
+	public String getDictValue3() {
+		return dictValue3;
+	}
+
+	public void setDictValue3(String dictValue3) {
+		this.dictValue3 = dictValue3;
+	}
+
+	public String getDictValue4() {
+		return dictValue4;
+	}
+
+	public void setDictValue4(String dictValue4) {
+		this.dictValue4 = dictValue4;
+	}
 }

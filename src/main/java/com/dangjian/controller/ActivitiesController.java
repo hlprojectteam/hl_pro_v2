@@ -1144,7 +1144,7 @@ public class ActivitiesController extends BaseController{
 	 * @author: qinyongqian
 	 * @date:2019年4月30日
 	 */
-	private String addCategoryAttributesByCode(String CategoryCode,String CategoryAttributesValue){
+	public String addCategoryAttributesByCode(String CategoryCode,String CategoryAttributesValue){
 		String newKey="";
 		//找到字典，如通过"sex"找到性别字典
 		Category category=this.dataDictionaryServiceImpl.getCategoryByCode(CategoryCode);

@@ -2,6 +2,7 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
+import com.dangjian.controller.ActivitiesController;
 import com.datacenter.dao.ITrafficJamDao;
 import com.datacenter.module.TrafficJam;
 import com.datacenter.service.ITrafficJamService;
@@ -37,6 +38,9 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
+
+	@Autowired
+	private ActivitiesController activitiesController;
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, TrafficJamVo trafficJamVo) {
@@ -55,6 +59,10 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 
 	@Override
 	public TrafficJam saveOrUpdate(TrafficJamVo trafficJamVo) {
+		if(trafficJamVo.getReceiptWay().equals(4)){
+			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_receiptWay", trafficJamVo.getDictValue());
+			trafficJamVo.setReceiptWay(Integer.parseInt(newKey));
+		}
 		TrafficJam trafficJam = new TrafficJam();
 		BeanUtils.copyProperties(trafficJamVo, trafficJam);
 		if(StringUtils.isBlank(trafficJam.getId())){

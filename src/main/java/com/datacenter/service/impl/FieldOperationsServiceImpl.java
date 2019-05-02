@@ -2,6 +2,7 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
+import com.dangjian.controller.ActivitiesController;
 import com.datacenter.dao.IFieldOperationsDao;
 import com.datacenter.module.FieldOperations;
 import com.datacenter.service.IFieldOperationsService;
@@ -38,6 +39,9 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
 
+	@Autowired
+	private ActivitiesController activitiesController;
+
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, FieldOperationsVo fieldOperationsVo) {
@@ -56,6 +60,10 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 
 	@Override
 	public FieldOperations saveOrUpdate(FieldOperationsVo fieldOperationsVo) {
+		if(fieldOperationsVo.getReceiptWay().equals(4)){
+			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_receiptWay", fieldOperationsVo.getDictValue());
+			fieldOperationsVo.setReceiptWay(Integer.parseInt(newKey));
+		}
 		FieldOperations fieldOperations = new FieldOperations();
 		BeanUtils.copyProperties(fieldOperationsVo, fieldOperations);
 		if(StringUtils.isBlank(fieldOperations.getId())){

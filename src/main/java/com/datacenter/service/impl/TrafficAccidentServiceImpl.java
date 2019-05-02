@@ -2,6 +2,7 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
+import com.dangjian.controller.ActivitiesController;
 import com.datacenter.dao.ITrafficAccidentDao;
 import com.datacenter.module.TrafficAccident;
 import com.datacenter.service.ITrafficAccidentService;
@@ -38,6 +39,9 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
 
+	@Autowired
+	private ActivitiesController activitiesController;
+
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, TrafficAccidentVo trafficAccidentVo) {
@@ -56,6 +60,22 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 
 	@Override
 	public TrafficAccident saveOrUpdate(TrafficAccidentVo trafficAccidentVo) {
+		if(trafficAccidentVo.getReceiptWay().equals(4)){
+			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_receiptWay", trafficAccidentVo.getDictValue());
+			trafficAccidentVo.setReceiptWay(Integer.parseInt(newKey));
+		}
+		if(trafficAccidentVo.getSource().equals(4)){
+			String newKey2 = this.activitiesController.addCategoryAttributesByCode("dc_source", trafficAccidentVo.getDictValue2());
+			trafficAccidentVo.setSource(Integer.parseInt(newKey2));
+		}
+		if(trafficAccidentVo.getAccidentType().equals(7)){
+			String newKey3 = this.activitiesController.addCategoryAttributesByCode("dc_accidentType", trafficAccidentVo.getDictValue3());
+			trafficAccidentVo.setAccidentType(Integer.parseInt(newKey3));
+		}
+		/*if(trafficAccidentVo.getCarType().equals(8)){
+			String newKey4 = this.activitiesController.addCategoryAttributesByCode("dc_carType", trafficAccidentVo.getDictValue4());
+			trafficAccidentVo.setCarType(Integer.parseInt(newKey4));
+		}*/
 		TrafficAccident trafficAccident = new TrafficAccident();
 		BeanUtils.copyProperties(trafficAccidentVo, trafficAccident);
 		if(StringUtils.isBlank(trafficAccident.getId())){
@@ -214,11 +234,11 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("接报方式");
 				row3.getCell(4).setCellStyle(r2_style);
-				row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportedWay", taList.get(tb).getReceiptWay().toString()));
+				row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_receiptWay", taList.get(tb).getReceiptWay().toString()));
 				row3.getCell(5).setCellStyle(mainStyle_center);
 				row3.createCell(6).setCellValue("消息来源");
 				row3.getCell(6).setCellStyle(r2_style);
-				row3.createCell(7).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_receiptWay", taList.get(tb).getSource().toString()));
+				row3.createCell(7).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_source", taList.get(tb).getSource().toString()));
 				row3.getCell(7).setCellStyle(mainStyle_center);
 
 				//第五行

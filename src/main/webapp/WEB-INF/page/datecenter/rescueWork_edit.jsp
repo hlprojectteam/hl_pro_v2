@@ -88,6 +88,12 @@
 				<input type="text" class="form-control" id="paymentOrder" name="paymentOrder" value="${rescueWorkVo.paymentOrder}" data-rule-required="true" data-rule-rangelength="[1,8]" />    
 			</div>
 		</div>
+		<div class="form-group dictValue"  style="display: none;">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的车型</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
+			</div>
+		</div>
 		
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>拯救费 </label>
@@ -108,6 +114,12 @@
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>拯救车牌 </label>
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="rescuePlates" name="rescuePlates" value="${rescueWorkVo.rescuePlates}" data-rule-required="true" data-rule-rangelength="[1,12]" />    
+			</div>
+		</div>
+		<div class="form-group dictValue2"  style="display: none;">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的车辆去向</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${rescueWorkVo.dictValue2}" data-rule-rangelength="[1,15]" />
 			</div>
 		</div>
 		
@@ -140,6 +152,27 @@
 	var winName = "${winName}";
 	var URLStr = "/datecenter/rescueWork/rescueWork_";
 
+    $("#carType").change(function(){
+        var carType = $("#carType").val();
+        if(carType == 8){
+            $(".dictValue").show();
+		}else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+		}
+	});
+
+    $("#whereabouts").change(function(){
+        var whereabouts = $("#whereabouts").val();
+        if(whereabouts == 14){
+            $(".dictValue2").show();
+        }else{
+            $(".dictValue2").hide();
+            $(".dictValue2").val(null)
+        }
+    });
+
+
 	//新增或编辑
 	function on_save(){
 		if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。  
@@ -150,28 +183,34 @@
 	}
 
 	//提交表单
-	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
+	function on_submit(){
+	    if($("#carType").val() == 8 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+		}else if($("#whereabouts").val() == 14 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+		}else{
+            $.ajax({
+                type : 'post',
+                async:false,
+                dataType : 'json',
+                url: URLStr + 'saveOrUpdate',
+                data:$('#baseForm').serialize(),
+                success : function(data) {
+                    if (data.result) {
+                        autoMsg("保存成功！", 1);
+                        parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+                            url : URLStr + "load"
+                        });//加载树下的列表
+                        parent.layer.close(index);
+                    } else {
+                        autoAlert("保存失败，请检查！", 5);
+                    }
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    autoAlert("系统出错，请检查！", 5);
                 }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+            });
+		}
 	}
 	
 	

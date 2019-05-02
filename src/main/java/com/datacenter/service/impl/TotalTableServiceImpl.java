@@ -1792,11 +1792,11 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("接报方式");
 				row3.getCell(4).setCellStyle(r2_style);
-				row3.createCell(5).setCellValue(getValueByDictAndKey("dc_reportedWay", taList.get(tb).getReceiptWay().toString()));
+				row3.createCell(5).setCellValue(getValueByDictAndKey("dc_receiptWay", taList.get(tb).getReceiptWay().toString()));
 				row3.getCell(5).setCellStyle(mainStyle_center);
 				row3.createCell(6).setCellValue("消息来源");
 				row3.getCell(6).setCellStyle(r2_style);
-				row3.createCell(7).setCellValue(getValueByDictAndKey("dc_receiptWay", taList.get(tb).getSource().toString()));
+				row3.createCell(7).setCellValue(getValueByDictAndKey("dc_source", taList.get(tb).getSource().toString()));
 				row3.getCell(7).setCellStyle(mainStyle_center);
 
 				//第五行

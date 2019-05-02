@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dangjian.controller.ActivitiesController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -39,6 +40,9 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
 
+	@Autowired
+	private ActivitiesController activitiesController;
+
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, InfoThroughVo infoThroughVo) {
@@ -57,6 +61,14 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 
 	@Override
 	public InfoThrough saveOrUpdate(InfoThroughVo infoThroughVo) {
+		if(infoThroughVo.getInfoSource().equals(2)){
+			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_infoSource", infoThroughVo.getDictValue());
+			infoThroughVo.setInfoSource(Integer.parseInt(newKey));
+		}
+		if(infoThroughVo.getThroughWay().equals(4)){
+			String newKey2 = this.activitiesController.addCategoryAttributesByCode("dc_throughWay", infoThroughVo.getDictValue2());
+			infoThroughVo.setThroughWay(Integer.parseInt(newKey2));
+		}
 		InfoThrough infoThrough = new InfoThrough();
 		BeanUtils.copyProperties(infoThroughVo, infoThrough);
 		if(StringUtils.isBlank(infoThrough.getId())){

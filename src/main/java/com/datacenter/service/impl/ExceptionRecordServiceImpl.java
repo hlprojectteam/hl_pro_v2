@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dangjian.controller.ActivitiesController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -39,6 +40,9 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
 
+	@Autowired
+	private ActivitiesController activitiesController;
+
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, ExceptionRecordVo exceptionRecordVo) {
@@ -57,6 +61,10 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 
 	@Override
 	public ExceptionRecord saveOrUpdate(ExceptionRecordVo exceptionRecordVo) {
+		if(exceptionRecordVo.getReportedWay().equals(5)){
+			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_reportedWay_ER", exceptionRecordVo.getDictValue());
+			exceptionRecordVo.setReportedWay(Integer.parseInt(newKey));
+		}
 		ExceptionRecord exceptionRecord = new ExceptionRecord();
 		BeanUtils.copyProperties(exceptionRecordVo, exceptionRecord);
 		if(StringUtils.isBlank(exceptionRecord.getId())){

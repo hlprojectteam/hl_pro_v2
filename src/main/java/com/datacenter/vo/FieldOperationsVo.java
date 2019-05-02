@@ -19,6 +19,8 @@ public class FieldOperationsVo extends FieldOperations{
 	private Date dutyDateEnd;               	 //日期End
 	
 	private String dutyDateStr;				//日期字符串
+
+	private String dictValue;				//新增字典值_接报方式
 	
 	
 	public String getDutyDateStr() {
@@ -40,4 +42,11 @@ public class FieldOperationsVo extends FieldOperations{
 		this.dutyDateEnd = dutyDateEnd;
 	}
 
+	public String getDictValue() {
+		return dictValue;
+	}
+
+	public void setDictValue(String dictValue) {
+		this.dictValue = dictValue;
+	}
 }

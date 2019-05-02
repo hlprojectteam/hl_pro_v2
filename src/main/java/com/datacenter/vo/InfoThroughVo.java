@@ -19,6 +19,9 @@ public class InfoThroughVo extends InfoThrough{
 	private Date dutyDateEnd;               	 //日期End
 	
 	private String dutyDateStr;				//日期字符串
+
+	private String dictValue;				//新增字典值_信息来源
+	private String dictValue2;				//新增字典值_通传方式
 	
 	
 	public String getDutyDateStr() {
@@ -40,4 +43,19 @@ public class InfoThroughVo extends InfoThrough{
 		this.dutyDateEnd = dutyDateEnd;
 	}
 
+	public String getDictValue() {
+		return dictValue;
+	}
+
+	public void setDictValue(String dictValue) {
+		this.dictValue = dictValue;
+	}
+
+	public String getDictValue2() {
+		return dictValue2;
+	}
+
+	public void setDictValue2(String dictValue2) {
+		this.dictValue2 = dictValue2;
+	}
 }

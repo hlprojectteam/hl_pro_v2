@@ -48,13 +48,19 @@
         </div>
 	  	
 	  	<div class="form-group  isNotShow" style="display: none;">
+			<label class="col-sm-2 control-label">报告方式</label>
+			<div class="col-sm-3">
+				<opt:select dictKey="dc_reportedWay_ER" classStyle="form-control" name="reportedWay" id="reportedWay" value="${exceptionRecordVo.reportedWay}" isDefSelect="true" />
+			</div>
 	  		<label class="col-sm-2 control-label">接报时间</label>
 	        <div class="col-sm-3">
 	            <input type="text" class="form-control" id="receiptTime" name="receiptTime" value="<fmt:formatDate value='${exceptionRecordVo.receiptTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" />
 	        </div>
-			<label class="col-sm-2 control-label">报告方式</label>
+		</div>
+		<div class="form-group dictValue"  style="display: none;">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的报告方式</label>
 			<div class="col-sm-3">
-				<opt:select dictKey="dc_reportedWay_ER" classStyle="form-control" name="reportedWay" id="reportedWay" value="${exceptionRecordVo.reportedWay}" isDefSelect="true" />
+				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
 			</div>
 		</div>
 	 
@@ -117,6 +123,26 @@
 	var URLStr = "/datecenter/exceptionRecord/exceptionRecord_";
 
 
+    $("#reportedWay").change(function(){
+        var reportedWay = $("#reportedWay").val();
+        if(reportedWay == 5){
+            $(".dictValue").show();
+        }else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+        }
+    });
+
+    $(function(){
+        var exceptionType = $("#exceptionType").val();      //异常类型( 1:营运异常; 2:其他异常)
+        if(exceptionType != 1){
+            $(".isNotShow").show();		//显示 接报时间、报告方式
+        }else{
+            $(".isNotShow").hide();		//隐藏 接报时间、报告方式
+        }
+	});
+
+
 	//异常类型切换
     $("#exceptionType").change(function(){
         changeExceptionType();
@@ -141,28 +167,32 @@
 	}
 
 	//提交表单
-	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
+	function on_submit(){
+        if($("#reportedWay").val() == 5 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+        }else{
+            $.ajax({
+                type : 'post',
+                async:false,
+                dataType : 'json',
+                url: URLStr + 'saveOrUpdate',
+                data:$('#baseForm').serialize(),
+                success : function(data) {
+                    if (data.result) {
+                        autoMsg("保存成功！", 1);
+                        parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+                            url : URLStr + "load"
+                        });//加载树下的列表
+                        parent.layer.close(index);
+                    } else {
+                        autoAlert("保存失败，请检查！", 5);
+                    }
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    autoAlert("系统出错，请检查！", 5);
                 }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+            });
+		}
 	}
 
 </script>

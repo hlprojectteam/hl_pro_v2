@@ -59,20 +59,31 @@
 		    <div class="col-sm-3">
 		    	<opt:select dictKey="dc_infoType" classStyle="form-control required" name="infoType" id="infoType" value="${infoThroughVo.infoType}" isDefSelect="true" />
 			</div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>信息来源</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_infoSource" classStyle="form-control required" name="infoSource" id="infoSource" value="${infoThroughVo.infoSource}" isDefSelect="true" />
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员 </label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="watcher" name="watcher" value="${infoThroughVo.watcher}" data-rule-required="true" data-rule-rangelength="[1,20]" />
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>通传方式</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_throughWay" classStyle="form-control required" name="throughWay" id="throughWay" value="${infoThroughVo.throughWay}" isDefSelect="true" />
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>信息来源</label>
+			<div class="col-sm-3">
+				<opt:select dictKey="dc_infoSource" classStyle="form-control required" name="infoSource" id="infoSource" value="${infoThroughVo.infoSource}" isDefSelect="true" />
 			</div>
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="watcher" name="watcher" value="${infoThroughVo.watcher}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
+			<label class="col-sm-2 control-label dictValue"  style="display: none;"><span style="color: red">*</span>请输入要添加的信息来源</label>
+			<div class="col-sm-3 dictValue"  style="display: none;">
+				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${infoThroughVo.dictValue}" data-rule-rangelength="[1,15]" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>通传方式</label>
+			<div class="col-sm-3">
+				<opt:select dictKey="dc_throughWay" classStyle="form-control required" name="throughWay" id="throughWay" value="${infoThroughVo.throughWay}" isDefSelect="true" />
+			</div>
+			<label class="col-sm-2 control-label dictValue2"  style="display: none;"><span style="color: red">*</span>请输入要添加的通传方式</label>
+			<div class="col-sm-3 dictValue2"  style="display: none;">
+				<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${infoThroughVo.dictValue2}" data-rule-rangelength="[1,15]" />
 			</div>
 		</div>
 		
@@ -121,29 +132,56 @@
         }
 	}
 
+
+    $("#infoSource").change(function(){
+        var infoSource = $("#infoSource").val();
+        if(infoSource == 2){
+            $(".dictValue").show();
+        }else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+        }
+    });
+
+    $("#throughWay").change(function(){
+        var throughWay = $("#throughWay").val();
+        if(throughWay == 4){
+            $(".dictValue2").show();
+        }else{
+            $(".dictValue2").hide();
+            $(".dictValue2").val(null)
+        }
+    });
+
 	//提交表单
-	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
+	function on_submit(){
+        if($("#infoSource").val() == 2 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+        }else if($("#throughWay").val() == 4 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+        }else{
+            $.ajax({
+                type : 'post',
+                async:false,
+                dataType : 'json',
+                url: URLStr + 'saveOrUpdate',
+                data:$('#baseForm').serialize(),
+                success : function(data) {
+                    if (data.result) {
+                        autoMsg("保存成功！", 1);
+                        parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+                            url : URLStr + "load"
+                        });//加载树下的列表
+                        parent.layer.close(index);
+                    } else {
+                        autoAlert("保存失败，请检查！", 5);
+                    }
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    autoAlert("系统出错，请检查！", 5);
                 }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+            });
+		}
 	}
 
 </script>

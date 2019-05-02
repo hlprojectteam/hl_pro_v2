@@ -57,6 +57,12 @@
 				<input type="text" class="form-control" id="reportedPerson" name="reportedPerson" value="${trafficJamVo.reportedPerson}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
 			</div>
 		</div>
+		<div class="form-group dictValue"  style="display: none;">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的接报方式</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${trafficJamVo.dictValue}" data-rule-rangelength="[1,15]" />
+			</div>
+		</div>
 	 
 	    <div class="form-group">
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>阻塞路段</label>
@@ -136,29 +142,43 @@
         }
 	}
 
+    $("#receiptWay").change(function(){
+        var receiptWay = $("#receiptWay").val();
+        if(receiptWay == 4){
+            $(".dictValue").show();
+        }else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+        }
+    });
+
 	//提交表单
-	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
+	function on_submit(){
+        if($("#receiptWay").val() == 4 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+        }else{
+            $.ajax({
+                type : 'post',
+                async:false,
+                dataType : 'json',
+                url: URLStr + 'saveOrUpdate',
+                data:$('#baseForm').serialize(),
+                success : function(data) {
+                    if (data.result) {
+                        autoMsg("保存成功！", 1);
+                        parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+                            url : URLStr + "load"
+                        });//加载树下的列表
+                        parent.layer.close(index);
+                    } else {
+                        autoAlert("保存失败，请检查！", 5);
+                    }
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    autoAlert("系统出错，请检查！", 5);
                 }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+            });
+		}
 	}
 
 </script>

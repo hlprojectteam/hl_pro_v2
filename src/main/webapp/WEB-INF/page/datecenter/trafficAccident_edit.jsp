@@ -59,24 +59,43 @@
 		<div class="form-group">
 	  		<label class="col-sm-2 control-label"><span style="color: red">*</span>接报方式</label>
 		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_reportedWay" classStyle="form-control required" name="receiptWay" id="receiptWay" value="${trafficAccidentVo.receiptWay}" isDefSelect="true" />
+		    	<opt:select dictKey="dc_receiptWay" classStyle="form-control required" name="receiptWay" id="receiptWay" value="${trafficAccidentVo.receiptWay}" isDefSelect="true" />
 			</div>
-	  		<label class="col-sm-2 control-label"><span style="color: red">*</span>消息来源</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_receiptWay" classStyle="form-control required" name="source" id="source" value="${trafficAccidentVo.source}" isDefSelect="true" />
+			<label class="col-sm-2 control-label dictValue"  style="display: none;"><span style="color: red">*</span>请输入要添加的接报方式</label>
+			<div class="col-sm-3 dictValue"  style="display: none;">
+				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${trafficAccidentVo.dictValue}" data-rule-rangelength="[1,15]" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>消息来源</label>
+			<div class="col-sm-3">
+				<opt:select dictKey="dc_source" classStyle="form-control required" name="source" id="source" value="${trafficAccidentVo.source}" isDefSelect="true" />
+			</div>
+			<label class="col-sm-2 control-label dictValue2"  style="display: none;"><span style="color: red">*</span>请输入要添加的消息来源</label>
+			<div class="col-sm-3 dictValue2"  style="display: none;">
+				<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${trafficAccidentVo.dictValue2}" data-rule-rangelength="[1,15]" />
 			</div>
 		</div>
 	 
 	    <div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>事故地点 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="accidentSite" name="accidentSite" value="${trafficAccidentVo.accidentSite}" data-rule-required="true" data-rule-rangelength="[1,50]" />    
-			</div>
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>事故类型</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_accidentType" classStyle="form-control required" name="accidentType" id="accidentType" value="${trafficAccidentVo.accidentType}" isDefSelect="true" />
+			<div class="col-sm-3">
+				<opt:select dictKey="dc_accidentType" classStyle="form-control required" name="accidentType" id="accidentType" value="${trafficAccidentVo.accidentType}" isDefSelect="true" />
+			</div>
+			<label class="col-sm-2 control-label dictValue3" style="display: none;"><span style="color: red">*</span>请输入要添加的事故类型</label>
+			<div class="col-sm-3 dictValue3" style="display: none;">
+				<input type="text" class="form-control" id="dictValue3" name="dictValue3" value="${trafficAccidentVo.dictValue3}" data-rule-rangelength="[1,15]" />
+			</div>
+
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>事故地点 </label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="accidentSite" name="accidentSite" value="${trafficAccidentVo.accidentSite}" data-rule-required="true" data-rule-rangelength="[1,50]" />
 			</div>
 		</div>
+
 		
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>车辆类型 </label>
@@ -174,29 +193,69 @@
         }
 	}
 
+
+    $("#receiptWay").change(function(){
+        var receiptWay = $("#receiptWay").val();
+        if(receiptWay == 4){
+            $(".dictValue").show();
+        }else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+        }
+    });
+
+    $("#source").change(function(){
+        var source = $("#source").val();
+        if(source == 4){
+            $(".dictValue2").show();
+        }else{
+            $(".dictValue2").hide();
+            $(".dictValue2").val(null)
+        }
+    });
+
+    $("#accidentType").change(function(){
+        var accidentType = $("#accidentType").val();
+        if(accidentType == 7){
+            $(".dictValue3").show();
+        }else{
+            $(".dictValue3").hide();
+            $(".dictValue3").val(null)
+        }
+    });
+
+
 	//提交表单
-	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
+	function on_submit(){
+        if($("#receiptWay").val() == 4 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+        }else if($("#source").val() == 4 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+        }else if($("#accidentType").val() == 7 && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
+            autoMsg("新添加的字典类型不能为空", 5);
+		}else{
+            $.ajax({
+                type : 'post',
+                async:false,
+                dataType : 'json',
+                url: URLStr + 'saveOrUpdate',
+                data:$('#baseForm').serialize(),
+                success : function(data) {
+                    if (data.result) {
+                        autoMsg("保存成功！", 1);
+                        parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+                            url : URLStr + "load"
+                        });//加载树下的列表
+                        parent.layer.close(index);
+                    } else {
+                        autoAlert("保存失败，请检查！", 5);
+                    }
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    autoAlert("系统出错，请检查！", 5);
                 }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+            });
+		}
 	}
 
 </script>

@@ -2,6 +2,7 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
+import com.dangjian.controller.ActivitiesController;
 import com.datacenter.dao.IRescueWorkDao;
 import com.datacenter.module.RescueWork;
 import com.datacenter.service.IRescueWorkService;
@@ -38,6 +39,10 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
 
+	@Autowired
+	private ActivitiesController activitiesController;
+
+
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, RescueWorkVo rescueWorkVo) {
@@ -56,6 +61,14 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 
 	@Override
 	public RescueWork saveOrUpdate(RescueWorkVo rescueWorkVo) {
+		if(rescueWorkVo.getCarType().equals(8)){
+			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_carType", rescueWorkVo.getDictValue());
+			rescueWorkVo.setCarType(Integer.parseInt(newKey));
+		}
+		if(rescueWorkVo.getWhereabouts().equals(14)){
+			String newKey2 = this.activitiesController.addCategoryAttributesByCode("dc_whereabouts", rescueWorkVo.getDictValue2());
+			rescueWorkVo.setWhereabouts(Integer.parseInt(newKey2));
+		}
 		RescueWork rescueWork = new RescueWork();
 		BeanUtils.copyProperties(rescueWorkVo, rescueWork);
 		if(StringUtils.isBlank(rescueWork.getId())){

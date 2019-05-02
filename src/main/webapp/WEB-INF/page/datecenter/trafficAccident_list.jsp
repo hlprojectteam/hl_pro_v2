@@ -81,10 +81,10 @@
 		           	  		return value.substr(11,5);
 		              }},
     	              {title: "接报方式", field: "receiptWay",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_reportedWay",value);
+		           	  		return changeDataDictByKey("dc_receiptWay",value);
 		              }},
 		              {title: "消息来源", field: "source",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_receiptWay",value);
+		           	  		return changeDataDictByKey("dc_source",value);
 		              }},
     	              {title: "事故地点", field: "accidentSite",width: 80,align:"center"},
     	              {title: "事故类型", field: "accidentType",width: 80,align:"center",formatter:function(value,row,index){
