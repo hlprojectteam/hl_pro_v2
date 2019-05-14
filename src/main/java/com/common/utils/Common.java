@@ -85,7 +85,14 @@ public class Common {
 	public static final String cwfzjlRoleCode = (String) Cache.getSysConfig.get("cwfzjlRoleCode");
 	public static final String cwfzjlRoleName = (String) Cache.getSysConfig.get("cwfzjlRoleName");
 	
-	//消息分类
+	
+	/****************************消息推送 start*********************************/
+	public static final String msg_ApnsProduction= (String) Cache.getSysConfig.get("msgApnsProduction");//IOS广播消息是否在生产环境
+	public static final String msg_platform= (String) Cache.getSysConfig.get("msgPlatform");//消息在什么平台上推送 1:ios 2:android 3:android_ios
+	public static final String msg_setMessage= (String) Cache.getSysConfig.get("msgSetMessage");//消息是否在APP打开时，在前台弹出提示
+
+	//消息类型 0系统管理 1教育考试 2营运动态 3规章制度 4安全管理 5党建 6考勤 
+	public static final int msgSYS = 0;
 	public static final int msgJY = 1;
 	public static final int msgDT = 2;
 	public static final int msgZD = 3;
@@ -94,7 +101,20 @@ public class Common {
 	public static final int msgKQ = 6;
 	
 	//消息标题
-	public static final String msgTitle_DJ_ldgz="党建活动亮点工作";
-	public static final String msgTitle_DJ_yjfk="党建意见反馈";
+	public static final String msgTitle_DJ_ldgz_todo="党建活动亮点工作待评审";
+	public static final String msgTitle_DJ_ldgz_finish="党建活动亮点工作回复";
+	public static final String msgTitle_DJ_hdfb_info="党建活动发布";
+	public static final String msgTitle_DJ_yj_todo="党建建议待回复";
+	public static final String msgTitle_DJ_yj_finish="党建建议回复";
+	public static final String msgTitle_AQ_jyxc_todo="安全管理建言献策提交";
+	public static final String msgTitle_AQ_jyxc_finish="安全管理建言献策已回复";
+	public static final String msgTitle_AQ_sj_todo="安全管理事件待办";
+	public static final String msgTitle_AQ_sj_finish="安全管理事件回复";
+	public static final String msgTitle_JY_jyks_todo="考试通知";
+	public static final String msgTitle_DT_dt_info="营运动态";
+	public static final String msgTitle_ZD_zd_info="规章制度";
+	public static final String msgTitle_KQ_dm="考勤点名";
+	public static final String msgTitle_KQ_qj="请假待办";
+	public static final String msgTitle_SYS_info="系统通知";
 	
 }

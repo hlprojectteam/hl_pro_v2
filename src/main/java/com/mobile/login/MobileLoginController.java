@@ -23,6 +23,9 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
+import com.common.message.MessageJpush;
+import com.common.message.module.Message;
+import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.JsonDateValueProcessor;
 import com.google.gson.Gson;
@@ -58,6 +61,8 @@ public class MobileLoginController extends BaseController{
 	
 	@Autowired 
 	public IOrgFrameDao orgFrameDaoImpl;
+	@Autowired
+	public IMessageService messageServiceImpl;
 	
 	/**
 	 * @intruduction：用户登录后台主页
@@ -302,6 +307,17 @@ public class MobileLoginController extends BaseController{
 			User user = new User();
 			BeanUtils.copyProperties(userVo, user);
 			userServiceImpl.save(user);
+			
+			/********发送事件通知 start*********/
+			String noticeTitle=Common.msgTitle_SYS_info;
+			String userIds="";
+			String roleCodes="sysManager";
+			int msgType=Common.msgSYS;
+			User nowPerson=null;
+			//发送给“部门安全员”角色
+			this.sendMsg(noticeTitle,"收到新的用户注册记录",userIds,roleCodes,msgType,nowPerson);
+			/********发送事件通知 end*********/
+			
 			isSuc=true;
 			json.put("result", isSuc);
 			json.put("msg","");
@@ -424,6 +440,43 @@ public class MobileLoginController extends BaseController{
 		loginLogServiceImpl.saveOrUpdate(loginLog);
 		//保存成功，把loginLogId 写入session，用于修改
 		this.getHttpSession().setAttribute("loginLogId", loginLog.getLoginLogId());
+	}
+	
+	
+	/*****************************以下是私有方法****************************************/
+	/**
+	 * 
+	 * @方法：@param noticeTitle 通知的提示标题
+	 * @方法：@param noticeContent 通知的简要内容
+	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
+	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
+	 * @方法：@param msgType 消息类型
+	 * @方法：@param user 会话用户
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年4月19日
+	 */
+	private void sendMsg(String noticeTitle, String noticeContent,
+			String userIds, String rodeCodes, int msgType, User user) {
+		try {
+			Message msg = new Message();
+			msg.setTitle(noticeTitle);
+			msg.setContent(noticeContent);
+			msg.setAlias(userIds);
+			msg.setType(msgType);
+			msg.setTags(rodeCodes);
+			msg.setSysCode(Common.SYSCODE);
+			if(user!=null){
+				msg.setSender(user.getUserName());
+				msg.setCreatorId(user.getId());
+				msg.setCreatorName(user.getUserName());
+			}
+			this.messageServiceImpl.saveOrUpdate(msg);
+			MessageJpush.sendCommonMsg(noticeTitle, msg);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 }

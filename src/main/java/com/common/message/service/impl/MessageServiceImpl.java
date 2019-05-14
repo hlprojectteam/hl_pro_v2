@@ -11,13 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.common.base.service.impl.BaseServiceImpl;
-import com.common.message.MessageJpush;
 import com.common.message.dao.IMessageDao;
 import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.message.vo.MessageVo;
 import com.common.utils.helper.Pager;
-import com.urms.user.module.User;
 
 @Repository("messageServiceImpl")
 public class MessageServiceImpl extends BaseServiceImpl implements IMessageService{
@@ -119,28 +117,6 @@ public class MessageServiceImpl extends BaseServiceImpl implements IMessageServi
 
 		Message msg = this.baseDaoImpl.getEntityById(Message.class, id);
 		return msg;
-	}
-
-	@Override
-	public void sendMsg(String noticeTitle, String noticeContent,
-			String userIds, String rodeCodes, int msgType, User user) {
-		try {
-			Message msg = new Message();
-			msg.setTitle(noticeTitle);
-			msg.setContent(noticeContent);
-			msg.setAlias(userIds);
-			msg.setType(msgType);
-			msg.setTags(rodeCodes);
-			msg.setSender(user.getUserName());
-			msg.setCreatorId(user.getId());
-			msg.setCreatorName(user.getUserName());
-			msg.setSysCode(user.getSysCode());
-			this.saveOrUpdate(msg);
-			MessageJpush.sendCommonMsg(noticeTitle, msg);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
 	}
 
 }

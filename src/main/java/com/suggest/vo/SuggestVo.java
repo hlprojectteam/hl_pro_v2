@@ -10,5 +10,15 @@ import com.suggest.module.Suggest;
  *
  */
 public class SuggestVo extends Suggest{
+	
+	private String rebackUserName;		//反馈人
+
+	public String getRebackUserName() {
+		return rebackUserName;
+	}
+
+	public void setRebackUserName(String rebackUserName) {
+		this.rebackUserName = rebackUserName;
+	}
 
 }

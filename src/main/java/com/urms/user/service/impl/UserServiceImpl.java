@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.common.utils.Common;
-import com.urms.role.module.Role;
 import com.urms.sysConfig.service.ISuperPasswordService;
 
 import org.apache.commons.lang.StringUtils;
@@ -343,6 +342,41 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService{
 			}
 		}
 		return msg;
+	}
+
+	@Override
+	public String findUserIdsByUserIdAndRoleCode(String userId, String roleCodes) {
+		User user=this.getEntityById(User.class, userId);
+		OrgFrame org=user.getOrgFrame();
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT u.ID FROM `um_user` u,um_role r,um_user_role ur where 1=1 ");
+		sql.append("and u.ID=ur.user_Id AND r.ID=ur.role_Id  ");
+		if(org!=null){
+			sql.append("and u.ORGFRAME_ID='"+org.getId()+"'  ");
+		}
+		if(roleCodes.indexOf(",")>0){
+			//有多个code
+			String[] codes=roleCodes.split(",");
+			sql.append("and (  ");
+			for (int i = 0; i < codes.length; i++) {
+				sql.append(" r.ROLE_CODE='"+codes[i]+"' OR");
+			}
+			sql.delete(sql.length()-2,sql.length());
+			sql.append(")  ");
+		}else{
+			sql.append("and r.ROLE_CODE='"+roleCodes+"'  ");
+		}
+		List<Object> listUserId=userDaoImpl.queryBySql(sql.toString());
+		StringBuffer userIds=new StringBuffer();
+		if(listUserId!=null){
+			for (int j = 0; j < listUserId.size(); j++) {
+				Object obj = (Object)listUserId.get(j);
+				userIds.append(obj.toString());
+				userIds.append(",");
+			}
+			userIds.delete(userIds.length()-1,userIds.length() );
+		}
+		return userIds.toString();
 	}
 
 }

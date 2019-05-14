@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.common.utils.Common;
+
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
 import cn.jpush.api.JPushClient;
@@ -56,10 +58,18 @@ public class MessageJpush {
 	        
 	     PushPayload payload = null;
 	     Builder builder= PushPayload.newBuilder();
-	     builder.setPlatform(Platform.android_ios())
-//	     builder.setPlatform(Platform.ios())
-//	     builder.setPlatform(Platform.android())
-	     		.setNotification(Notification.newBuilder()
+	     //选择手机平台
+	     String platform=Common.msg_platform;
+	     if(platform.equals("1")){
+		     builder.setPlatform(Platform.ios());
+	     }else if(platform.equals("2")){
+		     builder.setPlatform(Platform.android());
+	     }else if(platform.equals("3")){
+		     builder.setPlatform(Platform.android_ios());
+	     }else{
+	    	 builder.setPlatform(Platform.ios());//默认是IOS
+	     }
+	     builder.setNotification(Notification.newBuilder()
 		                		.addPlatformNotification(AndroidNotification.newBuilder()
 	                				.setAlert(title)
 	                				.addExtras(json)
@@ -70,9 +80,21 @@ public class MessageJpush {
 	                                .setSound("happy")
 	                                .addExtras(json)
 	                                .build())
-	                        .build())
-		                		.setOptions(Options.newBuilder().setApnsProduction(true).build())//指IOS生产环境推送
-                .setMessage(Message.newBuilder().setMsgContent(msg.getContent()).addExtras(json).build());//当APP在前台时，用消息在页面上传输
+	                        .build());
+		                		
+	     //选择是否生产环境
+	     String isApnsProduction=Common.msg_ApnsProduction;
+	     if(isApnsProduction.equals("1")){
+	    	 builder.setOptions(Options.newBuilder().setApnsProduction(true).build());//指IOS生产环境推送
+	     }else{
+	    	 builder.setOptions(Options.newBuilder().setApnsProduction(false).build());//指IOS开发环境推送
+	     }
+	     //选择消息是否在APP前台展示
+	     String setMessage=Common.msg_setMessage;
+	     if(setMessage.equals("1")){
+	    	 builder.setMessage(Message.newBuilder().setMsgContent(msg.getContent()).addExtras(json).build());//当APP在前台时，用消息在页面上传输
+	     }
+	     
 	     if(Alias.length == 0 && Tags.length > 0){
 	    	 builder.setAudience(Audience.tag(Tags));
 	     }else if(Alias.length > 0 && Tags.length == 0){

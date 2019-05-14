@@ -18,6 +18,9 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.message.MessageJpush;
+import com.common.message.module.Message;
+import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
@@ -28,8 +31,10 @@ import com.safecheck.hiddenDanger.module.EventProcess;
 import com.safecheck.hiddenDanger.service.IEventManagerService;
 import com.safecheck.hiddenDanger.vo.EventInfoVo;
 import com.safecheck.hiddenDanger.vo.EventProcessVo;
+import com.urms.orgFrame.service.IOrgFrameService;
 import com.urms.role.module.Role;
 import com.urms.user.module.User;
+import com.urms.user.service.IUserService;
 
 
 /**
@@ -45,6 +50,12 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 	
 	@Autowired
 	private IAttachService attachServiceImpl;
+	@Autowired
+	public IMessageService messageServiceImpl;
+	@Autowired
+	public IOrgFrameService orgFrameServiceImpl;
+	@Autowired
+	public IUserService userServiceImpl;
 
 	
 	/**
@@ -110,7 +121,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 				process2.setEpDealState(1);									//第二个过程的处理状态  【事件上报完,则立马产生两个事件过程,第一个过程的处理状态为3(处理完),第二个过程的处理状态为1(未处理)】
 				
 				this.eventManagerDaoImpl.save(process2);		/* ** 事件上报完产生的第二个事件过程   ** */
-				 
+				
+				/********发送事件通知 start*********/
+				String noticeTitle=Common.msgTitle_AQ_sj_todo;
+				String userIds=this.userServiceImpl.findUserIdsByUserIdAndRoleCode(eventInfo.getCreatorId(), Common.bmaqyRoleCode);
+				String roleCodes="";
+				int msgType=Common.msgAQ;
+				User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfo.getCreatorId());
+				//发送给“部门安全员”角色
+				this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+				/********发送事件通知 end*********/
+				
 				return eventInfo.getId();			//返回事件Id
 			}
 		}
@@ -591,6 +612,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		
 		this.eventManagerDaoImpl.save(process3);		/* ** 部门安全员  将事件上报给   部门负责人    产生的第三个事件过程   ** */
 		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds=this.userServiceImpl.findUserIdsByUserIdAndRoleCode(eventInfo.getCreatorId(), Common.bmfzrRoleCode);
+		String roleCodes="";
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“部门负责人”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
+		
 		return eventInfoVo.getId();			//返回事件Id
 	}
 	
@@ -638,6 +670,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		
 		this.eventManagerDaoImpl.save(process4);		/* ** 部门负责人  将事件上报给   安保办安全员 产生的第四个事件过程   ** */
 		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds="";
+		String roleCodes=Common.abbaqyRoleCode;
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“安保办安全员”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
+		
 		return eventInfoVo.getId();			//返回事件Id
 	}
 	
@@ -684,6 +727,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		process5.setEpDealState(1);									//第五个过程的处理状态
 		
 		this.eventManagerDaoImpl.save(process5);		/* ** 安保办安全员  将事件上报给   安保办主任 产生的第五个事件过程   ** */
+		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds="";
+		String roleCodes=Common.abbzrRoleCode;
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“安保办主任”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
 	}
@@ -738,6 +792,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		
 		this.eventManagerDaoImpl.save(process6);		 /** 安保办主任	将事件派遣给	  部门负责人   后产生的第六个事件过程   **/ 
 		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds=eventInfoVo.getEpNextPersonId();
+		String roleCodes="";
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“部门负责人”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
+		
 		return eventInfoVo.getId();			//返回事件Id
 	};
 	
@@ -790,6 +855,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		
 		this.eventManagerDaoImpl.save(process7);		 /** 部门负责人	将事件派遣给	  处理人   后产生的第七个事件过程   **/ 
 		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds=eventInfoVo.getEpNextPersonId();
+		String roleCodes="";
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“处理人”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
+		
 		return eventInfoVo.getId();			//返回事件Id
 	};
 	
@@ -836,6 +912,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		process8.setEpDealState(1);									//第八个过程的处理状态
 		
 		this.eventManagerDaoImpl.save(process8);		/* ** 处理人	将事件解决后提交给	安保办安全员   后产生的第八个事件过程   ** */
+		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds="";
+		String roleCodes=Common.abbaqyRoleCode;
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“安保办安全员”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
 	};
@@ -892,6 +979,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			
 			this.eventManagerDaoImpl.save(process10);		/* ** 安保办主任	对此事件向上级	分管领导   后产生的第九个事件过程   ** */
 			
+			/********发送事件通知 start*********/
+			EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+			String noticeTitle=Common.msgTitle_AQ_sj_todo;
+			String userIds=eventInfoVo.getEpNextPersonId();
+			String roleCodes="";
+			int msgType=Common.msgAQ;
+			User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+			//发送给“分管领导”角色
+			this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+			/********发送事件通知 end*********/
+			
 			return eventInfoVo.getId();			//返回事件Id
 	}
 
@@ -936,6 +1034,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			process11.setEpDealState(1);								//第十一个过程的处理状态
 			
 			this.eventManagerDaoImpl.save(process11);		/* ** 分管领导	对此事件向上级	常务副总经理    后产生的第十一个事件过程   ** */
+			
+			/********发送事件通知 start*********/
+			EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+			String noticeTitle=Common.msgTitle_AQ_sj_todo;
+			String userIds="";
+			String roleCodes=Common.cwfzjlRoleCode;
+			int msgType=Common.msgAQ;
+			User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+			//发送给“常务副总经理”角色
+			this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+			/********发送事件通知 end*********/
 			
 			return eventInfoVo.getId();			//返回事件Id
 	}
@@ -986,6 +1095,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		
 		this.eventManagerDaoImpl.save(nextProcess);		/* ** 常务副总经理		审批后将事件反馈给		分管领导	产生的下一过程   ** */
 		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds=process.getEpUpPersonId();
+		String roleCodes="";
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“分管领导”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
+		
 		return eventInfoVo.getId();			//返回事件Id
 	}
 
@@ -1030,6 +1150,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		process5.setEpDealState(1);									//下一过程的处理状态
 		
 		this.eventManagerDaoImpl.save(process5);		/* ** 分管领导	审批后将事件反馈给		安保办主任	产生的下一过程   ** */
+		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds="";
+		String roleCodes=Common.abbzrRoleCode;
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“安保办主任”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
 	}
@@ -1079,6 +1210,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		
 		this.eventManagerDaoImpl.save(process5);		/* ** 部门负责人	将事件退回给	安保办主任	产生的下一过程   ** */
 		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds="";
+		String roleCodes=Common.abbzrRoleCode;
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		//发送给“安保办主任”角色
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
+		
 		return eventInfoVo.getId();			//返回事件Id
 	}
 	
@@ -1124,6 +1266,16 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		process6.setEpDealState(1);									//下一过程的处理状态
 		
 		this.eventManagerDaoImpl.save(process6);		/* ** 处理人	将事件退回给	部门负责人	产生的下一过程   ** */
+		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds=this.userServiceImpl.findUserIdsByUserIdAndRoleCode(eventInfoVo.getEpNowPersonId(), Common.bmfzrRoleCode);
+		String roleCodes="";
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
 	}
@@ -1173,6 +1325,16 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		
 		this.eventManagerDaoImpl.save(process7);		/* ** 安保办安全员	审核后觉得处理不到位将事件退回给	处理人	产生的下一过程   ** */
 		
+		/********发送事件通知 start*********/
+		EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+		String noticeTitle=Common.msgTitle_AQ_sj_todo;
+		String userIds=process8.getEpUpPersonId();
+		String roleCodes="";
+		int msgType=Common.msgAQ;
+		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		/********发送事件通知 end*********/
+		
 		return eventInfoVo.getId();			//返回事件Id
 	}
 	
@@ -1221,6 +1383,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			this.eventManagerDaoImpl.save(nextProcess);	
 			//事件办结后,将经办事件表(Event_handle)中关联的事件过程全部删除掉
 			deleteEventHandleByEId(nextProcess.getEventId());
+			
+			
+			/********发送事件通知 start*********/
+			EventInfo eventInfo=this.eventManagerDaoImpl.getEntityById(EventInfo.class, eventInfoVo.getId());
+			String noticeTitle=Common.msgTitle_AQ_sj_finish;
+			String userIds=eventInfo.getCreatorId();//事件上报人
+			String roleCodes="";
+			int msgType=Common.msgAQ;
+			User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
+			this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+			/********发送事件通知 end*********/
 			
 			return eventInfoVo.getId();			//返回事件Id
 	}
@@ -1426,5 +1599,39 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		}
 		
 		return this.eventManagerDaoImpl.queryEntityList(params, Order.desc("createTime"), User.class);
+	}
+	
+	
+	/**
+	 * 
+	 * @方法：@param noticeTitle 通知的提示标题
+	 * @方法：@param noticeContent 通知的简要内容
+	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
+	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
+	 * @方法：@param msgType 消息类型
+	 * @方法：@param user 会话用户
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年4月19日
+	 */
+	private void sendMsg(String noticeTitle, String noticeContent,
+			String userIds, String rodeCodes, int msgType, User user) {
+		try {
+			Message msg = new Message();
+			msg.setTitle(noticeTitle);
+			msg.setContent(noticeContent);
+			msg.setAlias(userIds);
+			msg.setType(msgType);
+			msg.setTags(rodeCodes);
+			msg.setSender(user.getUserName());
+			msg.setCreatorId(user.getId());
+			msg.setCreatorName(user.getUserName());
+			msg.setSysCode(user.getSysCode());
+			this.messageServiceImpl.saveOrUpdate(msg);
+			MessageJpush.sendCommonMsg(noticeTitle, msg);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 }
