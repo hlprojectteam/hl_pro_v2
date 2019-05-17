@@ -18,6 +18,7 @@
 		<div class="row" style="padding:0px 10px 5px 10px;">
 			<button class="btn btn-primary " id="add" style="margin-left: 5px;" type="button" onclick="on_add()"><i class="fa fa-plus"></i>&nbsp;新增</button>
 			<button class="btn btn-danger " id="del" style="margin-left: 5px;" type="button" onclick="on_del()"><i class="fa fa-remove"></i>&nbsp;删除</button>
+			<button class="btn btn-primary " id="addMany" style="margin-left: 5px;" type="button" onclick="on_addMany()"><i class="fa fa-plus"></i>&nbsp;批量新增</button>
 		</div>
 	</c:if>
 	<div class="row ibox-content" style="padding:5px 0 5px 0;">
@@ -76,7 +77,7 @@
     	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
     	              {title: "日期", field: "dutyDate",width: 120,align:"center"},
     	              {title: "收费站", field: "tollGate",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_tollGate",value);
+		           	  		return changeDataDictByKey("dc_tollGate_operation",value);
 		              }},
     	              {title: "出口车流量_总车流", field: "totalTraffic",width: 100,align:"center"},
     	              {title: "出口车流量_其中粤通卡车流", field: "ytkTraffic",width: 100,align:"center"},
@@ -156,6 +157,19 @@
 	function on_search(){
 		$("#grid").bootstrapTable("refresh");
 	}
+	
+	//批量新增
+    function on_addMany(){
+    	parent.layer.open({
+            type: 2,
+            title: "导入营运数据",
+            shadeClose: true,//打开遮蔽
+            shade: 0.6, 
+            maxmin: true, //开启最大化最小化按钮
+            area: ["80%", "80%"],
+            content: URLStr + "import?winName="+winName+"&ttId="+ttId+"&dutyDateStr="+dutyDateStr
+        });
+    }
 
     //导出Excel
     function on_export(){

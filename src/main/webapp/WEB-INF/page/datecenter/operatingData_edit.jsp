@@ -44,7 +44,7 @@
 	        </div>
 	        <label class="col-sm-2 control-label"><span style="color: red">*</span>收费站</label>
 		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_tollGate" classStyle="form-control required" name="tollGate" id="tollGate" value="${operatingDataVo.tollGate}" isDefSelect="true"  />
+		    	<opt:select dictKey="dc_tollGate_operation" classStyle="form-control required" name="tollGate" id="tollGate" value="${operatingDataVo.tollGate}" isDefSelect="true"  />
 			</div>
         </div>
 	  	

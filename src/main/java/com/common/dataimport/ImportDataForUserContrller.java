@@ -43,7 +43,7 @@ import com.urms.user.vo.UserVo;
 @RequestMapping("/dataImport")
 public class ImportDataForUserContrller extends BaseController{
 
-public static Logger logger_excel = Logger.getLogger("EXCEL");//记录导入日志
+    public static Logger logger_excel = Logger.getLogger("EXCEL");//记录导入日志
 	
 	@Autowired
 	private IPartyMemberService partyMemberServiceImpl;

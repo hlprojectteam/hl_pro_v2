@@ -274,4 +274,28 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		return wb;
 	}
 
+	@Override
+	public boolean isRecordExist(Date dutyDate, String tollGateId) {
+		OperatingDataVo operatingDataVo=new OperatingDataVo();
+		operatingDataVo.setDutyDate(dutyDate);
+		if(tollGateId!=null){
+			operatingDataVo.setTollGate(Integer.parseInt(tollGateId));
+		}
+		
+		List<Criterion> params = new ArrayList<Criterion>();
+		if(operatingDataVo.getDutyDate() != null){		//日期
+			params.add(Restrictions.eq("dutyDate", operatingDataVo.getDutyDate()));
+		}
+		if(operatingDataVo.getTollGate() != null){		//收费站
+			params.add(Restrictions.eq("tollGate", operatingDataVo.getTollGate()));
+		}
+		List<OperatingData> list= this.operatingDataDaoImpl.queryEntityList(params, Order.desc("createTime"), OperatingData.class);
+		if(list!=null){
+			if(list.size()>0){
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
