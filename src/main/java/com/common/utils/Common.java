@@ -117,4 +117,8 @@ public class Common {
 	public static final String msgTitle_KQ_qj="请假待办";
 	public static final String msgTitle_SYS_info="系统通知";
 	
+	/****************************消息推送 end*********************************/
+	//百度地图的key
+	public static final String bMapKey = (String) Cache.getSysConfig.get("bMapKey");
+	
 }
