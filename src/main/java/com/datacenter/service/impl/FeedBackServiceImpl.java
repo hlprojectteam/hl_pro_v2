@@ -52,6 +52,19 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 		if(feedBackVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", feedBackVo.getDutyDateEnd()));
 		}
+
+		if(feedBackVo.getFbType() != null){
+			params.add(Restrictions.eq("fbType", feedBackVo.getFbType()));
+		}
+		if(StringUtils.isNotBlank(feedBackVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (reported_Person like '%" + feedBackVo.getKeyword() + "%' " +
+					" or plate_Num like '%" + feedBackVo.getKeyword() + "%' " +
+					" or customer_Phone like '%" + feedBackVo.getKeyword() + "%' " +
+					" or watcher_ like '%" + feedBackVo.getKeyword() + "%' " +
+					" or situation_Desc like '%" + feedBackVo.getKeyword() + "%' " +
+					" or disposal_Situation like '%" + feedBackVo.getKeyword() + "%' " +
+					" or remark_ like '%" + feedBackVo.getKeyword() + "%' )"));
+		}
 		return this.feedBackDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), FeedBack.class);
 	}
 

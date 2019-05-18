@@ -52,6 +52,15 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 		if(surveillanceInspectionVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", surveillanceInspectionVo.getDutyDateEnd()));
 		}
+		if(surveillanceInspectionVo.getInspectionlocation() != null){		//巡检位置
+			params.add(Restrictions.eq("inspectionlocation", surveillanceInspectionVo.getInspectionlocation()));
+		}
+
+		if(StringUtils.isNotBlank(surveillanceInspectionVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (shift_Supervisor like '%" + surveillanceInspectionVo.getKeyword() + "%' " +
+					" or inspection_Details like '%" + surveillanceInspectionVo.getKeyword() + "%' " +
+					" or follow_Measure like '%" + surveillanceInspectionVo.getKeyword() + "%' )"));
+		}
 		return this.surveillanceInspectionDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), SurveillanceInspection.class);
 	}
 

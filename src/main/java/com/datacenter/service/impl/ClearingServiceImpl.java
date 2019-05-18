@@ -51,6 +51,22 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 		if(clearingVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", clearingVo.getDutyDateEnd()));
 		}
+
+		if(StringUtils.isNotBlank(clearingVo.getReportedDp())){
+			params.add(Restrictions.like("reportedDp", "%" + clearingVo.getReportedDp() + "%"));
+		}
+		if(clearingVo.getReportedWay() != null){
+			params.add(Restrictions.eq("reportedWay", clearingVo.getReportedWay()));
+		}
+		if(StringUtils.isNotBlank(clearingVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (reported_Dp like '%" + clearingVo.getKeyword() + "%' " +
+					" or reported_Person like '%" + clearingVo.getKeyword() + "%' " +
+					" or traffic_Road like '%" + clearingVo.getKeyword() + "%' " +
+					" or processing_Dp like '%" + clearingVo.getKeyword() + "%' " +
+					" or brief_Introduction like '%" + clearingVo.getKeyword() + "%' " +
+					" or result_ like '%" + clearingVo.getKeyword() + "%' " +
+					" or remark_ like '%" + clearingVo.getKeyword() + "%' )"));
+		}
 		return this.clearingDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), Clearing.class);
 	}
 

@@ -56,6 +56,22 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 		if(exceptionRecordVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", exceptionRecordVo.getDutyDateEnd()));
 		}
+
+		if(StringUtils.isNotBlank(exceptionRecordVo.getReportedDp())){
+			params.add(Restrictions.like("reportedDp", "%" + exceptionRecordVo.getReportedDp() + "%"));
+		}
+		if(StringUtils.isNotBlank(exceptionRecordVo.getProcessingDp())){
+			params.add(Restrictions.like("processingDp", "%" + exceptionRecordVo.getProcessingDp() + "%"));
+		}
+		if(StringUtils.isNotBlank(exceptionRecordVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (reported_Dp like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or reported_Person like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or traffic_Road like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or processing_Dp like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or brief_Introduction like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or result_ like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or remark_ like '%" + exceptionRecordVo.getKeyword() + "%' )"));
+		}
 		return this.exceptionRecordDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), ExceptionRecord.class);
 	}
 

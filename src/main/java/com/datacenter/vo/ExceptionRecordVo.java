@@ -21,7 +21,17 @@ public class ExceptionRecordVo extends ExceptionRecord{
 	private String dutyDateStr;				//日期字符串
 
 	private String dictValue;				//新增字典值_车型
-	
+
+	private String keyword;				//关键字
+
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	
 	public String getDutyDateStr() {
 		return dutyDateStr;

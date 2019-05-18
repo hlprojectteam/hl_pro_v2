@@ -23,8 +23,17 @@ public class RescueWorkVo extends RescueWork{
 	private String dictValue;				//新增字典值_车型
 
 	private String dictValue2;				//新增字典值_车辆去向
-	
-	
+
+	private String keyword;				//关键字
+
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	public String getDutyDateStr() {
 		return dutyDateStr;
 	}

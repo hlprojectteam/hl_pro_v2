@@ -119,7 +119,7 @@
             shadeClose: true,//打开遮蔽
             shade: 0.6,
             maxmin: true, //开启最大化最小化按钮
-            area: ["80%", "80%"],
+            area: ["95%", "95%"],
             content: URLStr + "edit?winName="+winName+"&ttId="+ttId+"&dutyDateStr="+dutyDateStr
         });
     }
@@ -166,7 +166,7 @@
             shadeClose: true,//打开遮蔽
             shade: 0.6,
             maxmin: true, //开启最大化最小化按钮
-            area: ["80%", "80%"],
+            area: ["95%", "95%"],
             content: URLStr + "edit?winName="+winName+"&id="+id
         });
     }
@@ -179,8 +179,12 @@
 
     //导出Excel
     function on_export(){
-        if($("#dutyDateStart").val() == null || $("#dutyDateStart").val() == "" || $("#dutyDateEnd").val() == null || $("#dutyDateEnd").val() == ""){
+        let star = $("#dutyDateStart").val();
+        let end = $("#dutyDateEnd").val();
+        if(star == null || star == "" || end == null || end == ""){
             autoAlert("注意：导出Excel时筛选条件不能为空!",5);
+        }else if((new Date(end) - new Date(star))/(24*60*60*1000) > 90){
+            autoAlert("注意：导出Excel时筛选时间区间必须三个月以内，以防数据量过大!",5);
         }else{
             window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()
         }

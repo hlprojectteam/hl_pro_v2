@@ -58,6 +58,21 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 			objectList.add(transferRegistrationVo.getDutyDateEnd());
 			sql.append(" and duty_Date <= ? ");
 		}
+
+		if(StringUtils.isNotBlank(transferRegistrationVo.getKeyword())){
+			sql.append(" and (");
+			objectList.add("%" + transferRegistrationVo.getKeyword() + "%");
+			sql.append(" this_Watcher like ? ");
+			objectList.add("%" + transferRegistrationVo.getKeyword() + "%");
+			sql.append(" or lase_Watcher like ? ");
+			objectList.add("%" + transferRegistrationVo.getKeyword() + "%");
+			sql.append(" or handover_Matters like ? ");
+			objectList.add("%" + transferRegistrationVo.getKeyword() + "%");
+			sql.append(" or exception_ like ? ");
+			sql.append(" )");
+		}
+
+
 		//排序, 先根据日期倒序排序,再根据班次顺序排序
 		sql.append(" order by duty_Date desc,shift_ asc ");
 

@@ -22,8 +22,17 @@ public class InfoThroughVo extends InfoThrough{
 
 	private String dictValue;				//新增字典值_信息来源
 	private String dictValue2;				//新增字典值_通传方式
-	
-	
+
+	private String keyword;				//关键字
+
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	public String getDutyDateStr() {
 		return dutyDateStr;
 	}

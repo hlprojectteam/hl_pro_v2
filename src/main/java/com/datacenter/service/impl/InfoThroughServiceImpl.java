@@ -56,6 +56,20 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 		if(infoThroughVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", infoThroughVo.getDutyDateEnd()));
 		}
+
+		if(infoThroughVo.getInfoType() != null){
+			params.add(Restrictions.eq("infoType", infoThroughVo.getInfoType()));
+		}
+		if(infoThroughVo.getThroughWay() != null){
+			params.add(Restrictions.eq("throughWay", infoThroughVo.getThroughWay()));
+		}
+		if(StringUtils.isNotBlank(infoThroughVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (reported_Person like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or watcher_ like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or info_Content like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or through_Situation like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or remark_ like '%" + infoThroughVo.getKeyword() + "%' )"));
+		}
 		return this.infoThroughDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), InfoThrough.class);
 	}
 

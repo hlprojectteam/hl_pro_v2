@@ -55,6 +55,34 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 		if(trafficAccidentVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", trafficAccidentVo.getDutyDateEnd()));
 		}
+
+		if(trafficAccidentVo.getWeather() != null){
+			params.add(Restrictions.eq("weather", trafficAccidentVo.getWeather()));
+		}
+		if(trafficAccidentVo.getAccidentType() != null){
+			params.add(Restrictions.eq("accidentType", trafficAccidentVo.getAccidentType()));
+		}
+		if(StringUtils.isNotBlank(trafficAccidentVo.getAccidentSite())){
+			params.add(Restrictions.like("accidentSite", "%" + trafficAccidentVo.getAccidentSite() + "%"));
+		}
+		if(trafficAccidentVo.getMinorInjuryNum() != null){
+			params.add(Restrictions.eq("minorInjuryNum", trafficAccidentVo.getMinorInjuryNum()));
+		}
+		if(trafficAccidentVo.getSeriousInjuryNum() != null){
+			params.add(Restrictions.eq("seriousInjuryNum", trafficAccidentVo.getSeriousInjuryNum()));
+		}
+		if(trafficAccidentVo.getDeathNum() != null){
+			params.add(Restrictions.like("deathNum", trafficAccidentVo.getDeathNum()));
+		}
+		if(StringUtils.isNotBlank(trafficAccidentVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (accident_Site like '%" + trafficAccidentVo.getKeyword() + "%' " +
+					" or involveCar_Num like '%" + trafficAccidentVo.getKeyword() + "%' " +
+					" or involve_Plates like '%" + trafficAccidentVo.getKeyword() + "%' " +
+					" or road_Loss like '%" + trafficAccidentVo.getKeyword() + "%' " +
+					" or claim_Note like '%" + trafficAccidentVo.getKeyword() + "%' " +
+					" or accident_Details like '%" + trafficAccidentVo.getKeyword() + "%' " +
+					" or remark_ like '%" + trafficAccidentVo.getKeyword() + "%' )"));
+		}
 		return this.trafficAccidentDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), TrafficAccident.class);
 	}
 

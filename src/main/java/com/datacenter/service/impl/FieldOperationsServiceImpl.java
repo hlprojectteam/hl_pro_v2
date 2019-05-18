@@ -55,6 +55,24 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 		if(fieldOperationsVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", fieldOperationsVo.getDutyDateEnd()));
 		}
+
+		if(fieldOperationsVo.getReceiptWay() != null){
+			params.add(Restrictions.eq("receiptWay", fieldOperationsVo.getReceiptWay()));
+		}
+		if(StringUtils.isNotBlank(fieldOperationsVo.getScene())){
+			params.add(Restrictions.like("scene", "%" + fieldOperationsVo.getScene() + "%"));
+		}
+
+		if(StringUtils.isNotBlank(fieldOperationsVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (reported_Person like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or out_worker like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or scene_ like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or involved_Units like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or violation_OrderNo like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or receipt_Situation like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or dispose_Desc like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or remark_ like '%" + fieldOperationsVo.getKeyword() + "%' )"));
+		}
 		return this.fieldOperationsDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), FieldOperations.class);
 	}
 

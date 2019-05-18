@@ -97,7 +97,7 @@
             shadeClose: true,//打开遮蔽
             shade: 0.6, 
             maxmin: true, //开启最大化最小化按钮
-            area: ["80%", "80%"],
+            area: ["95%", "95%"],
             content: URLStr + "edit?winName="+winName+"&ttId="+ttId+"&dutyDateStr="+dutyDateStr + "&sign=brief"
         });
   	}
@@ -144,7 +144,7 @@
             shadeClose: true,//打开遮蔽
             shade: 0.6, 
             maxmin: true, //开启最大化最小化按钮
-            area: ["80%", "80%"],
+            area: ["95%", "95%"],
             content: URLStr + "edit?winName="+winName+"&id="+id + "&sign=brief"
         });
   	}

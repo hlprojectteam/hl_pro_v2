@@ -24,8 +24,17 @@ public class TrafficAccidentVo extends TrafficAccident{
 	private String dictValue2;				//新增字典值_消息来源
 	private String dictValue3;				//新增字典值_事故类型
 	private String dictValue4;				//新增字典值_车辆类型
-	
-	
+
+	private String keyword;				//关键字
+
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	public String getDutyDateStr() {
 		return dutyDateStr;
 	}

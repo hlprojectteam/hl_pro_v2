@@ -52,6 +52,31 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 		if(roadWorkVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", roadWorkVo.getDutyDateEnd()));
 		}
+		if(roadWorkVo.getPositionAttributes() != null){
+			params.add(Restrictions.eq("positionAttributes", roadWorkVo.getPositionAttributes()));
+		}
+		if(StringUtils.isNotBlank(roadWorkVo.getUnitName())){
+			params.add(Restrictions.like("unitName", "%" + roadWorkVo.getUnitName() + "%"));
+		}
+		if(StringUtils.isNotBlank(roadWorkVo.getConstructionContent())){
+			params.add(Restrictions.like("constructionContent", "%" + roadWorkVo.getConstructionContent() + "%"));
+		}
+		if(StringUtils.isNotBlank(roadWorkVo.getRectificationMeasures())){
+			params.add(Restrictions.like("rectificationMeasures", "%" + roadWorkVo.getRectificationMeasures() + "%"));
+		}
+
+		if(StringUtils.isNotBlank(roadWorkVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (unit_Name like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or relation_Person like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or relation_Phone like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or specific_Location like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or construction_Content like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or jeeves_Situation like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or checker_ like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or description_ like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or rectification_Measures like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or reported_Situation like '%" + roadWorkVo.getKeyword() + "%' )"));
+		}
 		return this.roadWorkDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), RoadWork.class);
 	}
 

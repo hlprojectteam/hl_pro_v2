@@ -56,6 +56,26 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 		if(rescueWorkVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", rescueWorkVo.getDutyDateEnd()));
 		}
+
+		if(StringUtils.isNotBlank(rescueWorkVo.getFaultPlates())){
+			params.add(Restrictions.like("faultPlates", "%" + rescueWorkVo.getFaultPlates() + "%"));
+		}
+		if(StringUtils.isNotBlank(rescueWorkVo.getRescuePlates())){
+			params.add(Restrictions.like("rescuePlates", "%" + rescueWorkVo.getRescuePlates() + "%"));
+		}
+		if(StringUtils.isNotBlank(rescueWorkVo.getSite())){
+			params.add(Restrictions.like("site", "%" + rescueWorkVo.getSite() + "%"));
+		}
+		if(StringUtils.isNotBlank(rescueWorkVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" (site_ like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or fault_Plates like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or payment_Order like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or rescue_Charge like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or trailer_Mileage like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or rescue_Plates like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or driver_Phone like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or remark_ like '%" + rescueWorkVo.getKeyword() + "%' )"));
+		}
 		return this.rescueWorkDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), RescueWork.class);
 	}
 

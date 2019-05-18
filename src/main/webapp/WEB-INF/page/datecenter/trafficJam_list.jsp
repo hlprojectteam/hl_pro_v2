@@ -32,6 +32,17 @@
 	            <div class="col-sm-2">
 	                <input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 	            </div>
+
+				  <label class="col-sm-1 control-label">接报方式</label>
+				  <div class="col-sm-2">
+					  <opt:select dictKey="dc_receiptWay" classStyle="form-control" id="receiptWay" name="receiptWay" isDefSelect="true"/>
+				  </div>
+
+				  <label class="col-sm-1 control-label">关键字</label>
+				  <div class="col-sm-2">
+					  <input type="text" class="form-control" id="keyword" name="keyword" value="" />
+				  </div>
+
 				<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
 				  <button class="btn btn-primary" type="button" onclick="on_export()"><i class="fa fa-file-excel-o"></i>&nbsp;导出Excle</button>
 			  </div>
@@ -118,7 +129,7 @@
             shadeClose: true,//打开遮蔽
             shade: 0.6, 
             maxmin: true, //开启最大化最小化按钮
-            area: ["80%", "80%"],
+            area: ["95%", "95%"],
             content: URLStr + "edit?winName="+winName+"&ttId="+ttId+"&dutyDateStr="+dutyDateStr
         });
   	}
@@ -165,7 +176,7 @@
             shadeClose: true,//打开遮蔽
             shade: 0.6, 
             maxmin: true, //开启最大化最小化按钮
-            area: ["80%", "80%"],
+            area: ["95%", "95%"],
             content: URLStr + "edit?winName="+winName+"&id="+id
         });
   	}
@@ -177,8 +188,12 @@
 
     //导出Excel
     function on_export(){
-        if($("#dutyDateStart").val() == null || $("#dutyDateStart").val() == "" || $("#dutyDateEnd").val() == null || $("#dutyDateEnd").val() == ""){
+        let star = $("#dutyDateStart").val();
+        let end = $("#dutyDateEnd").val();
+        if(star == null || star == "" || end == null || end == ""){
             autoAlert("注意：导出Excel时筛选条件不能为空!",5);
+        }else if((new Date(end) - new Date(star))/(24*60*60*1000) > 90){
+            autoAlert("注意：导出Excel时筛选时间区间必须三个月以内，以防数据量过大!",5);
         }else{
             window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()
         }

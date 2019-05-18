@@ -19,8 +19,17 @@ public class SurveillanceInspectionVo extends SurveillanceInspection{
 	private Date dutyDateEnd;               	 //日期End
 	
 	private String dutyDateStr;				//日期字符串
-	
-	
+
+	private String keyword;				//关键字
+
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	public String getDutyDateStr() {
 		return dutyDateStr;
 	}

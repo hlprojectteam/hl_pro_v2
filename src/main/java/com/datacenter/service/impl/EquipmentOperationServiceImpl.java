@@ -51,6 +51,21 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		if(equipmentOperationVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", equipmentOperationVo.getDutyDateEnd()));
 		}
+
+		if(equipmentOperationVo.getTollGate() != null){
+			params.add(Restrictions.eq("tollGate", equipmentOperationVo.getTollGate()));
+		}
+		if(equipmentOperationVo.getIsOrNot() != null){
+			if(equipmentOperationVo.getIsOrNot() == 1){
+				params.add(Restrictions.sqlRestriction(" (cdgqzp_=3 or zdfkj_=3 or mtcckcd_=3 or etcckcd_=3 or mtcrkcd_=3 or etcrkcd_=3 or jzcd_=3) "));
+			}else{
+				params.add(Restrictions.sqlRestriction(" (cdgqzp_!=3 and zdfkj_!=3 and mtcckcd_!=3 and etcckcd_!=3 and mtcrkcd_!=3 and etcrkcd_!=3 and jzcd_!=3) "));
+			}
+		}
+
+		if(StringUtils.isNotBlank(equipmentOperationVo.getKeyword())){
+			params.add(Restrictions.sqlRestriction(" remark_ like '%" + equipmentOperationVo.getKeyword() + "%' "));
+		}
 		return this.equipmentOperationDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), EquipmentOperation.class);
 	}
 
