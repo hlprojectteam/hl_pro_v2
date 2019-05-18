@@ -41,20 +41,20 @@
 		<div class="left">
 			<ul>
 				<%--<li class="brief" onclick="pageSwitch('brief')"  style="border-top: none; background-color: lightgray;">工作简报</li>--%>
-				<li class="transferRegistration" onclick="pageSwitch('transferRegistration')">交接登记表</li>
-				<li class="surveillanceInspection" onclick="pageSwitch('surveillanceInspection')">监控巡检</li>
-				<li class="roadWork" onclick="pageSwitch('roadWork')">涉路施工</li>
-				<li class="equipmentOperation" onclick="pageSwitch('equipmentOperation')">设备运行情况统计表</li>
-				<li class="equipmentStatus" onclick="pageSwitch('equipmentStatus')">联网设备日常检查表</li>
-				<li class="operatingData" onclick="pageSwitch('operatingData')">营运数据</li>
-				<li class="rescueWork" onclick="pageSwitch('rescueWork')">拯救作业</li>
-				<li class="clearing" onclick="pageSwitch('clearing')">清障保洁</li>
-				<li class="exceptionRecord" onclick="pageSwitch('exceptionRecord')">营运异常记录</li>
-				<li class="trafficAccident" onclick="pageSwitch('trafficAccident')">交通事故</li>
-				<li class="infoThrough" onclick="pageSwitch('infoThrough')">信息通传</li>
-				<li class="feedBack" onclick="pageSwitch('feedBack')">顾客意见反馈</li>
-				<li class="trafficJam" onclick="pageSwitch('trafficJam')">交通阻塞</li>
-				<li class="fieldOperations" onclick="pageSwitch('fieldOperations')"  style="border-bottom: #eee 1px solid;">外勤作业</li>
+				<li class="transferRegistration" onclick="pageSwitch('transferRegistration')"><a>交接登记表</a></li>
+				<li class="surveillanceInspection" onclick="pageSwitch('surveillanceInspection')"><a>监控巡检</a></li>
+				<li class="roadWork" onclick="pageSwitch('roadWork')"><a>涉路施工</a></li>
+				<li class="equipmentOperation" onclick="pageSwitch('equipmentOperation')"><a>设备运行情况统计表</a></li>
+				<li class="equipmentStatus" onclick="pageSwitch('equipmentStatus')"><a>联网设备日常检查表</a></li>
+				<li class="operatingData" onclick="pageSwitch('operatingData')"><a>营运数据</a></li>
+				<li class="rescueWork" onclick="pageSwitch('rescueWork')"><a>拯救作业</a></li>
+				<li class="clearing" onclick="pageSwitch('clearing')"><a>清障保洁</a></li>
+				<li class="exceptionRecord" onclick="pageSwitch('exceptionRecord')"><a>营运异常记录</a></li>
+				<li class="trafficAccident" onclick="pageSwitch('trafficAccident')"><a>交通事故</a></li>
+				<li class="infoThrough" onclick="pageSwitch('infoThrough')"><a>信息通传</a></li>
+				<li class="feedBack" onclick="pageSwitch('feedBack')"><a>顾客意见反馈</a></li>
+				<li class="trafficJam" onclick="pageSwitch('trafficJam')"><a>交通阻塞</a></li>
+				<li class="fieldOperations" onclick="pageSwitch('fieldOperations')"  style="border-bottom: #eee 1px solid;"><a>外勤作业</a></li>
 			</ul>
 		</div>
 		<div class="right">

@@ -2,6 +2,8 @@ package com.suggest.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,15 +25,27 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
+import com.common.message.MessageJpush;
+import com.common.message.module.Message;
+import com.common.message.service.IMessageService;
+import com.common.utils.Common;
+import com.common.utils.helper.JsonDateTimeValueProcessor;
+import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
+import com.dangjian.module.Activities;
+import com.dangjian.module.ActivitiesLaunch;
 import com.dangjian.module.Branch;
 import com.dangjian.module.Introduction;
+import com.dangjian.module.PartyMember;
 import com.dangjian.service.IBranchService;
 import com.dangjian.service.IIntroductionService;
-import com.dangjian.vo.IntroductionVo;
+import com.dangjian.vo.ActivitiesLaunchVo;
 import com.google.gson.JsonObject;
+import com.suggest.module.Suggest;
 import com.suggest.service.ISuggestService;
+import com.suggest.vo.SuggestVo;
 import com.urms.user.module.User;
+import com.urms.user.service.IUserService;
 import com.urms.user.vo.UserVo;
 
 /**
@@ -51,6 +65,10 @@ public class SuggestController extends BaseController{
 	public IBranchService branchServiceImpl;
 	@Autowired
 	public IAttachService attachServiceImpl;
+	@Autowired
+	public IUserService userServiceImpl;
+	@Autowired
+	public IMessageService messageServiceImpl;
 
 	@RequestMapping(value="/suggest_list")
 	public String list(HttpSession httpSession,HttpServletResponse response,String menuCode,Integer moduleClass){
@@ -66,35 +84,163 @@ public class SuggestController extends BaseController{
 	    return "/page/suggest/suggest_list";
 	}
 
-//	@RequestMapping(value="/suggest_load")
-//	public void load(HttpServletRequest request,HttpServletResponse response,IntroductionVo introductionVo,
-//			Integer page,Integer rows){
-//		Pager pager = this.suggestServiceImpl.queryEntityList(page, rows, introductionVo);
-//		JSONObject json = new JSONObject();
-//		json.put("total", pager.getRowCount());
-//		JsonConfig config = new JsonConfig();
-//		json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
-//		this.print(json);
-//	}
-//	
-//
+	@RequestMapping(value="/suggest_load")
+	public void load(HttpServletRequest request,HttpServletResponse response,SuggestVo suggestVo,
+			Integer page,Integer rows){
+		JSONObject json = new JSONObject();
+		json.put("result",false);
+		try {
+			Pager pager = this.suggestServiceImpl.queryEntityList(page, rows, suggestVo);
+			json.put("total", pager.getRowCount());
+			json.put("curPageSize", pager.getPageList().size());
+			JsonConfig config = new JsonConfig();
+			String[] excludes = new String[] {"creatorId","moduleClass","rebackUserId","sysCode"}; // 列表排除信息内容字段，减少传递时间
+			config.setExcludes(excludes);
+			config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
+			json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
+			json.put("result",true);
+		} catch (Exception e) {
+			json.put("result",false);
+			json.put("msg",e.getMessage());
+		}
+		this.print(json);
+	}
+	
+	@RequestMapping(value="/suggest_detail")
+	public void suggestDetail(HttpServletRequest request,HttpServletResponse response,SuggestVo suggestVo){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
+		try {
+			Suggest suggest=this.suggestServiceImpl.getEntityById(Suggest.class, suggestVo.getId());
+			if(suggest!=null){
+				updateStatus(suggest,suggestVo.getRebackUserId());
+				BeanUtils.copyProperties(suggest, suggestVo);
+				if(StringUtils.isNotBlank(suggest.getRebackUserId())){
+					User user=this.userServiceImpl.getEntityById(User.class, suggest.getRebackUserId());
+					suggestVo.setRebackUserName(user.getUserName());
+				}
+				JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
+				config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
+				json.put("result", true);
+				json.put("content", JSONObject.fromObject(suggestVo, config));
+			}
+		} catch (Exception e) {
+			json.put("result",false);
+			json.put("msg",e.getMessage());
+		}
+		this.print(json);
+	}
+	
+	/**
+	 * 
+	 * @方法：@param suggest
+	 * @方法：@param userId
+	 * @描述：更新状态
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年5月8日
+	 */
+	private void updateStatus(Suggest suggest,String userId){
+		if(suggest.getStatus()==1){
+			//未阅状态
+			if(!suggest.getCreatorId().equals(userId)){
+				//查看人不是自己，则状态变成已阅
+				suggest.setStatus(2);
+				suggest.setReadDate(new Date());
+				this.suggestServiceImpl.saveOrUpdate(suggest);
+			}
+		}
+	}
+	
+	@RequestMapping(value="/suggest_answer")
+	public void suggestAnswer(HttpServletRequest request,HttpServletResponse response,SuggestVo suggestVo){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
+		try {
+			Suggest suggest=this.suggestServiceImpl.getEntityById(Suggest.class, suggestVo.getId());
+			if(suggest!=null){
+				suggest.setReback(suggestVo.getReback());
+				suggest.setRebackDate(new Date());
+				suggest.setRebackUserId(this.getSessionUser().getId());
+				suggest.setStatus(3);
+				this.suggestServiceImpl.saveOrUpdate(suggest);
+				String noticeTitle="";
+				String userIds=suggest.getCreatorId();
+				String roleCodes="";
+				int msgType=0;
+				if(suggestVo.getModuleClass()==1){
+					//安全管理
+					noticeTitle=Common.msgTitle_AQ_jyxc_finish;
+					msgType=Common.msgAQ;
+				}else if(suggestVo.getModuleClass()==2){
+					//党建
+					noticeTitle=Common.msgTitle_DJ_yj_finish;
+					msgType=Common.msgDJ;
+				}
+				//发送给意见提出者
+				this.sendMsg(noticeTitle,"收到一条意见回复",userIds,roleCodes,msgType,this.getSessionUser());
+				json.put("result", true);
+			}
+		} catch (Exception e) {
+			json.put("result",false);
+			json.put("msg",e.getMessage());
+		}finally{
+			this.print(json.toString());
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @方法：@param noticeTitle 通知的提示标题
+	 * @方法：@param noticeContent 通知的简要内容
+	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
+	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
+	 * @方法：@param msgType 消息类型
+	 * @方法：@param user 会话用户
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年4月19日
+	 */
+	private void sendMsg(String noticeTitle, String noticeContent,
+			String userIds, String rodeCodes, int msgType, User user) {
+		try {
+			Message msg = new Message();
+			msg.setTitle(noticeTitle);
+			msg.setContent(noticeContent);
+			msg.setAlias(userIds);
+			msg.setType(msgType);
+			msg.setTags(rodeCodes);
+			msg.setSender(user.getUserName());
+			msg.setCreatorId(user.getId());
+			msg.setCreatorName(user.getUserName());
+			msg.setSysCode(user.getSysCode());
+			this.messageServiceImpl.saveOrUpdate(msg);
+			MessageJpush.sendCommonMsg(noticeTitle, msg);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	
 //	@RequestMapping(value="/introduction_edit")
-//	public String edit(HttpServletRequest request, IntroductionVo introductionVo){
-//		if(StringUtils.isNotBlank(introductionVo.getId())){
+//	public String edit(HttpServletRequest request, SuggestVo suggestVo){
+//		if(StringUtils.isNotBlank(suggestVo.getId())){
 //			try{
-//				Introduction introduction = this.suggestServiceImpl.getEntityById(Introduction.class, introductionVo.getId());
-//				BeanUtils.copyProperties(introduction, introductionVo);
+//				Introduction introduction = this.suggestServiceImpl.getEntityById(Introduction.class, suggestVo.getId());
+//				BeanUtils.copyProperties(introduction, suggestVo);
 //				if(introduction.getContent()!=null){
-//					introductionVo.setContentStr(new String(introduction.getContent(), "UTF-8"));
+//					suggestVo.setContentStr(new String(introduction.getContent(), "UTF-8"));
 //				}
-//				request.setAttribute("introductionVo", introductionVo);
+//				request.setAttribute("suggestVo", suggestVo);
 //			}catch (Exception e) {
 //				e.printStackTrace();
 //			}
 //		}else{
 //			User user = this.getSessionUser();
-//			introductionVo.setAuthorName(user.getUserName());
-//			request.setAttribute("introductionVo", introductionVo);
+//			suggestVo.setAuthorName(user.getUserName());
+//			request.setAttribute("suggestVo", suggestVo);
 //		}
 //		return "/page/dangjian/introduction/introduction_edit";
 //	}
@@ -108,14 +254,14 @@ public class SuggestController extends BaseController{
 //	}
 //	
 //	@RequestMapping(value="/introduction_saveOrUpdate",method = RequestMethod.POST)
-//	public void saveOrUpdate(HttpSession httpSession,HttpServletResponse response,IntroductionVo introductionVo){
+//	public void saveOrUpdate(HttpSession httpSession,HttpServletResponse response,SuggestVo suggestVo){
 //		JsonObject json =new JsonObject();
 //		try{
 //			Introduction introduction = new Introduction();
-//			introductionVo = formatVo(introductionVo);
-//			BeanUtils.copyProperties(introductionVo, introduction);
-//			 if(StringUtils.isNotEmpty(introductionVo.getContentStr()))
-//				 introduction.setContent(introductionVo.getContentStr().getBytes("UTF8"));
+//			suggestVo = formatVo(suggestVo);
+//			BeanUtils.copyProperties(suggestVo, introduction);
+//			 if(StringUtils.isNotEmpty(suggestVo.getContentStr()))
+//				 introduction.setContent(suggestVo.getContentStr().getBytes("UTF8"));
 //			this.suggestServiceImpl.saveOrUpdate(introduction);
 //			json.addProperty("id", introduction.getId());
 //			json.addProperty("result", true);
@@ -160,24 +306,24 @@ public class SuggestController extends BaseController{
 //	}
 //	
 //	
-//	private IntroductionVo formatVo(IntroductionVo introductionVo){
+//	private SuggestVo formatVo(SuggestVo suggestVo){
 //		
-//		if(StringUtils.isNotBlank(introductionVo.getReleaseDateStr())){
+//		if(StringUtils.isNotBlank(suggestVo.getReleaseDateStr())){
 //			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 //			try {
-//				introductionVo.setReleaseDate(sdf.parse(introductionVo.getReleaseDateStr()));
+//				suggestVo.setReleaseDate(sdf.parse(suggestVo.getReleaseDateStr()));
 //			} catch (ParseException e) {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
 //		}
-//		if(introductionVo.getVisitNum() == null){
-//			introductionVo.setVisitNum(0);
+//		if(suggestVo.getVisitNum() == null){
+//			suggestVo.setVisitNum(0);
 //		}
-//		if(introductionVo.getStatus() == null){
-//			introductionVo.setStatus(0);
+//		if(suggestVo.getStatus() == null){
+//			suggestVo.setStatus(0);
 //		}
-//		return introductionVo;
+//		return suggestVo;
 //	}
 
 }

@@ -491,12 +491,17 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataD
 		String CategoryAttributesKey="";
 		if(category==null)
 			return null;
-		List<Criterion> criterionsList = new ArrayList<Criterion>();
-		criterionsList.add(Restrictions.eq("category", category));
-		List<CategoryAttribute> categoryAttributeList = dataDictionaryDaoImpl.queryList(criterionsList, Order.desc("attrKey") ,CategoryAttribute.class);
-		if(categoryAttributeList!=null){
-			CategoryAttribute ca=categoryAttributeList.get(0);
-			CategoryAttributesKey=ca.getAttrKey();
+		//找到最大的key
+		String sql="SELECT t.ATTR_KEY FROM `um_categoryattribute` t where t.CATEGORY_ID='##' ORDER BY (t.ATTR_KEY+0) DESC; ";
+		sql = sql.replace("##", category.getId());
+		List<Object> listCa=dataDictionaryDaoImpl.queryBySql(sql);
+		if(listCa!=null){
+			if(listCa.size()>0){
+				Object obj = (Object)listCa.get(0);
+				if(obj!=null){
+					CategoryAttributesKey=obj.toString();
+				}
+			}
 		}
 		return CategoryAttributesKey;
 	}

@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
-import com.urms.role.vo.RoleVo;
 import com.urms.user.module.User;
 import com.urms.user.vo.UserVo;
 
@@ -115,5 +114,17 @@ public interface IUserService extends IBaseService{
 	 * @date:2019年1月31日
 	 */
 	public String isUserExist(UserVo userVo);
+	
+	/**
+	 * 
+	 * @方法：@param userId
+	 * @方法：@param roleCode
+	 * @方法：@return
+	 * @描述：通过当前userid和目标roleCode，找到同一部门下的目标角色的userId，多个用“,”隔开
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年5月8日
+	 */
+	public String findUserIdsByUserIdAndRoleCode(String userId,String roleCodes);
 	
 }

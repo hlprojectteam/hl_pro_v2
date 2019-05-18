@@ -72,6 +72,18 @@ public interface IOperatingDataService extends IBaseService{
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook export(OperatingDataVo operatingDataVo);
+	
+	/**
+	 * 
+	 * @方法：@param dutyDate 录入日期
+	 * @方法：@param tollGateId 收费站ID
+	 * @方法：@return
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年5月14日
+	 */
+	public boolean isRecordExist(Date dutyDate,String tollGateId);
 
 
 }

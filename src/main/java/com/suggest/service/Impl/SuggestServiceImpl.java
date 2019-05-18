@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.common.attach.service.IAttachService;
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
-import com.dangjian.module.Activities;
 import com.suggest.dao.ISuggestDao;
 import com.suggest.module.Suggest;
 import com.suggest.service.ISuggestService;
@@ -39,6 +38,19 @@ public class SuggestServiceImpl extends BaseServiceImpl implements ISuggestServi
 		List<Criterion> criterionsList = new ArrayList<Criterion>();
 		if(StringUtils.isNotBlank(suggestVo.getContent())){
 			criterionsList.add(Restrictions.like("content", "%"+ suggestVo.getContent()+"%"));
+		}
+		if(StringUtils.isNotBlank(suggestVo.getCreatorId())){
+			criterionsList.add(Restrictions.eq("creatorId",  suggestVo.getCreatorId()));
+		}
+		if(suggestVo.getModuleClass()!=null){
+			criterionsList.add(Restrictions.eq("moduleClass",  suggestVo.getModuleClass()));
+		}
+		if(suggestVo.getStatus()!=null){
+			if(suggestVo.getStatus()==-1){
+				//表示获取所有未回复的
+				criterionsList.add(Restrictions.or(Restrictions.eq("status", 1),Restrictions.eq("status", 2)));//字典目录
+			}
+			
 		}
 		return this.suggestDaoImpl.queryEntityList(page, rows, criterionsList, Order.desc("createTime"), Suggest.class);
 	}

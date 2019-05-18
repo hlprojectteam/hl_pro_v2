@@ -228,7 +228,7 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer();
 		
-		sql.append("SELECT t.ID,t.LAUNCH_DATE,t.BRANCH_ID,t.ACTIVITY_ID,t.CREATOR_NAME,t.LAUNCH_POINTS,t.LAUNCH_STATUS FROM `p_dj_activities_launch` t where 1=1 ");
+		sql.append("SELECT t.ID,t.LAUNCH_DATE,t.BRANCH_ID,t.ACTIVITY_ID,t.CREATOR_NAME,t.LAUNCH_POINTS,t.LAUNCH_STATUS,t.LAUNCH_CONTENT FROM `p_dj_activities_launch` t where 1=1 ");
 		if(StringUtils.isNotBlank(activitiesLaunchVo.getBranchId())){
 			sql.append(" and t.BRANCH_ID = ? ");		
 			paramList.add(activitiesLaunchVo.getBranchId());
@@ -267,6 +267,7 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 	    		if(obj[4]!=null) alVo.setCreatorName(obj[4].toString());
 	    		if(obj[5]!=null) alVo.setPoints(Integer.parseInt(obj[5].toString()));
 	    		if(obj[6]!=null) alVo.setStatus(Integer.parseInt(obj[6].toString()));
+	    		if(obj[7]!=null) alVo.setLaunchContent(obj[7].toString());
 	    		list.add(alVo);
 	    	}
 	    	pager.setPageList(list);
