@@ -43,9 +43,9 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, TransferRegistrationVo transferRegistrationVo) {
-		List<Object> objectList = new ArrayList<Object>();
+		List<Object> objectList = new ArrayList<>();
 
-		StringBuffer sql = new StringBuffer("select  id,create_time,duty_Date,exception_,form_Number,handover_Matters,handover_Time,lase_Watcher,shift_,this_Watcher,title_,ttId,watch_Time_End,watch_Time_Start,weather_  from dc_TransferRegistration where 1 = 1 ");
+		StringBuilder sql = new StringBuilder("select  id,create_time,duty_Date,exception_,form_Number,handover_Matters,handover_Time,lase_Watcher,shift_,this_Watcher,title_,ttId,watch_Time_End,watch_Time_Start,weather_  from dc_TransferRegistration where 1 = 1 ");
 		if(StringUtils.isNotBlank(transferRegistrationVo.getTtId())){
 			objectList.add(transferRegistrationVo.getTtId());
 			sql.append(" and ttId = ? ");
@@ -122,7 +122,7 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 
 	@Override
 	public int updateDutyDate(String ttId, Date dutyDate) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(ttId)){
 			params.add(Restrictions.eq("ttId", ttId));
 		}
@@ -136,9 +136,9 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 
 	@Override
 	public List<TransferRegistration> queryEntityList(TransferRegistrationVo transferRegistrationVo) {
-		List<Object> objectList = new ArrayList<Object>();
+		List<Object> objectList = new ArrayList<>();
 
-		StringBuffer hql = new StringBuffer("from TransferRegistration where 1 = 1 ");
+		StringBuilder hql = new StringBuilder("from TransferRegistration where 1 = 1 ");
 		if(StringUtils.isNotBlank(transferRegistrationVo.getTtId())){
 			objectList.add(transferRegistrationVo.getTtId());
 			hql.append(" and ttId = ? ");
@@ -151,11 +151,14 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 			objectList.add(transferRegistrationVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(StringUtils.isNotBlank(transferRegistrationVo.getKeyword())){
+			hql.append(" and (thisWatcher like '%").append(transferRegistrationVo.getKeyword()).append("%' ").append(" or laseWatcher like '%").append(transferRegistrationVo.getKeyword()).append("%' ").append(" or handoverMatters like '%").append(transferRegistrationVo.getKeyword()).append("%' ").append(" or exception like '%").append(transferRegistrationVo.getKeyword()).append("%' )");
+		}
 		//排序, 先根据日期倒序排序,再根据班次顺序排序
 		hql.append(" order by dutyDate desc,shift asc ");
 
-		List<TransferRegistration> trList = this.transferRegistrationDaoImpl.queryEntityHQLList(hql.toString(), objectList, TransferRegistration.class);
-		return trList;
+		return this.transferRegistrationDaoImpl.queryEntityHQLList(hql.toString(), objectList, TransferRegistration.class);
 	}
 
 	@Override
@@ -233,7 +236,7 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 		//第三行
 		HSSFRow row2 = sheet.createRow(2);
 		row2.setHeightInPoints(30);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title = {"日期","班次","天气","本班次值班人员","值班时间","上班次值班人员","交接时间","交接事项","接班异常情况"};
 		for(int i=0;i<title.length;i++){
 			cell = row2.createCell(i);		//创建单元格
@@ -251,10 +254,9 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 		}
 
 		//第四行 及 之后的行
-		HSSFRow row = null;
+		HSSFRow row;
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-		String[][] content = new String[trList.size()][];
 		for (int i = 0; i < trList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
 			row.setHeightInPoints(60);					//设置行高

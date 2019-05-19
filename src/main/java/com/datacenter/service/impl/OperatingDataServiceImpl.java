@@ -42,7 +42,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, OperatingDataVo operatingDataVo) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(operatingDataVo.getTtId())){
 			params.add(Restrictions.eq("ttId", operatingDataVo.getTtId()));
 		}
@@ -84,7 +84,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 
 	@Override
 	public int updateDutyDate(String ttId, Date dutyDate) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(ttId)){
 			params.add(Restrictions.eq("ttId", ttId));
 		}
@@ -98,9 +98,9 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 
 	@Override
 	public List<OperatingData> queryEntityList(OperatingDataVo operatingDataVo) {
-		List<Object> objectList = new ArrayList<Object>();
+		List<Object> objectList = new ArrayList<>();
 
-		StringBuffer hql = new StringBuffer("from OperatingData where 1 = 1 ");
+		StringBuilder hql = new StringBuilder("from OperatingData where 1 = 1 ");
 		if(StringUtils.isNotBlank(operatingDataVo.getTtId())){
 			objectList.add(operatingDataVo.getTtId());
 			hql.append(" and ttId = ? ");
@@ -113,11 +113,18 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 			objectList.add(operatingDataVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(operatingDataVo.getTollGate() != null){
+			objectList.add(operatingDataVo.getTollGate());
+			hql.append(" and tollGate = ? ");
+		}
+		if(StringUtils.isNotBlank(operatingDataVo.getKeyword())){
+			hql.append(" and (totalTraffic like '%").append(operatingDataVo.getKeyword()).append("%' ").append(" or ytkTraffic like '%").append(operatingDataVo.getKeyword()).append("%' ").append(" or generalIncome like '%").append(operatingDataVo.getKeyword()).append("%' ").append(" or ytkIncome like '%").append(operatingDataVo.getKeyword()).append("%' )");
+		}
 		//排序, 根据日期倒序排序，收费站顺序排序
 		hql.append(" order by dutyDate desc,tollGate asc ");
 
-		List<OperatingData> odList = this.operatingDataDaoImpl.queryEntityHQLList(hql.toString(), objectList, OperatingData.class);
-		return odList;
+		return this.operatingDataDaoImpl.queryEntityHQLList(hql.toString(), objectList, OperatingData.class);
 	}
 
 	@Override
@@ -209,7 +216,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		//第三行
 		HSSFRow row2 = sheet.createRow(2);
 		row2.setHeightInPoints(30);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title1 = {"日期","收费站","出口车流量","收费额"};
 		row2.createCell(3).setCellStyle(r2_style);
 		row2.createCell(5).setCellStyle(r2_style);
@@ -237,8 +244,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 
 		//第五行 及 之后的行
-		HSSFRow row = null;
-		String[][] content = new String[odList.size()][];
+		HSSFRow row;
 		Integer hj_totalTraffic = 0;
 		Integer hj_ytkTraffic = 0;
 		Double hj_generalIncome = 0.0;
@@ -292,7 +298,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 			operatingDataVo.setTollGate(Integer.parseInt(tollGateId));
 		}
 		
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(operatingDataVo.getDutyDate() != null){		//日期
 			params.add(Restrictions.eq("dutyDate", operatingDataVo.getDutyDate()));
 		}
@@ -301,9 +307,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		}
 		List<OperatingData> list= this.operatingDataDaoImpl.queryEntityList(params, Order.desc("createTime"), OperatingData.class);
 		if(list!=null){
-			if(list.size()>0){
-				return true;
-			}
+			return list.size() > 0;
 		}
 		return false;
 	}

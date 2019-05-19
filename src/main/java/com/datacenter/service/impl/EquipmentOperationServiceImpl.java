@@ -41,7 +41,7 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, EquipmentOperationVo equipmentOperationVo) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(equipmentOperationVo.getTtId())){
 			params.add(Restrictions.eq("ttId", equipmentOperationVo.getTtId()));
 		}
@@ -88,7 +88,7 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 
 	@Override
 	public int updateDutyDate(String ttId, Date dutyDate) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(ttId)){
 			params.add(Restrictions.eq("ttId", ttId));
 		}
@@ -102,9 +102,9 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 
 	@Override
 	public List<EquipmentOperation> queryEntityList(EquipmentOperationVo equipmentOperationVo) {
-		List<Object> objectList = new ArrayList<Object>();
+		List<Object> objectList = new ArrayList<>();
 
-		StringBuffer hql = new StringBuffer("from EquipmentOperation where 1 = 1 ");
+		StringBuilder hql = new StringBuilder("from EquipmentOperation where 1 = 1 ");
 		if(StringUtils.isNotBlank(equipmentOperationVo.getTtId())){
 			objectList.add(equipmentOperationVo.getTtId());
 			hql.append(" and ttId = ? ");
@@ -117,11 +117,26 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 			objectList.add(equipmentOperationVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(equipmentOperationVo.getTollGate() != null){
+			objectList.add(equipmentOperationVo.getTollGate());
+			hql.append(" and tollGate = ? ");
+		}
+		if(equipmentOperationVo.getIsOrNot() != null){
+			if(equipmentOperationVo.getIsOrNot() == 1){
+				hql.append(" and (cdgqzp_=3 or zdfkj_=3 or mtcckcd_=3 or etcckcd_=3 or mtcrkcd_=3 or etcrkcd_=3 or jzcd_=3) ");
+			}else{
+				hql.append(" and (cdgqzp_!=3 and zdfkj_!=3 and mtcckcd_!=3 and etcckcd_!=3 and mtcrkcd_!=3 and etcrkcd_!=3 and jzcd_!=3) ");
+			}
+		}
+
+		if(StringUtils.isNotBlank(equipmentOperationVo.getKeyword())){
+			hql.append(" and remark_ like '%").append(equipmentOperationVo.getKeyword()).append("%' ");
+		}
 		//排序, 根据日期倒序排序，部门(收费站)顺序排序
 		hql.append(" order by dutyDate desc,tollGate asc ");
 
-		List<EquipmentOperation> eoList = this.equipmentOperationDaoImpl.queryEntityHQLList(hql.toString(), objectList, EquipmentOperation.class);
-		return eoList;
+		return this.equipmentOperationDaoImpl.queryEntityHQLList(hql.toString(), objectList, EquipmentOperation.class);
 	}
 
 	@Override
@@ -212,7 +227,7 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		//第三行
 		HSSFRow row3 = sheet.createRow(2);
 		row3.setHeightInPoints(30);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title = {"日期","部门","车道高清抓拍","自动发卡机","MTC出口车道","ETC出口车道","MTC入口车道","ETC入口车道","计重车道","备注","车道停用时间段"};
 		for(int i=0;i<title.length;i++){
 			cell = row3.createCell(i);		//创建单元格
@@ -221,16 +236,14 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		}
 
 		//第四行 及 之后的行
-		HSSFRow row = null;
+		HSSFRow row;
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-		String[][] content = new String[eoList.size()][];
 		for (int i = 0; i < eoList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
 			row.setHeightInPoints(65);					//设置行高
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
-				Integer value = 0;
 				//设置单元格内容
 				switch (j){
 					case 0:	cell.setCellValue(sdf1.format(eoList.get(i).getDutyDate())); break;

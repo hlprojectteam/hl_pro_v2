@@ -10,7 +10,6 @@ import com.datacenter.vo.*;
 import com.urms.dataDictionary.module.CategoryAttribute;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -74,7 +73,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, TotalTableVo totalTableVo) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(totalTableVo.getDutyDate() != null){			//日期
 			params.add(Restrictions.eq("dutyDate", totalTableVo.getDutyDate()));
 		}
@@ -84,7 +83,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		if(totalTableVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", totalTableVo.getDutyDateEnd()));
 		}
-		return this.totalTableDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), TotalTable.class);
+		return this.totalTableDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), TotalTable.class);
 	}
 
 	@Override
@@ -215,7 +214,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		r2_style.setFont(r2_font);
 
 		//1.工作简报
-		getBriefData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
+		getBriefData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style);
 		//2.交接班
 		getTransferRegistrationData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 		//3.监控巡检
@@ -225,7 +224,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//5.设备运行情况统计表
 		getEquipmentOperationData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 		//6.营运数据
-		getOperatingData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
+		getOperatingData(wb, ttId, mainStyle_center, r0_style, r1_style, r2_style);
 		//7.拯救作业
 		getRescueWorkData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 		//8.清障保洁
@@ -243,7 +242,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//14.外勤作业
 		getFieldOperationsData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 		//15.联网设备日常检查表
-		getEquipmentStatusData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
+		getEquipmentStatusData(wb, ttId, mainStyle_center, r0_style, r1_style, r2_style);
 
 		return wb;
 	}
@@ -257,12 +256,11 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @param mainStyle_left
 	 * @param r0_style
 	 * @param r1_style
-	 * @param r2_style
 	 * @return HSSFWorkbook
 	 * @author xuezb
 	 * @Date 2019年3月5日
 	 */
-	public HSSFWorkbook getBriefData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+	public HSSFWorkbook getBriefData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style){
 		BriefVo briefVo = new BriefVo();
 		briefVo.setTtId(ttId);
 		List<Brief> brList = this.briefServiceImpl.queryEntityList(briefVo);
@@ -431,7 +429,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//第三行
 		HSSFRow row2 = sheet2.createRow(2);
 		row2.setHeightInPoints(30);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title = {"班次","天气","本班次值班人员","值班时间","上班次值班人员","交接时间","交接事项","接班异常情况"};
 		for(int i=0;i<title.length;i++){
 			cell = row2.createCell(i);		//创建单元格
@@ -449,9 +447,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		}
 
 		//第四行 及 之后的行
-		HSSFRow row = null;
+		HSSFRow row;
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		String[][] content = new String[trList.size()][];
 		for (int i = 0; i < trList.size(); i++) {
 			row = sheet2.createRow(i + 3);	//创建行
 			row.setHeightInPoints(60);					//设置行高
@@ -567,9 +564,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		}
 
 		//第五行 及 之后的行
-		HSSFRow row = null;
+		HSSFRow row;
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		String[][] content = new String[siList.size()][];
 		for (int i = 0; i < siList.size(); i++) {
 			row = sheet3.createRow(i + 4);	//创建行
 			row.setHeightInPoints(60);					//设置行高
@@ -822,7 +818,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//第四行
 		HSSFRow row3 = sheet5.createRow(3);
 		row3.setHeightInPoints(30);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title = {"部门","车道高清抓拍","自动发卡机","MTC出口车道","ETC出口车道","MTC入口车道","ETC入口车道","计重车道","备注","车道停用时间段"};
 		for(int i=0;i<title.length;i++){
 			cell = row3.createCell(i);		//创建单元格
@@ -860,9 +856,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 
         //第五行 及 之后的行
-		HSSFRow row = null;
+		HSSFRow row;
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		String[][] content = new String[eoList.size()][];
 		for (int i = 0; i < eoList.size(); i++) {
 			row = sheet5.createRow(i + 4);	//创建行
 			row.setHeightInPoints(65);					//设置行高
@@ -978,7 +973,6 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @param wb excel文档对象
 	 * @param ttId 主表id
 	 * @param mainStyle_center
-	 * @param mainStyle_left
 	 * @param r0_style
 	 * @param r1_style
 	 * @param r2_style
@@ -986,7 +980,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @author xuezb
 	 * @Date 2019年3月28日
 	 */
-	public HSSFWorkbook getOperatingData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+	public HSSFWorkbook getOperatingData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		OperatingDataVo operatingDataVo = new OperatingDataVo();
 		operatingDataVo.setTtId(ttId);
 		List<OperatingData> odList = this.operatingDataServiceImpl.queryEntityList(operatingDataVo);
@@ -1062,8 +1056,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 
 		//第五行 及 之后的行
-		HSSFRow row = null;
-		String[][] content = new String[odList.size()][];
+		HSSFRow row;
 		Integer hj_totalTraffic = 0;
 		Integer hj_ytkTraffic = 0;
 		Double hj_generalIncome = 0.0;
@@ -1167,7 +1160,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//第三行
 		HSSFRow row2 = sheet7.createRow(2);
 		row2.setHeightInPoints(30);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title = {"日期","接报时间","到达时间","到场用时","清场时间","地点","故障车","车型","缴费单号","拯救费","拖车里程","车辆去向","拯救车","司机电话","备注"};
 		for(int i=0;i<title.length;i++){
 			cell = row2.createCell(i);		//创建单元格
@@ -1176,10 +1169,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		}
 
 		//第四行 及 之后的行
-		HSSFRow row = null;
+		HSSFRow row;
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-		String[][] content = new String[rwList.size()][];
 		for (int i = 0; i < rwList.size(); i++) {
 			row = sheet7.createRow(i + 3);	//创建行
 			row.setHeightInPoints(60);					//设置行高
@@ -1367,7 +1359,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
                 }
 
 			}
-		}else{		//空表
+		}else{
+			//空表
 
 			//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
 			sheet8.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
@@ -1887,7 +1880,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				}
 
 			}
-		}else{		//空表
+		}else{
+			//空表
 
 			//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
 			sheet10.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
@@ -2622,7 +2616,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				}
 
 			}
-		}else{		//空表
+		}else{
+			//空表
 
 			//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
 			sheet13.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
@@ -2967,7 +2962,6 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @param wb excel文档对象
 	 * @param ttId 主表id
 	 * @param mainStyle_center
-	 * @param mainStyle_left
 	 * @param r0_style
 	 * @param r1_style
 	 * @param r2_style
@@ -2975,7 +2969,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @author xuezb
 	 * @Date 2019年3月5日
 	 */
-	public HSSFWorkbook getEquipmentStatusData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+	public HSSFWorkbook getEquipmentStatusData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		EquipmentStatusVo equipmentStatusVo = new EquipmentStatusVo();
 		equipmentStatusVo.setTtId(ttId);
 		List<EquipmentStatus> esList = this.equipmentStatusServiceImpl.queryEntityList(equipmentStatusVo);

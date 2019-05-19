@@ -127,6 +127,24 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 			objectList.add(exceptionRecordVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(StringUtils.isNotBlank(exceptionRecordVo.getReportedDp())){
+			objectList.add("%" + exceptionRecordVo.getReportedDp() + "%");
+			hql.append(" and reportedDp like ? ");
+		}
+		if(StringUtils.isNotBlank(exceptionRecordVo.getProcessingDp())){
+			objectList.add("%" + exceptionRecordVo.getProcessingDp() + "%");
+			hql.append(" and processingDp like ? ");
+		}
+		if(StringUtils.isNotBlank(exceptionRecordVo.getKeyword())){
+			hql.append(" and (reportedDp like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or reportedPerson like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or trafficRoad like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or processingDp like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or briefIntroduction like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or result like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or remark like '%" + exceptionRecordVo.getKeyword() + "%' )");
+		}
 		//排序, 根据日期倒序排序,异常类型顺序排序
 		hql.append(" order by dutyDate desc,exceptionType asc ");
 

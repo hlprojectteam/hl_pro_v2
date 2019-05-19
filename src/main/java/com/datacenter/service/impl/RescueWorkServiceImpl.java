@@ -46,7 +46,7 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, RescueWorkVo rescueWorkVo) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(rescueWorkVo.getTtId())){
 			params.add(Restrictions.eq("ttId", rescueWorkVo.getTtId()));
 		}
@@ -106,7 +106,7 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 
 	@Override
 	public int updateDutyDate(String ttId, Date dutyDate) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(ttId)){
 			params.add(Restrictions.eq("ttId", ttId));
 		}
@@ -120,9 +120,9 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 
 	@Override
 	public List<RescueWork> queryEntityList(RescueWorkVo rescueWorkVo) {
-		List<Object> objectList = new ArrayList<Object>();
+		List<Object> objectList = new ArrayList<>();
 
-		StringBuffer hql = new StringBuffer("from RescueWork where 1 = 1 ");
+		StringBuilder hql = new StringBuilder("from RescueWork where 1 = 1 ");
 		if(StringUtils.isNotBlank(rescueWorkVo.getTtId())){
 			objectList.add(rescueWorkVo.getTtId());
 			hql.append(" and ttId = ? ");
@@ -135,11 +135,26 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 			objectList.add(rescueWorkVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(StringUtils.isNotBlank(rescueWorkVo.getFaultPlates())){
+			objectList.add("%" + rescueWorkVo.getFaultPlates() + "%");
+			hql.append(" and faultPlates like ? ");
+		}
+		if(StringUtils.isNotBlank(rescueWorkVo.getRescuePlates())){
+			objectList.add("%" + rescueWorkVo.getRescuePlates() + "%");
+			hql.append(" and rescuePlates like ? ");
+		}
+		if(StringUtils.isNotBlank(rescueWorkVo.getSite())){
+			objectList.add("%" + rescueWorkVo.getSite() + "%");
+			hql.append(" and site like ? ");
+		}
+		if(StringUtils.isNotBlank(rescueWorkVo.getKeyword())){
+			hql.append(" and (site like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or faultPlates like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or paymentOrder like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or rescueCharge like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or trailerMileage like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or rescuePlates like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or driverPhone like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or remark like '%").append(rescueWorkVo.getKeyword()).append("%' )");
+		}
 		//排序, 根据日期倒序排序,接报时间顺序排序
 		hql.append(" order by dutyDate desc,receiptTime asc ");
 
-		List<RescueWork> rwList = this.rescueWorkDaoImpl.queryEntityHQLList(hql.toString(), objectList, RescueWork.class);
-		return rwList;
+		return this.rescueWorkDaoImpl.queryEntityHQLList(hql.toString(), objectList, RescueWork.class);
 	}
 
 	@Override
@@ -226,7 +241,7 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 		//第三行
 		HSSFRow row2 = sheet.createRow(2);
 		row2.setHeightInPoints(30);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title = {"日期","接报时间","到达时间","到场用时","清场时间","地点","故障车","车型","缴费单号","拯救费","拖车里程","车辆去向","拯救车","司机电话","备注"};
 		for(int i=0;i<title.length;i++){
 			cell = row2.createCell(i);		//创建单元格
@@ -238,7 +253,6 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 		HSSFRow row = null;
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-		String[][] content = new String[rwList.size()][];
 		for (int i = 0; i < rwList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
 			row.setHeightInPoints(60);					//设置行高

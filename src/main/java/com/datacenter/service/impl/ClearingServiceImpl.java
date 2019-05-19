@@ -118,6 +118,24 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 			objectList.add(clearingVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(StringUtils.isNotBlank(clearingVo.getReportedDp())){
+			objectList.add("%" + clearingVo.getReportedDp() + "%");
+			hql.append(" and reportedDp like ? ");
+		}
+		if(clearingVo.getReportedWay() != null){
+			objectList.add(clearingVo.getReportedWay());
+			hql.append(" and reportedWay = ? ");
+		}
+		if(StringUtils.isNotBlank(clearingVo.getKeyword())){
+			hql.append(" and (reportedDp like '%" + clearingVo.getKeyword() + "%' " +
+					" or reportedPerson like '%" + clearingVo.getKeyword() + "%' " +
+					" or trafficRoad like '%" + clearingVo.getKeyword() + "%' " +
+					" or processingDp like '%" + clearingVo.getKeyword() + "%' " +
+					" or briefIntroduction like '%" + clearingVo.getKeyword() + "%' " +
+					" or result like '%" + clearingVo.getKeyword() + "%' " +
+					" or remark like '%" + clearingVo.getKeyword() + "%' )");
+		}
 		//排序, 根据日期倒序排序,接报时间
 		hql.append(" order by dutyDate desc,receiptTime asc ");
 

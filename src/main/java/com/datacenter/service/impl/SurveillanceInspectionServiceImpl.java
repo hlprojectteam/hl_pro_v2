@@ -42,7 +42,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, SurveillanceInspectionVo surveillanceInspectionVo) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(surveillanceInspectionVo.getTtId())){
 			params.add(Restrictions.eq("ttId", surveillanceInspectionVo.getTtId()));
 		}
@@ -83,7 +83,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 	@Override
 	public int updateDutyDate(String ttId, Date dutyDate) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(ttId)){
 			params.add(Restrictions.eq("ttId", ttId));
 		}
@@ -97,9 +97,9 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 	@Override
 	public List<SurveillanceInspection> queryEntityList(SurveillanceInspectionVo surveillanceInspectionVo) {
-		List<Object> objectList = new ArrayList<Object>();
+		List<Object> objectList = new ArrayList<>();
 
-		StringBuffer hql = new StringBuffer("from SurveillanceInspection where 1 = 1 ");
+		StringBuilder hql = new StringBuilder("from SurveillanceInspection where 1 = 1 ");
 		if(StringUtils.isNotBlank(surveillanceInspectionVo.getTtId())){
 			objectList.add(surveillanceInspectionVo.getTtId());
 			hql.append(" and ttId = ? ");
@@ -112,11 +112,21 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 			objectList.add(surveillanceInspectionVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(surveillanceInspectionVo.getInspectionlocation() != null){		//巡检位置
+			objectList.add(surveillanceInspectionVo.getInspectionlocation());
+			hql.append(" and inspectionlocation = ? ");
+		}
+
+		if(StringUtils.isNotBlank(surveillanceInspectionVo.getKeyword())){
+			hql.append(" and (shiftSupervisor like '%").append(surveillanceInspectionVo.getKeyword()).append("%' ").append(" or inspectionDetails like '%").append(surveillanceInspectionVo.getKeyword()).append("%' ").append(" or followMeasure like '%").append(surveillanceInspectionVo.getKeyword()).append("%' )");
+		}
+
+
 		//排序, 根据日期倒序排序，巡检时间Start顺序排序
 		hql.append(" order by dutyDate desc,inspectionTimeStart asc ");
 
-		List<SurveillanceInspection> siList = this.surveillanceInspectionDaoImpl.queryEntityHQLList(hql.toString(), objectList, SurveillanceInspection.class);
-		return siList;
+		return this.surveillanceInspectionDaoImpl.queryEntityHQLList(hql.toString(), objectList, SurveillanceInspection.class);
 	}
 
 	@Override
@@ -194,7 +204,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 		//第三行
 		HSSFRow row3 = sheet.createRow(2);
 		row3.setHeightInPoints(40);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title = {"日期","巡检起止时间段","值班主任","巡检位置","故障设备","巡检情况描述","跟进措施"};
 		for(int i=0;i<title.length;i++){
 			cell = row3.createCell(i);		//创建单元格
@@ -214,10 +224,9 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 		}
 
 		//第四行 及 之后的行
-		HSSFRow row = null;
+		HSSFRow row;
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-		String[][] content = new String[siList.size()][];
 		for (int i = 0; i < siList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
 			row.setHeightInPoints(60);					//设置行高
