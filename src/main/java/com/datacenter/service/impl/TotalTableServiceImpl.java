@@ -84,7 +84,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		if(totalTableVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", totalTableVo.getDutyDateEnd()));
 		}
-		return this.totalTableDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), TotalTable.class);
+		return this.totalTableDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), TotalTable.class);
 	}
 
 	@Override
