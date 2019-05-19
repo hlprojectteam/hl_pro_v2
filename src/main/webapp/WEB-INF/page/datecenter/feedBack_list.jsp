@@ -22,34 +22,36 @@
 	</c:if>
 	<div class="row ibox-content" style="padding:5px 0 5px 0;">
 		<form id="baseForm" method="post" name="baseForm" class="form-horizontal" action="" >
-		  <c:if test="${not empty menuCode}">	
-			  <div class="row">
-			    <label class="col-sm-1 control-label">起始日期</label>
-	            <div class="col-sm-2">
-	                <input type="text" class="form-control" id="dutyDateStart" name="dutyDateStart" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-	            </div>
-	            <label class="col-sm-1 control-label">终止日期</label>
-	            <div class="col-sm-2">
-	                <input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-	            </div>
+			<c:if test="${not empty menuCode}">
+				<div class="row">
+					<label class="col-sm-1 control-label">起始日期</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="dutyDateStart" name="dutyDateStart" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+					</div>
+					<label class="col-sm-1 control-label">终止日期</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+					</div>
+				</div>
 
-				  <label class="col-sm-1 control-label">反馈类型</label>
-				  <div class="col-sm-2">
-					  <opt:select dictKey="dc_fbType" classStyle="form-control" id="fbType" name="fbType" isDefSelect="true"/>
-				  </div>
+				<div class="row" style="margin-top: 10px;">
+					<label class="col-sm-1 control-label">反馈类型</label>
+					<div class="col-sm-2">
+						<opt:select dictKey="dc_fbType" classStyle="form-control" id="fbType" name="fbType" isDefSelect="true"/>
+					</div>
 
-				  <label class="col-sm-1 control-label">关键字</label>
-				  <div class="col-sm-2">
-					  <input type="text" class="form-control" id="keyword" name="keyword" value="" />
-				  </div>
+					<label class="col-sm-1 control-label">关键字</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="keyword" name="keyword" value="" />
+					</div>
 
-				<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
-				  <button class="btn btn-primary" type="button" onclick="on_export()"><i class="fa fa-file-excel-o"></i>&nbsp;导出Excle</button>
-			  </div>
-		  </c:if>
-		  <c:if test="${empty menuCode}">
-		  		<input type="hidden" id="ttId" name="ttId" value="${ttId}" />
-		  </c:if>
+					<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
+					<button class="btn btn-primary" type="button" onclick="on_export()"><i class="fa fa-file-excel-o"></i>&nbsp;导出Excle</button>
+				</div>
+			</c:if>
+			<c:if test="${empty menuCode}">
+				<input type="hidden" id="ttId" name="ttId" value="${ttId}" />
+			</c:if>
 		</form>
 	</div>
 	<div class="row ibox-content">
