@@ -2,7 +2,6 @@ package com.datacenter.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.base.dao.IBaseDao;
-import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.Brief;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

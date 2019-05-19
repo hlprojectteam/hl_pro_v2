@@ -536,6 +536,7 @@ public class ActivitiesController extends BaseController{
 	 * @author xuezb
 	 * @Date 2019年3月5日
 	 */
+	@SuppressWarnings({ "resource", "unchecked" })
 	@RequestMapping(value="/activitiesLauch_export")
 	public void export(HttpServletRequest request, HttpServletResponse response, ActivitiesLaunchVo activitiesLaunchVo){
 		try{
@@ -598,6 +599,7 @@ public class ActivitiesController extends BaseController{
 			String[] excludes = new String[] {"createTime","creatorId","creatorName","createUserId","cover"
 					,"id","order","points","sysCode","content"}; // 列表排除信息内容字段，减少传递时间
 			config.setExcludes(excludes);
+			@SuppressWarnings("unused")
 			JSONArray atArray = JSONArray.fromObject(atList,config);
 
 

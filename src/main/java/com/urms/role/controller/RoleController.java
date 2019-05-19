@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.common.base.controller.BaseController;
 import com.common.utils.helper.Pager;
 import com.google.gson.JsonObject;
-import com.urms.orgFrame.module.OrgFrame;
 import com.urms.role.module.Role;
 import com.urms.role.service.IRoleService;
 import com.urms.role.vo.RoleVo;

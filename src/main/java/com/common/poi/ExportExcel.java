@@ -21,6 +21,7 @@ import com.answer.questions.module.ExamPerson;
  */
 public class ExportExcel {
 
+	@SuppressWarnings({ "resource", "deprecation" })
 	public void exportExcel(String title, String[] headers,
 			List<ExamPerson> list, OutputStream out) {
 		

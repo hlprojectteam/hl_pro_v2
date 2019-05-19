@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
-import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -25,7 +24,6 @@ import com.urms.orgFrame.module.OrgFrame;
 import com.urms.orgFrame.service.IOrgFrameService;
 import com.urms.orgFrame.vo.OrgFrameVo;
 import com.urms.user.module.User;
-import com.urms.user.vo.UserVo;
 
 @Controller
 @RequestMapping("/urms")

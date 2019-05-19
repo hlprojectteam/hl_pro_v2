@@ -234,6 +234,7 @@ public class MobileExamController extends BaseController{
 	 * @param examManageId
 	 * @param consumeTime
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/submitOnlineExam") 
 	public void submitOnlineExam(HttpServletRequest request,HttpServletResponse response,String examManageId,int consumeTime) {
 		JsonObject json = new JsonObject();
@@ -262,6 +263,7 @@ public class MobileExamController extends BaseController{
 		json.put("examPersonVo", JSONObject.fromObject(examPerson, config));
 		this.print(json.toString());
 	}
+	@SuppressWarnings("unchecked")
 	private String makeOnlineExamList(Pager pager){
 		ArrayList<ExamManage> list = (ArrayList<ExamManage>) pager.getPageList();
 		JSONArray array =new JSONArray();
@@ -288,10 +290,11 @@ public class MobileExamController extends BaseController{
 		}
 		return array.toString();
 	}
+	@SuppressWarnings("unchecked")
 	private String makeMyExamList(Pager pager){
 		ArrayList<ExamPersonVo> list = (ArrayList<ExamPersonVo>) pager.getPageList();
 		JSONArray array =new JSONArray();
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+//		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
 		for(int i = 0; i< list.size(); i++){
 			ExamPersonVo examPersonVo = list.get(i);
 			ExamManage examManage = examPersonVo.getExamManage();

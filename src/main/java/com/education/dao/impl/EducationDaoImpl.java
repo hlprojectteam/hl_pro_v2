@@ -1,12 +1,10 @@
 package com.education.dao.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.common.base.dao.impl.BaseDaoImpl;
 import com.education.dao.IEducationDao;
-import com.education.module.EducationPerson;
 
 /**
  * 

@@ -1,6 +1,5 @@
 package com.dangjian.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
 import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
-import com.dangjian.module.Branch;
 import com.dangjian.module.PartyMember;
 import com.dangjian.service.IBranchService;
 import com.dangjian.service.IPartyMemberService;
@@ -82,6 +80,7 @@ public class PartyMemberController extends BaseController{
 	 * @author: qinyongqian
 	 * @date:2018年12月29日
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/partyMember_load")
 	public void load(HttpServletRequest request,HttpServletResponse response,PartyMemberVo partyMemberVo,
 			Integer page,Integer rows){

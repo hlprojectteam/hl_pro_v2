@@ -244,7 +244,7 @@ public class MobileLoginController extends BaseController{
 		json.put("result", true);
 		try{
 			JSONObject obj = JSONObject.fromObject(data);
-			Integer intVal ;
+//			Integer intVal ;
 			user.setUserName(obj.getString("userName"));
 			user.setCertificatesNum(obj.getString("certificatesNum"));
 			user.setJobNumber(obj.getString("jobNumber"));
@@ -425,8 +425,8 @@ public class MobileLoginController extends BaseController{
 		loginLog.setLoginName(userName);
 		loginLog.setUserId(userId);
 
-		String visitServerName = request.getServerName(); //获得访问地址的双斜杠后面的参数
-		String userAgent = request.getHeader("user-agent");
+//		String visitServerName = request.getServerName(); //获得访问地址的双斜杠后面的参数
+//		String userAgent = request.getHeader("user-agent");
 //		String returnInfo = VisitUtil.getVisitIp(visitServerName,userAgent); //获得访问的外网ip地址
 //		// ip + "@@@" + operatorType + "@@@" + address + "@@@" +agent + "@@@" + os + "@@@" + browser + "@@@" + pcOrMobile;
 //		String str[] = returnInfo.split("@@@");

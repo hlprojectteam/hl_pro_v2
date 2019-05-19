@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.common.base.dao.impl.BaseDaoImpl;
 import com.urms.visit.dao.IVisitDao;
 
+@SuppressWarnings("unchecked")
 @Repository("visitDaoImpl")
 public class VisitDaoImpl   extends BaseDaoImpl implements IVisitDao{
 

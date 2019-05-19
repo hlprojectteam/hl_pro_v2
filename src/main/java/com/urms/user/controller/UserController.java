@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.common.base.controller.BaseController;
-import com.common.utils.helper.MD5Utils;
 import com.common.utils.helper.Pager;
 import com.common.utils.helper.SpringUtils;
 import com.google.gson.JsonObject;

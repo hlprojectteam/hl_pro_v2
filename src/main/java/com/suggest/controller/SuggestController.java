@@ -1,10 +1,6 @@
 package com.suggest.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,11 +14,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.o.common.beans.BeanUtils;
 
-import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
 import com.common.message.MessageJpush;
@@ -30,17 +24,9 @@ import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
-import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
-import com.dangjian.module.Activities;
-import com.dangjian.module.ActivitiesLaunch;
 import com.dangjian.module.Branch;
-import com.dangjian.module.Introduction;
-import com.dangjian.module.PartyMember;
 import com.dangjian.service.IBranchService;
-import com.dangjian.service.IIntroductionService;
-import com.dangjian.vo.ActivitiesLaunchVo;
-import com.google.gson.JsonObject;
 import com.suggest.module.Suggest;
 import com.suggest.service.ISuggestService;
 import com.suggest.vo.SuggestVo;

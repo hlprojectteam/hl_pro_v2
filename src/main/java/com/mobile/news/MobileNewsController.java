@@ -135,6 +135,7 @@ public class MobileNewsController extends BaseController{
 	 * @param pager
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private String makeNewsList(Pager pager) {
 		ArrayList<News> list = (ArrayList<News>) pager.getPageList();
 		JSONArray array =new JSONArray();

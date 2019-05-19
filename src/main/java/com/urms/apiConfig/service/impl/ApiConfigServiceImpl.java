@@ -17,7 +17,6 @@ import com.urms.apiConfig.dao.IApiConfigDao;
 import com.urms.apiConfig.module.ApiConfig;
 import com.urms.apiConfig.service.IApiConfigService;
 import com.urms.apiConfig.vo.ApiConfigVo;
-import com.urms.sysConfig.module.SysConfig;
 
 /**
  * API综合接口配置

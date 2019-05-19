@@ -1,22 +1,15 @@
 package com.answer.questions.controller;
 
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -436,6 +429,7 @@ public class ExamManageController extends BaseController{
 				Pager pager = this.questionsServiceImpl.queryExamPsersonList(1, 10000,null,"asc", examPersonVo);
 				try {
 					OutputStream out = new FileOutputStream(filePath);
+					@SuppressWarnings("unchecked")
 					List<ExamPerson> list= pager.getPageList();
 					ExportExcel exp=new ExportExcel();
 					exp.exportExcel("成绩表", headers, list, out);

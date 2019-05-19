@@ -7,7 +7,6 @@ import com.common.utils.helper.Pager;
 import com.google.gson.JsonObject;
 import com.urms.sysConfig.module.SuperPassword;
 import com.urms.sysConfig.service.ISuperPasswordService;
-import com.urms.user.module.User;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
