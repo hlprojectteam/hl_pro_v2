@@ -14,8 +14,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.common.base.module.BaseModule;
-
 /**
  * 
  * @intruduction 题库题目选项

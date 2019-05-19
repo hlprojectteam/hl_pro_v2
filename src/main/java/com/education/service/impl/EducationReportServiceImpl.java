@@ -2,18 +2,14 @@ package com.education.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import cn.o.common.util.JsonUtil;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.education.dao.IEducationReportDao;
 import com.education.module.Education;
 import com.education.module.EducationPerson;
 import com.education.service.IEducationReportService;
-import com.google.gson.JsonObject;
 import com.urms.orgFrame.dao.IOrgFrameDao;
 import com.urms.orgFrame.module.OrgFrame;
 import com.urms.orgFrame.service.IOrgFrameService;
@@ -70,6 +66,7 @@ public class EducationReportServiceImpl extends BaseServiceImpl implements IEduc
 		//this.educationReportDaoImpl.saveOrUpdate(ep);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public boolean isRepeatData(EducationPerson ep){
 		String educationID = ep.getEducation().getId();
 		String personID = ep.getPersonId();

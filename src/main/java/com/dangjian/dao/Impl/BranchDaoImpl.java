@@ -1,6 +1,5 @@
 package com.dangjian.dao.Impl;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import com.common.base.dao.impl.BaseDaoImpl;

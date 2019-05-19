@@ -34,6 +34,7 @@ public class ListMenuDefinition extends TagSupport {
 	
 	private String menuCode;//菜单编码
 	
+	@SuppressWarnings("unchecked")
 	public int doStartTag() throws JspException {
 		JspWriter out = this.pageContext.getOut();
 		User user = (User)this.pageContext.getSession().getAttribute("user");
@@ -115,6 +116,7 @@ public class ListMenuDefinition extends TagSupport {
 	 * @author Mr.joker
 	 * @Date 2016年7月12日 15:43:17
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List removeDuplicate(List list) {
 		HashSet h = new HashSet(list);
 		list.clear();

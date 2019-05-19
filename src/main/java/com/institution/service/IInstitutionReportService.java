@@ -2,8 +2,6 @@ package com.institution.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.common.base.service.IBaseService;
 import com.institution.module.Institution;
 import com.urms.orgFrame.module.OrgFrame;

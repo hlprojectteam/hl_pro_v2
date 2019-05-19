@@ -67,6 +67,7 @@ public class InstitutionReportServiceImpl extends BaseServiceImpl implements IIn
 		//this.institutionReportDaoImpl.saveOrUpdate(ep);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public boolean isRepeatData(InstitutionPerson ep){
 		String institutionID = ep.getInstitution().getId();
 		String personID = ep.getPersonId();

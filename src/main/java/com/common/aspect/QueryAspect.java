@@ -41,7 +41,8 @@ public class QueryAspect {
      */    
     @Before("declearQueryPointExpression()") 
     public void beforQueryMethod(JoinPoint joinPoint){
-    	String sysCode = this.getProperty("sysCode");//子系统编码
+    	@SuppressWarnings("static-access")
+		String sysCode = this.getProperty("sysCode");//子系统编码
 		List<Object> args = Arrays.asList(joinPoint.getArgs());//获得输入参数对象
 		Object obj = null;
 		if(args.size()==5)

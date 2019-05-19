@@ -168,6 +168,7 @@ public class MobileEducationController extends BaseController{
 	 * @param pager
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private String makeEducationList(Pager pager) {
 		ArrayList<Education> list = (ArrayList<Education>) pager.getPageList();
 		JSONArray array =new JSONArray();
@@ -187,6 +188,7 @@ public class MobileEducationController extends BaseController{
 		return array.toString();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private String makeEducationCategoryAtrList(Pager pager) {
 		ArrayList<CategoryAttribute> list = (ArrayList<CategoryAttribute>) pager.getPageList();
 		JSONArray array =new JSONArray();

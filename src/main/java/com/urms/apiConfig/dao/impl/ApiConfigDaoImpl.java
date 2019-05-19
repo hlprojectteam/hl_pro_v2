@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.common.base.dao.impl.BaseDaoImpl;
 import com.urms.apiConfig.dao.IApiConfigDao;
 
+@SuppressWarnings("unchecked")
 @Repository("apiConfigDaoImpl")
 public class ApiConfigDaoImpl extends BaseDaoImpl implements IApiConfigDao{
 	

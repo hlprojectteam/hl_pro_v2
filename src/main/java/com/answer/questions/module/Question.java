@@ -21,8 +21,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.common.base.module.BaseModule;
-
 /**
  * 
  * @intruduction 题库

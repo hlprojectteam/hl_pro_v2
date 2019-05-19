@@ -187,6 +187,7 @@ public class LoginController extends BaseController{
 	 * @author Dic
 	 * @Date 2016年1月15日上午11:33:53
 	 */
+	@SuppressWarnings("unchecked")
 	public List<List<Menu>> getMenu(User user){
 		List<List<Menu>> list = new ArrayList<List<Menu>>();
 		if(user.getType()==1){//超级管理员			
@@ -349,6 +350,7 @@ public class LoginController extends BaseController{
 	 * @author Mr.joker
 	 * @Date 2016年7月12日 15:43:17
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List removeDuplicate(List list) {
 		HashSet h = new HashSet(list);
 		list.clear();

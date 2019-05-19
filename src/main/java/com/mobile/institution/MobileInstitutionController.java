@@ -129,6 +129,7 @@ public class MobileInstitutionController extends BaseController{
 	 * @param pager
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private String makeList(Pager pager) {
 		ArrayList<Institution> list = (ArrayList<Institution>) pager.getPageList();
 		JSONArray array =new JSONArray();

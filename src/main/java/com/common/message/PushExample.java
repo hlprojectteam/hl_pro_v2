@@ -45,7 +45,7 @@ public class PushExample {
     public static final String REGISTRATION_ID = "0900e8d85ef";
     public static final String TAG = "tag_api";
     public static long sendCount = 0;
-    private static long sendTotalTime = 0;
+//    private static long sendTotalTime = 0;
 
 	public static void main(String[] args) {
 //        testSendPushWithCustomConfig();

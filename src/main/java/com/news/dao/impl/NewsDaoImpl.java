@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.common.base.dao.impl.BaseDaoImpl;
-import com.education.dao.IEducationDao;
 import com.news.dao.INewsDao;
 /**
  * 

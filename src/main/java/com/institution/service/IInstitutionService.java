@@ -4,7 +4,6 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.institution.module.Institution;
 import com.institution.vo.InstitutionVo;
-import com.news.module.News;
 
 
 /**

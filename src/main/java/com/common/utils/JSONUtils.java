@@ -65,7 +65,8 @@ public class JSONUtils{
      * @param object
      * @return
      */
-    public static List toArrayList(Object object){
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static List toArrayList(Object object){
         List arrayList = new ArrayList();
         JSONArray jsonArray = JSONArray.fromObject(object);
         Iterator it = jsonArray.iterator();
@@ -86,7 +87,8 @@ public class JSONUtils{
      * @param object
      * @return
      */
-    public static Collection toCollection(Object object){
+    @SuppressWarnings("rawtypes")
+	public static Collection toCollection(Object object){
         JSONArray jsonArray = JSONArray.fromObject(object);
         return JSONArray.toCollection(jsonArray);
     }
@@ -114,7 +116,8 @@ public class JSONUtils{
      * @param object
      * @return
      */
-    public static HashMap toHashMap(Object object){
+    @SuppressWarnings("rawtypes")
+	public static HashMap toHashMap(Object object){
         HashMap<String, Object> data = new HashMap<String, Object>();
         JSONObject jsonObject = JSONUtils.toJSONObject(object);
         Iterator it = jsonObject.keys();
@@ -138,7 +141,8 @@ public class JSONUtils{
         for (Object obj : jsonArray){
             JSONObject jsonObject = (JSONObject) obj;
             Map<String, Object> map = new HashMap<String, Object>();
-            Iterator it = jsonObject.keys();
+            @SuppressWarnings("rawtypes")
+			Iterator it = jsonObject.keys();
             while (it.hasNext()){
                 String key = (String) it.next();
                 Object value = jsonObject.get(key);
@@ -156,7 +160,8 @@ public class JSONUtils{
      * @param objectClass
      * @return
      */
-    public static <T> List<T> toList(JSONArray jsonArray, Class<T> objectClass){
+    @SuppressWarnings({ "unchecked", "deprecation" })
+	public static <T> List<T> toList(JSONArray jsonArray, Class<T> objectClass){
         return JSONArray.toList(jsonArray, objectClass);
     }
 
@@ -167,7 +172,8 @@ public class JSONUtils{
      * @param objectClass
      * @return
      */
-    public static <T> List<T> toList(Object object, Class<T> objectClass){
+    @SuppressWarnings({ "unchecked", "deprecation" })
+	public static <T> List<T> toList(Object object, Class<T> objectClass){
         JSONArray jsonArray = JSONArray.fromObject(object);
         return JSONArray.toList(jsonArray, objectClass);
     }
@@ -179,7 +185,8 @@ public class JSONUtils{
      * @param beanClass
      * @return
      */
-    public static <T> T toBean(JSONObject jsonObject, Class<T> beanClass){
+    @SuppressWarnings("unchecked")
+	public static <T> T toBean(JSONObject jsonObject, Class<T> beanClass){
         return (T) JSONObject.toBean(jsonObject, beanClass);
     }
 
@@ -190,7 +197,8 @@ public class JSONUtils{
      * @param beanClass
      * @return
      */
-    public static <T> T toBean(Object object, Class<T> beanClass){
+    @SuppressWarnings("unchecked")
+	public static <T> T toBean(Object object, Class<T> beanClass){
         JSONObject jsonObject = JSONObject.fromObject(object);
         return (T) JSONObject.toBean(jsonObject, beanClass);
     }
@@ -291,7 +299,8 @@ public class JSONUtils{
      * @param detailClass 存放了多个从实体在主实体中属性名称和类型
      * @return
      */
-    public static <T> T toBean(String jsonString, Class<T> mainClass, HashMap<String, Class> detailClass){
+    @SuppressWarnings("rawtypes")
+	public static <T> T toBean(String jsonString, Class<T> mainClass, HashMap<String, Class> detailClass){
         JSONObject jsonObject = JSONObject.fromObject(jsonString);
         T mainEntity = JSONUtils.toBean(jsonObject, mainClass);
         for(Object key : detailClass.keySet()){

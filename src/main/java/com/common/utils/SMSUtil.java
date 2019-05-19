@@ -80,8 +80,8 @@ public class SMSUtil {
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws Exception {
-		String sms = "";
 		// String content = "IP20151215165303已成功办结，请您即日后携带证件原件(身份证,户口本,结婚证)";
 		String content = "IP20151215165303已成功办结，请您即日后携带证件原件(身份证,户口本,结婚证)";
 		String mobile = "18502048759,13570330616";

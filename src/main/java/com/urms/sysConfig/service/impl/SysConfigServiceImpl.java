@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.common.utils.Common;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -100,6 +99,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl implements ISysConfigS
 	}
 
 	//读取配置文件
+	@SuppressWarnings("unused")
 	private String getProperty(String key) {
 		String str = "";
 		try {
