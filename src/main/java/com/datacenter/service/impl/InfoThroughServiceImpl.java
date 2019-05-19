@@ -129,6 +129,22 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 			objectList.add(infoThroughVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(infoThroughVo.getInfoType() != null){
+			objectList.add(infoThroughVo.getInfoType());
+			hql.append(" and infoType = ? ");
+		}
+		if(infoThroughVo.getThroughWay() != null){
+			objectList.add(infoThroughVo.getThroughWay());
+			hql.append(" and throughWay = ? ");
+		}
+		if(StringUtils.isNotBlank(infoThroughVo.getKeyword())){
+			hql.append(" and (reportedPerson like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or watcher like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or infoContent like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or throughSituation like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or remark like '%" + infoThroughVo.getKeyword() + "%' )");
+		}
 		//排序, 根据日期倒序排序,通报时间顺序排序
 		hql.append(" order by dutyDate desc,throughTime asc ");
 

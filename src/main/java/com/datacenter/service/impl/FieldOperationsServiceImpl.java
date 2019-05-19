@@ -128,6 +128,25 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 			objectList.add(fieldOperationsVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+		if(fieldOperationsVo.getReceiptWay() != null){
+			objectList.add(fieldOperationsVo.getReceiptWay());
+			hql.append(" and receiptWay = ? ");
+		}
+		if(StringUtils.isNotBlank(fieldOperationsVo.getScene())){
+			objectList.add("%" + fieldOperationsVo.getScene() + "%");
+			hql.append(" and scene like ? ");
+		}
+
+		if(StringUtils.isNotBlank(fieldOperationsVo.getKeyword())){
+			hql.append(" and (reportedPerson like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or outworker like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or scene like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or involvedUnits like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or violationOrderNo like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or receiptSituation like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or disposeDesc like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or remark like '%" + fieldOperationsVo.getKeyword() + "%' )");
+		}
 		//排序, 根据日期倒序排序,接报时间顺序排序
 		hql.append(" order by dutyDate desc,receiptTime asc ");
 

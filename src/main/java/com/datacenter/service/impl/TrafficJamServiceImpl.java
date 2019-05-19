@@ -120,6 +120,18 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 			objectList.add(trafficJamVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(trafficJamVo.getReceiptWay() != null){
+			objectList.add(trafficJamVo.getReceiptWay());
+			hql.append(" and receiptWay = ? ");
+		}
+		if(StringUtils.isNotBlank(trafficJamVo.getKeyword())){
+			hql.append(" and (reportedPerson like '%" + trafficJamVo.getKeyword() + "%' " +
+					" or jamSection like '%" + trafficJamVo.getKeyword() + "%' " +
+					" or jamReason like '%" + trafficJamVo.getKeyword() + "%' " +
+					" or disposalSituation like '%" + trafficJamVo.getKeyword() + "%' " +
+					" or remark like '%" + trafficJamVo.getKeyword() + "%' )");
+		}
 		//排序, 根据日期倒序排序,接报时间顺序排序
 		hql.append(" order by dutyDate desc,receiptTime asc ");
 

@@ -194,7 +194,7 @@
         }else if((new Date(end) - new Date(star))/(24*60*60*1000) > 92){
             autoAlert("注意：导出Excel时筛选时间区间必须三个月以内，以防数据量过大!",5);
         }else{
-            window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()
+            window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()+"&inspectionlocation="+$("#inspectionlocation").val()+"&keyword="+$("#keyword").val()
         }
     }
 </script>

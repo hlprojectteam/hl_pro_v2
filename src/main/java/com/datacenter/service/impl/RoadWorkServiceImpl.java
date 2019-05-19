@@ -42,7 +42,7 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, RoadWorkVo roadWorkVo) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(roadWorkVo.getTtId())){
 			params.add(Restrictions.eq("ttId", roadWorkVo.getTtId()));
 		}
@@ -99,7 +99,7 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 
 	@Override
 	public int updateDutyDate(String ttId, Date dutyDate) {
-		List<Criterion> params = new ArrayList<Criterion>();
+		List<Criterion> params = new ArrayList<>();
 		if(StringUtils.isNotBlank(ttId)){
 			params.add(Restrictions.eq("ttId", ttId));
 		}
@@ -113,9 +113,9 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 
 	@Override
 	public List<RoadWork> queryEntityList(RoadWorkVo roadWorkVo) {
-		List<Object> objectList = new ArrayList<Object>();
+		List<Object> objectList = new ArrayList<>();
 
-		StringBuffer hql = new StringBuffer("from RoadWork where 1 = 1 ");
+		StringBuilder hql = new StringBuilder("from RoadWork where 1 = 1 ");
 		if(StringUtils.isNotBlank(roadWorkVo.getTtId())){
 			objectList.add(roadWorkVo.getTtId());
 			hql.append(" and ttId = ? ");
@@ -128,11 +128,31 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 			objectList.add(roadWorkVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(roadWorkVo.getPositionAttributes() != null){
+			objectList.add(roadWorkVo.getPositionAttributes());
+			hql.append(" and positionAttributes = ? ");
+		}
+		if(StringUtils.isNotBlank(roadWorkVo.getUnitName())){
+			objectList.add("%" + roadWorkVo.getUnitName() + "%");
+			hql.append(" and unitName like ? ");
+		}
+		if(StringUtils.isNotBlank(roadWorkVo.getConstructionContent())){
+			objectList.add("%" + roadWorkVo.getConstructionContent() + "%");
+			hql.append(" and constructionContent like ? ");
+		}
+		if(StringUtils.isNotBlank(roadWorkVo.getRectificationMeasures())){
+			objectList.add("%" + roadWorkVo.getRectificationMeasures() + "%");
+			hql.append(" and rectificationMeasures like ? ");
+		}
+
+		if(StringUtils.isNotBlank(roadWorkVo.getKeyword())){
+			hql.append(" and (unitName like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or relationPerson like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or relationPhone like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or specificLocation like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or constructionContent like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or jeevesSituation like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or checker like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or description like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or rectificationMeasures like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or reportedSituation like '%").append(roadWorkVo.getKeyword()).append("%' )");
+		}
 		//排序, 根据日期倒序排序，进场时间顺序排序
 		hql.append(" order by dutyDate desc,approachTime asc ");
 
-		List<RoadWork> rwList = this.roadWorkDaoImpl.queryEntityHQLList(hql.toString(), objectList, RoadWork.class);
-		return rwList;
+		return this.roadWorkDaoImpl.queryEntityHQLList(hql.toString(), objectList, RoadWork.class);
 	}
 
 	@Override
@@ -236,7 +256,7 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 		//第三行
 		HSSFRow row2 = sheet.createRow(2);
 		row2.setHeightInPoints(30);		//行高
-		HSSFCell cell = null;
+		HSSFCell cell;
 		String[] title1 = {"日期","进场时间","撤场时间","施工单位","施工情况","现场安全检查情况","施工报备情况"};
 		for(int i=0;i<title1.length;i++){
 			if(i == 4){
@@ -276,10 +296,9 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 
 
 		//第五行 及 之后的行
-		HSSFRow row = null;
+		HSSFRow row;
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-		String[][] content = new String[rwList.size()][];
 		for (int i = 0; i < rwList.size(); i++) {
 			row = sheet.createRow(i + 4);	//创建行
 			row.setHeightInPoints(60);					//设置行高

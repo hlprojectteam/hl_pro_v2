@@ -90,7 +90,7 @@
     	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
     	              {title: "日期", field: "dutyDate",width: 120,align:"center"},
     	              {title: "收费站", field: "tollGate",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_tollGate_operation",value);
+		           	  		return changeDataDictByKey("dc_tollGate",value);
 		              }},
     	              {title: "出口车流量_总车流", field: "totalTraffic",width: 100,align:"center"},
     	              {title: "出口车流量_其中粤通卡车流", field: "ytkTraffic",width: 100,align:"center"},
@@ -193,7 +193,7 @@
         }else if((new Date(end) - new Date(star))/(24*60*60*1000) > 92){
             autoAlert("注意：导出Excel时筛选时间区间必须三个月以内，以防数据量过大!",5);
         }else{
-            window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()
+            window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()+"&tollGate="+$("#tollGate").val()+"&keyword="+$("#keyword").val()
         }
     }
 </script>

@@ -116,6 +116,20 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 			objectList.add(feedBackVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+
+		if(feedBackVo.getFbType() != null){
+			objectList.add(feedBackVo.getFbType());
+			hql.append(" and fbType = ? ");
+		}
+		if(StringUtils.isNotBlank(feedBackVo.getKeyword())){
+			hql.append(" and (reportedPerson like '%" + feedBackVo.getKeyword() + "%' " +
+					" or plateNum like '%" + feedBackVo.getKeyword() + "%' " +
+					" or customerPhone like '%" + feedBackVo.getKeyword() + "%' " +
+					" or watcher like '%" + feedBackVo.getKeyword() + "%' " +
+					" or situationDesc like '%" + feedBackVo.getKeyword() + "%' " +
+					" or disposalSituation like '%" + feedBackVo.getKeyword() + "%' " +
+					" or remark like '%" + feedBackVo.getKeyword() + "%' )");
+		}
 		//排序, 根据日期倒序排序，接报时间顺序排序
 		hql.append(" order by dutyDate desc,receiptTime asc ");
 
