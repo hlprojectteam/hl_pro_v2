@@ -1,5 +1,6 @@
 package com.common.utils;
 
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +29,21 @@ public class MathUtil {
 		else
 			return false;
 	}
+	
+	/**
+	 * 
+	 * @方法：@return
+	 * @描述：随机生成2位数
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年5月19日
+	 */
+	public static int randomTwoNumber() {
+		Random random = new Random();
+		int ends = random.nextInt(99);
+		return ends;
+	}
+	
 
 
 }

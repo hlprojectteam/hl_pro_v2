@@ -21,7 +21,8 @@ import com.common.base.module.BaseModule;
 @Table(name = "KQ_LEAVE")
 public class Leave extends BaseModule{
 	
-	private String leaveType;// 请假类型  数据字典key:Leave_Type 存在多个值用“,”隔开，如“事假,产假”
+	private String approvalNumber;// 审批编号，记录生成的唯一编号，为时间+审批类别+随机3位数 格式如 yyyymmddhhmmss0101 
+	private String leaveType;// 请假类别  数据字典key:Leave_Type 存在多个值用“,”隔开，如“事假,产假”
 	private String userId;// 请假人ID 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date startTime;// 开始时间
@@ -95,6 +96,13 @@ public class Leave extends BaseModule{
 	}
 	public void setFryPersonIds(String fryPersonIds) {
 		FryPersonIds = fryPersonIds;
+	}
+	@Column(name = "APPROVAL_NUMBER", length = 18)
+	public String getApprovalNumber() {
+		return approvalNumber;
+	}
+	public void setApprovalNumber(String approvalNumber) {
+		this.approvalNumber = approvalNumber;
 	}
 	
 	
