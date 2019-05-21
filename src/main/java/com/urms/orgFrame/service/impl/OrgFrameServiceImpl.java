@@ -90,6 +90,17 @@ public class OrgFrameServiceImpl extends BaseServiceImpl implements IOrgFrameSer
 	}
 	
 	@Override
+	public List<OrgFrame> queryEntityListByPIdAndType(String pid,
+			Integer orgFrameType) {
+		List<Criterion> criterionsList = new ArrayList<Criterion>();
+		criterionsList.add(Restrictions.eq("pId", pid));
+		if(orgFrameType!=null){
+			criterionsList.add(Restrictions.eq("orgFrameType", orgFrameType));
+		}
+		return orgFrameDaoImpl.queryList(criterionsList, Order.asc("order") ,OrgFrame.class);
+	}
+	
+	@Override
 	public List<OrgFrame> queryOrgFrameList(OrgFrameVo orgFrameVo){
 		List<Criterion> criterionsList = new ArrayList<Criterion>();
 		if(StringUtils.isNotBlank(orgFrameVo.getId()))
@@ -104,6 +115,8 @@ public class OrgFrameServiceImpl extends BaseServiceImpl implements IOrgFrameSer
 			criterionsList.add(Restrictions.eq("orgFrameName", orgFrameVo.getOrgFrameName()));
 		if(orgFrameVo.getSysCode()!=null)
 			criterionsList.add(Restrictions.eq("sysCode", orgFrameVo.getSysCode()));
+		if(orgFrameVo.getOrgFrameType()!=null)
+			criterionsList.add(Restrictions.eq("orgFrameType", orgFrameVo.getOrgFrameType()));
 		if(orgFrameVo.getpIds()!=null)
 			criterionsList.add(Restrictions.like("pIds", "%"+orgFrameVo.getpIds()+"%"));
 		return orgFrameDaoImpl.queryList(criterionsList,Order.asc("order"), OrgFrame.class);
@@ -181,5 +194,7 @@ public class OrgFrameServiceImpl extends BaseServiceImpl implements IOrgFrameSer
 		}
 		return null;
 	}
+
+	
 
 }

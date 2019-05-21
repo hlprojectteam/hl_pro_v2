@@ -59,6 +59,18 @@ public interface IOrgFrameService extends IBaseService{
 	 * 创建时间:2016-1-5 下午4:48:56
 	 */
 	public List<OrgFrame> queryEntityListByPId(String pid);
+	
+	/**
+	 * 
+	 * @方法：@param pid
+	 * @方法：@param orgFrameType
+	 * @方法：@return
+	 * @描述：凭父ID,类别获得菜单集合
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年5月21日
+	 */
+	public List<OrgFrame> queryEntityListByPIdAndType(String pid,Integer orgFrameType);
 
 	/**
 	 * 说明：删除菜单树

@@ -30,6 +30,7 @@ public class OrgFrame extends BaseModule{
 	private Integer isLeaf;//是否叶节点
 	private Integer order;//排序
 	private Integer level;//层数
+	private Integer orgFrameType;//部门类别 1职能部门 2收费站
 	
 	private Set<User> users = new TreeSet<User>();
 	private Set<Role> roles = new TreeSet<Role>();
@@ -105,6 +106,13 @@ public class OrgFrame extends BaseModule{
 	}
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+	@Column(name = "ORG_FRAME_TYPE")
+	public Integer getOrgFrameType() {
+		return orgFrameType;
+	}
+	public void setOrgFrameType(Integer orgFrameType) {
+		this.orgFrameType = orgFrameType;
 	}
 	
 }

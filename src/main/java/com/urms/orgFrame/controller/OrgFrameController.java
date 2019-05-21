@@ -220,6 +220,66 @@ public class OrgFrameController extends BaseController{
 	}
 	
 	/**
+	 * 
+	 * @方法：@param response
+	 * @方法：@param id
+	 * @方法：@param orgFrameType
+	 * @描述：加载部门树，根据部门类别
+	 * 调用url如 
+	 * “/urms/orgFrame_loadTreeByOrgFrameType?orgFrameType=1”  这里1指加载部门是职能部门
+	 * “/urms/orgFrame_loadTreeByOrgFrameType?orgFrameType=2”  这里2指加载部门是收费站
+	 * “/urms/orgFrame_loadTreeByOrgFrameType”                 这里type为空，指加载所有部门
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年5月21日
+	 */
+	@RequestMapping(value="/orgFrame_loadTreeByOrgFrameType") 
+	public void loadTree(HttpServletResponse response,String id,Integer orgFrameType) {
+		StringBuffer tree = new StringBuffer();
+		tree.append("[");
+		User user =(User)this.getHttpSession().getAttribute("user");
+		if(StringUtils.isBlank(id)){
+			if (user.getType()==1) {//如果是超级管理员情况下
+					id = "0";//初始化菜单 根节点为 0
+					OrgFrame m = this.orgFrameServiceImpl.getEntityById(OrgFrame.class, id);
+					tree.append("{");
+					tree.append("id:'"+m.getId()+"',");
+					tree.append("pId:'00',");
+					tree.append("name:'"+m.getOrgFrameName()+"',");
+					tree.append("open:true");
+					tree.append("},");
+			}else{//只能查看当前子系统组织
+				OrgFrameVo oVo = new OrgFrameVo();
+				oVo.setSysCode(user.getSysCode());
+//				oVo.setLevel(1);//一级菜单  如果不是超管 直接显示当前子系统的跟节点 否则会显示 “组织架构”的节点 0级菜单
+				List<OrgFrame> list = this.orgFrameServiceImpl.queryOrgFrameList(oVo);
+				id = list.get(0).getId();
+				tree.append("{");
+				tree.append("id:'"+list.get(0).getId()+"',");
+				tree.append("pId:'0',");
+				tree.append("name:'"+list.get(0).getOrgFrameName()+"',");
+				tree.append("open:true");
+				tree.append("},");
+			}
+		}
+		List<OrgFrame> orgFrameList = this.orgFrameServiceImpl.queryEntityListByPIdAndType(id, orgFrameType);
+		for (int i = 0; i < orgFrameList.size(); i++) {
+			OrgFrame m = orgFrameList.get(i);
+			tree.append("{");
+			tree.append("id:'"+m.getId()+"',");
+			tree.append("pId:'"+m.getpId()+"',");
+			tree.append("name:'"+m.getOrgFrameName()+"'");
+			if(m.getIsLeaf()==0)
+				tree.append(",isParent:true");
+			tree.append("},");
+		}
+		tree.deleteCharAt(tree.toString().length()-1);
+		tree.append("]");
+		logger.info("输出树结构:"+tree.toString());
+		this.print(tree.toString());
+	}
+	
+	/**
 	 * @intruduction 删除树
 	 * @param response
 	 * @param ids
