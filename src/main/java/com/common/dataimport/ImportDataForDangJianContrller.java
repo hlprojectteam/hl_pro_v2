@@ -163,7 +163,7 @@ public class ImportDataForDangJianContrller extends BaseController{
 	private Date getDate(String strDate){
 		if(org.apache.commons.lang3.StringUtils.isNotBlank(strDate)){
 			try {
-				return DateUtil.format(strDate, "yyyy-mm-dd");
+				return DateUtil.format(strDate, "yyyy-MM-dd");
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;

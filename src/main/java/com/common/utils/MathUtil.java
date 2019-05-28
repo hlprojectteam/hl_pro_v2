@@ -38,10 +38,16 @@ public class MathUtil {
 	 * @author: qinyongqian
 	 * @date:2019年5月19日
 	 */
-	public static int randomTwoNumber() {
+	public static String randomTwoNumber() {
+		String num="";
 		Random random = new Random();
 		int ends = random.nextInt(99);
-		return ends;
+		if(ends<10){
+			num="0"+ends;
+		}else{
+			num=ends+"";
+		}
+		return num;
 	}
 	
 

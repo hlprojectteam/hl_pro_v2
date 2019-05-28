@@ -38,7 +38,7 @@
 				<div class="row"  style="margin-top: 10px;">
 					<label class="col-sm-1 control-label">收费站</label>
 					<div class="col-sm-2">
-						<opt:select dictKey="dc_tollGate" classStyle="form-control" id="tollGate" name="tollGate" isDefSelect="true"/>
+						<opt:select dictKey="dc_tollGate_operation" classStyle="form-control" id="tollGate" name="tollGate" isDefSelect="true"/>
 					</div>
 
 					<label class="col-sm-1 control-label">关键字</label>
@@ -90,7 +90,7 @@
     	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
     	              {title: "日期", field: "dutyDate",width: 120,align:"center"},
     	              {title: "收费站", field: "tollGate",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_tollGate",value);
+		           	  		return changeDataDictByKey("dc_tollGate_operation",value);
 		              }},
     	              {title: "出口车流量_总车流", field: "totalTraffic",width: 100,align:"center"},
     	              {title: "出口车流量_其中粤通卡车流", field: "ytkTraffic",width: 100,align:"center"},

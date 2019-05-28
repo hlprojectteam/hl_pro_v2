@@ -57,10 +57,10 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 			params.add(Restrictions.eq("tollGate", operatingDataVo.getTollGate()));
 		}
 		if(StringUtils.isNotBlank(operatingDataVo.getKeyword())){
-			params.add(Restrictions.sqlRestriction(" (total_Traffic like '%" + operatingDataVo.getKeyword() + "%' " +
-					" or ytk_Traffic like '%" + operatingDataVo.getKeyword() + "%' " +
-					" or general_Income like '%" + operatingDataVo.getKeyword() + "%' " +
-					" or ytk_Income like '%" + operatingDataVo.getKeyword() + "%' )"));
+			params.add(Restrictions.sqlRestriction(" (total_Traffic = " + operatingDataVo.getKeyword() + " " +
+					" or ytk_Traffic = " + operatingDataVo.getKeyword() + " " +
+					" or general_Income = " + operatingDataVo.getKeyword() + " " +
+					" or ytk_Income = " + operatingDataVo.getKeyword() + " )"));
 		}
 		return this.operatingDataDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), OperatingData.class);
 	}

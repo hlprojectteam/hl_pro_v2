@@ -99,14 +99,14 @@ public class DateUtil {
 	 * @param dateString
 	 *            字符串类型日期
 	 * @param format
-	 *            字符串类型日期格式
+	 *            字符串类型日期格式 "yyyy-MM-dd HH:mm:ss"是正确格式，其它都出错
 	 * @return
 	 * @throws Exception
 	 */
 	public static Date format(String dateString, String format)	throws Exception {
-		java.util.Date result = null;
+		Date result = null;
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+			DateFormat dateFormat = new SimpleDateFormat(format);
 			result = dateFormat.parse(dateString);
 		} catch (Exception ex) {
 			throw new Exception("日期格式错误：" + format);
@@ -538,6 +538,25 @@ public class DateUtil {
 		String str = sdf.format(date);
 		if(StringUtils.isNotEmpty(temp)){
 			str=temp+str;
+		}
+		return str;
+	}
+	
+	/**
+	 * 
+	 * @方法：@param temp
+	 * @方法：@return
+	 * @描述：根据串生成一串唯一字符串
+	 * @return 20151121114058+temp
+	 * @author: qinyongqian
+	 * @date:2019年5月20日
+	 */
+	public static String getYYMMDDHHMMSS2(String temp){
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String str = sdf.format(date);
+		if(StringUtils.isNotEmpty(temp)){
+			str=str+temp;
 		}
 		return str;
 	}
