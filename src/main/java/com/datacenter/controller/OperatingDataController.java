@@ -4,8 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,13 +90,34 @@ public class OperatingDataController extends BaseController{
 	 */
 	@RequestMapping(value="/operatingData_load")
 	public void load(HttpServletResponse response, Integer page, Integer rows, OperatingDataVo operatingDataVo){
-		Pager pager = this.operatingDataServiceImpl.queryEntityList(page, rows, operatingDataVo);
 		JSONObject json = new JSONObject();
+		Pager pager = this.operatingDataServiceImpl.queryEntityList(page, rows, operatingDataVo);
 		json.put("total", pager.getRowCount());
 		JsonConfig config = new JsonConfig();  //自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据  
 		config.registerJsonValueProcessor(Date.class , new JsonDateValueProcessor());//格式化日期
 		json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
 		this.print(json);
+	}
+	
+	@RequestMapping(value="/operatingData_Total")
+	public void operatingDataTotal(HttpServletResponse response, OperatingDataVo operatingDataVo){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
+		try {
+			Map<String, String> m= this.operatingDataServiceImpl.operatingDataTotal(operatingDataVo);
+			json.put("totalTraffic", m.get("totalTraffic"));
+			json.put("ytkTraffic", m.get("ytkTraffic"));
+			json.put("mobilePaymentTraffic", m.get("mobilePaymentTraffic"));
+			json.put("generalIncome", m.get("generalIncome"));
+			json.put("ytkIncome", m.get("ytkIncome"));
+			json.put("mobilePaymentIncome", m.get("mobilePaymentIncome"));
+			json.put("result", true);
+		} catch (Exception e) {
+			json.put("result", false);
+			logger.error(e.getMessage(), e);
+		}
+		this.print(json);
+		
 	}
 	
 	
@@ -207,6 +231,7 @@ public class OperatingDataController extends BaseController{
 	 * @author: qinyongqian
 	 * @date:2019年5月14日
 	 */
+	@Transactional
 	@RequestMapping(value="/submitOperatingDataExcel",produces = "application/json;charset=utf-8",method=RequestMethod.POST) 
 	public void importExcel(MultipartFile file,HttpServletResponse response,OperatingDataVo operatingDataVo) throws Exception{
 		InputStream in =null;  
@@ -222,6 +247,7 @@ public class OperatingDataController extends BaseController{
         logger_excel.info("-------------营运数据导入开始 开始时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"---------------");
         logger_excel.info("导入操作用户："+this.getSessionUser().getUserName());
         int successCount=0;//计算失败数和成功数
+        List<OperatingData> importOperatingDataList=new ArrayList<>();
         for (int i = 0; i < listob.size(); i++) {  
             List<Object> lo = listob.get(i);  
             if(lo.isEmpty())	continue;	//去掉多余的行
@@ -246,6 +272,7 @@ public class OperatingDataController extends BaseController{
         			continue;
             	}else{
             		//不存在则导入
+            		
             		OperatingData operatingData=new OperatingData();
             		operatingData.setTtId(operatingDataVo.getTtId());
             		operatingData.setTitle(operatingDataVo.getTitle());
@@ -259,19 +286,29 @@ public class OperatingDataController extends BaseController{
             			operatingData.setYtkTraffic(Integer.parseInt((String)lo.get(2)));
             		}
             		if(lo.get(3)!=null){
-            			operatingData.setGeneralIncome(Double.valueOf((String)lo.get(3)));
+            			operatingData.setMobilePaymentTraffic(Integer.parseInt((String)lo.get(3)));
             		}
             		if(lo.get(4)!=null){
-            			operatingData.setYtkIncome(Double.valueOf((String)lo.get(4)));
+            			operatingData.setGeneralIncome(Double.valueOf((String)lo.get(4)));
             		}
-            		operatingDataServiceImpl.save(operatingData);
-            		successCount++;
+            		if(lo.get(5)!=null){
+            			operatingData.setYtkIncome(Double.valueOf((String)lo.get(5)));
+            		}
+            		if(lo.get(6)!=null){
+            			operatingData.setMobilePaymentIncome(Double.valueOf((String)lo.get(6)));
+            		}
+            		importOperatingDataList.add(operatingData);
             	}
 			} catch (Exception e) {
-				logger_excel.error("第"+(i+1)+"条数据，"+tollGateName+"失败数据。 ",e);
+				this.print("第"+(i+1)+"条数据："+tollGateName+"，存有问题，导入中止 ");
+				return;
 			}
         }
-        
+        //开始插入库
+        for (OperatingData operatingData : importOperatingDataList) {
+        	operatingDataServiceImpl.save(operatingData);
+        	successCount++;
+		}
         logger_excel.info("导入数："+successCount);
         logger_excel.info("-------------营运数据导入结束 结束时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"---------------");
 		this.print("营运数据导入完毕,导入数："+successCount);

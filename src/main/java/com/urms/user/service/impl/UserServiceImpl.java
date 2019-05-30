@@ -51,6 +51,8 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService{
 			criterionsList.add(Restrictions.like("loginName", "%"+userVo.getLoginName()+"%"));
 		if(StringUtils.isNotBlank(userVo.getUserName()))
 			criterionsList.add(Restrictions.like("userName", "%"+userVo.getUserName()+"%"));
+		if(StringUtils.isNotBlank(userVo.getJobNumber()))
+			criterionsList.add(Restrictions.eq("jobNumber", userVo.getJobNumber()));
 		if(userVo.getOrgFrame()!=null){//所属组织架构
 			if(StringUtils.isNotBlank(userVo.getOrgFrame().getId())){
 				List<OrgFrame> ofList = orgFrameServiceImpl.getOrgFrameChildren(userVo.getOrgFrame().getId());

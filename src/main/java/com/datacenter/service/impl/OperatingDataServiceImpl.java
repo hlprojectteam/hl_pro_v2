@@ -3,7 +3,9 @@ package com.datacenter.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -19,9 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.IOperatingDataDao;
 import com.datacenter.module.OperatingData;
+import com.datacenter.ql.datacenterQl;
 import com.datacenter.service.IOperatingDataService;
 import com.datacenter.vo.OperatingDataVo;
 
@@ -42,27 +46,62 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, OperatingDataVo operatingDataVo) {
-		List<Criterion> params = new ArrayList<>();
+		
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer();
+		sql.append(datacenterQl.MySql.operatingData);
+		sql.append(" where 1=1");
 		if(StringUtils.isNotBlank(operatingDataVo.getTtId())){
-			params.add(Restrictions.eq("ttId", operatingDataVo.getTtId()));
+			sql.append(" and t.ttId='"+operatingDataVo.getTtId()+"'");
 		}
 		if(operatingDataVo.getDutyDateStart() != null){		//日期Start
-			params.add(Restrictions.ge("dutyDate", operatingDataVo.getDutyDateStart()));
+			sql.append(" and t.duty_Date>='"+ DateUtil.getDateFormatString(operatingDataVo.getDutyDateStart(),"yyyy-MM-dd HH:mm:ss")+"'");
 		}
 		if(operatingDataVo.getDutyDateEnd() != null){		//日期End
-			params.add(Restrictions.le("dutyDate", operatingDataVo.getDutyDateEnd()));
+			sql.append(" and t.duty_Date<='"+DateUtil.getDateFormatString(operatingDataVo.getDutyDateEnd(),"yyyy-MM-dd HH:mm:ss")+"'");
 		}
-
 		if(operatingDataVo.getTollGate() != null){
-			params.add(Restrictions.eq("tollGate", operatingDataVo.getTollGate()));
+			sql.append(" and t.toll_Gate ="+operatingDataVo.getTollGate());
 		}
 		if(StringUtils.isNotBlank(operatingDataVo.getKeyword())){
-			params.add(Restrictions.sqlRestriction(" (total_Traffic = " + operatingDataVo.getKeyword() + " " +
-					" or ytk_Traffic = " + operatingDataVo.getKeyword() + " " +
-					" or general_Income = " + operatingDataVo.getKeyword() + " " +
-					" or ytk_Income = " + operatingDataVo.getKeyword() + " )"));
+			sql.append(" and (");
+			sql.append(" t.total_Traffic="+operatingDataVo.getKeyword());
+			sql.append(" or t.ytk_Traffic="+operatingDataVo.getKeyword());
+			sql.append(" or t.mobile_Payment_Traffic="+operatingDataVo.getKeyword());
+			sql.append(" or t.general_Income="+operatingDataVo.getKeyword());
+			sql.append(" or t.ytk_Income="+operatingDataVo.getKeyword());
+			sql.append(" or t.mobile_Payment_Income="+operatingDataVo.getKeyword());
+			sql.append(")");
 		}
-		return this.operatingDataDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), OperatingData.class);
+		sql.append(" ORDER BY t.CREATE_TIME DESC,t.toll_Gate ASC");//按日期倒序，收费站顺序
+		Pager pager = this.operatingDataDaoImpl.queryEntitySQLList(page, rows, sql.toString(), paramList);
+		if(pager!=null){
+			List<OperatingData> list = new ArrayList<OperatingData>();
+			for (int i = 0; i < pager.getPageList().size(); i++) {
+				Object[] obj = (Object[])pager.getPageList().get(i);
+				OperatingData od = new OperatingData();
+				if(obj[0]!=null) od.setId(obj[0].toString());
+				if(obj[1]!=null) od.setCreateTime(DateUtil.getDateFromString(obj[1].toString()));
+				if(obj[2]!=null) od.setCreatorId(obj[2].toString());
+				if(obj[3]!=null) od.setCreatorName(obj[3].toString());
+				if(obj[5]!=null) od.setDutyDate(DateUtil.getDateFromString(obj[5].toString()));
+				if(obj[6]!=null) od.setFormNumber(obj[6].toString());
+				if(obj[7]!=null) od.setGeneralIncome(Double.parseDouble(obj[7].toString()));
+				if(obj[8]!=null) od.setTitle(obj[8].toString());
+				if(obj[9]!=null) od.setTollGate(Integer.parseInt(obj[9].toString()));
+				if(obj[10]!=null) od.setTotalTraffic(Integer.parseInt(obj[10].toString()));
+				if(obj[11]!=null) od.setTtId(obj[11].toString());
+				if(obj[12]!=null) od.setYtkIncome(Double.parseDouble(obj[12].toString()));
+				if(obj[13]!=null) od.setYtkTraffic(Integer.parseInt(obj[13].toString()));
+				if(obj[14]!=null) od.setMobilePaymentIncome(Double.parseDouble(obj[14].toString()));
+				if(obj[15]!=null) od.setMobilePaymentTraffic(Integer.parseInt(obj[15].toString()));
+				list.add(od);
+			}
+			pager.setPageList(list);
+		}
+		return pager;
+		
+		
 	}
 
 	@Override
@@ -310,6 +349,60 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 			return list.size() > 0;
 		}
 		return false;
+	}
+
+	@Override
+	public Map<String, String> operatingDataTotal(OperatingDataVo operatingDataVo) {
+		
+		Map<String, String> m=new HashMap<String, String>();
+		m.put("totalTraffic","0");
+		m.put("ytkTraffic","0");
+		m.put("mobilePaymentTraffic","0");
+		m.put("generalIncome","0");
+		m.put("ytkIncome","0");
+		m.put("mobilePaymentIncome","0");
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append(datacenterQl.MySql.operatingTotal);
+		sql.append(" where 1=1");
+		if(StringUtils.isNotBlank(operatingDataVo.getTtId())){
+			sql.append(" and t.ttId='"+operatingDataVo.getTtId()+"'");
+		}
+		if(operatingDataVo.getDutyDateStart() != null){		//日期Start
+			sql.append(" and t.duty_Date>='"+ DateUtil.getDateFormatString(operatingDataVo.getDutyDateStart(),"yyyy-MM-dd HH:mm:ss")+"'");
+		}
+		if(operatingDataVo.getDutyDateEnd() != null){		//日期End
+			sql.append(" and t.duty_Date<='"+DateUtil.getDateFormatString(operatingDataVo.getDutyDateEnd(),"yyyy-MM-dd HH:mm:ss")+"'");
+		}
+		if(operatingDataVo.getTollGate() != null){
+			sql.append(" and t.toll_Gate ="+operatingDataVo.getTollGate());
+		}
+		
+		List<Object> list  = this.operatingDataDaoImpl.queryBySql(sql.toString());
+		if(list!=null){
+			Object[] obj = (Object[])list.get(0);
+			if(obj!=null){
+				if(obj[0]!=null){
+					m.put("totalTraffic", obj[0].toString());
+				}
+				if(obj[1]!=null){
+					m.put("ytkTraffic", obj[1].toString());
+				}
+				if(obj[2]!=null){
+					m.put("mobilePaymentTraffic", obj[2].toString());
+				}
+				if(obj[3]!=null){
+					m.put("generalIncome", obj[3].toString());
+				}
+				if(obj[4]!=null){
+					m.put("ytkIncome", obj[4].toString());
+				}
+				if(obj[5]!=null){
+					m.put("mobilePaymentIncome", obj[5].toString());
+				}
+			}
+		}
+		return m;
 	}
 
 }

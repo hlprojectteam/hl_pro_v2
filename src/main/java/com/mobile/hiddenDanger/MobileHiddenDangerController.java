@@ -92,7 +92,7 @@ public class MobileHiddenDangerController extends BaseController{
 			JsonConfig config = new JsonConfig();	//自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据 
 			config.registerJsonValueProcessor(Date.class , new JsonDateTimeValueProcessor());	//格式化日期(这里精确到秒)
 			String[] excludes = new String[] {"contactPhone","creatorId","dataSource","epAppraise",
-					"epAttachId","epDealContent","epDealWay","epId","epIsReturned","epIsSite","epLimitTime","epNextNode","epNextPersonId",
+					"epAttachId","epDealContent","epDealWay","epIsReturned","epIsSite","epLimitTime","epNextNode","epNextPersonId",
 					"epNextPersonName","epNextRole","epNextRoleName","imgUrls","videoUrl","epNowNodeArriveTime","epNowNodeLeavleTime",
 					"eventGPSX","eventGPSY","eventType","loginName",
 					"reporterOrgId","roleCode","roleName","sysCode",

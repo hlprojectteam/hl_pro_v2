@@ -22,6 +22,16 @@
 		</div>
 	</c:if>
 	<div class="row ibox-content" style="padding:5px 0 5px 0;">
+		<span style="color: red; font-weight:bold; margin-left: 15px;">合计（元）：</span>
+		&nbsp;<span>总车流:</span><span style="color: red; font-weight:bold;" id="totalTraffic"></span>
+		&nbsp;<span>粤通卡车流:</span><span style="color: red; font-weight:bold;" id="ytkTraffic"></span>
+		&nbsp;<span>移动支付车流:</span><span style="color: red; font-weight:bold;" id="mobilePaymentTraffic"></span>
+		
+		&nbsp;&nbsp;&nbsp;&nbsp;<span>总收费额:</span><span style="color: red; font-weight:bold;" id="generalIncome"></span>
+		&nbsp;<span>粤通卡收入:</span><span style="color: red; font-weight:bold;" id="ytkIncome"></span>
+		&nbsp;<span>移动支付收入:</span><span style="color: red; font-weight:bold;" id="mobilePaymentIncome"></span>
+	</div>
+	<div class="row ibox-content" style="padding:5px 0 5px 0;">
 		<form id="baseForm" method="post" name="baseForm" class="form-horizontal" action="" >
 			<c:if test="${not empty menuCode}">
 				<div class="row">
@@ -48,6 +58,7 @@
 
 					<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
 					<button class="btn btn-primary" type="button" onclick="on_export()"><i class="fa fa-file-excel-o"></i>&nbsp;导出Excle</button>
+					<button class="btn btn-primary" type="button" onclick="on_dateTotal()"><i class="fa fa-calendar-minus-o"></i>&nbsp;计算总额</button>
 				</div>
 			</c:if>
 			<c:if test="${empty menuCode}">
@@ -67,6 +78,11 @@
 	
     $(document).ready(function(){
     	loadGrid();//加载列表
+    	
+    	if(menuCode_==""||menuCode_==null){
+    		on_dateTotal();
+    	}
+    	
     });
     //加载列表
     function loadGrid() {
@@ -88,14 +104,16 @@
 		           	  		return index+1;
 		              }},
     	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
-    	              {title: "日期", field: "dutyDate",width: 120,align:"center"},
+    	              {title: "日期", field: "dutyDate",width: 80,align:"center"},
     	              {title: "收费站", field: "tollGate",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_tollGate_operation",value);
 		              }},
-    	              {title: "出口车流量_总车流", field: "totalTraffic",width: 100,align:"center"},
-    	              {title: "出口车流量_其中粤通卡车流", field: "ytkTraffic",width: 100,align:"center"},
-    	              {title: "收费额_总收费额", field: "generalIncome",width: 80,align:"center"},
-    	              {title: "收费额_其中粤通卡收入", field: "ytkIncome",width: 80,align:"center"},
+    	              {title: "总车流", field: "totalTraffic",width: 100,align:"center"},
+    	              {title: "粤通卡车流", field: "ytkTraffic",width: 100,align:"center"},
+    	              {title: "移动支付车流", field: "mobilePaymentTraffic",width: 100,align:"center"},
+    	              {title: "总收费额", field: "generalIncome",width: 80,align:"center"},
+    	              {title: "粤通卡收入", field: "ytkIncome",width: 80,align:"center"},
+    	              {title: "移动支付收入", field: "mobilePaymentIncome",width: 80,align:"center"},
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){
     					  return "<a href='#' onclick='on_edit(\""+row.id+"\")'>编辑</a>";
 		              }}]
@@ -106,6 +124,7 @@
     
     var ttId = "${ttId}";
 	var dutyDateStr = "${dutyDateStr}";
+	var menuCode_="${menuCode }";
   	//新增
   	function on_add(){
   		parent.layer.open({
@@ -195,6 +214,47 @@
         }else{
             window.location.href = URLStr + "export?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()+"&tollGate="+$("#tollGate").val()+"&keyword="+$("#keyword").val()
         }
+    }
+    
+    //计算合计
+    function on_dateTotal(){
+    	var urlTotal=URLStr;
+    	if(ttId.length>0){
+    		urlTotal =  urlTotal + "Total?ttId="+ttId;
+    	}else if(ttId.length==0){
+    		let star = $("#dutyDateStart").val();
+   	        let end = $("#dutyDateEnd").val();
+   	        if(star == null || star == "" || end == null || end == ""){
+   	            autoAlert("注意：时间区间条件不能为空!",5);
+   	            return;
+   	        }else if((new Date(end) - new Date(star))/(24*60*60*1000) > 366){
+   	            autoAlert("注意：时间区间必须在一年以内，以防数据量过大!",5);
+   	         	return;
+   	        }
+   	     	urlTotal = URLStr + "Total?dutyDateStart="+$("#dutyDateStart").val()+"&dutyDateEnd="+$("#dutyDateEnd").val()+"&tollGate="+$("#tollGate").val();
+    	}
+       	$.ajax({
+ 			type : 'post',
+ 			async:false,
+ 			dataType : 'json',
+ 			url: urlTotal,
+ 			data:null,
+ 			success : function(data) {
+                 if (data.result) {
+                    $('#totalTraffic').html(data.totalTraffic);
+                    $('#ytkTraffic').html(data.ytkTraffic);
+                    $('#mobilePaymentTraffic').html(data.mobilePaymentTraffic);
+                    $('#generalIncome').html(data.generalIncome);
+                    $('#ytkIncome').html(data.ytkIncome);
+                    $('#mobilePaymentIncome').html(data.mobilePaymentIncome);
+                 } else {
+                     autoAlert("保存失败，请检查！", 5);
+                 }
+             },
+             error : function(XMLHttpRequest, textStatus, errorThrown) {
+                 autoAlert("系统出错，请检查！", 5);
+             }
+ 		});
     }
 </script>
 </body>

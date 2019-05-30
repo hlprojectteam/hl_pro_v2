@@ -238,37 +238,31 @@ public class MobileLoginController extends BaseController{
 	 * @param data
 	 */
 	@RequestMapping(value="/mobile_user_edit")
-	public void editUserInfo(HttpServletRequest request,HttpServletResponse response,String id,String data){
-		User user = this.userServiceImpl.getEntityById(User.class, id);
+	public void editUserInfo(HttpServletRequest request,HttpServletResponse response,UserVo userVo){
+		User user = this.userServiceImpl.getEntityById(User.class, userVo.getId());
 		JSONObject json = new JSONObject();
-		json.put("result", true);
+		json.put("result", false);
 		try{
-			JSONObject obj = JSONObject.fromObject(data);
-//			Integer intVal ;
-			user.setUserName(obj.getString("userName"));
-			user.setCertificatesNum(obj.getString("certificatesNum"));
-			user.setJobNumber(obj.getString("jobNumber"));
-			user.setMobilePhone(obj.getString("mobilePhone"));
-			String str = "";
-			str = obj.getString("age");
-			if(StringUtils.isNotBlank(str))	
-				user.setAge(Integer.parseInt(str));
-			str = obj.getString("sex");
-			if(StringUtils.isNotBlank(str))	
-				user.setSex(Integer.parseInt(str));
-			str = obj.getString("nation");
-			if(StringUtils.isNotBlank(str))	
-				user.setNation(Integer.parseInt(str));
+			user.setUserName(userVo.getUserName());
+			user.setJobNumber(userVo.getJobNumber());
+			user.setMobilePhone(userVo.getMobilePhone());
+			user.setSex(userVo.getSex());
+			user.setAge(userVo.getAge());
+			user.setNation(user.getNation());
+			user.setCertificatesNum(user.getCertificatesNum());
 			this.userServiceImpl.saveOrUpdate(user);
 			
 			json.put("sysCode", user.getSysCode());
+			json.put("result", true);
 		}catch (Exception e) {
 			e.printStackTrace();
-			json.put("result", true);
+			json.put("result", false);
 		}finally{
 			this.print(json.toString());
 		}
 	}
+	
+	
 	/**
 	 * 
 	 * @ClassName:MobileLoginController.java

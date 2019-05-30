@@ -2,11 +2,13 @@ package com.datacenter.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.OperatingData;
 import com.datacenter.vo.OperatingDataVo;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
@@ -84,6 +86,17 @@ public interface IOperatingDataService extends IBaseService{
 	 * @date:2019年5月14日
 	 */
 	public boolean isRecordExist(Date dutyDate,String tollGateId);
+	
+	/**
+	 * 
+	 * @方法：@param operatingDataVo
+	 * @方法：@return
+	 * @描述：计算营运数据合计
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年5月30日
+	 */
+	public Map<String, String> operatingDataTotal(OperatingDataVo operatingDataVo);
 
 
 }

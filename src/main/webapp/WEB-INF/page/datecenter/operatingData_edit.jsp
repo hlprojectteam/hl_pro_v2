@@ -58,6 +58,13 @@
 				<input type="text" class="form-control" id="ytkTraffic" name="ytkTraffic" value="${operatingDataVo.ytkTraffic}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,8]" />    
 			</div>
 		</div>
+		<div class="form-group">
+	  		<label class="col-sm-2 control-label"><span style="color: red">*</span>出口车流量_移动支付车流</label>
+	        <div class="col-sm-3">
+				<input type="text" class="form-control" id="mobilePaymentTraffic" name="mobilePaymentTraffic" value="${operatingDataVo.mobilePaymentTraffic}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,8]" />    
+	        </div>
+		  	
+		</div>
 	 
 	    <div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>收费额_总收费额</label>
@@ -68,6 +75,12 @@
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="ytkIncome" name="ytkIncome" value="${operatingDataVo.ytkIncome}" data-rule-required="true" data-rule-num2="true" data-rule-rangelength="[1,10]" />    
 			</div>
+		</div>
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>收费额_移动支付收入</label>
+	        <div class="col-sm-3">
+				<input type="text" class="form-control" id="mobilePaymentIncome" name="mobilePaymentIncome" value="${operatingDataVo.mobilePaymentIncome}" data-rule-required="true" data-rule-num2="true" data-rule-rangelength="[1,10]" />    
+	        </div>
 		</div>
 	</form>
 </div>
