@@ -1,5 +1,9 @@
 package com.common.utils;
 
+import java.util.Date;
+
+import com.common.utils.helper.DateUtil;
+
 public class Test {
 
 	public static void main(String[] args) {
@@ -9,8 +13,19 @@ public class Test {
 //		String str2=StrUtils.subString(str, 9);
 //		System.out.println(str2);
 		
-		int tt=MathUtil.randomTwoNumber();
-		System.out.println(tt+"");
+//		String tt=MathUtil.randomTwoNumber();
+//		System.out.println(DateUtil.getYYMMDDHHMMSS2(tt));
+		
+		String dateStr="2019-05-28 12:23:00";
+		try {
+			//"yyyy-MM-dd HH:mm:ss"是正确格式，其它都出错
+			Date d=DateUtil.format(dateStr,"yyyy-MM-dd HH:mm:ss");
+			System.out.println(d);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 	}
 
