@@ -24,7 +24,7 @@ public class OperatingData extends BaseModule{
 	private String formNumber;        //表单编号
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date dutyDate;            //日期
-	private Integer tollGate;         //收费站		(数据字典：dc_tollGate)
+	private Integer tollGate;         //收费站		(数据字典：dc_tollGate_operatingData)
 	private Integer totalTraffic;     //出口车流量_总车流
 	private Integer ytkTraffic;       //出口车流量_其中粤通卡车流
 	private Integer mobilePaymentTraffic;     //出口车流量_运动支付车流
