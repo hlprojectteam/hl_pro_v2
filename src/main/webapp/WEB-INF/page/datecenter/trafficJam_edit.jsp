@@ -38,8 +38,10 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>日期</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${trafficJamVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" disabled="disabled"  />
-	            <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${trafficJamVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${trafficJamVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true"  />
+				<%--disabled="disabled"
+				<input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${trafficJamVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+				--%>
 	        </div>
 	        <label class="col-sm-2 control-label"><span style="color: red">*</span>接报时间</label>
 	        <div class="col-sm-3">
@@ -87,13 +89,13 @@
 		</div>
 		
 		<div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>交警到场时间</label>
+		  	<label class="col-sm-2 control-label">交警到场时间</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="jjdcTime" name="jjdcTime" value="<fmt:formatDate value='${trafficJamVo.jjdcTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" data-rule-required="true"  />
+	            <input type="text" class="form-control" id="jjdcTime" name="jjdcTime" value="<fmt:formatDate value='${trafficJamVo.jjdcTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" />
 	        </div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>路管员到场时间</label>
+			<label class="col-sm-2 control-label">路管员到场时间</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="lgydcTime" name="lgydcTime" value="<fmt:formatDate value='${trafficJamVo.lgydcTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" data-rule-required="true"  />
+	            <input type="text" class="form-control" id="lgydcTime" name="lgydcTime" value="<fmt:formatDate value='${trafficJamVo.lgydcTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" />
 	        </div>
 		</div>
 		

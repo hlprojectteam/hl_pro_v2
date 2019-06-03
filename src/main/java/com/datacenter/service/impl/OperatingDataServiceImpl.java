@@ -1,12 +1,13 @@
 package com.datacenter.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.helper.DateUtil;
+import com.common.utils.helper.Pager;
+import com.datacenter.dao.IOperatingDataDao;
+import com.datacenter.module.OperatingData;
+import com.datacenter.ql.datacenterQl;
+import com.datacenter.service.IOperatingDataService;
+import com.datacenter.vo.OperatingDataVo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -20,14 +21,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.common.base.service.impl.BaseServiceImpl;
-import com.common.utils.helper.DateUtil;
-import com.common.utils.helper.Pager;
-import com.datacenter.dao.IOperatingDataDao;
-import com.datacenter.module.OperatingData;
-import com.datacenter.ql.datacenterQl;
-import com.datacenter.service.IOperatingDataService;
-import com.datacenter.vo.OperatingDataVo;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @Description 营运数据 service实现
@@ -43,10 +38,9 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
 
-	
+
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, OperatingDataVo operatingDataVo) {
-		
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append(datacenterQl.MySql.operatingData);
@@ -100,8 +94,8 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 			pager.setPageList(list);
 		}
 		return pager;
-		
-		
+
+
 	}
 
 	@Override
@@ -296,7 +290,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 				//设置单元格内容
 				switch (j){
 					case 0:	cell.setCellValue(sdf1.format(odList.get(i).getDutyDate())); break;
-					case 1: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_tollGate", odList.get(i).getTollGate().toString()));	break;
+					case 1: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_tollGate_operation", odList.get(i).getTollGate().toString()));	break;
 					case 2: cell.setCellValue(odList.get(i).getTotalTraffic());	break;
 					case 3: cell.setCellValue(odList.get(i).getYtkTraffic());	break;
 					case 4: cell.setCellValue(odList.get(i).getGeneralIncome());	 break;
@@ -336,7 +330,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		if(tollGateId!=null){
 			operatingDataVo.setTollGate(Integer.parseInt(tollGateId));
 		}
-		
+
 		List<Criterion> params = new ArrayList<>();
 		if(operatingDataVo.getDutyDate() != null){		//日期
 			params.add(Restrictions.eq("dutyDate", operatingDataVo.getDutyDate()));
@@ -353,7 +347,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 
 	@Override
 	public Map<String, String> operatingDataTotal(OperatingDataVo operatingDataVo) {
-		
+
 		Map<String, String> m=new HashMap<String, String>();
 		m.put("totalTraffic","0");
 		m.put("ytkTraffic","0");
@@ -361,7 +355,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		m.put("generalIncome","0");
 		m.put("ytkIncome","0");
 		m.put("mobilePaymentIncome","0");
-		
+
 		StringBuffer sql = new StringBuffer();
 		sql.append(datacenterQl.MySql.operatingTotal);
 		sql.append(" where 1=1");
@@ -377,7 +371,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		if(operatingDataVo.getTollGate() != null){
 			sql.append(" and t.toll_Gate ="+operatingDataVo.getTollGate());
 		}
-		
+
 		List<Object> list  = this.operatingDataDaoImpl.queryBySql(sql.toString());
 		if(list!=null){
 			Object[] obj = (Object[])list.get(0);

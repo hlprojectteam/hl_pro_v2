@@ -24,7 +24,7 @@ public class OperatingData extends BaseModule{
 	private String formNumber;        //表单编号
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date dutyDate;            //日期
-	private Integer tollGate;         //收费站		(数据字典：dc_tollGate_operatingData)
+	private Integer tollGate;         //收费站		(数据字典：dc_tollGate_operation)
 	private Integer totalTraffic;     //出口车流量_总车流
 	private Integer ytkTraffic;       //出口车流量_其中粤通卡车流
 	private Integer mobilePaymentTraffic;     //出口车流量_运动支付车流
@@ -33,8 +33,8 @@ public class OperatingData extends BaseModule{
 	private Double mobilePaymentIncome;         //收费额_移动支付收入	(精确度小数点后两位)
 	private String ttId;              //主表id
 	
-	
-	
+
+
 	@Column(name = "title_", length=50)
 	public String getTitle() {
 		return title;

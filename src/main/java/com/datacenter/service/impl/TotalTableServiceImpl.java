@@ -953,7 +953,21 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 						}
 						break;*/
 					case 8: cell.setCellValue(eoList.get(i).getRemark());	break;
-					case 9: cell.setCellValue(sdf.format(eoList.get(i).getDownTimeStart()) + "--" + sdf.format(eoList.get(i).getDownTimeEnd()));	break;
+					case 9:
+						String d1 = "";
+						String d2 = "";
+						if(eoList.get(i).getDownTimeStart() != null){
+							d1 = sdf.format(eoList.get(i).getDownTimeStart());
+						}
+						if(eoList.get(i).getDownTimeEnd() != null){
+							d2 = sdf.format(eoList.get(i).getDownTimeEnd());
+						}
+						if(StringUtils.isNotBlank(d1) && StringUtils.isNotBlank(d2)){
+							cell.setCellValue(d1 + "——" + d2);
+						}else {
+							cell.setCellValue("");
+						}
+						break;
 				}
 				//设置单元格样式
 				if(j == 8){
@@ -1069,7 +1083,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				//设置单元格内容
 				switch (j){
 					case 0: cell.setCellValue(i+1);	break;
-					case 1: cell.setCellValue(getValueByDictAndKey("dc_tollGate", odList.get(i).getTollGate().toString()));	break;
+					case 1: cell.setCellValue(getValueByDictAndKey("dc_tollGate_operation", odList.get(i).getTollGate().toString()));	break;
 					case 2: cell.setCellValue(odList.get(i).getTotalTraffic());	break;
 					case 3: cell.setCellValue(odList.get(i).getYtkTraffic());	break;
 					case 4: cell.setCellValue(odList.get(i).getGeneralIncome());	break;
@@ -2571,11 +2585,19 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.getCell(3).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("交警到场时间");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(sdf2.format(tjList.get(tb).getJjdcTime()));
+				if(tjList.get(tb).getJjdcTime() != null){
+					row4.createCell(5).setCellValue(sdf2.format(tjList.get(tb).getJjdcTime()));
+				}else{
+					row4.createCell(5);
+				}
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				row4.createCell(7).setCellValue("路管员到场时间");
 				row4.getCell(7).setCellStyle(r2_style);
-				row4.createCell(8).setCellValue(sdf2.format(tjList.get(tb).getLgydcTime()));
+				if(tjList.get(tb).getJjdcTime() != null){
+					row4.createCell(8).setCellValue(sdf2.format(tjList.get(tb).getLgydcTime()));
+				}else{
+					row4.createCell(8);
+				}
 				row4.getCell(8).setCellStyle(mainStyle_center);
 
 				row4.createCell(6).setCellStyle(r2_style);
@@ -3095,12 +3117,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row6.createCell(0);
 				row6.createCell(1).setCellValue("误标数量");
 				row6.createCell(2).setCellValue(esList.get(tb).getMislabelNumR1());
-				row6.createCell(3).setCellValue(esList.get(tb).getMislabelNumR2() + "%");
-				row6.createCell(4).setCellValue(esList.get(tb).getMislabelNumE1() + "%");
-				row6.createCell(5).setCellValue(esList.get(tb).getMislabelNumA() + "%");
-				row6.createCell(6).setCellValue(esList.get(tb).getMislabelNumB() + "%");
-				row6.createCell(7).setCellValue(esList.get(tb).getMislabelNumC() + "%");
-				row6.createCell(8).setCellValue(esList.get(tb).getMislabelNumD() + "%");
+				row6.createCell(3).setCellValue(esList.get(tb).getMislabelNumR2());
+				row6.createCell(4).setCellValue(esList.get(tb).getMislabelNumE1());
+				row6.createCell(5).setCellValue(esList.get(tb).getMislabelNumA());
+				row6.createCell(6).setCellValue(esList.get(tb).getMislabelNumB());
+				row6.createCell(7).setCellValue(esList.get(tb).getMislabelNumC());
+				row6.createCell(8).setCellValue(esList.get(tb).getMislabelNumD());
 				row6.createCell(9);
 				for (int i = 0; i < 10; i++) {
 					row6.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式

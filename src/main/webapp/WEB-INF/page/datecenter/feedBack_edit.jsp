@@ -38,8 +38,10 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>日期</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${feedBackVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" disabled="disabled"  />
-	            <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${feedBackVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${feedBackVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" />
+				<%--disabled="disabled"
+				<input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${feedBackVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+				--%>
 	        </div>
         </div>
 	  	
@@ -59,9 +61,9 @@
 		    <div class="col-sm-3">
 		    	<opt:select dictKey="sex" classStyle="form-control required" name="customerSex" id="customerSex" value="${feedBackVo.customerSex}" isDefSelect="true" />
 			</div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>车辆号牌 </label>
+			<label class="col-sm-2 control-label">车辆号牌 </label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="plateNum" name="plateNum" value="${feedBackVo.plateNum}" data-rule-required="true" data-rule-rangelength="[1,12]" />    
+				<input type="text" class="form-control" id="plateNum" name="plateNum" value="${feedBackVo.plateNum}" data-rule-rangelength="[0,12]" />
 			</div>
 		</div>
 		
