@@ -31,7 +31,7 @@ public class Leave extends BaseModule{
 	private double timeLength;//时长
 	private String leaveReason;// 请假理由 
 	private String outAddress;// 外出地址
-	private int approvalStatus; //审批状态  字典：Approval_Status
+	private int approvalStatus; //审批状态  字典：Approval_Status 0未审批；1审批中；2审批通过；3审批不通过；
 	private String FryPersonIds; //抄送人ID 存在多个值用“,”隔开，最多不多于5人
 	
 	@Column(name = "LEAVE_TYPE", length = 30)

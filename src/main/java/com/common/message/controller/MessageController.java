@@ -1,6 +1,7 @@
 package com.common.message.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +21,12 @@ import cn.o.common.beans.BeanUtils;
 import com.common.base.controller.BaseController;
 import com.common.message.MessageJpush;
 import com.common.message.module.Message;
+import com.common.message.module.MessageReaded;
+import com.common.message.service.IMessageReadedService;
 import com.common.message.service.IMessageService;
+import com.common.message.vo.MessageReadedVo;
 import com.common.message.vo.MessageVo;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.Pager;
 import com.google.gson.JsonObject;
@@ -33,6 +38,8 @@ import com.urms.user.module.User;
 public class MessageController extends BaseController{
 	@Autowired
 	public IMessageService messageServiceImpl;
+	@Autowired
+	public IMessageReadedService messageReadedServiceImpl;
 	
 	/**
 	 * 
@@ -89,6 +96,43 @@ public class MessageController extends BaseController{
 		}
 		this.print(json);
 	}
+	
+	/**
+	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param messageVo
+	 * @方法：@param days
+	 * @描述：获取当前时间多少天内的消息
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月5日
+	 */
+	@RequestMapping(value="/message_load_indays")
+	public void messageLoadIndays(HttpServletRequest request,HttpServletResponse response,MessageVo messageVo,int days){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
+		User user = this.getSessionUser();
+		messageVo.setAlias(user.getId());
+		try{
+			List<Message> list = this.messageServiceImpl.queryEntityList(messageVo, days);
+			if(list!=null){
+				json.put("total", list.size());
+				JsonConfig config = new JsonConfig();
+				String[] excludes = new String[] {"content","creatorId","creatorName","sysCode",
+						"tags","alias","sender"}; // 列表排除信息内容字段，减少传递时间
+				config.setExcludes(excludes);
+				config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
+				json.put("rows", JSONArray.fromObject(list,config));
+				json.put("result", true);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			json.put("result", false);
+		}
+		this.print(json);
+	}
+	
 	/**
 	 * 
 	 * @Description: 
@@ -165,6 +209,70 @@ public class MessageController extends BaseController{
 		this.print(json.toString());
 	}
 	
+	/********************************已读消息 start******************************************/
+	@RequestMapping("/messageRead_save")
+	public void saveOrUpdateMessageRead(HttpServletRequest request,HttpServletResponse response,MessageReadedVo messageReadedVo){
+		JsonObject json = new JsonObject();
+		try{
+			MessageReaded messageReaded=messageReadedServiceImpl.queryEntityByUserId(messageReadedVo.getUserId());
+			if(messageReaded==null){
+				//已读消息不存在，则添加记录
+				messageReaded=new MessageReaded();
+				messageReaded.setUserId(messageReadedVo.getUserId());
+				messageReaded.setNewReadMsg(messageReadedVo.getNewReadMsg());
+				messageReaded.setReadMsgs(messageReadedVo.getNewReadMsg());
+				if(StringUtils.isNotBlank(messageReadedVo.getUpdateTimeStr())){
+					messageReaded.setUpdateTime(DateUtil.format(messageReadedVo.getUpdateTimeStr(), "yyyy-MM-dd HH:mm:ss"));
+				}
+				this.messageReadedServiceImpl.saveOrUpdate(messageReaded);
+			}else{
+				//已读消息存在
+				if(!messageReaded.getReadMsgs().contains(messageReadedVo.getNewReadMsg())){
+					//库中不包括这次的消息ID，则追加入库
+					messageReaded.setReadMsgs(messageReaded.getReadMsgs()+","+messageReadedVo.getNewReadMsg());
+					messageReaded.setNewReadMsg(messageReadedVo.getNewReadMsg());
+					if(StringUtils.isNotBlank(messageReadedVo.getUpdateTimeStr())){
+						messageReaded.setUpdateTime(DateUtil.format(messageReadedVo.getUpdateTimeStr(), "yyyy-MM-dd HH:mm:ss"));
+					}
+					this.messageReadedServiceImpl.saveOrUpdate(messageReaded);
+				}
+			}
+			json.addProperty("id", messageReaded.getId());
+			json.addProperty("result", true);
+		}catch (Exception e) {
+			e.printStackTrace();
+			json.addProperty("result", false);
+		}finally{
+			this.print(json);
+		}
+	}
+	
+	@RequestMapping(value="/messageRead_load")
+	public void messageReadLoad(HttpServletRequest request,HttpServletResponse response,MessageReadedVo messageReadedVo){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
+		try{
+			MessageReaded messageReaded = this.messageReadedServiceImpl.queryEntityByUserId(messageReadedVo.getUserId());
+			if(messageReaded!=null){
+				String readMsgs=messageReaded.getReadMsgs();
+				json.put("readMsgs", readMsgs);
+			}else{
+				json.put("readMsgs", "");
+			}
+			json.put("result", true);
+		}catch(Exception e){
+			e.printStackTrace();
+			json.put("result", false);
+			json.put("err", e.getMessage());
+		}
+		this.print(json);
+	}
+	
+	
+	/********************************已读消息 end******************************************/
+	
+	
+	/********************************以前是私有方法******************************************/
 	private void sendMsg(final Message msg){
 		new Thread(new Runnable() {
 			@Override

@@ -50,6 +50,22 @@ public class MathUtil {
 		return num;
 	}
 	
+	public static int stringToInt(String str) {
+		int num=0;
+		try {
+			if(str.indexOf(".")>0){
+				//double型
+				double d= Double.parseDouble(str);
+				num=new Double(d).intValue();
+			}else{
+				num=Integer.parseInt(str);
+			}
+		} catch (Exception e) {
+			return 0;
+		}
+		return num;
+	}
+	
 
 
 }

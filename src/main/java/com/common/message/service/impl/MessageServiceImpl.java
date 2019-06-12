@@ -119,4 +119,43 @@ public class MessageServiceImpl extends BaseServiceImpl implements IMessageServi
 		return msg;
 	}
 
+	@Override
+	public List<Message> queryEntityList(MessageVo messageVo, int days) {
+		List<Criterion> criterionsList = new ArrayList<Criterion>();
+		if(StringUtils.isNotBlank(messageVo.getTitle())){
+			criterionsList.add(Restrictions.like("title", "%" + messageVo.getTitle() + "%"));
+		}
+		if(messageVo.getType() != null){
+			criterionsList.add(Restrictions.eq("type", messageVo.getType()));
+		}
+		StringBuffer strSQL=new StringBuffer();
+		strSQL.append("(");
+		strSQL.append("((ALIAS='' or ALIAS is null) and (TAGS='' or TAGS is NULL)) ");
+		if(StringUtils.isNotBlank(messageVo.getAlias())){
+			strSQL.append(" OR ");
+			strSQL.append(" (ALIAS LIKE '%"+messageVo.getAlias()+"%') ");
+		}
+		if(StringUtils.isNotBlank(messageVo.getTags())){
+			strSQL.append(" OR ");
+			String[] tags = messageVo.getTags().split(",");
+			StringBuffer strTags=new StringBuffer();
+			for (int i = 0; i < tags.length; i++) {
+				strTags.append(" (TAGS LIKE '"+tags[i]+",%') OR ");
+				strTags.append(" (TAGS LIKE '%,"+tags[i]+"') OR ");
+				strTags.append(" (TAGS LIKE '%,"+tags[i]+",%') OR ");
+				strTags.append(" (TAGS = '"+tags[i]+"') ");
+				strTags.append(" OR ");
+			}
+			strTags.delete(strTags.length()-3, strTags.length());
+			strSQL.append(strTags);
+		}
+		strSQL.append(")");
+		if(days>0){
+			strSQL.append("and DATE_SUB(CURDATE(), INTERVAL "+days+" DAY) <= date(CREATE_TIME)");
+		}
+		criterionsList.add(Restrictions.sqlRestriction(strSQL.toString()));
+		
+		return this.messageDaoImpl.queryEntityList(criterionsList, Order.desc("createTime"), Message.class);
+	}
+
 }

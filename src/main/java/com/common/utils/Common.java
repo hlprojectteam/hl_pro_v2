@@ -111,8 +111,8 @@ public class Common {
 	public static final String msgTitle_AQ_sj_todo="安全管理事件待办";
 	public static final String msgTitle_AQ_sj_finish="安全管理事件回复";
 	public static final String msgTitle_JY_jyks_todo="考试通知";
-	public static final String msgTitle_DT_dt_info="营运动态";
-	public static final String msgTitle_ZD_zd_info="规章制度";
+	public static final String msgTitle_DT_dt_info="营运动态发布通知";
+	public static final String msgTitle_ZD_zd_info="规章制度发布通知";
 	public static final String msgTitle_KQ_dm="考勤点名";
 	public static final String msgTitle_KQ_qj="请假待办";
 	public static final String msgTitle_SYS_info="系统通知";

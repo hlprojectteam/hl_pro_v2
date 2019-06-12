@@ -39,8 +39,10 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>日期</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${operatingDataVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" disabled="disabled"  />
+	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${operatingDataVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true"  />
+				<%--disabled="disabled"
 	            <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${operatingDataVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+				--%>
 	        </div>
 	        <label class="col-sm-2 control-label"><span style="color: red">*</span>收费站</label>
 		    <div class="col-sm-3">
@@ -59,13 +61,12 @@
 			</div>
 		</div>
 		<div class="form-group">
-	  		<label class="col-sm-2 control-label"><span style="color: red">*</span>出口车流量_移动支付车流</label>
-	        <div class="col-sm-3">
-				<input type="text" class="form-control" id="mobilePaymentTraffic" name="mobilePaymentTraffic" value="${operatingDataVo.mobilePaymentTraffic}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,8]" />    
-	        </div>
-		  	
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>出口车流量_移动支付车流</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="mobilePaymentTraffic" name="mobilePaymentTraffic" value="${operatingDataVo.mobilePaymentTraffic}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,8]" />
+			</div>
 		</div>
-	 
+
 	    <div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>收费额_总收费额</label>
 	        <div class="col-sm-3">
@@ -77,10 +78,10 @@
 			</div>
 		</div>
 		<div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>收费额_移动支付收入</label>
-	        <div class="col-sm-3">
-				<input type="text" class="form-control" id="mobilePaymentIncome" name="mobilePaymentIncome" value="${operatingDataVo.mobilePaymentIncome}" data-rule-required="true" data-rule-num2="true" data-rule-rangelength="[1,10]" />    
-	        </div>
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>收费额_移动支付收入</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="mobilePaymentIncome" name="mobilePaymentIncome" value="${operatingDataVo.mobilePaymentIncome}" data-rule-required="true" data-rule-num2="true" data-rule-rangelength="[1,10]" />
+			</div>
 		</div>
 	</form>
 </div>

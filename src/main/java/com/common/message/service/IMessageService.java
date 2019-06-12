@@ -1,5 +1,7 @@
 package com.common.message.service;
 
+import java.util.List;
+
 import com.common.base.service.IBaseService;
 import com.common.message.module.Message;
 import com.common.message.vo.MessageVo;
@@ -24,6 +26,18 @@ public interface IMessageService  extends IBaseService{
 	 * @date 2016-8-15 上午11:18:25
 	 */
 	public Pager queryEntityList(Integer page, Integer rows,MessageVo messageVo);
+	
+	/**
+	 * 
+	 * @方法：@param messageVo
+	 * @方法：@param days
+	 * @方法：@return
+	 * @描述：获取当前时间多少天内的消息
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月5日
+	 */
+	public List<Message> queryEntityList(MessageVo messageVo,int days);
 	
 	/**
 	 * 

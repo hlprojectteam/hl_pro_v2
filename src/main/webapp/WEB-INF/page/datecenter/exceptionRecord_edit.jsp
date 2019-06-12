@@ -38,8 +38,10 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>日期</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${exceptionRecordVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" disabled="disabled"  />
-	            <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${exceptionRecordVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${exceptionRecordVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true"  />
+				<%--disabled="disabled"
+				<input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${exceptionRecordVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+				--%>
 	        </div>
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>异常类型</label>
 			<div class="col-sm-3">
@@ -57,8 +59,8 @@
 	            <input type="text" class="form-control" id="receiptTime" name="receiptTime" value="<fmt:formatDate value='${exceptionRecordVo.receiptTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" />
 	        </div>
 		</div>
-		<div class="form-group dictValue"  style="display: none;">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的报告方式</label>
+		<div class="form-group dictValue isNotShow"  style="display: none;">
+			<label class="col-sm-2 control-label">请输入要添加的报告方式</label>
 			<div class="col-sm-3">
 				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
 			</div>

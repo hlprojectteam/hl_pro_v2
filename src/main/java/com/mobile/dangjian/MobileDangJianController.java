@@ -407,7 +407,7 @@ public class MobileDangJianController extends BaseController{
 			String[] excludes = new String[] {"createTime","createUserId","creatorId"
 					,"sysCode","branchId","completionTimes","isReach","frequency","timeQuantum","year","month"
 					,"activityId","exOpinion","isPass","launchAddress","launchDateStr","opinion"
-					,"points","status","timeQuantumValue"}; // 列表排除信息内容字段，减少传递时间
+					,"status","timeQuantumValue"}; // 列表排除信息内容字段，减少传递时间
 			config.setExcludes(excludes);
 			json.put("total", pager.getRowCount());
 			json.put("curPageSize", pager.getPageList().size());

@@ -62,7 +62,7 @@
 </div>
 </body>
 <%-- 引入报表 --%>
-<script src="/common/plugins/Echarts/echarts.js" type="text/javascript"></script>
+<script src="/common/plugins/Echarts/echarts4.0.js" type="text/javascript"></script>
 <script type="text/javascript">
 // 基于准备好的dom，初始化echarts实例
 var myChart = echarts.init(document.getElementById('main'));

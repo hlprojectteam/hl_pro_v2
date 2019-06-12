@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.common.base.controller.BaseController;
 import com.common.dataimport.ImportExcelUtil;
+import com.common.utils.MathUtil;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
@@ -247,71 +248,154 @@ public class OperatingDataController extends BaseController{
         logger_excel.info("-------------营运数据导入开始 开始时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"---------------");
         logger_excel.info("导入操作用户："+this.getSessionUser().getUserName());
         int successCount=0;//计算失败数和成功数
+        StringBuffer strErrMsg=new StringBuffer();
+        boolean isImportReady=true;
         List<OperatingData> importOperatingDataList=new ArrayList<>();
-        for (int i = 0; i < listob.size(); i++) {  
+        //TTID
+    	if(StringUtils.isEmpty(operatingDataVo.getTtId())){
+    		strErrMsg.append("与主表关联失效，无法导入数据\r\n");
+    		strErrMsg.append("----导入失败----");
+        	this.print(strErrMsg.toString());
+        	return;
+    	}
+        for (int i = 0; i < listob.size(); i++) {
+        	System.out.println("第"+(i+1)+"条数据");
+        	
+        	
             List<Object> lo = listob.get(i);  
             if(lo.isEmpty())	continue;	//去掉多余的行
+            //收费站
             String tollGateName=(String)lo.get(0);
-            String dutyDateStr=operatingDataVo.getDutyDateStr(); //录入时间
-            Date dutyDate =DateUtil.format(operatingDataVo.getDutyDateStr(), "yyyy-MM-dd");
-            if(StringUtils.isEmpty(tollGateName)){
-            	continue;
-            }
-            if(StringUtils.isEmpty(operatingDataVo.getTtId())){
-            	continue;
-            }
-            String tollGateId= DictUtils.getDictAttrKey("dc_tollGate_operation", tollGateName);
-            if(StringUtils.isEmpty(tollGateId)){
-            	continue;
-            }
-            try {
-            	boolean flag=operatingDataServiceImpl.isRecordExist(dutyDate,tollGateId);
-            	if(flag){
-        			//存在重复的记录
-        			logger_excel.info("-------------存在相同的记录，不导入："+dutyDateStr+"-"+tollGateName+"---------------");
-        			continue;
-            	}else{
-            		//不存在则导入
-            		
-            		OperatingData operatingData=new OperatingData();
-            		operatingData.setTtId(operatingDataVo.getTtId());
-            		operatingData.setTitle(operatingDataVo.getTitle());
-            		operatingData.setDutyDate(dutyDate);
-            		operatingData.setFormNumber("HLZXRBB-06");
-            		operatingData.setTollGate(Integer.parseInt(tollGateId));
-            		if(lo.get(1)!=null){
-            			operatingData.setTotalTraffic(Integer.parseInt((String)lo.get(1)));
-            		}
-            		if(lo.get(2)!=null){
-            			operatingData.setYtkTraffic(Integer.parseInt((String)lo.get(2)));
-            		}
-            		if(lo.get(3)!=null){
-            			operatingData.setMobilePaymentTraffic(Integer.parseInt((String)lo.get(3)));
-            		}
-            		if(lo.get(4)!=null){
-            			operatingData.setGeneralIncome(Double.valueOf((String)lo.get(4)));
-            		}
-            		if(lo.get(5)!=null){
-            			operatingData.setYtkIncome(Double.valueOf((String)lo.get(5)));
-            		}
-            		if(lo.get(6)!=null){
-            			operatingData.setMobilePaymentIncome(Double.valueOf((String)lo.get(6)));
-            		}
-            		importOperatingDataList.add(operatingData);
-            	}
+        	if(tollGateName.isEmpty())	break;//退出循环	
+        	String tollGateId= DictUtils.getDictAttrKey("dc_tollGate_operation", tollGateName);
+        	if(StringUtils.isEmpty(tollGateId)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【收费站】列存有格式问题,是否正确填写收费站名称\r\n");
+        		isImportReady=false;
+        	}
+        	//总车流
+        	String totalTrafficStr=(String)lo.get(1);
+        	if(StringUtils.isEmpty(totalTrafficStr)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【总车流】列存有格式问题，不能空\r\n");
+        		isImportReady=false;
+        	}
+        	int totalTraffic=0;
+        	try {
+        		totalTraffic=MathUtil.stringToInt(totalTrafficStr);
 			} catch (Exception e) {
-				this.print("第"+(i+1)+"条数据："+tollGateName+"，存有问题，导入中止 ");
-				return;
+				strErrMsg.append("第"+(i+1)+"条数据：【总车流】列存有格式问题，检查是否为整数\r\n");
+        		isImportReady=false;
 			}
+        	//其中粤通卡车流
+        	String ytkTrafficStr=(String)lo.get(2);
+        	if(StringUtils.isEmpty(ytkTrafficStr)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【其中粤通卡车流】列存有格式问题，不能空\r\n");
+        		isImportReady=false;
+        	}
+        	int ytkTraffic=0;
+        	try {
+        		ytkTraffic=MathUtil.stringToInt(ytkTrafficStr);
+			} catch (Exception e) {
+				strErrMsg.append("第"+(i+1)+"条数据：【其中粤通卡车流】列存有格式问题，检查是否为整数\r\n");
+        		isImportReady=false;
+			}
+        	//移动支付车流
+        	String mobilePaymentTrafficStr=(String)lo.get(3);
+        	if(StringUtils.isEmpty(mobilePaymentTrafficStr)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【移动支付车流】列存有格式问题，不能空\r\n");
+        		isImportReady=false;
+        	}
+        	int mobilePaymentTraffic=0;
+        	try {
+        		mobilePaymentTraffic=MathUtil.stringToInt(mobilePaymentTrafficStr);
+			} catch (Exception e) {
+				strErrMsg.append("第"+(i+1)+"条数据：【移动支付车流】列存有格式问题，检查是否为整数\r\n");
+        		isImportReady=false;
+			}
+        	//总收费额
+        	String generalIncomeStr=(String)lo.get(4);
+        	if(StringUtils.isEmpty(generalIncomeStr)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【总收费额】列存有格式问题，不能空\r\n");
+        		isImportReady=false;
+        	}
+        	double generalIncome=0.0;
+        	try {
+        		generalIncome=Double.parseDouble(generalIncomeStr);
+			} catch (Exception e) {
+				strErrMsg.append("第"+(i+1)+"条数据：【总收费额】列存有格式问题，检查是否为数值\r\n");
+        		isImportReady=false;
+			}
+        	//其中粤通卡收入
+        	String ytkIncomeStr=(String)lo.get(5);
+        	if(StringUtils.isEmpty(ytkIncomeStr)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【其中粤通卡收入】列存有格式问题，不能空\r\n");
+        		isImportReady=false;
+        	}
+        	double ytkIncome=0.0;
+        	try {
+        		ytkIncome=Double.parseDouble(ytkIncomeStr);
+			} catch (Exception e) {
+				strErrMsg.append("第"+(i+1)+"条数据：【其中粤通卡收入】列存有格式问题，检查是否为数值\r\n");
+        		isImportReady=false;
+			}
+        	//移动支付收入
+        	String mobilePaymentIncomeStr=(String)lo.get(6);
+        	if(StringUtils.isEmpty(mobilePaymentIncomeStr)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【移动支付收入】列存有格式问题，不能空\r\n");
+        		isImportReady=false;
+        	}
+        	double mobilePaymentIncome=0.0;
+        	try {
+        		mobilePaymentIncome=Double.parseDouble(mobilePaymentIncomeStr);
+			} catch (Exception e) {
+				strErrMsg.append("第"+(i+1)+"条数据：【移动支付收入】列存有格式问题，检查是否为数值\r\n");
+        		isImportReady=false;
+			}
+
+        	if(isImportReady){
+        		//以上excel内容格式检查通过，开始整理实体
+        		 String dutyDateStr=operatingDataVo.getDutyDateStr(); //录入时间
+                 Date dutyDate =DateUtil.format(operatingDataVo.getDutyDateStr(), "yyyy-MM-dd");
+                 try {
+                 	boolean flag=operatingDataServiceImpl.isRecordExist(dutyDate,tollGateId);
+                 	if(flag){
+             			//存在重复的记录
+             			logger_excel.info("-------------存在相同的记录，不导入："+dutyDateStr+"-"+tollGateName+"---------------");
+             			continue;
+                 	}else{
+                 		//不存在则导入
+                 		OperatingData operatingData=new OperatingData();
+                 		operatingData.setTtId(operatingDataVo.getTtId());
+                 		operatingData.setTitle(operatingDataVo.getTitle());
+                 		operatingData.setDutyDate(dutyDate);
+                 		operatingData.setFormNumber("HLZXRBB-06");
+                 		operatingData.setTollGate(Integer.parseInt(tollGateId));
+                 		operatingData.setTotalTraffic(totalTraffic);
+                 		operatingData.setYtkTraffic(ytkTraffic);
+                 		operatingData.setMobilePaymentTraffic(mobilePaymentTraffic);
+                 		operatingData.setGeneralIncome(generalIncome);
+                 		operatingData.setYtkIncome(ytkIncome);
+                 		operatingData.setMobilePaymentIncome(mobilePaymentIncome);
+                 		importOperatingDataList.add(operatingData);
+                 	}
+     			} catch (Exception e) {
+     				this.print("第"+(i+1)+"条数据："+tollGateName+"，存有问题，导入中止 ");
+     				return;
+     			}
+        	}
         }
-        //开始插入库
-        for (OperatingData operatingData : importOperatingDataList) {
-        	operatingDataServiceImpl.save(operatingData);
-        	successCount++;
-		}
-        logger_excel.info("导入数："+successCount);
-        logger_excel.info("-------------营运数据导入结束 结束时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"---------------");
-		this.print("营运数据导入完毕,导入数："+successCount);
+        if(isImportReady){
+        	//开始插入库
+        	for (OperatingData operatingData : importOperatingDataList) {
+        		operatingDataServiceImpl.save(operatingData);
+        		successCount++;
+        	}
+        	logger_excel.info("导入数："+successCount);
+        	logger_excel.info("-------------营运数据导入结束 结束时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"---------------");
+        	this.print("营运数据导入完毕,导入数："+successCount);
+        }else{
+        	strErrMsg.append("----导入失败----");
+        	this.print(strErrMsg.toString());
+        }
 	}
 
 

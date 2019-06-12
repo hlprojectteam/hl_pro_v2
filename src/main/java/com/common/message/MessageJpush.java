@@ -35,7 +35,7 @@ public class MessageJpush {
      * @ClassName:MessageJpush.java
      * @Description:事件推送消息
      * @param title 通知标题
-     * @param msgContent 事件内容
+     * @param msg 事件内容
      * @param Tag 推送的标签，如 有eventTag这一个标签的人都收到，不指定标签时设置为NULL
      * @param Alias 推送的标注，标注一般是每个用户唯一的，如标注为用户ID，只有这个标注的人才收到，不指定标注时指定为NULL
      */

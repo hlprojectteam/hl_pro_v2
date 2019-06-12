@@ -40,7 +40,7 @@
     
     <%-- 第3行 --%>
   	<div class="form-group">
-	  	<label class="col-sm-2 control-label"><span style="color: red">*</span>党内职务</label>
+	  	<label class="col-sm-2 control-label">党内职务</label>
 	     <div class="col-sm-3">
 	     	<opt:select dictKey="dj_partyMember_duty" isDefSelect="true" id="memberDuty" name="memberDuty" value="${partyMemberVo.memberDuty }" classStyle="form-control m-b"/>
 	     </div>

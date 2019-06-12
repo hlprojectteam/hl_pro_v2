@@ -172,11 +172,11 @@ public class BriefController extends BaseController{
 				/**交通运行情况*/
 				//一、交通概况
 				long count_rescuework = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_rescuework t where t.ttId = '" + ttId + "'");
-				String jt_1 = "一、交通概况 ：\n" + "	拯救作业" + count_rescuework + "宗。";
+				String jt_1 = "一、交通概况 ：\n" + "	拯救作业" + count_rescuework + "宗。\n";
 
 				//二、路面施工
 				long count_roadwork = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_roadwork t where t.ttId = '" + ttId + "'");
-				String jt_2 = "\n二、路面施工：\n" + "	全天涉路施工" + count_roadwork + "宗。";
+				String jt_2 = "二、路面施工：\n" + "	全天涉路施工" + count_roadwork + "宗。\n";
 
 				//三、其它情况
 				long count_exceptionrecord = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_exceptionrecord t where t.exception_Type = 1 and t.ttId = '" + ttId + "'");
@@ -184,15 +184,15 @@ public class BriefController extends BaseController{
 				long count_feedback = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_feedback t where t.fb_Type = 1 and t.ttId = '" + ttId + "'");
 				String jt_3 = "";
 				if(count_feedback > 0){
-					jt_3 = "\n二、其它情况：\n" +
+					jt_3 = "二、其它情况：\n" +
 							"	1、营运异常记录" + count_exceptionrecord + "宗;\n" +
 							"	2、信息通传" + count_infothrough + "宗;\n" +
-							"	3、顾客投诉" + count_feedback + "宗。";
+							"	3、顾客投诉" + count_feedback + "宗。\n";
 				}else{
-					jt_3 = "\n二、其它情况：\n" +
+					jt_3 = "二、其它情况：\n" +
 							"	1、营运异常记录" + count_exceptionrecord + "宗;\n" +
 							"	2、信息通传" + count_infothrough + "宗;\n" +
-							"	3、全线收费站有序开展超限非现场执法，无投诉及收费纠纷。";
+							"	3、全线收费站有序开展超限非现场执法，无投诉及收费纠纷。\n";
 				}
 
 				briefVo.setTrafficOperation(jt_1 + jt_2 + jt_3);
@@ -209,17 +209,17 @@ public class BriefController extends BaseController{
 				if(equipmentStatusList.size() > 0){
 					EquipmentStatus equipmentStatus = equipmentStatusList.get(0);
 					sb_1 += "	1、标识点运行情况：\n " +
-							"	R1标识成功率" + equipmentStatus.getSuccessRateR1() + "%、R1误标数量" + equipmentStatus.getMislabelNumR1() + "；R2标识成功率" + equipmentStatus.getSuccessRateR2() + "%、R2误标数量" + equipmentStatus.getMislabelNumR2() + "；5.8标识成功率" + equipmentStatus.getSuccessRateE1() + "% ；";
+							"	R1标识成功率" + equipmentStatus.getSuccessRateR1() + "%、R1误标数量" + equipmentStatus.getMislabelNumR1() + "；R2标识成功率" + equipmentStatus.getSuccessRateR2() + "%、R2误标数量" + equipmentStatus.getMislabelNumR2() + "；5.8标识成功率" + equipmentStatus.getSuccessRateE1() + "% ；\n";
 					sb_1 += "	2、高清卡口运行情况（车牌识别成功率）：\n" +
-							"	细沥-黄阁（东行）" + equipmentStatus.getSuccessRateA() + "%；细沥-黄阁（西行）" + equipmentStatus.getSuccessRateB() + "%；庙贝沙-横沥（北行）" + equipmentStatus.getSuccessRateC() + "%；庙贝沙-横沥（南行）" + equipmentStatus.getSuccessRateD() + "%；中心已通知相关单位跟进处理。";
+							"	细沥-黄阁（东行）" + equipmentStatus.getSuccessRateA() + "%；细沥-黄阁（西行）" + equipmentStatus.getSuccessRateB() + "%；庙贝沙-横沥（北行）" + equipmentStatus.getSuccessRateC() + "%；庙贝沙-横沥（南行）" + equipmentStatus.getSuccessRateD() + "%；中心已通知相关单位跟进处理。\n";
 				}else{
-					sb_1 += "	1、标识点运行情况：\n 暂无数据；\n" +
-							"	2、高清卡口运行情况（车牌识别成功率）：\n暂无数据；\n";
+					sb_1 += "	1、标识点运行情况：\n		暂无数据；\n" +
+							"	2、高清卡口运行情况（车牌识别成功率）：\n	暂无数据；\n";
 				}
 
 
 				//二、路面监控系统
-				String sb_2 = "\n二、路面监控系统：\n";
+				String sb_2 = "二、路面监控系统：\n";
 				//路面摄像枪
 				long count_si2 = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_SurveillanceInspection t where t.failure_Equipment = 2 and t.ttId = '" + ttId + "'");
 				//收费站广场摄像枪
@@ -245,7 +245,7 @@ public class BriefController extends BaseController{
 
 
 				//三、各站收费设备运行情况
-				String sb_3 = "\n三、各站收费设备运行情况：\n";
+				String sb_3 = "三、各站收费设备运行情况：\n";
 				//所有车道都正常的收费站数量
 				long count_eq1 = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_EquipmentOperation t where t.cdgqzp_ = 1 and t.zdfkj_ = 1 and t.mtcckcd_ = 1 " +
 						" and t.etcckcd_ = 1 and t.mtcrkcd_ = 1 and t.etcrkcd_ = 1 and t.jzcd_ = 1 and t.ttId = '" + ttId + "'");
@@ -254,11 +254,11 @@ public class BriefController extends BaseController{
 						" and t.ttId =  '" + ttId + "'");
 
 				if(count_eq1 == 13){
-					sb_3 += "设备故障报修及跟踪情况详见《各站车道设备运行情况统计表》。";
+					sb_3 += "	设备故障报修及跟踪情况详见《各站车道设备运行情况统计表》。";
 				}else if(count_eq2 > 0){
-					sb_3 += "现有" + count_eq2 + "个收费站的车道故障无法正常使用，详见《各站车道设备运行情况统计表》。";
+					sb_3 += "	现有" + count_eq2 + "个收费站的车道故障无法正常使用，详见《各站车道设备运行情况统计表》。";
 				}else{
-					sb_3 += "现有部分收费站的车道故障，暂不影响发卡、收费，详见《各站车道设备运行情况统计表》。";
+					sb_3 += "	现有部分收费站的车道故障，暂不影响发卡、收费，详见《各站车道设备运行情况统计表》。";
 				}
 
 				briefVo.setEquipmentOperation(sb_1 + sb_2 + sb_3);
@@ -295,11 +295,11 @@ public class BriefController extends BaseController{
 				/**交通运行情况*/
 				//一、交通概况
 				long count_rescuework = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_rescuework t where t.ttId = '" + ttId + "'");
-				String jt_1 = "一、交通概况 ：\n" + "	拯救作业" + count_rescuework + "宗。";
+				String jt_1 = "一、交通概况 ：\n" + "	拯救作业" + count_rescuework + "宗。\n";
 
 				//二、路面施工
 				long count_roadwork = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_roadwork t where t.ttId = '" + ttId + "'");
-				String jt_2 = "\n二、路面施工：\n" + "	全天涉路施工" + count_roadwork + "宗。";
+				String jt_2 = "二、路面施工：\n" + "	全天涉路施工" + count_roadwork + "宗。\n";
 
 				//三、其它情况
 				long count_exceptionrecord = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_exceptionrecord t where t.exception_Type = 1 and t.ttId = '" + ttId + "'");
@@ -307,15 +307,15 @@ public class BriefController extends BaseController{
 				long count_feedback = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_feedback t where t.fb_Type = 1 and t.ttId = '" + ttId + "'");
 				String jt_3 = "";
 				if(count_feedback > 0){
-					jt_3 = "\n二、其它情况：\n" +
+					jt_3 = "二、其它情况：\n" +
 							"	1、营运异常记录" + count_exceptionrecord + "宗;\n" +
 							"	2、信息通传" + count_infothrough + "宗;\n" +
-							"	3、顾客投诉" + count_feedback + "宗。";
+							"	3、顾客投诉" + count_feedback + "宗。\n";
 				}else{
-					jt_3 = "\n二、其它情况：\n" +
+					jt_3 = "二、其它情况：\n" +
 							"	1、营运异常记录" + count_exceptionrecord + "宗;\n" +
 							"	2、信息通传" + count_infothrough + "宗;\n" +
-							"	3、全线收费站有序开展超限非现场执法，无投诉及收费纠纷。";
+							"	3、全线收费站有序开展超限非现场执法，无投诉及收费纠纷。\n";
 				}
 
 				trafficOperation = jt_1 + jt_2 + jt_3;
@@ -332,17 +332,17 @@ public class BriefController extends BaseController{
 				if(equipmentStatusList.size() > 0){
 					EquipmentStatus equipmentStatus = equipmentStatusList.get(0);
 					sb_1 += "	1、标识点运行情况：\n " +
-							"	R1标识成功率" + equipmentStatus.getSuccessRateR1() + "%、R1误标数量" + equipmentStatus.getMislabelNumR1() + "；R2标识成功率" + equipmentStatus.getSuccessRateR2() + "%、R2误标数量" + equipmentStatus.getMislabelNumR2() + "；5.8标识成功率" + equipmentStatus.getSuccessRateE1() + "% ；";
+							"	R1标识成功率" + equipmentStatus.getSuccessRateR1() + "%、R1误标数量" + equipmentStatus.getMislabelNumR1() + "；R2标识成功率" + equipmentStatus.getSuccessRateR2() + "%、R2误标数量" + equipmentStatus.getMislabelNumR2() + "；5.8标识成功率" + equipmentStatus.getSuccessRateE1() + "% ；\n";
 					sb_1 += "	2、高清卡口运行情况（车牌识别成功率）：\n" +
-							"	细沥-黄阁（东行）" + equipmentStatus.getSuccessRateA() + "%；细沥-黄阁（西行）" + equipmentStatus.getSuccessRateB() + "%；庙贝沙-横沥（北行）" + equipmentStatus.getSuccessRateC() + "%；庙贝沙-横沥（南行）" + equipmentStatus.getSuccessRateD() + "%；中心已通知相关单位跟进处理。";
+							"	细沥-黄阁（东行）" + equipmentStatus.getSuccessRateA() + "%；细沥-黄阁（西行）" + equipmentStatus.getSuccessRateB() + "%；庙贝沙-横沥（北行）" + equipmentStatus.getSuccessRateC() + "%；庙贝沙-横沥（南行）" + equipmentStatus.getSuccessRateD() + "%；中心已通知相关单位跟进处理。\n";
 				}else{
-					sb_1 += "	1、标识点运行情况：\n 暂无数据；\n" +
-							"	2、高清卡口运行情况（车牌识别成功率）：\n暂无数据； \n";
+					sb_1 += "	1、标识点运行情况：\n	 暂无数据；\n" +
+							"	2、高清卡口运行情况（车牌识别成功率）：\n     暂无数据； \n";
 				}
 
 
 				//二、路面监控系统
-				String sb_2 = "\n二、路面监控系统：\n";
+				String sb_2 = "二、路面监控系统：\n";
 				//路面摄像枪
 				long count_si2 = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_SurveillanceInspection t where t.failure_Equipment = 2 and t.ttId = '" + ttId + "'");
 				//收费站广场摄像枪
@@ -368,7 +368,7 @@ public class BriefController extends BaseController{
 
 
 				//三、各站收费设备运行情况
-				String sb_3 = "\n三、各站收费设备运行情况：\n";
+				String sb_3 = "三、各站收费设备运行情况：\n";
 				//所有车道都正常的收费站数量
 				long count_eq1 = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_EquipmentOperation t where t.cdgqzp_ = 1 and t.zdfkj_ = 1 and t.mtcckcd_ = 1 " +
 						" and t.etcckcd_ = 1 and t.mtcrkcd_ = 1 and t.etcrkcd_ = 1 and t.jzcd_ = 1 and t.ttId = '" + ttId + "'");
@@ -377,11 +377,11 @@ public class BriefController extends BaseController{
 						" and t.ttId =  '" + ttId + "'");
 
 				if(count_eq1 == 13){
-					sb_3 += "设备故障报修及跟踪情况详见《各站车道设备运行情况统计表》。";
+					sb_3 += "	设备故障报修及跟踪情况详见《各站车道设备运行情况统计表》。";
 				}else if(count_eq2 > 0){
-					sb_3 += "现有" + count_eq2 + "个收费站的车道故障无法正常使用，详见《各站车道设备运行情况统计表》。";
+					sb_3 += "	现有" + count_eq2 + "个收费站的车道故障无法正常使用，详见《各站车道设备运行情况统计表》。";
 				}else{
-					sb_3 += "现有部分收费站的车道故障，暂不影响发卡、收费，详见《各站车道设备运行情况统计表》。 ";
+					sb_3 += "	现有部分收费站的车道故障，暂不影响发卡、收费，详见《各站车道设备运行情况统计表》。 ";
 				}
 
 				equipmentOperation = sb_1 + sb_2 + sb_3;

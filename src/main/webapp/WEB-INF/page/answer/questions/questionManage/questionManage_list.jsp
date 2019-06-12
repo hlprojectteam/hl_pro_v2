@@ -165,6 +165,18 @@
             content: "/answer/question_edit?id="+obj.id+"&winName="+window.name
         });
   	}
+    //题库导入
+  	function on_import(obj){
+  		parent.layer.open({
+            type: 2,
+            title: "导入题库",
+            shadeClose: true,//打开遮蔽
+            shade: 0.6, 
+            maxmin: true, //开启最大化最小化按钮
+            area: ["60%", "60%"],
+            content: "/answer/question_import?id="+obj.id+"&winName="+window.name
+        });
+  	}
 //查询
 function on_search(){
 	$("#grid").bootstrapTable("refresh");

@@ -31,6 +31,7 @@ import com.answer.questions.vo.QuestionManageVo;
 import com.answer.questions.vo.QuestionProblemVo;
 import com.answer.questions.vo.QuestionVo;
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.MathUtil;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.common.utils.helper.SpringUtils;
@@ -101,7 +102,7 @@ public class QuestionsServiceImpl extends BaseServiceImpl implements IQuestionsS
 		Question question = new Question();
 		BeanUtils.copyProperties(questionVo, question);
 		if(StringUtils.isBlank(questionVo.getId())){
-			question.setNum(DateUtil.getYYMMDDHHMMSS(""));
+			question.setNum(DateUtil.getYYMMDDHHMMSS2(MathUtil.randomTwoNumber()));
 			this.save(question);
 			for (QuestionProblem qp : questionVo.getProblems()) {
 				qp.setQuestion(question);
@@ -123,14 +124,24 @@ public class QuestionsServiceImpl extends BaseServiceImpl implements IQuestionsS
 		Question question = new Question();
 		BeanUtils.copyProperties(questionVo, question);
 		if(StringUtils.isBlank(questionVo.getId())){
-			question.setNum(DateUtil.getYYMMDDHHMMSS(""));
+			question.setNum(DateUtil.getYYMMDDHHMMSS2(MathUtil.randomTwoNumber()));
 			this.save(question);
-			QuestionProblem qp = new QuestionProblem();
-			qp.setAnswer(questionVo.getQuestionProblemAnswer());
-			qp.setNo(questionVo.getQuestionProblemNo());
-			qp.setOption(questionVo.getQuestionProblemOption());
-			qp.setQuestion(question);
-			this.save(qp);
+			if(questionVo.getProblems()!=null){
+				//采用批量方式
+				for (QuestionProblem qp : questionVo.getProblems()) {
+					qp.setOption("判断题");
+					qp.setQuestion(question);
+					this.save(qp);
+				}
+			}else if(questionVo.getQuestionProblemAnswer()!=null){
+				//单条编辑
+				QuestionProblem qp = new QuestionProblem();
+				qp.setAnswer(questionVo.getQuestionProblemAnswer());
+				qp.setNo(questionVo.getQuestionProblemNo());
+				qp.setOption(questionVo.getQuestionProblemOption());
+				qp.setQuestion(question);
+				this.save(qp);
+			}
 		}else{
 			this.update(question);
 			List<Criterion> criterionsList = new ArrayList<Criterion>();
@@ -150,19 +161,29 @@ public class QuestionsServiceImpl extends BaseServiceImpl implements IQuestionsS
 		Question question = new Question();
 		BeanUtils.copyProperties(questionVo, question);
 		if(StringUtils.isBlank(questionVo.getId())){
-			question.setNum(DateUtil.getYYMMDDHHMMSS(""));
+			question.setNum(DateUtil.getYYMMDDHHMMSS2(MathUtil.randomTwoNumber()));
 			this.save(question);
 			for (QuestionProblem qp : questionVo.getProblems()) {
 				qp.setOption("填空题");
 				qp.setQuestion(question);
+				qp.setSysCode("hl");
 				this.save(qp);
 			}
 		}else{
 			this.update(question);
-			for (QuestionProblem qp : questionVo.getProblems()) {
-				qp.setOption("填空题");
-				qp.setQuestion(question);
-				this.update(qp);
+			if(questionVo.getProblems()!=null){
+				if(StringUtils.isEmpty(questionVo.getProblems().get(0).getId())){
+					//如果ID是空，将原来的problems清空，重新添加
+					this.deleteQuestionProblem(questionVo.getId());
+				}
+					for (QuestionProblem qp : questionVo.getProblems()) {
+						qp.setOption("填空题");
+						qp.setQuestion(question);
+						qp.setSysCode("hl");
+						this.saveOrUpdate(qp);
+					}
+			}else{
+				this.deleteQuestionProblem(questionVo.getId());
 			}
 		}
 	}
@@ -185,6 +206,28 @@ public class QuestionsServiceImpl extends BaseServiceImpl implements IQuestionsS
 				this.delete(questionProblem);
 			}
 			this.delete(question);
+		}
+	}
+	
+	//----------题目选项--------------------------------------------------------
+	
+	@Override
+	public void saveOrUpdate(QuestionProblem questionProblem) {
+		if(StringUtils.isBlank(questionProblem.getId())){
+			this.save(questionProblem);
+		}else{
+			this.update(questionProblem);	
+		}
+		
+	}
+	
+	@Override
+	public void deleteQuestionProblem(String questionId) {
+		List<Criterion> criterionsList = new ArrayList<Criterion>();
+		criterionsList.add(Restrictions.eq("question.id", questionId));
+		List<QuestionProblem> list= this.questionsDaoImpl.queryEntityList(criterionsList, null, QuestionProblem.class);
+		for (QuestionProblem questionProblem2 : list) {
+			this.delete(questionProblem2);
 		}
 	}
 
@@ -695,7 +738,7 @@ public class QuestionsServiceImpl extends BaseServiceImpl implements IQuestionsS
 		attributeList.add(examManageVo.getId());//所属考题
 		String queryOnlineExam = "";
 		if(sign!=null){
-			queryOnlineExam = QuestionsQl.HQL.queryOnlineExam.replace("##", " and epq.isRight !=? ");
+			queryOnlineExam = QuestionsQl.HQL.queryOnlineExam.replace("##", " and (epq.isRight !=? or epq.isRight is null)");
 			attributeList.add(sign);//只显示错题
 		}else{
 			queryOnlineExam = QuestionsQl.HQL.queryOnlineExam.replace("##", " ");
@@ -844,11 +887,15 @@ public class QuestionsServiceImpl extends BaseServiceImpl implements IQuestionsS
 									epq.setIsRight(0);//答案不相同
 							}else{
 								epq.setPersonAnswer(epq.getPersonAnswer()+","+answer);
-								if(epq.getIsRight()==1){//如果第一个答案是对才能进入对比
-									if(qp.getAnswer().indexOf(answer)>-1)
-										epq.setIsRight(1);//答案相同
-									else
-										epq.setIsRight(0);//答案不相同
+								if(epq.getIsRight()!=null){
+									if(epq.getIsRight()==1){//如果第一个答案是对才能进入对比
+										if(qp.getAnswer().indexOf(answer)>-1)
+											epq.setIsRight(1);//答案相同
+										else
+											epq.setIsRight(0);//答案不相同
+									}
+								}else{
+									epq.setIsRight(0);//答案不相同
 								}
 							}
 							this.update(epq);
@@ -959,6 +1006,7 @@ public class QuestionsServiceImpl extends BaseServiceImpl implements IQuestionsS
 				if(obj[1]!=null) epVo.setSubject(obj[1].toString());
 				if(obj[2]!=null) epVo.setTotalSource(Float.parseFloat(obj[2].toString()));//总分
 				if(obj[3]!=null) epVo.setConsumeTime(Integer.parseInt(obj[3].toString()));//耗时
+				if(obj[4]!=null) epVo.setType(Integer.parseInt(obj[4].toString()));//考试类型
 				emList.add(epVo);
 			}
 			pager.setPageList(emList);
@@ -1016,6 +1064,38 @@ public class QuestionsServiceImpl extends BaseServiceImpl implements IQuestionsS
 			attr.add(examManageVo.getId());
 			return this.baseDaoImpl.queryCountByHql(QuestionsQl.HQL.queryExamPersonCount, attr);
 		}
+		@Override
+		public void deletePersonExamRecord(String ExamId, String UserId) {
+			//删除人员考试答案记录
+			String cleanExamPersonQuestionSQL =  QuestionsQl.MySql.cleanExamPersonQuestion.replace("@@", ExamId);
+			cleanExamPersonQuestionSQL=cleanExamPersonQuestionSQL.replace("##", UserId);
+			questionsDaoImpl.excuteBySql(cleanExamPersonQuestionSQL);
+			
+			//清空人员试题记录，如分数，时间
+			List<Criterion> criterionsList = new ArrayList<Criterion>();
+			criterionsList.add(Restrictions.eq("examManage.id", ExamId));
+			criterionsList.add(Restrictions.eq("personId", UserId));
+			List<ExamPerson> epList = this.baseDaoImpl.queryEntityList(criterionsList, null, ExamPerson.class);
+			if(epList!=null){
+				ExamPerson examPerson=epList.get(0);
+				examPerson.setConsumeTime(null);
+				examPerson.setTotalSource(null);
+				examPerson.setFillRight(null);
+				examPerson.setFillTotalSource(null);
+				examPerson.setJudgeRight(null);
+				examPerson.setJudgeTotalSource(null);
+				examPerson.setSingleRight(null);
+				examPerson.setSingleTotalSource(null);
+				examPerson.setManyRight(null);
+				examPerson.setManyTotalSource(null);
+				this.questionsDaoImpl.update(examPerson);
+			}
+	
+			
+			
+		}
+	
+	
 	
 	
 }

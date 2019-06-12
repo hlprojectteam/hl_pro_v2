@@ -77,7 +77,7 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 
 	@Override
 	public ExceptionRecord saveOrUpdate(ExceptionRecordVo exceptionRecordVo) {
-		if(exceptionRecordVo.getReportedWay().equals(5)){
+		if(exceptionRecordVo.getReportedWay() != null && exceptionRecordVo.getReportedWay().equals(5)){
 			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_reportedWay_ER", exceptionRecordVo.getDictValue());
 			exceptionRecordVo.setReportedWay(Integer.parseInt(newKey));
 		}

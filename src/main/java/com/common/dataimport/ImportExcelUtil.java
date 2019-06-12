@@ -107,7 +107,7 @@ public class ImportExcelUtil {
 	@SuppressWarnings("deprecation")
 	public Object getCellValue(Cell cell) {
 		Object value = null;
-		DecimalFormat df = new DecimalFormat("0"); // 格式化number String字符
+		DecimalFormat df = new DecimalFormat("0.00"); // 格式化number String字符
 		SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd"); // 日期格式化
 		DecimalFormat df2 = new DecimalFormat("0"); // 格式化数字
 
@@ -120,10 +120,14 @@ public class ImportExcelUtil {
 			break;
 		case Cell.CELL_TYPE_NUMERIC: // 10-五月-2015
 			if ("General".equals(cell.getCellStyle().getDataFormatString())) {
+				//excle表格常规格式
 				value = df.format(cell.getNumericCellValue());
-			} else if ("m/d/yy".equals(cell.getCellStyle().getDataFormatString())) {
+			} else if((cell.getCellStyle().getDataFormatString().contains("0.00_"))){
+				//excle表格数值格式
+				value = df.format(cell.getNumericCellValue());
+			}else if ("m/d/yy".equals(cell.getCellStyle().getDataFormatString())) {
 				value = sdf.format(cell.getDateCellValue());
-			} else {
+			}else {
 				if (HSSFDateUtil.isCellDateFormatted(cell)) { // 判断是否属于时间格式（防止内容类型错乱）
 					value = cell.getStringCellValue();
 				} else {

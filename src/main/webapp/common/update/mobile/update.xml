@@ -1,13 +1,11 @@
 <root>
-	<versionCode>30</versionCode>
-	<versionName>3.0.0</versionName>
-	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/9df516143aa18e20a67d5d0f8ccfd345_d</androidUrl>
+	<versionCode>31</versionCode>
+	<versionName>3.1.0</versionName>
+	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/c668fa3e03bb6523473116d1ec6d5ff2_d</androidUrl>
 	<iosUrl>https://itunes.apple.com/cn/app/huan-long-ying-yun-tong/id1170974616?mt=8</iosUrl>
 	<updateLog>
-		更新版本 3.0.0
-		1、安全管理通知发送
-		2、党建活动升级
-		3、建议反馈
-		4、页面排版修复
+		更新版本 3.1.0
+		1、页面优化
+		2、考试模块更新
   	</updateLog>
 </root>

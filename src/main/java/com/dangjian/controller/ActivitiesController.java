@@ -1158,12 +1158,27 @@ public class ActivitiesController extends BaseController{
 	
 	@RequestMapping(value="/testJpush")
 	public void testJpush(HttpSession httpSession,HttpServletResponse response){
-//		this.messageServiceImpl.sendMsg("IOS.....","IOS开发证书提示mobileprovision和开发证书重新？",
-//				"40284a8d586759f801588b19159100a7",null,Common.msgAQ,this.getSessionUser());
-////		this.sendJpushMsg("IOS.....","IOS开发证书提示mobileprovision和开发证书重新？",
-////				"40284a8d586759f801588b19159100a7",null,Common.msgAQ);
-//		this.print("sendSuccess");
+//		String noticeTitle=Common.msgTitle_DJ_ldgz_todo;
+//		String userIds="40284a8d586759f801588b19159100a7";//app_account
+////		String userIds="40284a8d6b365949016b3687d2f4005b";//王保佳
+//		String roleCodes="";
+//		int msgType=Common.msgDJ;
+//		User nowPerson=this.getSessionUser();
+//		//发送给“部门安全员”角色
+//		this.sendMsg(noticeTitle,"测试",userIds,roleCodes,msgType,nowPerson);
+//		System.out.println(Common.msg_platform+"-"+Common.msg_ApnsProduction+"-"+Common.msg_setMessage);
+//		this.print("测试");
+		
+		String noticeTitle=Common.msgTitle_KQ_dm;
+		String userIds="40284a8d586759f801588b19159100a7";//app_account
+//		String userIds="40284a8d6b365949016b3687d2f4005b";//王保佳
+		String roleCodes="";
+		int msgType=Common.msgKQ;
+		User nowPerson=this.getSessionUser();
+		//发送给“部门安全员”角色
+		this.sendMsg(noticeTitle,"测试",userIds,roleCodes,msgType,nowPerson);
 		System.out.println(Common.msg_platform+"-"+Common.msg_ApnsProduction+"-"+Common.msg_setMessage);
+		this.print("测试");
 	}
 	
 	@RequestMapping(value="/testAddCategoryAttributesValue")
@@ -1216,6 +1231,8 @@ public class ActivitiesController extends BaseController{
 		String ids=this.userServiceImpl.findUserIdsByUserIdAndRoleCode(userId, roleCodes);
 		System.out.println(ids);
 	}
+	
+	
 	
 	
 

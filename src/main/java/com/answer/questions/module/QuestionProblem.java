@@ -26,9 +26,9 @@ import org.hibernate.annotations.GenericGenerator;
 public class QuestionProblem{
 	
 	private String id;
-	private String option;//选项
+	private String option;//选项内容
 	private String answer;//答案
-	private String no;//题号
+	private String no;// 选项（题号）如选择题是A B C D；判断题默认是1 ；填空有多个空也用 A B...表示 ；
 	private Question question;
 	private String sysCode;//子系统编码
 	

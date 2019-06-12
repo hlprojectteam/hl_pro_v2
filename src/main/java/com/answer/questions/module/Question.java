@@ -33,12 +33,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Question{
 	
 	private String id;
-	private String title;//标题
-	private Integer type;//问卷类型 1单选 2多选 3判断 4填空 
+	private String title;//题目
+	private Integer type;//题目类型  字典：title_type 1单选 2多选 3判断 4填空 
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")	
 	private Date createTime;
-	private Integer state;//状态 1:正常 0:停用
-	private Integer isRandom;//是否随机 1:是 0:否
+	private Integer state;//状态 字典：state 1:正常 2:停用
+	private Integer isRandom;//是否随机 字典：title_type  1:是 0:否
 	
 	private QuestionManage questionManage;
 

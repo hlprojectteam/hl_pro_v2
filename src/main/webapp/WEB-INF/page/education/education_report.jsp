@@ -15,7 +15,7 @@
 <script type="text/javascript" src="/common/plugins/ztree/js/jquery.ztree.all-3.5.js"></script>
 
 <!-- eCharts -->
-<script type="text/javascript" src="/common/plugins/Echarts/echarts.js"></script>
+<script type="text/javascript" src="/common/plugins/Echarts/echarts4.0.js"></script>
 
 <body style="overflow:scroll;overflow-y:hidden">
 <div class="ibox-content">

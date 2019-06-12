@@ -2,6 +2,7 @@ package com.common.dataimport;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -234,6 +236,111 @@ public class ImportDataForUserContrller extends BaseController{
         logger_excel.info("成功导入数："+successCount);
         logger_excel.info("-------------用户数据导入结束 结束时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"---------------");
 		return "用户数据导入完毕!";
+	}
+	
+	/**
+	 * 
+	 * @方法：@param file
+	 * @方法：@param response
+	 * @方法：@throws Exception
+	 * @描述：批量添加角色
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月7日
+	 */
+	@Transactional
+	@RequestMapping(value="/setUserRoleExcel",produces = "application/json;charset=utf-8",method=RequestMethod.POST) 
+	public void setUserRoleExcel(MultipartFile file,HttpServletResponse response) throws Exception{
+		InputStream in =null;  
+        List<List<Object>> listob = null;  
+        if(file.getSize()==0){
+        	this.print("请选择文件!");
+        	return ;
+        }
+        in = file.getInputStream();  
+        listob = new ImportExcelUtil().getBankListByExcel(in,file.getOriginalFilename(),34);  
+        in.close();  
+          
+        logger_excel.info("-------------数据导入开始 开始时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"---------------");
+        logger_excel.info("导入操作用户："+this.getSessionUser().getUserName());
+        int successCount=0;//计算失败数和成功数
+        StringBuffer strErrMsg=new StringBuffer();
+        boolean isImportReady=true;
+        List<User> importUserList=new ArrayList<>();
+
+        for (int i = 0; i < listob.size(); i++) {
+        	System.out.println("第"+(i+1)+"条数据");
+        	
+            List<Object> lo = listob.get(i);  
+            if(lo.isEmpty())	continue;	//去掉多余的行
+            //员工号
+            String jobNumber=(String)lo.get(0);
+        	if(StringUtils.isEmpty(jobNumber)){
+        		break;//退出循环	
+        	}
+        	//员工名称
+        	String userName=(String)lo.get(1);
+        	if(StringUtils.isEmpty(userName)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【员工姓名】列存有格式问题，不能空\r\n");
+        		isImportReady=false;
+        	}
+        	//角色名称
+        	String roleName=(String)lo.get(2);
+        	if(StringUtils.isEmpty(roleName)){
+        		strErrMsg.append("第"+(i+1)+"条数据：【角色名称】列存有格式问题，不能空\r\n");
+        		isImportReady=false;
+        	}
+
+        	if(isImportReady){
+        		//以上excel内容格式检查通过，开始整理实体
+        		User user=null;
+            	UserVo userVo=new UserVo();
+            	userVo.setUserName(userName);
+            	userVo.setJobNumber(jobNumber);
+            	List<User> uList= userServiceImpl.queryUserList(userVo);
+            	if(uList!=null){
+            		if(uList.size()>0){
+            			//有此人
+            			user=uList.get(0);
+            			RoleVo roleVo=new RoleVo();
+                    	roleVo.setRoleName(roleName);
+                    	Role role= roleServiceImpl.getRole(roleVo);
+                    	if(role!=null){
+                			//再导入新角色
+                			Set<Role> roles = user.getRoles();
+                			roles.add(role);
+                			user.setRoles(roles);
+                			
+                			importUserList.add(user);
+                    	}else{
+                    		strErrMsg.append("第"+(i+1)+"条数据：角色："+roleName+"，系统找不到此角色\r\n");
+                    		isImportReady=false;
+                    	}
+            		}else{
+            			strErrMsg.append("第"+(i+1)+"条数据：员工号："+jobNumber+"，姓名："+userName+"，系统找不到此人\r\n");
+                		isImportReady=false;
+            		}
+            	}else{
+            		//没有此人
+            		strErrMsg.append("第"+(i+1)+"条数据：员工号："+jobNumber+"，姓名："+userName+"，系统找不到此人\r\n");
+            		isImportReady=false;
+            	}
+                
+        	}
+        }
+        if(isImportReady){
+        	//开始插入库
+        	for (User user : importUserList) {
+        		userServiceImpl.update(user);
+        		successCount++;
+			}
+        	logger_excel.info("导入数："+successCount);
+        	logger_excel.info("-------------数据导入结束 结束时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"---------------");
+        	this.print("数据导入完毕,导入数："+successCount);
+        }else{
+        	strErrMsg.append("----导入失败----");
+        	this.print(strErrMsg.toString());
+        }
 	}
 
 }

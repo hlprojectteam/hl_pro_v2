@@ -47,7 +47,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>常务副总经理</label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="cwfzjl" name="cwfzjl" value='${(empty briefVo.cwfzjl) ? "林耿星" : briefVo.cwfzjl}' data-rule-required="true" data-rule-rangelength="[1,10]" />    
+				<input type="text" class="form-control" id="cwfzjl" name="cwfzjl" value='${(empty briefVo.cwfzjl) ? "刘勇" : briefVo.cwfzjl}' data-rule-required="true" data-rule-rangelength="[1,10]" />    
 			</div>
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>主管副总经理</label>
 		    <div class="col-sm-3">

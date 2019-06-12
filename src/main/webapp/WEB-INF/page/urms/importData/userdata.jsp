@@ -50,15 +50,14 @@
 			</div>
 		</form>
 		
-		<!-- <form id="residentForm" name="residentForm" action="submitResidentExcel"
+		<form id="userRoleForm" name="userRoleForm" action="setUserRoleExcel"
 			enctype="multipart/form-data" class="form-horizontal" method="post">
 			<div class="ibox-content">
 				<div class="form-group">
-					<label class="col-sm-2 control-label">住户EXCEL导入</label>
+					<label class="col-sm-2 control-label">批量添加员工角色</label>
 					<div class="col-sm-4">
 						<input type="file" name="file">
 					</div>
-
 					<div class="col-sm-1">
 						<button type="submit" class="btn btn-success">
 							<i class="fa fa-check"></i>&nbsp;提交
@@ -66,25 +65,7 @@
 					</div>
 				</div>
 			</div>
-		</form> -->
-		
-		<!-- <form id="populationForm" name="populationForm" action="submitPopulationExcel"
-			enctype="multipart/form-data" class="form-horizontal" method="post">
-			<div class="ibox-content">
-				<div class="form-group">
-					<label class="col-sm-2 control-label">人口EXCEL导入</label>
-					<div class="col-sm-4">
-						<input type="file" name="file">
-					</div>
-
-					<div class="col-sm-1">
-						<button type="submit" class="btn btn-success">
-							<i class="fa fa-check"></i>&nbsp;提交
-						</button>
-					</div>
-				</div>
-			</div>
-		</form> -->
+		</form>
 
 	</div>
 

@@ -38,8 +38,9 @@
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color: red">*</span>日期</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" id="" name="" value="<fmt:formatDate value='${equipmentStatusVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" disabled="disabled"  />
-                <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${equipmentStatusVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+                <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${equipmentStatusVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" />
+                <%--disabled="disabled"
+                <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${equipmentStatusVo.dutyDate}' pattern='yyyy-MM-dd'/>" />--%>
             </div>
             <jsp:useBean id="now" class="java.util.Date" scope="page"/>
             <label class="col-sm-2 control-label"><span style="color: red">*</span>记录时间</label>
@@ -64,8 +65,9 @@
                     <div class="input-group-addon">%</div>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" id="mislabelNumR1" name="mislabelNumR1" value="${(equipmentStatusVo.successRateR1 == "" || equipmentStatusVo.successRateR1 == null) ? "0" : equipmentStatusVo.mislabelNumR1}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
+            <label class="col-sm-1 control-label"><span style="color: red">*</span>误标数</label>
+            <div class="col-sm-1">
+                <input type="text" class="form-control" id="mislabelNumR1" name="mislabelNumR1" value="${(equipmentStatusVo.mislabelNumR1 == "" || equipmentStatusVo.mislabelNumR1 == null) ? "0" : equipmentStatusVo.mislabelNumR1}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
             </div>
         </div>
 
@@ -80,8 +82,9 @@
                         <div class="input-group-addon">%</div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="mislabelNumR2" name="mislabelNumR2" value="${(equipmentStatusVo.successRateR2 == "" || equipmentStatusVo.successRateR2 == null) ? "0" : equipmentStatusVo.mislabelNumR2}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
+                <label class="col-sm-1 control-label"><span style="color: red">*</span>误标数</label>
+                <div class="col-sm-1">
+                    <input type="text" class="form-control" id="mislabelNumR2" name="mislabelNumR2" value="${(equipmentStatusVo.mislabelNumR2 == "" || equipmentStatusVo.mislabelNumR2 == null) ? "0" : equipmentStatusVo.mislabelNumR2}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
                 </div>
             </div>
 
@@ -96,9 +99,6 @@
                         <div class="input-group-addon">%</div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="mislabelNumE1" name="mislabelNumE1" value="${(equipmentStatusVo.successRateE1 == "" || equipmentStatusVo.successRateE1 == null) ? "0" : equipmentStatusVo.mislabelNumE1}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
-                </div>
             </div>
 
             <div class="form-group">
@@ -112,9 +112,7 @@
                         <div class="input-group-addon">%</div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="mislabelNumA" name="mislabelNumA" value="${(equipmentStatusVo.successRateA == "" || equipmentStatusVo.successRateA == null) ? "0" : equipmentStatusVo.mislabelNumA}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
-                </div>
+               
             </div>
 
             <div class="form-group">
@@ -128,9 +126,7 @@
                         <div class="input-group-addon">%</div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="mislabelNumB" name="mislabelNumB" value="${(equipmentStatusVo.successRateB == "" || equipmentStatusVo.successRateB == null) ? "0" : equipmentStatusVo.mislabelNumB}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
-                </div>
+               
             </div>
 
             <div class="form-group">
@@ -144,9 +140,7 @@
                         <div class="input-group-addon">%</div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="mislabelNumC" name="mislabelNumC" value="${(equipmentStatusVo.successRateC == "" || equipmentStatusVo.successRateC == null) ? "0" : equipmentStatusVo.mislabelNumC}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
-                </div>
+               
             </div>
 
             <div class="form-group">
@@ -160,9 +154,7 @@
                         <div class="input-group-addon">%</div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="mislabelNumD" name="mislabelNumD" value="${(equipmentStatusVo.successRateD == "" || equipmentStatusVo.successRateD == null) ? "0" : equipmentStatusVo.mislabelNumD}" data-rule-required="true" data-rule-digits="true" data-rule-rangelength="[1,3]" placeholder="误标数量" />
-                </div>
+                
             </div>
 
 

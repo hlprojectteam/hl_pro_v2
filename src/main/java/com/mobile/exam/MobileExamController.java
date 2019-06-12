@@ -49,11 +49,13 @@ public class MobileExamController extends BaseController{
 	 * @param id
 	 */
 	@RequestMapping(value="/examOnline_start") 
-	public void start(HttpServletRequest request,HttpServletResponse response,String id) {
+	public void start(HttpServletRequest request,HttpServletResponse response,String id,boolean isRedo) {
 		//检查是否生成试题
 		ExamManageVo examManageVo = new ExamManageVo();
 		examManageVo.setId(id);
 		boolean chk = true;
+		//如重做，清空之前的记录
+		if(isRedo) this.questionsServiceImpl.deletePersonExamRecord(id, this.getSessionUser().getId());
 		if(!this.questionsServiceImpl.checkExam(examManageVo,this.getSessionUser())){
 			chk = this.questionsServiceImpl.submitGenerateExam(examManageVo,this.getSessionUser());//生产试题
 		}
@@ -303,8 +305,10 @@ public class MobileExamController extends BaseController{
 			obj.put("subject", examPersonVo.getSubject());
 			obj.put("consumeTime", examPersonVo.getConsumeTime());
 			obj.put("examManageId", examManage.getId());
+			obj.put("type", examPersonVo.getType());
 			array.add(obj);
 		}
 		return array.toString();
 	}
+
 }

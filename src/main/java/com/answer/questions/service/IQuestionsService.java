@@ -2,6 +2,7 @@ package com.answer.questions.service;
 
 
 import com.answer.questions.module.ExamPerson;
+import com.answer.questions.module.QuestionProblem;
 import com.answer.questions.vo.ExamManageVo;
 import com.answer.questions.vo.ExamPersonVo;
 import com.answer.questions.vo.QuestionManageVo;
@@ -87,6 +88,25 @@ public interface IQuestionsService extends IBaseService{
 	 * @Date 2016年9月9日上午10:58:03
 	 */
 	public void deleteQuestion(String ids);
+	
+	/**
+	 * 
+	 * @方法：@param questionProblem
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月3日
+	 */
+	public void saveOrUpdate(QuestionProblem questionProblem);
+	/**
+	 * 
+	 * @方法：@param questionId
+	 * @描述：删除题目下的选项
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月3日
+	 */
+	public void deleteQuestionProblem(String questionId);
 
 	//---------------------------------------
 	/**
@@ -278,5 +298,15 @@ public interface IQuestionsService extends IBaseService{
 	 */
 	public long checkIsExam(ExamManageVo examManageVo);
 
+	/**
+	 * 
+	 * @方法：@param ExamId
+	 * @方法：@param UserId
+	 * @描述：清空考试人员之前的考试记录，重做题目
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月7日
+	 */
+	public void deletePersonExamRecord(String ExamId,String UserId);
 	
 }

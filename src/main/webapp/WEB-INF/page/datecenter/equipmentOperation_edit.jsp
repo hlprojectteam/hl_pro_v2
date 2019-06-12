@@ -38,8 +38,9 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>日期</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="" name="" value="<fmt:formatDate value='${equipmentOperationVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true" disabled="disabled"  />
-	            <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${equipmentOperationVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
+	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${equipmentOperationVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true"  />
+				<%--disabled="disabled"
+	            <input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${equipmentOperationVo.dutyDate}' pattern='yyyy-MM-dd'/>" />--%>
 	        </div>
         </div>
 	  	

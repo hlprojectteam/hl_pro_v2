@@ -29,7 +29,7 @@
 	</div>
 </div>
 <!-- 底部按钮 -->
-<div class="footer edit_footer">
+<div class="footer edit_footer" style="z-index: 99999;">
 <div class="pull-right">
 <button class="btn btn-primary " type="button" onclick="on_sure()"><i class="fa fa-check"></i>&nbsp;确定</button>
 <button class="btn btn-danger " type="button" onclick="on_close()"><i class="fa fa-close"></i>&nbsp;关闭</button>
@@ -133,6 +133,7 @@ function on_sure(){
 function on_search(){
 	$("#grid").bootstrapTable("refresh");
 }
+
 </script>
 </body>
 </html>

@@ -46,7 +46,7 @@ public class QuestionsQl {
 				"questionManage_Id in ('##') ORDER BY RAND() LIMIT ?) as t ORDER BY t.NUM_ ASC";
 		
 		//我的已经考试的试卷
-		public static final String myOnlineExam = "select paem.id,paem.subject_ ,paep.total_source,paep.consume_time from P_ANSWER_EXAM_PERSON as paep INNER JOIN p_answer_exam_manage as paem where paep.exammanage_id = paem.id and paep.person_id = ? and paep.is_exam='1' ORDER BY paem.CREATE_TIME DESC ";
+		public static final String myOnlineExam = "select paem.id,paem.subject_ ,paep.total_source,paep.consume_time,paem.TYPE_ from P_ANSWER_EXAM_PERSON as paep INNER JOIN p_answer_exam_manage as paem where paep.exammanage_id = paem.id and paep.person_id = ? and paep.is_exam='1' ORDER BY paem.CREATE_TIME DESC ";
 
 		//易错题排行
 		public static final String worryTitle = "select COUNT(*),epq.QUESTION_ID,aq.title_,aq.type_ "
@@ -54,6 +54,9 @@ public class QuestionsQl {
 				"WHERE epq.QUESTION_ID=aq.id and epq.person_Id=aep.PERSON_ID and epq.EXAMMANAGE_ID = aep.EXAMMANAGE_ID and epq.EXAMMANAGE_ID = ? AND epq.IS_RIGHT = '0' "
 				+ " @@ "
 				+ "GROUP BY  epq.QUESTION_ID ORDER BY COUNT(*) DESC";
+		
+		//删除人员答案
+		public static final String cleanExamPersonQuestion="DELETE from p_answer_exam_person_question where EXAMMANAGE_ID='@@' and PERSON_ID='##'";
 		
 	}
 	
