@@ -121,5 +121,5 @@ public class OperatingData extends BaseModule{
 		this.mobilePaymentIncome = mobilePaymentIncome;
 	}
 	
-	
 }
+
