@@ -27,7 +27,7 @@ public class OperatingData extends BaseModule{
 	private Integer tollGate;         //收费站		(数据字典：dc_tollGate_operation)
 	private Integer totalTraffic;     //出口车流量_总车流
 	private Integer ytkTraffic;       //出口车流量_其中粤通卡车流
-	private Integer mobilePaymentTraffic;     //出口车流量_运动支付车流
+	private Integer mobilePaymentTraffic;     //出口车流量_移动支付车流
 	private Double generalIncome;     //收费额_总收费额		(精确度小数点后两位)
 	private Double ytkIncome;         //收费额_其中粤通卡收入	(精确度小数点后两位)
 	private Double mobilePaymentIncome;         //收费额_移动支付收入	(精确度小数点后两位)

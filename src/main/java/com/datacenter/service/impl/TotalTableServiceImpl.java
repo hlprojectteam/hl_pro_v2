@@ -9,11 +9,10 @@ import com.datacenter.service.*;
 import com.datacenter.vo.*;
 import com.urms.dataDictionary.module.CategoryAttribute;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -213,6 +212,188 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		r2_font.setBold(true);						//字体加粗
 		r2_style.setFont(r2_font);
 
+
+		//创建目录
+		HSSFSheet sheet0 = wb.createSheet("目录");
+		CreationHelper createHelper = wb.getCreationHelper();
+
+
+		//设置列宽
+		sheet0.setColumnWidth(0, sheet0.getColumnWidth(0)*4);
+		sheet0.setColumnWidth(1, sheet0.getColumnWidth(1)*11);
+
+		//创建字体
+		HSSFFont linkFont = wb.createFont();
+		linkFont.setUnderline(FontFormatting.U_SINGLE);//设置下划线
+		linkFont.setColor(HSSFColor.BLUE.index);//设置字体颜色
+		linkFont.setFontHeightInPoints((short)13);	//字体大小
+		HSSFCellStyle linkStyle = wb.createCellStyle();
+		linkStyle.cloneStyleFrom(mainStyle_center);
+		linkStyle.setFont(linkFont);
+
+
+		//第一行
+		HSSFRow row0 = sheet0.createRow(0);
+		row0.createCell(0).setCellValue("目录");
+		row0.createCell(1).setCellValue("备注");
+		row0.setHeightInPoints(30);
+		row0.getCell(0).setCellStyle(r2_style);
+		row0.getCell(1).setCellStyle(r2_style);
+
+		HSSFRow row1 = sheet0.createRow(1);
+		row1.createCell(0).setCellValue("运营控制指挥中心每日简报");
+		row1.createCell(1).setCellValue("反映每天车流路费、交通及设备运行基本情况");
+		Hyperlink link1 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link1.setAddress("#运营控制指挥中心每日简报!A1");
+		row1.getCell(0).setHyperlink(link1);
+		row1.setHeightInPoints(25);
+		row1.getCell(0).setCellStyle(linkStyle);
+		row1.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row2 = sheet0.createRow(2);
+		row2.createCell(0).setCellValue("交接班");
+		row2.createCell(1).setCellValue("反映中心监控员工作交接事项");
+		Hyperlink link2 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link2.setAddress("#交接班!A1");
+		row2.getCell(0).setHyperlink(link2);
+		row2.setHeightInPoints(25);
+		row2.getCell(0).setCellStyle(linkStyle);
+		row2.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row3 = sheet0.createRow(3);
+		row3.createCell(0).setCellValue("监控巡检");
+		row3.createCell(1).setCellValue("反映主线、收费站的视频监控巡检情况");
+		Hyperlink link3 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link3.setAddress("#监控巡检!A1");
+		row3.getCell(0).setHyperlink(link3);
+		row3.setHeightInPoints(25);
+		row3.getCell(0).setCellStyle(linkStyle);
+		row3.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row4 = sheet0.createRow(4);
+		row4.createCell(0).setCellValue("涉路施工");
+		row4.createCell(1).setCellValue("反映施工项目及相关业务部门对施工现场检查情况");
+		Hyperlink link4 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link4.setAddress("#涉路施工!A1");
+		row4.getCell(0).setHyperlink(link4);
+		row4.setHeightInPoints(25);
+		row4.getCell(0).setCellStyle(linkStyle);
+		row4.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row5 = sheet0.createRow(5);
+		row5.createCell(0).setCellValue("设备运行情况统计表");
+		row5.createCell(1).setCellValue("反映联网关键设备及车道收费系统运行情况");
+		Hyperlink link5 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link5.setAddress("#设备运行情况统计表!A1");
+		row5.getCell(0).setHyperlink(link5);
+		row5.getCell(0).setHyperlink(link4);
+		row5.setHeightInPoints(25);
+		row5.getCell(0).setCellStyle(linkStyle);
+		row5.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row15 = sheet0.createRow(6);
+		row15.createCell(0).setCellValue("联网设备日常检查表");
+		row15.createCell(1).setCellValue("反映...");
+		Hyperlink link15 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link15.setAddress("#联网设备日常检查表!A1");
+		row15.getCell(0).setHyperlink(link15);
+		row15.setHeightInPoints(25);
+		row15.getCell(0).setCellStyle(linkStyle);
+		row15.getCell(1).setCellStyle(mainStyle_left);
+
+
+		HSSFRow row6 = sheet0.createRow(7);
+		row6.createCell(0).setCellValue("各站营运数据");
+		row6.createCell(1).setCellValue("反映各收费站拆分前车流路费数据");
+		Hyperlink link6 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link6.setAddress("#各站营运数据!A1");
+		row6.getCell(0).setHyperlink(link6);
+		row6.setHeightInPoints(25);
+		row6.getCell(0).setCellStyle(linkStyle);
+		row6.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row7 = sheet0.createRow(8);
+		row7.createCell(0).setCellValue("拯救作业");
+		row7.createCell(1).setCellValue("反映故障车的拯救情况");
+		Hyperlink link7 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link7.setAddress("#拯救作业!A1");
+		row7.getCell(0).setHyperlink(link7);
+		row7.setHeightInPoints(25);
+		row7.getCell(0).setCellStyle(linkStyle);
+		row7.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row8 = sheet0.createRow(9);
+		row8.createCell(0).setCellValue("清障保洁");
+		row8.createCell(1).setCellValue(" 反映影响道路交通安全的处理情况");
+		Hyperlink link8 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link8.setAddress("#清障保洁!A1");
+		row8.getCell(0).setHyperlink(link8);
+		row8.setHeightInPoints(25);
+		row8.getCell(0).setCellStyle(linkStyle);
+		row8.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row9 = sheet0.createRow(10);
+		row9.createCell(0).setCellValue("营运异常记录");
+		row9.createCell(1).setCellValue(" 反映对收费站广场、车道、亭内的安全检查，对收费工作的监督和稽查,以及协助收費站处理的其它异常");
+		Hyperlink link9 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link9.setAddress("#异常记录!A1");
+		row9.getCell(0).setHyperlink(link9);
+		row9.setHeightInPoints(25);
+		row9.getCell(0).setCellStyle(linkStyle);
+		row9.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row10 = sheet0.createRow(11);
+		row10.createCell(0).setCellValue("交通事故");
+		row10.createCell(1).setCellValue(" 反映交通事故的处置概况");
+		Hyperlink link10 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link10.setAddress("#交通事故!A1");
+		row10.getCell(0).setHyperlink(link10);
+		row10.setHeightInPoints(25);
+		row10.getCell(0).setCellStyle(linkStyle);
+		row10.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row11 = sheet0.createRow(12);
+		row11.createCell(0).setCellValue("信息通传");
+		row11.createCell(1).setCellValue(" 反映重要信息的获取及传达情况");
+		Hyperlink link11 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link11.setAddress("#信息通传!A1");
+		row11.getCell(0).setHyperlink(link11);
+		row11.setHeightInPoints(25);
+		row11.getCell(0).setCellStyle(linkStyle);
+		row11.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row12 = sheet0.createRow(13);
+		row12.createCell(0).setCellValue("顾客意见反馈");
+		row12.createCell(1).setCellValue(" 反映顾客咨询、建议、投诉及处理情况");
+		Hyperlink link12 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link12.setAddress("#顾客意见反馈!A1");
+		row12.getCell(0).setHyperlink(link12);
+		row12.setHeightInPoints(25);
+		row12.getCell(0).setCellStyle(linkStyle);
+		row12.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row13 = sheet0.createRow(14);
+		row13.createCell(0).setCellValue("交通阻塞");
+		row13.createCell(1).setCellValue("反映交通阻塞及处理情况");
+		Hyperlink link13 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link13.setAddress("#交通阻塞!A1");
+		row13.getCell(0).setHyperlink(link13);
+		row13.setHeightInPoints(25);
+		row13.getCell(0).setCellStyle(linkStyle);
+		row13.getCell(1).setCellStyle(mainStyle_left);
+
+		HSSFRow row14 = sheet0.createRow(15);
+		row14.createCell(0).setCellValue("外勤作业");
+		row14.createCell(1).setCellValue("反映...");
+		Hyperlink link14 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+		link14.setAddress("#外勤作业!A1");
+		row14.getCell(0).setHyperlink(link14);
+		row14.setHeightInPoints(25);
+		row14.getCell(0).setCellStyle(linkStyle);
+		row14.getCell(1).setCellStyle(mainStyle_left);
+
+
+
 		//1.工作简报
 		getBriefData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style);
 		//2.交接班
@@ -223,6 +404,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		getRoadWorkData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 		//5.设备运行情况统计表
 		getEquipmentOperationData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
+		//15.联网设备日常检查表
+		getEquipmentStatusData(wb, ttId, mainStyle_center, r0_style, r1_style, r2_style);
 		//6.营运数据
 		getOperatingData(wb, ttId, mainStyle_center, r0_style, r1_style, r2_style);
 		//7.拯救作业
@@ -241,8 +424,6 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		getTrafficJamData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 		//14.外勤作业
 		getFieldOperationsData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//15.联网设备日常检查表
-		getEquipmentStatusData(wb, ttId, mainStyle_center, r0_style, r1_style, r2_style);
 
 		return wb;
 	}
@@ -292,7 +473,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//创建行（第一行）
 		HSSFRow row0 = sheet1.createRow(0);
 		//设置行的高度
-		row0.setHeightInPoints(30);
+		row0.setHeightInPoints(60);
 		//创建单元格 并 设置单元格内容
 		if(brList != null && brList.size() > 0){
 			row0.createCell(0).setCellValue(brief.getTitle());
@@ -300,7 +481,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			row0.createCell(0).setCellValue("环龙运营控制指挥中心工作简报");
 		}
 		//设置单元格样式
-		row0.getCell(0).setCellStyle(r0_style);
+		HSSFCellStyle bigTitle = wb.createCellStyle();
+		bigTitle.cloneStyleFrom(r0_style);
+		HSSFFont bigFont = wb.createFont();
+		bigFont.setBold(true);						//字体加粗
+		bigFont.setFontHeightInPoints((short)24);	//字体大小
+		bigTitle.setFont(bigFont);
+		row0.getCell(0).setCellStyle(bigTitle);
 
 
 		//第二行
@@ -576,7 +763,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 0:	cell.setCellValue(sdf.format(siList.get(i).getInspectionTimeStart()) + "--" + sdf.format(siList.get(i).getInspectionTimeEnd()));	break;
 					case 1: cell.setCellValue(siList.get(i).getShiftSupervisor());	break;
 					case 2: cell.setCellValue(getValueByDictAndKey("dc_inspectionlocation", siList.get(i).getInspectionlocation().toString()));	break;
-					case 3: cell.setCellValue(getValueByDictAndKey("dc_failureEquipment", siList.get(i).getFailureEquipment().toString()));	break;
+					case 3:
+						if(siList.get(i).getFailureEquipment() != null){
+							cell.setCellValue(getValueByDictAndKey("dc_failureEquipment", siList.get(i).getFailureEquipment().toString()));
+						}else{
+							cell.setCellValue("");
+						}
+						break;
 					case 4: cell.setCellValue(siList.get(i).getInspectionDetails());	break;
 					case 5: cell.setCellValue(siList.get(i).getFollowMeasure());	break;
 				}
@@ -1003,16 +1196,16 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		HSSFSheet sheet6 = wb.createSheet("各站营运数据");
 
 		//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
-		sheet6.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
-		sheet6.addMergedRegion(new CellRangeAddress(1, 1, 0, 5));
+		sheet6.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+		sheet6.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
 		sheet6.addMergedRegion(new CellRangeAddress(2, 3, 0, 0));
 		sheet6.addMergedRegion(new CellRangeAddress(2, 3, 1, 1));
-		sheet6.addMergedRegion(new CellRangeAddress(2, 2, 2, 3));
-		sheet6.addMergedRegion(new CellRangeAddress(2, 2, 4, 5));
+		sheet6.addMergedRegion(new CellRangeAddress(2, 2, 2, 4));
+		sheet6.addMergedRegion(new CellRangeAddress(2, 2, 5, 7));
 
 		sheet6.addMergedRegion(new CellRangeAddress(odList.size() + 4, odList.size() + 4, 0, 1));
 
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 8; i++) {
 			//列宽自适应（该方法在老版本的POI中效果不佳）
 			/*sheet6.autoSizeColumn(i);*/
 			//设置列宽
@@ -1045,11 +1238,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		row2.setHeightInPoints(30);		//行高
 		HSSFCell cell = null;
 		String[] title1 = {"序号","收费站","出口车流量","收费额"};
-        row2.createCell(3).setCellStyle(r2_style);
-        row2.createCell(5).setCellStyle(r2_style);
+		row2.createCell(3).setCellStyle(r2_style);
+		row2.createCell(4).setCellStyle(r2_style);
+        row2.createCell(6).setCellStyle(r2_style);
+		row2.createCell(7).setCellStyle(r2_style);
 		for(int i=0;i<title1.length;i++){
 		    if(i == 3){
-                cell = row2.createCell(4);		//创建单元格
+                cell = row2.createCell(5);		//创建单元格
             }else{
                 cell = row2.createCell(i);		//创建单元格
             }
@@ -1060,7 +1255,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//第四行
 		HSSFRow row3 = sheet6.createRow(3);
 		row3.setHeightInPoints(30);		//行高
-		String[] title2 = {"总车流","其中粤通卡车流","总收费额","其中粤通卡收入"};
+		String[] title2 = {"总车流","其中粤通卡车流","移动支付车流","总收费额","其中粤通卡收入","移动支付收入"};
         row3.createCell(0).setCellStyle(r2_style);
         for(int i=0;i<title2.length;i++){
 			cell = row3.createCell(i + 2);		//创建单元格
@@ -1073,12 +1268,14 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		HSSFRow row;
 		Integer hj_totalTraffic = 0;
 		Integer hj_ytkTraffic = 0;
+		Integer hj_mobilePaymentTraffic = 0;
 		Double hj_generalIncome = 0.0;
 		Double hj_ytkIncome = 0.0;
+		Double hj_mobilePaymentIncome = 0.0;
 		for (int i = 0; i < odList.size(); i++) {
 			row = sheet6.createRow(i + 4);	//创建行
 			row.setHeightInPoints(30);					//设置行高
-			for (int j = 0; j < 6; j++) {
+			for (int j = 0; j < 8; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
@@ -1086,16 +1283,36 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 1: cell.setCellValue(getValueByDictAndKey("dc_tollGate_operation", odList.get(i).getTollGate().toString()));	break;
 					case 2: cell.setCellValue(odList.get(i).getTotalTraffic());	break;
 					case 3: cell.setCellValue(odList.get(i).getYtkTraffic());	break;
-					case 4: cell.setCellValue(odList.get(i).getGeneralIncome());	break;
-					case 5: cell.setCellValue(odList.get(i).getYtkIncome());	break;
+					case 4:
+						if(odList.get(i).getMobilePaymentTraffic() != null){
+							cell.setCellValue(odList.get(i).getMobilePaymentTraffic());
+						}else{
+							cell.setCellValue("");
+						}
+						break;
+					case 5: cell.setCellValue(odList.get(i).getGeneralIncome());	break;
+					case 6: cell.setCellValue(odList.get(i).getYtkIncome());	break;
+					case 7:
+						if(odList.get(i).getMobilePaymentIncome() != null){
+							cell.setCellValue(odList.get(i).getMobilePaymentIncome());
+						}else{
+							cell.setCellValue("");
+						}
+						break;
 				}
 				//设置单元格样式
 				cell.setCellStyle(mainStyle_center);
 			}
             hj_totalTraffic += odList.get(i).getTotalTraffic();
             hj_ytkTraffic += odList.get(i).getYtkTraffic();
+            if(odList.get(i).getMobilePaymentTraffic() != null){
+				hj_mobilePaymentTraffic += odList.get(i).getMobilePaymentTraffic();
+			}
             hj_generalIncome += odList.get(i).getGeneralIncome();
             hj_ytkIncome += odList.get(i).getYtkIncome();
+            if(odList.get(i).getMobilePaymentIncome() != null){
+				hj_mobilePaymentIncome += odList.get(i).getMobilePaymentIncome();
+			}
 		}
 
 		//最后一行
@@ -1108,10 +1325,14 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		row.getCell(2).setCellStyle(mainStyle_center);
 		row.createCell(3).setCellValue(hj_ytkTraffic);
 		row.getCell(3).setCellStyle(mainStyle_center);
-		row.createCell(4).setCellValue(hj_generalIncome);
+		row.createCell(4).setCellValue(hj_mobilePaymentTraffic);
 		row.getCell(4).setCellStyle(mainStyle_center);
-		row.createCell(5).setCellValue(hj_ytkIncome);
+		row.createCell(5).setCellValue(hj_generalIncome);
 		row.getCell(5).setCellStyle(mainStyle_center);
+		row.createCell(6).setCellValue(hj_ytkIncome);
+		row.getCell(6).setCellStyle(mainStyle_center);
+		row.createCell(7).setCellValue(hj_mobilePaymentIncome);
+		row.getCell(7).setCellStyle(mainStyle_center);
 
 		return wb;
 	}
