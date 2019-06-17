@@ -318,6 +318,12 @@
 			<artifactId>ocn-common</artifactId>
 			<version>1.0</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>cn.jpush.api</groupId>
+		    <artifactId>jpush-client</artifactId>
+		    <version>3.3.4</version>
+		</dependency>
 
 		<!-- 云汀基础框架包 -->
 		<dependency>
