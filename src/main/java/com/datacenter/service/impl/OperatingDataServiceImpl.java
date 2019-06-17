@@ -213,16 +213,16 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		HSSFSheet sheet = wb.createSheet("营运数据汇总");
 
 		//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
-		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
-		sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 5));
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+		sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
 		sheet.addMergedRegion(new CellRangeAddress(2, 3, 0, 0));
 		sheet.addMergedRegion(new CellRangeAddress(2, 3, 1, 1));
-		sheet.addMergedRegion(new CellRangeAddress(2, 2, 2, 3));
-		sheet.addMergedRegion(new CellRangeAddress(2, 2, 4, 5));
+		sheet.addMergedRegion(new CellRangeAddress(2, 2, 2, 4));
+		sheet.addMergedRegion(new CellRangeAddress(2, 2, 5, 7));
 
 		sheet.addMergedRegion(new CellRangeAddress(odList.size() + 4, odList.size() + 4, 0, 1));
 
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 8; i++) {
 			//列宽自适应（该方法在老版本的POI中效果不佳）
 			/*sheet.autoSizeColumn(i);*/
 			//设置列宽
@@ -252,10 +252,12 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		HSSFCell cell;
 		String[] title1 = {"日期","收费站","出口车流量","收费额"};
 		row2.createCell(3).setCellStyle(r2_style);
-		row2.createCell(5).setCellStyle(r2_style);
+		row2.createCell(4).setCellStyle(r2_style);
+		row2.createCell(6).setCellStyle(r2_style);
+		row2.createCell(7).setCellStyle(r2_style);
 		for(int i=0;i<title1.length;i++){
 			if(i == 3){
-				cell = row2.createCell(4);		//创建单元格
+				cell = row2.createCell(5);		//创建单元格
 			}else{
 				cell = row2.createCell(i);		//创建单元格
 			}
@@ -266,7 +268,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		//第四行
 		HSSFRow row3 = sheet.createRow(3);
 		row3.setHeightInPoints(30);		//行高
-		String[] title2 = {"总车流","其中粤通卡车流","总收费额","其中粤通卡收入"};
+		String[] title2 = {"总车流","其中粤通卡车流","移动支付车流","总收费额","其中粤通卡收入","移动支付收入"};
 		row3.createCell(0).setCellStyle(r2_style);
 		for(int i=0;i<title2.length;i++){
 			cell = row3.createCell(i + 2);		//创建单元格
@@ -280,29 +282,51 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		HSSFRow row;
 		Integer hj_totalTraffic = 0;
 		Integer hj_ytkTraffic = 0;
+		Integer hj_mobilePaymentTraffic = 0;
 		Double hj_generalIncome = 0.0;
 		Double hj_ytkIncome = 0.0;
+		Double hj_mobilePaymentIncome = 0.0;
 		for (int i = 0; i < odList.size(); i++) {
 			row = sheet.createRow(i + 4);	//创建行
 			row.setHeightInPoints(30);				//设置行高
-			for (int j = 0; j < 6; j++) {
+			for (int j = 0; j < 8; j++) {
 				cell = row.createCell(j);			//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf1.format(odList.get(i).getDutyDate())); break;
+					case 0: cell.setCellValue(i+1);	break;
 					case 1: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_tollGate_operation", odList.get(i).getTollGate().toString()));	break;
 					case 2: cell.setCellValue(odList.get(i).getTotalTraffic());	break;
 					case 3: cell.setCellValue(odList.get(i).getYtkTraffic());	break;
-					case 4: cell.setCellValue(odList.get(i).getGeneralIncome());	 break;
-					case 5: cell.setCellValue(odList.get(i).getYtkIncome());	break;
+					case 4:
+						if(odList.get(i).getMobilePaymentTraffic() != null){
+							cell.setCellValue(odList.get(i).getMobilePaymentTraffic());
+						}else{
+							cell.setCellValue("");
+						}
+						break;
+					case 5: cell.setCellValue(odList.get(i).getGeneralIncome());	break;
+					case 6: cell.setCellValue(odList.get(i).getYtkIncome());	break;
+					case 7:
+						if(odList.get(i).getMobilePaymentIncome() != null){
+							cell.setCellValue(odList.get(i).getMobilePaymentIncome());
+						}else{
+							cell.setCellValue("");
+						}
+						break;
 				}
 				//设置单元格样式
 				cell.setCellStyle(mainStyle_center);
 			}
 			hj_totalTraffic += odList.get(i).getTotalTraffic();
 			hj_ytkTraffic += odList.get(i).getYtkTraffic();
+			if(odList.get(i).getMobilePaymentTraffic() != null){
+				hj_mobilePaymentTraffic += odList.get(i).getMobilePaymentTraffic();
+			}
 			hj_generalIncome += odList.get(i).getGeneralIncome();
 			hj_ytkIncome += odList.get(i).getYtkIncome();
+			if(odList.get(i).getMobilePaymentIncome() != null){
+				hj_mobilePaymentIncome += odList.get(i).getMobilePaymentIncome();
+			}
 		}
 
 		//最后一行
@@ -315,10 +339,14 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		row.getCell(2).setCellStyle(mainStyle_center);
 		row.createCell(3).setCellValue(hj_ytkTraffic);
 		row.getCell(3).setCellStyle(mainStyle_center);
-		row.createCell(4).setCellValue(hj_generalIncome);
+		row.createCell(4).setCellValue(hj_mobilePaymentTraffic);
 		row.getCell(4).setCellStyle(mainStyle_center);
-		row.createCell(5).setCellValue(hj_ytkIncome);
+		row.createCell(5).setCellValue(hj_generalIncome);
 		row.getCell(5).setCellStyle(mainStyle_center);
+		row.createCell(6).setCellValue(hj_ytkIncome);
+		row.getCell(6).setCellStyle(mainStyle_center);
+		row.createCell(7).setCellValue(hj_mobilePaymentIncome);
+		row.getCell(7).setCellStyle(mainStyle_center);
 
 		return wb;
 	}

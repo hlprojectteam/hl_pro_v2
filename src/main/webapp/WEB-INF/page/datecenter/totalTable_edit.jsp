@@ -17,6 +17,7 @@
 	    <input type="hidden" id="creatorName" name="creatorName" value="${totalTableVo.creatorName}" />
 	    <input type="hidden" id="createTime" name="createTime" value="<fmt:formatDate value='${totalTableVo.createTime}' pattern='yyyy-MM-dd HH:mm:ss'/>" />
 	    <input type="hidden" id="sysCode" name="sysCode" value="${totalTableVo.sysCode}" />
+	    <input type="hidden" id="status" name="status" value="${totalTableVo.status}" />
 	    <%-- baseModule end --%>
 	    
 	    <br><br>

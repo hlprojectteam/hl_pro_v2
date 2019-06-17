@@ -62,13 +62,22 @@
     	              {title: "标题", field: "title",width: 250,align:"center"}, 
     	              {title: "日期", field: "dutyDate",width: 100,align:"center"},
     				  {title: "操作", field: "", width: 120,align:"center",formatter:function(value,row,index){
-    					  var json = JSON.stringify(row);
+    					  var json = JSON.stringify(row);//将对象解析成json字符串
     					  var tb = table_button.split("&nbsp;&nbsp;");
     					  var html = "";
-    					  for (var i = 0; i < tb.length; i++) {
-    							  html+=tb[i]+"&nbsp;&nbsp;";
-						  }
+    					  if(row.status==0){//撤回 下线
+	    					  for (var i = 0; i < tb.length; i++) {
+	    						  if(tb[i].indexOf("撤回")<0)
+	    							  html+=tb[i]+"&nbsp;&nbsp;";
+							  }
+    					  }else{
+    						  for (var i = 0; i < tb.length; i++) {
+    							  if(tb[i].indexOf("发布")<0)
+	    							  html+=tb[i]+"&nbsp;&nbsp;";
+							  }
+    					  }
     					  return html.replace(new RegExp("row_id_","gm"),""+json+"");
+    					  
 		              }}]
     	 });
     }
@@ -169,6 +178,40 @@
             content: "/datecenter/brief/brief_edit?ttId="+obj.id +"&dutyDateStr="+obj.dutyDate + "&winName=" + window.name + "&sign=totalTable"
         });
     }
+    
+  //撤回
+	function on_withdraw(obj){
+		changeState(obj);
+	}
+	
+	//发布
+	function on_release(obj){
+		changeState(obj);
+	}
+		
+	//更改状态	
+	function changeState(obj){
+		$.ajax({
+			type : 'post',
+			async:false,
+			dataType : 'json',
+			url: '/datecenter/totalTable/tatalTable_changeState?id='+obj.id,//此处写成obj.id会造成后台id=undefind
+			success : function(data){
+				if(data.result){
+					if(data.sign=="up")
+						autoMsg("发布成功！",1);
+					else
+						autoMsg("撤回成功！",1);
+					iframeIndex.$("#grid").bootstrapTable("refresh",{url:"/datecenter/totalTable/totalTable_load"});//加载树下的列表
+				}else{
+					autoAlert("操作失败，请检查！",5);
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				autoAlert("系统出错，请检查！",5);
+			}
+		});
+	}
 
 </script>
 </body>

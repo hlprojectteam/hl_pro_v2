@@ -59,7 +59,7 @@
 			<mvc:exclude-mapping path="/mobileLogin" /> <!--不被拦截的请求 手机登录-->
 			<mvc:exclude-mapping path="/mobileOrgFrameList" /> <!--不被拦截的请求 手机组织架构请求-->
 			<mvc:exclude-mapping path="/mobileRegister" /> <!--不被拦截的请求 手机注册-->
-			<mvc:exclude-mapping path="/mobile_validateInfo" /> <!--不被拦截的请求 手机注册-->
+			<mvc:exclude-mapping path="/mobile_validateInfo" /> <!--不被拦截的请求 验证用户-->
 			<mvc:exclude-mapping path="/mobile_reset_password" /> <!--不被拦截的请求 手机注册-->
 			<mvc:exclude-mapping path="/app_download" /> <!--不被拦截的请求 手机安装包下载-->
 			<mvc:exclude-mapping path="/app_download_cache" /> <!--不被拦截的请求 手机缓存-->

@@ -8,6 +8,12 @@
 <head>
 	<meta charset="utf-8">
 	<title>营运异常记录编辑</title>
+
+	<style>
+		.dictValue{
+			display: none;
+		}
+	</style>
 </head>
 <body>
 <div id="" class="ibox-content">
@@ -49,7 +55,7 @@
 			</div>
         </div>
 	  	
-	  	<div class="form-group  isNotShow" style="display: none;">
+	  	<div class="form-group  isNotShow">
 			<label class="col-sm-2 control-label">报告方式</label>
 			<div class="col-sm-3">
 				<opt:select dictKey="dc_reportedWay_ER" classStyle="form-control" name="reportedWay" id="reportedWay" value="${exceptionRecordVo.reportedWay}" isDefSelect="true" />
@@ -59,7 +65,7 @@
 	            <input type="text" class="form-control" id="receiptTime" name="receiptTime" value="<fmt:formatDate value='${exceptionRecordVo.receiptTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" />
 	        </div>
 		</div>
-		<div class="form-group dictValue isNotShow"  style="display: none;">
+		<div class="form-group dictValue">
 			<label class="col-sm-2 control-label">请输入要添加的报告方式</label>
 			<div class="col-sm-3">
 				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
@@ -125,25 +131,25 @@
 	var URLStr = "/datecenter/exceptionRecord/exceptionRecord_";
 
 
-    $("#reportedWay").change(function(){
-        var reportedWay = $("#reportedWay").val();
-        if(reportedWay == 5){
-            $(".dictValue").show();
-        }else{
-            $(".dictValue").hide();
-            $(".dictValue").val(null)
-        }
-    });
-
-    $(function(){
-        var exceptionType = $("#exceptionType").val();      //异常类型( 1:营运异常; 2:其他异常)
-        if(exceptionType != 1){
-            $(".isNotShow").show();		//显示 接报时间、报告方式
-        }else{
-            $(".isNotShow").hide();		//隐藏 接报时间、报告方式
-        }
+	$(function(){
+		changeReportedWay();
+		changeExceptionType();
 	});
 
+
+    $("#reportedWay").change(function(){
+		changeReportedWay();
+    });
+	//报告类型切换
+    function changeReportedWay(){
+		var reportedWay = $("#reportedWay").val();
+		if(reportedWay == 5){
+			$(".dictValue").show();
+		}else{
+			$(".dictValue").hide();
+			$("#dictValue").val(null)
+		}
+	}
 
 	//异常类型切换
     $("#exceptionType").change(function(){
@@ -153,8 +159,13 @@
         var exceptionType = $("#exceptionType").val();      //异常类型( 1:营运异常; 2:其他异常)
         if(exceptionType != 1){
 			$(".isNotShow").show();		//显示 接报时间、报告方式
+			$("#title").val("<fmt:formatDate value='${exceptionRecordVo.dutyDate}' pattern='yyyy年MM月dd日其它异常记录'/>");
+			changeReportedWay();
         }else{
             $(".isNotShow").hide();		//隐藏 接报时间、报告方式
+			$("#title").val("<fmt:formatDate value='${exceptionRecordVo.dutyDate}' pattern='yyyy年MM月dd日营运异常记录'/>");
+			$(".dictValue").hide();
+			$("#dictValue").val(null)
         }
     }
 

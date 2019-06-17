@@ -50,16 +50,17 @@ public class SysConfig{
 	public String getSysValue() {
 		return sysValue;
 	}
-	public String getSysKey() {
-		return sysKey;
-	}
-	@Column(name = "SYS_KEY", length=128)
-	public void setSysKey(String sysKey) {
-		this.sysKey = sysKey;
-	}
 	public void setSysValue(String sysValue) {
 		this.sysValue = sysValue;
 	}
+	@Column(name = "SYS_KEY", length=128)
+	public String getSysKey() {
+		return sysKey;
+	}
+	public void setSysKey(String sysKey) {
+		this.sysKey = sysKey;
+	}
+	
 	@Column(name = "MEMO_", length=512)
 	public String getMemo() {
 		return memo;

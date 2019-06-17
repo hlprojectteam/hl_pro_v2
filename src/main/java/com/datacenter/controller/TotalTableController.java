@@ -1,6 +1,10 @@
 package com.datacenter.controller;
 
 import com.common.base.controller.BaseController;
+import com.common.message.MessageJpush;
+import com.common.message.module.Message;
+import com.common.message.service.IMessageService;
+import com.common.utils.Common;
 import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.TotalTable;
@@ -8,19 +12,24 @@ import com.datacenter.service.ITotalTableService;
 import com.datacenter.service.ITransferRegistrationService;
 import com.datacenter.vo.TotalTableVo;
 import com.google.gson.JsonObject;
+import com.urms.user.module.User;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -41,6 +50,9 @@ public class TotalTableController extends BaseController{
 
 	@Autowired
 	private ITransferRegistrationService transferRegistrationServiceImpl;
+	
+	@Autowired
+	public IMessageService messageServiceImpl;
 
 
 	/**
@@ -96,6 +108,7 @@ public class TotalTableController extends BaseController{
 			BeanUtils.copyProperties(totalTable, totalTableVo);
 			request.setAttribute("totalTableVo", totalTableVo);
 		}else{
+			totalTableVo.setStatus(0);//默认状态为撤回 0
 			request.setAttribute("totalTableVo", totalTableVo);
 		}
 		return "/page/datecenter/totalTable_edit";
@@ -143,6 +156,34 @@ public class TotalTableController extends BaseController{
 		} catch (Exception e) {
 			json.addProperty("result", false);
 			logger.error(e.getMessage(), e);
+		}finally{
+			this.print(json.toString());
+		}
+	}
+	
+	@RequestMapping(value="/tatalTable_changeState",method = RequestMethod.POST) 
+	public void changeState(HttpSession httpSession,HttpServletResponse response,String id) {
+		JsonObject json = new JsonObject();
+		try {
+			TotalTable totalTable= totalTableServiceImpl.getEntityById(TotalTable.class, id);
+			if(totalTable!=null){
+				String sign = this.totalTableServiceImpl.saveChangeState(id);
+				if(sign.equals("up")){
+					/********发送发布通知 start*********/
+					String noticeTitle=Common.msgTitle_DT_zbbb_info;
+					String userIds="";
+					String roleCodes="app_role,app_role2";
+					int msgType=Common.msgDT;
+					User nowPerson=this.getSessionUser();
+					this.sendMsg(noticeTitle,totalTable.getTitle(),userIds,roleCodes,msgType,nowPerson);
+					/********发送发布通知 end*********/
+				}
+				json.addProperty("result", true);
+				json.addProperty("sign", sign);
+			}
+		} catch (Exception e) {
+			json.addProperty("result", false);
+			e.printStackTrace();
 		}finally{
 			this.print(json.toString());
 		}
@@ -239,6 +280,40 @@ public class TotalTableController extends BaseController{
 			response.addHeader("Cache-Control", "no-cache");
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @方法：@param noticeTitle 通知的提示标题
+	 * @方法：@param noticeContent 通知的简要内容
+	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
+	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
+	 * @方法：@param msgType 消息类型
+	 * @方法：@param user 会话用户
+	 * @描述：
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年4月19日
+	 */
+	private void sendMsg(String noticeTitle, String noticeContent,
+			String userIds, String rodeCodes, int msgType, User user) {
+		try {
+			Message msg = new Message();
+			msg.setTitle(noticeTitle);
+			msg.setContent(noticeContent);
+			msg.setAlias(userIds);
+			msg.setType(msgType);
+			msg.setTags(rodeCodes);
+			msg.setSender(user.getUserName());
+			msg.setCreatorId(user.getId());
+			msg.setCreatorName(user.getUserName());
+			msg.setSysCode(user.getSysCode());
+			this.messageServiceImpl.saveOrUpdate(msg);
+			MessageJpush.sendCommonMsg(noticeTitle, msg);
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 	}
 

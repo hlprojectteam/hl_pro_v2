@@ -109,6 +109,10 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 			objectList.add(briefVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
+		if(briefVo.getStatus() != null){		//状态
+			objectList.add(briefVo.getStatus());
+			hql.append(" and status = ? ");
+		}
 		//排序, 根据日期倒序排序
 		hql.append(" order by dutyDate desc ");
 
@@ -231,11 +235,17 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 				//创建行（第一行）
 				HSSFRow row0 = sheet.createRow(0 + tb*7);
 				//设置行的高度
-				row0.setHeightInPoints(30);
+				row0.setHeightInPoints(60);
 				//创建单元格 并 设置单元格内容
 				row0.createCell(0).setCellValue(briefList.get(tb).getTitle());
 				//设置单元格样式
-				row0.getCell(0).setCellStyle(r0_style);
+				HSSFCellStyle bigTitle = wb.createCellStyle();
+				bigTitle.cloneStyleFrom(r0_style);
+				HSSFFont bigFont = wb.createFont();
+				bigFont.setBold(true);						//字体加粗
+				bigFont.setFontHeightInPoints((short)24);	//字体大小
+				bigTitle.setFont(bigFont);
+				row0.getCell(0).setCellStyle(bigTitle);
 				for (int i = 1; i < 5; i++) {
 					row0.createCell(i).setCellStyle(r0_style);
 				}

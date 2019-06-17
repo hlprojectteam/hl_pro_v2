@@ -4,6 +4,7 @@ import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.TotalTable;
 import com.datacenter.vo.TotalTableVo;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
@@ -50,5 +51,16 @@ public interface ITotalTableService extends IBaseService{
 	 * @Date 2019年3月6日
 	 */
 	public HSSFWorkbook downLoad(String ttId);
+	
+	/**
+	 * 
+	 * @方法：@param id
+	 * @方法：@return
+	 * @描述：修改状态
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月13日
+	 */
+	public String saveChangeState(String id);
 
 }

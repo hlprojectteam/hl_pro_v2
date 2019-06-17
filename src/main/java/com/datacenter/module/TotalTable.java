@@ -26,6 +26,7 @@ public class TotalTable extends BaseModule{
 	private String title;		//标题
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date dutyDate;		//值班日期 (不能为空)
+	private Integer status;	        //状态	(数据字典:isPass) 0撤回， 1 发布
 	
 	
 	@Column(name = "title_", length=50)
@@ -42,6 +43,13 @@ public class TotalTable extends BaseModule{
 	}
 	public void setDutyDate(Date dutyDate) {
 		this.dutyDate = dutyDate;
+	}
+	@Column(name = "STATUS",length=2)
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 }

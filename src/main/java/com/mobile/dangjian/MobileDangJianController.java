@@ -167,6 +167,9 @@ public class MobileDangJianController extends BaseController{
 				
 				//发送给“党委委员-初审”角色初审
 				this.sendMsg(Common.msgTitle_DJ_ldgz_todo,StrUtils.subString(alVo.getLaunchContent(), 100) ,null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
+			}else{
+				//普通活动，发普通给党员浏览
+				this.sendMsg(Common.msgTitle_DJ_hdfb_info,StrUtils.subString(alVo.getLaunchContent(), 100) ,null,"dangjian_dy",Common.msgDJ,this.getSessionUser());
 			}
 			json.put("result", true);
 			json.put("msg", "");

@@ -28,6 +28,7 @@ import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.JsonDateValueProcessor;
+import com.common.utils.helper.Pager;
 import com.google.gson.Gson;
 import com.urms.loginLog.module.LoginLog;
 import com.urms.loginLog.service.ILoginLogService;
@@ -36,6 +37,9 @@ import com.urms.orgFrame.module.OrgFrame;
 import com.urms.orgFrame.service.IOrgFrameService;
 import com.urms.role.module.Role;
 import com.urms.subsystem.service.ISubsystemService;
+import com.urms.sysConfig.module.SysConfig;
+import com.urms.sysConfig.service.ISysConfigService;
+import com.urms.sysConfig.vo.SysConfigVo;
 import com.urms.user.module.User;
 import com.urms.user.service.IUserService;
 import com.urms.user.vo.UserVo;
@@ -63,6 +67,8 @@ public class MobileLoginController extends BaseController{
 	public IOrgFrameDao orgFrameDaoImpl;
 	@Autowired
 	public IMessageService messageServiceImpl;
+	@Autowired
+	public ISysConfigService sysConfigServiceImpl;
 	
 	/**
 	 * @intruduction：用户登录后台主页
@@ -76,7 +82,7 @@ public class MobileLoginController extends BaseController{
 	 * @Date 2015年12月26日下午1:15:56
 	 */
 	@RequestMapping(value="/mobileLogin") 
-	public void mobileLogin(HttpServletRequest request,HttpServletResponse response,String loginName,String password) {
+	public void mobileLogin(HttpServletRequest request,HttpServletResponse response,String loginName,String password,String APPSettingParams) {
 		JSONObject json = new JSONObject();
 		boolean isLogin;
 		String msg = "";
@@ -105,6 +111,8 @@ public class MobileLoginController extends BaseController{
 						//写入token
 //						String tokenStr=addToken(user);
 //						json.put("token", tokenStr);
+						//是否更新APP参数
+						json.put("appSetting",updateAPPSet(APPSettingParams));
 					}else{//冻结
 						msg = "该账号已经被冻结或未激活！";
 						isLogin = false;
@@ -438,6 +446,37 @@ public class MobileLoginController extends BaseController{
 	
 	
 	/*****************************以下是私有方法****************************************/
+	
+	@SuppressWarnings("unchecked")
+	private String updateAPPSet(String APPSettingParams){
+		String val="";
+		try {
+			SysConfigVo vo=new SysConfigVo();
+			vo.setSysKey("APPSettingParams");
+			Pager pager = this.sysConfigServiceImpl.queryEntityList(1, 1, vo);
+			List<SysConfig> list= (List<SysConfig>)pager.getPageList();
+			if(list!=null){
+				if(list.size()>0){
+					SysConfig sys= list.get(0);
+					if(sys.getSysValue()!=null){
+						int sysVal=Integer.parseInt(sys.getSysValue()); 
+						if(StringUtils.isEmpty(APPSettingParams)){
+							return sys.getSysValue();
+						}
+						int APPSettingParamsInt=Integer.parseInt(APPSettingParams);
+						if(sysVal>APPSettingParamsInt){
+							//需要更新APP参数
+							val=sys.getSysValue();
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			return "";
+		}
+		return val;
+	}
+	
 	/**
 	 * 
 	 * @方法：@param noticeTitle 通知的提示标题

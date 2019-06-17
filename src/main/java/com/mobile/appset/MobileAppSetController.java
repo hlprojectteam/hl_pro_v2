@@ -41,10 +41,19 @@ public class MobileAppSetController extends BaseController{
 				for (Object object : array) {
 					String code=object.toString();
 					//List<Map<String, String>> list=getCategorys(code);
-					JSONObject itemList=getCategorys(code);
-					JSONObject jb=new JSONObject();
-					jb.put(code, itemList);
-					result.add(jb);
+					
+					if(code.equals("appRigtht")){
+						JSONArray arrays=getChildCategorys(code);
+						JSONObject jb=new JSONObject();
+						jb.put(code, arrays);
+						result.add(jb);
+					}else{
+						JSONObject itemList=getCategoryAttributes(code);
+						JSONObject jb=new JSONObject();
+						jb.put(code, itemList);
+						result.add(jb);
+					}
+					
 				}
 			}
 			json.put("rows", result);
@@ -56,6 +65,7 @@ public class MobileAppSetController extends BaseController{
 		this.print(json);
 	}
 	
+	/***********************************以下是私有方法***********************************************/
 	/**
 	 * 
 	 * @方法：@param categoryCode
@@ -65,7 +75,7 @@ public class MobileAppSetController extends BaseController{
 	 * @author: qinyongqian
 	 * @date:2019年3月1日
 	 */
-	private JSONObject getCategorys(String categoryCode){
+	private JSONObject getCategoryAttributes(String categoryCode){
 		JSONObject json=new JSONObject();
 		Category category = this.dataDictionaryServiceImpl.getCategoryByCode(categoryCode);
 		if(category!=null){
@@ -77,6 +87,36 @@ public class MobileAppSetController extends BaseController{
 			}
 		}
 		return json;
+	}
+	
+	/**
+	 * 
+	 * @方法：@param parentCode
+	 * @方法：@return
+	 * @描述：通过父节点的CODE，到子Category，再找到所有子Category的CategoryAttributes
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月14日
+	 */
+	private JSONArray getChildCategorys(String parentCode){
+		JSONArray array=new JSONArray();
+		Category ca= this.dataDictionaryServiceImpl.getCategoryByCode(parentCode);
+		if(ca!=null){
+			List<Category> caChildList= this.dataDictionaryServiceImpl.queryEntityListByPId(ca.getId());
+			for (Category category : caChildList) {
+				List<CategoryAttribute> catList= this.dataDictionaryServiceImpl.queryEntityCategoryAttrListALL(category.getId());
+				JSONArray caArray=new JSONArray();
+				for (CategoryAttribute categoryAttribute : catList) {
+					caArray.add(categoryAttribute.getAttrKey());
+				}
+				
+//				JSONObject attributes=getCategoryAttributes(category.getCategoryCode());
+				JSONObject jsongetCategory=new JSONObject();
+				jsongetCategory.put(category.getCategoryCode(), caArray);
+				array.add(jsongetCategory);
+			}
+		}
+		return array;
 	}
 
 }
