@@ -94,8 +94,10 @@ public class OrgFrameServiceImpl extends BaseServiceImpl implements IOrgFrameSer
 			Integer orgFrameType) {
 		List<Criterion> criterionsList = new ArrayList<Criterion>();
 		criterionsList.add(Restrictions.eq("pId", pid));
-		if(orgFrameType!=null){
-			criterionsList.add(Restrictions.eq("orgFrameType", orgFrameType));
+		if(!pid.equals("0")){
+			if(orgFrameType!=null){
+				criterionsList.add(Restrictions.eq("orgFrameType", orgFrameType));
+			}
 		}
 		return orgFrameDaoImpl.queryList(criterionsList, Order.asc("order") ,OrgFrame.class);
 	}
