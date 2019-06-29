@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.common.utils.helper.DateUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -25,6 +26,7 @@ import com.datacenter.dao.ITransferRegistrationDao;
 import com.datacenter.module.TransferRegistration;
 import com.datacenter.service.ITransferRegistrationService;
 import com.datacenter.vo.TransferRegistrationVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
 
 /**
  * @Description 交接班登记表 service实现
@@ -39,6 +41,9 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
+	
+	@Autowired
+	public IDataDictionaryService dataDictionaryServiceImpl;
 
 
 	@Override
@@ -105,6 +110,14 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 
 	@Override
 	public TransferRegistration saveOrUpdate(TransferRegistrationVo transferRegistrationVo) {
+		if(transferRegistrationVo.getThisWatcher().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_dutyPerson", transferRegistrationVo.getDictValue());
+			transferRegistrationVo.setThisWatcher(newKey);
+		}
+		if(transferRegistrationVo.getLaseWatcher().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_dutyPerson", transferRegistrationVo.getDictValue2());
+			transferRegistrationVo.setLaseWatcher(newKey);
+		}
 		TransferRegistration transferRegistration = new TransferRegistration();
 		BeanUtils.copyProperties(transferRegistrationVo, transferRegistration);
 		if(StringUtils.isBlank(transferRegistration.getId())){
@@ -156,7 +169,7 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 			hql.append(" and (thisWatcher like '%").append(transferRegistrationVo.getKeyword()).append("%' ").append(" or laseWatcher like '%").append(transferRegistrationVo.getKeyword()).append("%' ").append(" or handoverMatters like '%").append(transferRegistrationVo.getKeyword()).append("%' ").append(" or exception like '%").append(transferRegistrationVo.getKeyword()).append("%' )");
 		}
 		//排序, 先根据日期倒序排序,再根据班次顺序排序
-		hql.append(" order by dutyDate desc,shift asc ");
+		hql.append(" order by dutyDate asc,shift asc ");
 
 		return this.transferRegistrationDaoImpl.queryEntityHQLList(hql.toString(), objectList, TransferRegistration.class);
 	}
@@ -267,14 +280,14 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 					case 0:	cell.setCellValue(sdf1.format(trList.get(i).getDutyDate())); break;
 					case 1:	cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_shift", trList.get(i).getShift().toString())); break;
 					case 2: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_weather", trList.get(i).getWeather().toString()));	break;
-					case 3: cell.setCellValue(trList.get(i).getThisWatcher()); break;
+					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", trList.get(i).getThisWatcher().toString()));	break;
 					case 4:
 						if(trList.get(i).getShift() == 3){
 							cell.setCellValue(sdf.format(trList.get(i).getWatchTimeStart()) + "--次日" + sdf.format(trList.get(i).getWatchTimeEnd()));	break;
 						}else{
 							cell.setCellValue(sdf.format(trList.get(i).getWatchTimeStart()) + "--" + sdf.format(trList.get(i).getWatchTimeEnd()));	break;
 						}
-					case 5: cell.setCellValue(trList.get(i).getLaseWatcher());	break;
+					case 5: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", trList.get(i).getLaseWatcher().toString()));	break;
 					case 6: cell.setCellValue(sdf.format(trList.get(i).getHandoverTime()));	break;
 					case 7: cell.setCellValue(trList.get(i).getHandoverMatters()); break;
 					case 8: cell.setCellValue(trList.get(i).getException()); break;

@@ -1127,7 +1127,8 @@ $.extend($.validator, {
 		//---------------自定义验证---------------------------------
 		//移动电话
 		mobilephone: function( value, element ) {
-			return this.optional(element) || /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(value);
+			/*return this.optional(element) || /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(value);*/
+			return this.optional(element) || /^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(value);
 		},
 		telephone: function( value, element ) {
 			//固定电话 区号+号码 区号与号码之间可以无连接符，也可以“-”连接 如01088888888,010-88888888,0955-7777777 			
@@ -1144,7 +1145,8 @@ $.extend($.validator, {
 		//		(6)11位移动电话号码的第一位和第二位为"13" 
 		//		(7)12位移动电话号码的第二位和第三位为"13" 
 		phone: function( value, element ) {
-			return this.optional(element) || /(^[0-9]{3,4}\-[0-9]{3,8}$)|(^[0-9]{3,8}$)|(^\([0-9]{3,4}\)[0-9]{3,8}$)|(^0{0,1}1[3|4|5|8][0-9]{9}$)/.test(value);
+			/*return this.optional(element) || /(^[0-9]{3,4}\-[0-9]{3,8}$)|(^[0-9]{3,8}$)|(^\([0-9]{3,4}\)[0-9]{3,8}$)|(^0{0,1}1[3|4|5|8][0-9]{9}$)/.test(value);*/
+			return this.optional(element) || /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/.test(value);
 		},
 		//小数点2位
 		num2: function( value, element ) {

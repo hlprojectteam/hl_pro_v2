@@ -61,5 +61,13 @@ public interface IMessageReadedService  extends IBaseService{
 	 */
 	public MessageReaded queryEntityByUserId(String userId);
 	
-
+	/**
+	 * 
+	 * @方法：清理已阅消息
+	 * @描述：定期对过长的消息删减，长度长于50条消息ID的，删减到50
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月24日
+	 */
+	public void updateCleanMessageReaded();
 }

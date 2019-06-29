@@ -93,7 +93,7 @@
     		queryParamsType: "limit",//服务器分页必须
     		striped:true,//条纹行
     		contentType: "application/x-www-form-urlencoded",
-    		pageSize:10,//每页大小
+    		pageSize:15,//每页大小
     		pageNumber:1,//开始页
     		pageList:[10,20,50],
     		pagination:true,//显示分页工具栏

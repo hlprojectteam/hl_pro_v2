@@ -24,6 +24,7 @@ import com.datacenter.dao.IFeedBackDao;
 import com.datacenter.module.FeedBack;
 import com.datacenter.service.IFeedBackService;
 import com.datacenter.vo.FeedBackVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
 
 /**
  * @Description 顾客意见反馈 service实现
@@ -38,6 +39,9 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
+	
+	@Autowired
+	public IDataDictionaryService dataDictionaryServiceImpl;
 
 	
 	@Override
@@ -70,6 +74,10 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 
 	@Override
 	public FeedBack saveOrUpdate(FeedBackVo feedBackVo) {
+		if(feedBackVo.getWatcher().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_dutyPerson", feedBackVo.getDictValue());
+			feedBackVo.setWatcher(newKey);
+		}
 		FeedBack feedBack = new FeedBack();
 		BeanUtils.copyProperties(feedBackVo, feedBack);
 		if(StringUtils.isBlank(feedBack.getId())){
@@ -131,7 +139,7 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 					" or remark like '%" + feedBackVo.getKeyword() + "%' )");
 		}
 		//排序, 根据日期倒序排序，接报时间顺序排序
-		hql.append(" order by dutyDate desc,receiptTime asc ");
+		hql.append(" order by dutyDate asc,receiptTime asc ");
 
 		List<FeedBack> fbList = this.feedBackDaoImpl.queryEntityHQLList(hql.toString(), objectList, FeedBack.class);
 		return fbList;
@@ -226,7 +234,7 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 
 				//第二行
 				HSSFRow row1 = sheet.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-12 ");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-13");
 				row1.getCell(0).setCellStyle(r1_style);
 
 				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
@@ -270,13 +278,12 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 				row4.createCell(4).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_fbType", fbList.get(tb).getFbType().toString()));
 				row4.getCell(4).setCellStyle(mainStyle_center);
 				row4.createCell(6).setCellValue("值班员");
+				
 				row4.getCell(6).setCellStyle(r2_style);
-				row4.createCell(7).setCellValue(fbList.get(tb).getWatcher());
+				row4.createCell(7).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", fbList.get(tb).getWatcher().toString()));
 				row4.getCell(7).setCellStyle(mainStyle_center);
-
 				row4.createCell(2).setCellStyle(r2_style);
 				row4.createCell(5).setCellStyle(r2_style);
-
 
 				//第六
 				HSSFRow row5 = sheet.createRow(5 + tb*10);

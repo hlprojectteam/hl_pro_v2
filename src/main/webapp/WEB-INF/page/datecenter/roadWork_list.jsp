@@ -32,15 +32,15 @@
 				<div class="col-sm-2">
 					<input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 				</div>
-
+				
 				<label class="col-sm-1 control-label">位置</label>
 				<div class="col-sm-2">
 					<opt:select dictKey="dc_positionAttributes" classStyle="form-control" id="positionAttributes" name="positionAttributes" isDefSelect="true"/>
 				</div>
 				<label class="col-sm-1 control-label">单位名称</label>
-				<div class="col-sm-2">
-					<input type="text" class="form-control" id="unitName" name="unitName" value="" />
-				</div>
+					<div class="col-sm-2">
+						<opt:select dictKey="dc_ConstructionUnitName" classStyle="form-control" id="unitName" name="unitName" isDefSelect="true"/>
+					</div>
 			</div>
 
 			<div class="row" style="margin-top: 10px;">
@@ -100,28 +100,36 @@
 		           	  		return index+1;
 		              }},
     	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
-    	              {title: "日期", field: "dutyDate",width: 150,align:"center",formatter:function(value,row,index){
+    	              {title: "日期", field: "dutyDate",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(0,10);
 		              }},
-    	              {title: "进场时间", field: "approachTime",width: 100,align:"center",formatter:function(value,row,index){
+    	              {title: "进场时间", field: "approachTime",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "撤场时间", field: "departureTime",width: 80,align:"center",formatter:function(value,row,index){
+    	              {title: "撤场时间", field: "departureTime",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "施工单位名称", field: "unitName",width: 80,align:"center"},
+    	              {title: "施工单位名称", field: "unitName",width: 80,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_ConstructionUnitName",value);
+		              }},
     	              {title: "现场负责人", field: "relationPerson",width: 80,align:"center"},
                 	  {title: "负责人电话", field: "relationPhone",width: 80,align:"center"},
-    	              {title: "位置属性", field: "positionAttributes",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_positionAttributes",value);
+		              {title: "位置属性", field: "positionAttributes",width: 80,align:"center",formatter:function(value,row,index){
+		            	  	var paArr = value.split(",");
+		            	  	var paStr = "";
+		            	  	for (var i = 0; i < paArr.length; i++) {
+		            	  		paStr += changeDataDictByKey("dc_positionAttributes",paArr[i]) + ",";
+							}
+		           	  		return paStr.substr(0,paStr.length-1);
 		              }},
     	              {title: "具体位置", field: "specificLocation",width: 80,align:"center"},
-    	              {title: "施工内容", field: "constructionContent",width: 80,align:"center"},
     	              {title: "占道情况", field: "jeevesSituation",width: 80,align:"center"},
-    	              {title: "检查时间", field: "checkTime",width: 80,align:"center",formatter:function(value,row,index){
+    	              {title: "检查时间", field: "checkTime",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "检查人员", field: "checker",width: 80,align:"center"},
+    	              {title: "检查人员", field: "checker",width: 80,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_Inspectors",value);
+		              }},
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){
     					  return "<a href='#' onclick='on_edit(\""+row.id+"\")'>编辑</a>";
 		              }}]

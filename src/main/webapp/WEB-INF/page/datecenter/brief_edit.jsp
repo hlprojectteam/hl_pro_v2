@@ -56,7 +56,7 @@
 		</div>
 	 
 	    <div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>中心副主任</label>
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>中心主任</label>
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="zxfzr" name="zxfzr" value='${(empty briefVo.zxfzr) ? "黄佑平" : briefVo.zxfzr}' data-rule-required="true" data-rule-rangelength="[1,10]" />    
 			</div>

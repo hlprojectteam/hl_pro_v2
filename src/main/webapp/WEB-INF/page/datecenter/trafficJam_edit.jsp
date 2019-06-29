@@ -54,15 +54,18 @@
 		    <div class="col-sm-3">
 		    	<opt:select dictKey="dc_receiptWay" classStyle="form-control required" name="receiptWay" id="receiptWay" value="${trafficJamVo.receiptWay}" isDefSelect="true" />
 			</div>
+			<div class="dictValue"  style="display: none;">
+				<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的接报方式</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${trafficJamVo.dictValue}" data-rule-rangelength="[1,15]" />
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>报告人员 </label>
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="reportedPerson" name="reportedPerson" value="${trafficJamVo.reportedPerson}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
-			</div>
-		</div>
-		<div class="form-group dictValue"  style="display: none;">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的接报方式</label>
-			<div class="col-sm-3">
-				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${trafficJamVo.dictValue}" data-rule-rangelength="[1,15]" />
 			</div>
 		</div>
 	 
@@ -146,7 +149,7 @@
 
     $("#receiptWay").change(function(){
         var receiptWay = $("#receiptWay").val();
-        if(receiptWay == 4){
+        if(receiptWay == 99){
             $(".dictValue").show();
         }else{
             $(".dictValue").hide();
@@ -156,7 +159,7 @@
 
 	//提交表单
 	function on_submit(){
-        if($("#receiptWay").val() == 4 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+        if($("#receiptWay").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
             autoMsg("新添加的字典类型不能为空", 5);
         }else{
             $.ajax({

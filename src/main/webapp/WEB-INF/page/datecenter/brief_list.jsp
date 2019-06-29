@@ -77,7 +77,7 @@
     	              {title: "日期", field: "dutyDate",width: 100,align:"center"},
     	              {title: "常务副总经理", field: "cwfzjl",width: 100,align:"center"},
     	              {title: "主管副总经理", field: "zgfzjl",width: 80,align:"center"},
-    	              {title: "中心副主任", field: "zxfzr",width: 80,align:"center"},
+    	              {title: "中心主任", field: "zxfzr",width: 80,align:"center"},
     	              {title: "复核人员", field: "fhry",width: 80,align:"center"},
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){
     					  return "<a href='#' onclick='on_edit(\""+row.id+"\")'>编辑</a>";

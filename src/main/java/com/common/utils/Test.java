@@ -29,6 +29,20 @@ public class Test {
 //			e.printStackTrace();
 //		}
 		
+		String msg="297ef6c66b507393016b5076e0b50001,297ef6c66b507393016b508747100006,297ef6c66b507393016b507c46060005,297ef6c66b507393016b507c1aa40004";
+		if(msg.indexOf(",")>0){
+			String[] msgArr= msg.split(",");
+			int lmsg=msgArr.length;
+			if(lmsg>1){
+				//长度大于50个id，进行删减
+				//index 多出的个数
+				int index=lmsg-1;
+				for (int i = 0; i < index; i++) {
+					msg= msg.substring(msg.indexOf(",")+1, msg.length()); 
+				}
+				System.out.println(msg);
+			}
+		}
 		
 
 	}

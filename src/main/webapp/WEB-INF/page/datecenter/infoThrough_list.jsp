@@ -92,23 +92,25 @@
 		           	  		return index+1;
 		              }},
     	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
-    	              {title: "日期", field: "dutyDate",width: 120,align:"center",formatter:function(value,row,index){
+    	              {title: "日期", field: "dutyDate",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(0,10);
 		              }},
-    	              {title: "通报时间", field: "throughTime",width: 100,align:"center",formatter:function(value,row,index){
+    	              {title: "通报时间", field: "throughTime",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
     	              {title: "报告人员", field: "reportedPerson",width: 80,align:"center"},
-    	              {title: "信息类型", field: "infoType",width: 80,align:"center",formatter:function(value,row,index){
+    	              {title: "信息类型", field: "infoType",width: 140,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_infoType",value);
 		              }},
 		              {title: "信息来源", field: "infoSource",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_infoSource",value);
 		              }},
-		              {title: "通传方式", field: "throughWay",width: 80,align:"center",formatter:function(value,row,index){
+		              {title: "通传方式", field: "throughWay",width: 160,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_throughWay",value);
 		              }},
-    	              {title: "值班员", field: "watcher",width: 80,align:"center"},
+    	              {title: "值班员", field: "watcher",width: 80,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_dutyPerson",value);
+		              }},
     	              /*{title: "信息内容", field: "infoContent",width: 80,align:"center"},
     	              {title: "通传情况", field: "throughSituation",width: 80,align:"center"},*/
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){

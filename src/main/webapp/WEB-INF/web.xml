@@ -3,7 +3,7 @@
   <display-name>Spring MVC Application</display-name>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:spring/springmvc-config.xml</param-value>
+    <param-value>classpath:spring/springmvc-config.xml,classpath:spring/spring-quartz.xml</param-value>
   </context-param>
   <filter>
     <filter-name>SpringOpenSessionInViewFilter</filter-name>

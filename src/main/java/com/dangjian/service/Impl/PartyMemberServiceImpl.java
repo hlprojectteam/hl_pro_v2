@@ -73,6 +73,7 @@ public class PartyMemberServiceImpl extends BaseServiceImpl implements IPartyMem
 			if(obj[3]!=null) pmVo.setBranchName(obj[3].toString());
 			if(obj[4]!=null) pmVo.setMemberDuty(Integer.parseInt(obj[4].toString()));
 			if(obj[5]!=null) pmVo.setJoininTime(DateUtil.getDateFromString(obj[5].toString()));
+			if(obj[6]!=null) pmVo.setPhoto(obj[6].toString());
 			list.add(pmVo);
 		}
 		

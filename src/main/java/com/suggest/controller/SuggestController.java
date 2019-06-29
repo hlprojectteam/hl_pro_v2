@@ -1,6 +1,8 @@
 package com.suggest.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.o.common.beans.BeanUtils;
 
+import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
 import com.common.message.MessageJpush;
@@ -77,14 +80,31 @@ public class SuggestController extends BaseController{
 		json.put("result",false);
 		try {
 			Pager pager = this.suggestServiceImpl.queryEntityList(page, rows, suggestVo);
-			json.put("total", pager.getRowCount());
-			json.put("curPageSize", pager.getPageList().size());
-			JsonConfig config = new JsonConfig();
-			String[] excludes = new String[] {"creatorId","moduleClass","rebackUserId","sysCode"}; // 列表排除信息内容字段，减少传递时间
-			config.setExcludes(excludes);
-			config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
-			json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
-			json.put("result",true);
+			if(page!=null){
+				@SuppressWarnings("unchecked")
+				List<Suggest> list=pager.getPageList();
+				List<SuggestVo> listVo=new ArrayList<>();
+				for (Suggest suggest : list) {
+					User user=this.userServiceImpl.getEntityById(User.class,suggest.getCreatorId());
+					SuggestVo vo=new SuggestVo();
+					BeanUtils.copyProperties(suggest, vo);
+					vo.setSex(user.getSex());
+					
+					List<Attach> listAttach= this.attachServiceImpl.queryAttchByFormIdAndOnlyPicture(user.getId());
+					for (Attach attach : listAttach) {
+						vo.setPhoto(attach.getPathUpload());
+					}
+					listVo.add(vo);
+				}
+				json.put("total", pager.getRowCount());
+				json.put("curPageSize", pager.getPageList().size());
+				JsonConfig config = new JsonConfig();
+				String[] excludes = new String[] {"creatorId","moduleClass","rebackUserId","sysCode"}; // 列表排除信息内容字段，减少传递时间
+				config.setExcludes(excludes);
+				config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
+				json.put("rows", JSONArray.fromObject(listVo,config));
+				json.put("result",true);
+			}
 		} catch (Exception e) {
 			json.put("result",false);
 			json.put("msg",e.getMessage());
@@ -145,27 +165,31 @@ public class SuggestController extends BaseController{
 		try {
 			Suggest suggest=this.suggestServiceImpl.getEntityById(Suggest.class, suggestVo.getId());
 			if(suggest!=null){
-				suggest.setReback(suggestVo.getReback());
-				suggest.setRebackDate(new Date());
-				suggest.setRebackUserId(this.getSessionUser().getId());
-				suggest.setStatus(3);
-				this.suggestServiceImpl.saveOrUpdate(suggest);
-				String noticeTitle="";
-				String userIds=suggest.getCreatorId();
-				String roleCodes="";
-				int msgType=0;
-				if(suggestVo.getModuleClass()==1){
-					//安全管理
-					noticeTitle=Common.msgTitle_AQ_jyxc_finish;
-					msgType=Common.msgAQ;
-				}else if(suggestVo.getModuleClass()==2){
-					//党建
-					noticeTitle=Common.msgTitle_DJ_yj_finish;
-					msgType=Common.msgDJ;
+				if(suggest.getStatus()==3){
+					json.put("msg","该建议已被回复");
+				}else{
+					suggest.setReback(suggestVo.getReback());
+					suggest.setRebackDate(new Date());
+					suggest.setRebackUserId(this.getSessionUser().getId());
+					suggest.setStatus(3);
+					this.suggestServiceImpl.saveOrUpdate(suggest);
+					String noticeTitle="";
+					String userIds=suggest.getCreatorId();
+					String roleCodes="";
+					int msgType=0;
+					if(suggestVo.getModuleClass()==1){
+						//安全管理
+						noticeTitle=Common.msgTitle_AQ_jyxc_finish;
+						msgType=Common.msgAQ;
+					}else if(suggestVo.getModuleClass()==2){
+						//党建
+						noticeTitle=Common.msgTitle_DJ_yj_finish;
+						msgType=Common.msgDJ;
+					}
+					//发送给意见提出者
+					this.sendMsg(noticeTitle,"收到一条意见回复",userIds,roleCodes,msgType,this.getSessionUser());
+					json.put("result", true);
 				}
-				//发送给意见提出者
-				this.sendMsg(noticeTitle,"收到一条意见回复",userIds,roleCodes,msgType,this.getSessionUser());
-				json.put("result", true);
 			}
 		} catch (Exception e) {
 			json.put("result",false);

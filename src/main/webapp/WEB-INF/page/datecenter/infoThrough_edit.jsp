@@ -58,12 +58,12 @@
 	 
 	    <div class="form-group">
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>信息类型</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_infoType" classStyle="form-control required" name="infoType" id="infoType" value="${infoThroughVo.infoType}" isDefSelect="true" />
-			</div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员 </label>
 			<div class="col-sm-3">
-				<input type="text" class="form-control" id="watcher" name="watcher" value="${infoThroughVo.watcher}" data-rule-required="true" data-rule-rangelength="[1,20]" />
+				<opt:select dictKey="dc_infoType" classStyle="form-control required" name="infoType" id="infoType" value="${infoThroughVo.infoType}" isDefSelect="true" />
+			</div>
+			<label class="col-sm-2 control-label dictValue3"  style="display: none;"><span style="color: red">*</span>请输入要添加的信息类型</label>
+			<div class="col-sm-3 dictValue3"  style="display: none;">
+				<input type="text" class="form-control" id="dictValue3" name="dictValue3" value="${infoThroughVo.dictValue3}" data-rule-rangelength="[1,15]" />
 			</div>
 		</div>
 		
@@ -86,6 +86,19 @@
 			<label class="col-sm-2 control-label dictValue2"  style="display: none;"><span style="color: red">*</span>请输入要添加的通传方式</label>
 			<div class="col-sm-3 dictValue2"  style="display: none;">
 				<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${infoThroughVo.dictValue2}" data-rule-rangelength="[1,15]" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员 </label>
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_dutyPerson" classStyle="form-control required" name="watcher" id="watcher" value="${infoThroughVo.watcher}" isDefSelect="false"/>
+			</div>
+			<div class="dictValue4"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入值班员</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue4" name="dictValue4" value="${infoThroughVo.dictValue4}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
 		</div>
 		
@@ -137,7 +150,7 @@
 
     $("#infoSource").change(function(){
         var infoSource = $("#infoSource").val();
-        if(infoSource == 2){
+        if(infoSource == 99){
             $(".dictValue").show();
         }else{
             $(".dictValue").hide();
@@ -147,20 +160,44 @@
 
     $("#throughWay").change(function(){
         var throughWay = $("#throughWay").val();
-        if(throughWay == 4){
+        if(throughWay == 99){
             $(".dictValue2").show();
         }else{
             $(".dictValue2").hide();
             $(".dictValue2").val(null)
         }
     });
+    
+    $("#infoType").change(function(){
+        var infoType = $("#infoType").val();
+        if(infoType == 99){
+            $(".dictValue3").show();
+        }else{
+            $(".dictValue3").hide();
+            $(".dictValue3").val(null)
+        }
+    });
+    
+    $("#watcher").change(function(){
+        var watcher = $("#watcher").val();
+        if(watcher == 99){
+            $(".dictValue4").show();
+        }else{
+            $(".dictValue4").hide();
+            $(".dictValue4").val(null)
+        }
+    });
 
 	//提交表单
 	function on_submit(){
-        if($("#infoSource").val() == 2 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
-        }else if($("#throughWay").val() == 4 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
+        if($("#infoSource").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("请输入信息来源", 5);
+        }else if($("#throughWay").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("请输入通传方式", 5);
+        }else if($("#infoType").val() == 99 && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
+            autoMsg("请输入信息类型", 5);
+        }else if($("#watcher").val() == 99 && ($("#dictValue4").val() == null || $("#dictValue4").val() == "")){
+            autoMsg("请输入值班员", 5);
         }else{
             $.ajax({
                 type : 'post',

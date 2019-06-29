@@ -2,11 +2,12 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
-import com.dangjian.controller.ActivitiesController;
 import com.datacenter.dao.ITrafficAccidentDao;
 import com.datacenter.module.TrafficAccident;
 import com.datacenter.service.ITrafficAccidentService;
 import com.datacenter.vo.TrafficAccidentVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -40,7 +41,7 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 	private TotalTableServiceImpl totalTableServiceImpl;
 
 	@Autowired
-	private ActivitiesController activitiesController;
+	public IDataDictionaryService dataDictionaryServiceImpl;
 
 	
 	@Override
@@ -88,22 +89,18 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 
 	@Override
 	public TrafficAccident saveOrUpdate(TrafficAccidentVo trafficAccidentVo) {
-		if(trafficAccidentVo.getReceiptWay().equals(4)){
-			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_receiptWay", trafficAccidentVo.getDictValue());
+		if(trafficAccidentVo.getReceiptWay().equals(99)){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_receiptWay", trafficAccidentVo.getDictValue());
 			trafficAccidentVo.setReceiptWay(Integer.parseInt(newKey));
 		}
-		if(trafficAccidentVo.getSource().equals(4)){
-			String newKey2 = this.activitiesController.addCategoryAttributesByCode("dc_source", trafficAccidentVo.getDictValue2());
+		if(trafficAccidentVo.getSource().equals(99)){
+			String newKey2 = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_source", trafficAccidentVo.getDictValue2());
 			trafficAccidentVo.setSource(Integer.parseInt(newKey2));
 		}
-		if(trafficAccidentVo.getAccidentType().equals(7)){
-			String newKey3 = this.activitiesController.addCategoryAttributesByCode("dc_accidentType", trafficAccidentVo.getDictValue3());
+		if(trafficAccidentVo.getAccidentType().equals(99)){
+			String newKey3 = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_accidentType", trafficAccidentVo.getDictValue3());
 			trafficAccidentVo.setAccidentType(Integer.parseInt(newKey3));
 		}
-		/*if(trafficAccidentVo.getCarType().equals(8)){
-			String newKey4 = this.activitiesController.addCategoryAttributesByCode("dc_carType", trafficAccidentVo.getDictValue4());
-			trafficAccidentVo.setCarType(Integer.parseInt(newKey4));
-		}*/
 		TrafficAccident trafficAccident = new TrafficAccident();
 		BeanUtils.copyProperties(trafficAccidentVo, trafficAccident);
 		if(StringUtils.isBlank(trafficAccident.getId())){
@@ -185,7 +182,7 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 					" or remark like '%" + trafficAccidentVo.getKeyword() + "%' )");
 		}
 		//排序, 根据日期倒序排序，接报时间顺序排序
-		hql.append(" order by dutyDate desc,receiptTime asc ");
+		hql.append(" order by dutyDate asc,receiptTime asc ");
 
 		List<TrafficAccident> trList = this.trafficAccidentDaoImpl.queryEntityHQLList(hql.toString(), objectList, TrafficAccident.class);
 		return trList;
@@ -271,7 +268,7 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 
 				//第二行
 				HSSFRow row1 = sheet.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-10");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-11");
 				row1.getCell(0).setCellStyle(r1_style);
 
 				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");

@@ -103,7 +103,7 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
             hql.append(" and dutyDate <= ? ");
         }
         //排序, 根据日期倒序排序
-        hql.append(" order by dutyDate desc ");
+        hql.append(" order by dutyDate asc ");
 
         List<EquipmentStatus> trList = this.equipmentStatusDaoImpl.queryEntityHQLList(hql.toString(), objectList, EquipmentStatus.class);
         return trList;
@@ -128,6 +128,7 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
         HSSFCellStyle mainStyle_center = wb.createCellStyle();
         mainStyle_center.cloneStyleFrom(mainStyle);
         mainStyle_center.setAlignment(HorizontalAlignment.CENTER);
+        
         //基础样式 水平靠左
         HSSFCellStyle mainStyle_left = wb.createCellStyle();
         mainStyle_left.cloneStyleFrom(mainStyle);
@@ -190,7 +191,7 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
 
         //第二行
         HSSFRow row1 = sheet.createRow(1);
-        row1.createCell(0).setCellValue("表单编号：HLZXRBB-15");
+        row1.createCell(0).setCellValue("表单编号：HLZXRBB-06");
         row1.getCell(0).setCellStyle(r1_style);
 
         //第三行
@@ -226,11 +227,11 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
         for (int i = 0; i < 10; i++) {
             row3.getCell(i).setCellStyle(r2_style);	//设置单元格样式
         }
-
-
+        
+        int esListRows=0;
         //数据展示
         if(esList != null && esList.size() > 0){
-
+        	esListRows=esList.size()*3;//占用了几行
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
             SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
@@ -238,8 +239,7 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
 
                 //合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
                 sheet.addMergedRegion(new CellRangeAddress(4 + tb*3,  6 + tb*3, 0, 0));
-
-
+                
                 HSSFRow row4 = sheet.createRow(4 + tb*3);
                 row4.setHeightInPoints(25);
                 row4.createCell(0).setCellValue(sdf1.format(esList.get(tb).getDutyDate()));
@@ -256,7 +256,6 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
                     row4.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
                 }
 
-
                 HSSFRow row5 = sheet.createRow(5 + tb*3);
                 row5.setHeightInPoints(25);
                 row5.createCell(0);
@@ -272,20 +271,19 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
                 for (int i = 0; i < 10; i++) {
                     row5.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
                 }
-
-
+                
                 HSSFRow row6 = sheet.createRow(6 + tb*3);
                 row6.setHeightInPoints(25);
                 row6.createCell(0);
-                row6.createCell(1).setCellValue("误标数量 ");
-                row6.createCell(2).setCellValue(esList.get(tb).getMislabelNumR1());
-                row6.createCell(3).setCellValue(esList.get(tb).getMislabelNumR2() + "%");
-                row6.createCell(4).setCellValue(esList.get(tb).getMislabelNumE1() + "%");
-                row6.createCell(5).setCellValue(esList.get(tb).getMislabelNumA() + "%");
-                row6.createCell(6).setCellValue(esList.get(tb).getMislabelNumB() + "%");
-                row6.createCell(7).setCellValue(esList.get(tb).getMislabelNumC() + "%");
-                row6.createCell(8).setCellValue(esList.get(tb).getMislabelNumD() + "%");
-                row6.createCell(9);
+				row6.createCell(1).setCellValue("误标数量");
+				row6.createCell(2).setCellValue(esList.get(tb).getMislabelNumR1());
+				row6.createCell(3).setCellValue(esList.get(tb).getMislabelNumR2());
+				row6.createCell(4).setCellValue(0);
+				row6.createCell(5).setCellValue(0);
+				row6.createCell(6).setCellValue(0);
+				row6.createCell(7).setCellValue(0);
+				row6.createCell(8).setCellValue(0);
+				row6.createCell(9);
                 for (int i = 0; i < 10; i++) {
                     row6.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
                 }
@@ -293,6 +291,17 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
             }
 
         }
+        int LastRowIndex=esListRows+4;
+        //合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+        sheet.addMergedRegion(new CellRangeAddress(LastRowIndex,LastRowIndex,0,9));
+        //创建行（最后一行）
+        HSSFRow rowLast = sheet.createRow(LastRowIndex);
+        //设置行的高度
+        rowLast.setHeightInPoints(50);
+        //创建单元格 并 设置单元格内容
+        rowLast.createCell(0).setCellValue("注：实时状态指每日早上在省营运平台进行登录。依次检查RFID、5.8G、高清卡口的运行状态情况。显示绿灯为正常运行，打√，显示红灯为设备故障，打×，需要向广交机及工程部进行设备报修，并在设备修复后记录修复时间。标识成功率指的是各联网关键设备在上一工班日的标识情况统计。误标数量指的是两个RFID标识点的疑似误标流水条数。");
+        //设置单元格样式
+        rowLast.getCell(0).setCellStyle(r2_style);	//设置单元格样式
 
         return wb;
         

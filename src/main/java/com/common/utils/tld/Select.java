@@ -49,13 +49,30 @@ public class Select extends TagSupport {
 						if(isDefSelect)	
 							stringBuffer.append("<option value=''>---请选择---</option>");				
 					}
+					CategoryAttribute caLast=null;
 					for (CategoryAttribute ca : set) {
-						stringBuffer.append("<option value='"+ca.getAttrKey()+"'");	
 						if(ca.getAttrKey().equals(value)){
+							stringBuffer.append("<option value='"+ca.getAttrKey()+"'");	
 							stringBuffer.append(" selected='selected' ");
+							stringBuffer.append(">");
+							stringBuffer.append(ca.getAttrValue());
+							stringBuffer.append("</option>");
+						}else{
+							if(ca.getOrder()==99){
+								//放最后
+								caLast=ca;
+							}else{
+								stringBuffer.append("<option value='"+ca.getAttrKey()+"'");	
+								stringBuffer.append(">");
+								stringBuffer.append(ca.getAttrValue());
+								stringBuffer.append("</option>");
+							}
 						}
+					}
+					if(caLast!=null){
+						stringBuffer.append("<option value='"+caLast.getAttrKey()+"'");	
 						stringBuffer.append(">");
-						stringBuffer.append(ca.getAttrValue());
+						stringBuffer.append(caLast.getAttrValue());
 						stringBuffer.append("</option>");
 					}
 				}else{
@@ -72,14 +89,37 @@ public class Select extends TagSupport {
 						if(isDefSelect)	
 							stringBuffer.append("<option value=''>---请选择---</option>");				
 					}
+					CategoryAttribute caLast=null;
 					for (CategoryAttribute ca : set) {
-						stringBuffer.append("<option value='"+ca.getAttrKey()+"'");	
 						if(ca.getIsDefault()!=null){
-							if(ca.getIsDefault()==1)
+							if(ca.getIsDefault()==1){
+								stringBuffer.append("<option value='"+ca.getAttrKey()+"'");	
 								stringBuffer.append(" selected='selected' ");
+								stringBuffer.append(">");
+								stringBuffer.append(ca.getAttrValue());
+								stringBuffer.append("</option>");
+							}else{
+								stringBuffer.append("<option value='"+ca.getAttrKey()+"'");	
+								stringBuffer.append(">");
+								stringBuffer.append(ca.getAttrValue());
+								stringBuffer.append("</option>");
+							}
+						}else{
+							if(ca.getOrder()==99){
+								//放最后
+								caLast=ca;
+							}else{
+								stringBuffer.append("<option value='"+ca.getAttrKey()+"'");	
+								stringBuffer.append(">");
+								stringBuffer.append(ca.getAttrValue());
+								stringBuffer.append("</option>");
+							}
 						}
+					}
+					if(caLast!=null){
+						stringBuffer.append("<option value='"+caLast.getAttrKey()+"'");	
 						stringBuffer.append(">");
-						stringBuffer.append(ca.getAttrValue());
+						stringBuffer.append(caLast.getAttrValue());
 						stringBuffer.append("</option>");
 					}
 				}else{

@@ -15,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
+
 import com.common.base.controller.BaseController;
+import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.JsonDateValueProcessor;
 import com.common.utils.helper.Pager;
 import com.datacenter.module.Brief;
@@ -91,7 +93,7 @@ public class MobileDataCenterController extends BaseController{
 				Brief brief = briefList.get(0);
 				
 				JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
-				config.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor()); // 格式化日期
+				config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
 				String[] excludes = new String[] {"creatorName","creatorId","createTime","sysCode",
 						"formNumber"}; // 列表排除信息内容字段，减少传递时间
 				config.setExcludes(excludes);

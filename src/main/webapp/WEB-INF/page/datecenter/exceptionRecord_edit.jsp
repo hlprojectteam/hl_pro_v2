@@ -54,43 +54,70 @@
 				<opt:select dictKey="dc_exceptionType" classStyle="form-control" name="exceptionType" id="exceptionType" value="${exceptionRecordVo.exceptionType}" isDefSelect="false" />
 			</div>
         </div>
-	  	
-	  	<div class="form-group  isNotShow">
-			<label class="col-sm-2 control-label">报告方式</label>
-			<div class="col-sm-3">
-				<opt:select dictKey="dc_reportedWay_ER" classStyle="form-control" name="reportedWay" id="reportedWay" value="${exceptionRecordVo.reportedWay}" isDefSelect="true" />
-			</div>
+        
+        <div class="form-group  isNotShow">
 	  		<label class="col-sm-2 control-label">接报时间</label>
 	        <div class="col-sm-3">
 	            <input type="text" class="form-control" id="receiptTime" name="receiptTime" value="<fmt:formatDate value='${exceptionRecordVo.receiptTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" />
 	        </div>
 		</div>
-		<div class="form-group dictValue">
-			<label class="col-sm-2 control-label">请输入要添加的报告方式</label>
+	  	
+	  	<div class="form-group  isNotShow">
+			<label class="col-sm-2 control-label">报告方式</label>
 			<div class="col-sm-3">
-				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
+				<opt:select dictKey="dc_reportedWay_ER" classStyle="form-control" name="reportedWay" id="reportedWay" value="${exceptionRecordVo.reportedWay}" isDefSelect="false" />
+			</div>
+			<div class="dictValue"  style="display: none;">
+				<label class="col-sm-2 control-label">请输入要添加的报告方式</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
+				</div>
 			</div>
 		</div>
 	 
 	    <div class="form-group">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>报告部门 </label>
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告部门 </label>
 			<div class="col-sm-3">
-				<input type="text" class="form-control" id="reportedDp" name="reportedDp" value="${exceptionRecordVo.reportedDp}" data-rule-required="true" data-rule-rangelength="[1,20]" />
+		    	<opt:select dictKey="dc_reportingDepartment" classStyle="form-control required" name="reportedDp" id="reportedDp" value="${exceptionRecordVo.reportedDp}" isDefSelect="false"/>
 			</div>
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告人员 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="reportedPerson" name="reportedPerson" value="${exceptionRecordVo.reportedPerson}" data-rule-required="true" data-rule-rangelength="[1,30]" />    
+			<div class="dictValue1"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入报告部门</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue1" name="dictValue1" value="${exceptionRecordVo.dictValue1}" data-rule-rangelength="[1,20]" />
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>报告人员 </label>
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_reportingPerson" classStyle="form-control required" name="reportedPerson" id="reportedPerson" value="${exceptionRecordVo.reportedPerson}" isDefSelect="false"/>
+			</div>
+			<div class="dictValue2"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入报告人员</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${exceptionRecordVo.dictValue2}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
 		</div>
 		
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>通行路段 </label>
-		    <div class="col-sm-3">
+		    <div class="col-sm-8">
 				<input type="text" class="form-control" id="trafficRoad" name="trafficRoad" value="${exceptionRecordVo.trafficRoad}" data-rule-required="true" data-rule-rangelength="[1,30]" />    
 			</div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>通知处理部门</label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="processingDp" name="processingDp" value="${exceptionRecordVo.processingDp}" data-rule-required="true" data-rule-rangelength="[1,30]" />    
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>通知处理部门 </label>
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_NotificationDepartment" classStyle="form-control required" name="processingDp" id="processingDp" value="${exceptionRecordVo.processingDp}" isDefSelect="false"/>
+			</div>
+			<div class="dictValue3"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入通知处理部门</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue3" name="dictValue3" value="${exceptionRecordVo.dictValue3}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
 		</div>
 		
@@ -143,13 +170,41 @@
 	//报告类型切换
     function changeReportedWay(){
 		var reportedWay = $("#reportedWay").val();
-		if(reportedWay == 5){
+		if(reportedWay == 99){
 			$(".dictValue").show();
 		}else{
 			$(".dictValue").hide();
 			$("#dictValue").val(null)
 		}
 	}
+    $("#reportedDp").change(function(){
+        var reportedDp = $("#reportedDp").val();
+        if(reportedDp ==99){
+            $(".dictValue1").show();
+		}else{
+            $(".dictValue1").hide();
+            $(".dictValue1").val(null)
+		}
+	});
+	
+	$("#reportedPerson").change(function(){
+        var reportedPerson = $("#reportedPerson").val();
+        if(reportedPerson ==99){
+            $(".dictValue2").show();
+		}else{
+            $(".dictValue2").hide();
+            $(".dictValue2").val(null)
+		}
+	});
+	$("#processingDp").change(function(){
+        var processingDp = $("#processingDp").val();
+        if(processingDp ==99){
+            $(".dictValue3").show();
+		}else{
+            $(".dictValue3").hide();
+            $(".dictValue3").val(null)
+		}
+	});
 
 	//异常类型切换
     $("#exceptionType").change(function(){
@@ -181,7 +236,7 @@
 
 	//提交表单
 	function on_submit(){
-        if($("#reportedWay").val() == 5 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+        if($("#reportedWay").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
             autoMsg("新添加的字典类型不能为空", 5);
         }else{
             $.ajax({

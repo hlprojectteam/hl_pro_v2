@@ -32,6 +32,10 @@
 					<div class="col-sm-2">
 						<input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</div>
+					<label class="col-sm-1 control-label">异常类型</label>
+					<div class="col-sm-2">
+						<opt:select dictKey="dc_exceptionType" classStyle="form-control" id="exceptionType" name="exceptionType" isDefSelect="true"/>
+					</div>
 					<label class="col-sm-1 control-label">关键字</label>
 					<div class="col-sm-2">
 						<input type="text" class="form-control" id="keyword" name="keyword" value="" />
@@ -41,11 +45,15 @@
 				<div class="row" style="margin-top: 10px;">
 					<label class="col-sm-1 control-label">报告部门</label>
 					<div class="col-sm-2">
-						<input type="text" class="form-control" id="reportedDp" name="reportedDp" value="" />
+						<opt:select dictKey="dc_reportingDepartment" classStyle="form-control" id="reportedDp" name="reportedDp" isDefSelect="true"/>
+					</div>
+					<label class="col-sm-1 control-label">报告人员</label>
+					<div class="col-sm-2">
+						<opt:select dictKey="dc_reportingPerson" classStyle="form-control" id="reportedPerson" name="reportedPerson" isDefSelect="true"/>
 					</div>
 					<label class="col-sm-1 control-label">处理部门</label>
 					<div class="col-sm-2">
-						<input type="text" class="form-control" id="processingDp" name="processingDp" value="" />
+						<opt:select dictKey="dc_NotificationDepartment" classStyle="form-control" id="processingDp" name="processingDp" isDefSelect="true"/>
 					</div>
 
 					<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
@@ -90,22 +98,28 @@
 		           	  		return index+1;
 		              }},
     	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
-    	              {title: "日期", field: "dutyDate",width: 150,align:"center",formatter:function(value,row,index){
+    	              {title: "日期", field: "dutyDate",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(0,10);
 		              }},
 				      {title: "异常类型", field: "exceptionType",width: 80,align:"center",formatter:function(value,row,index){
 							return changeDataDictByKey("dc_exceptionType",value);
 					   }},
-  	              	  {title: "接报时间", field: "receiptTime",width: 100,align:"center",formatter:function(value,row,index){
+  	              	  {title: "接报时间", field: "receiptTime",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "报告部门", field: "reportedDp",width: 100,align:"center"},
-    	              {title: "报告人员", field: "reportedPerson",width: 80,align:"center"},
+    	              {title: "报告部门", field: "reportedDp",width: 80,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_reportingDepartment",value);
+		              }},
+  	              	  {title: "报告人员", field: "reportedPerson",width: 80,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_reportingPerson",value);
+		              }},
     	              {title: "报告方式", field: "reportedWay",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_reportedWay_ER",value);
 		               }},
-		              {title: "通行路段", field: "trafficRoad",width: 80,align:"center"},
-    	              {title: "通知处理部门", field: "processingDp",width: 80,align:"center"},
+		              {title: "通行路段", field: "trafficRoad",width: 150,align:"center"},
+		              {title: "通知处理部门", field: "processingDp",width: 80,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_NotificationDepartment",value);
+		              }},
     	             /* {title: "情况简述", field: "briefIntroduction",width: 200,align:"center"},
     	              {title: "处理结果", field: "result",width: 200,align:"center"},
     	              {title: "备注", field: "remark",width: 200,align:"center"},*/

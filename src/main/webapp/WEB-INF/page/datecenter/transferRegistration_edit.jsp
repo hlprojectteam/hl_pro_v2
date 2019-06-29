@@ -54,9 +54,18 @@
 		    <div class="col-sm-3">
 		    	<opt:select dictKey="dc_shift" classStyle="form-control required" name="shift" id="shift" value="${transferRegistrationVo.shift}" isDefSelect="true" />
 			</div>
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>本班次值班人员 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="thisWatcher" name="thisWatcher" value="${transferRegistrationVo.thisWatcher}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>本班次值班人员 </label>
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_dutyPerson" classStyle="form-control required" name="thisWatcher" id="thisWatcher" value="${transferRegistrationVo.thisWatcher}" isDefSelect="false"/>
+			</div>
+			<div class="dictValue"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入本次值班员</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${transferRegistrationVo.dictValue}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
 		</div>
 	 
@@ -72,10 +81,19 @@
 		</div>
 		
 		<div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>上班次值班人员 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="laseWatcher" name="laseWatcher" value="${transferRegistrationVo.laseWatcher}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
+	        <label class="col-sm-2 control-label"><span style="color: red">*</span>上班次值班人员 </label>
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_dutyPerson" classStyle="form-control required" name="laseWatcher" id="laseWatcher" value="${transferRegistrationVo.laseWatcher}" isDefSelect="false"/>
 			</div>
+			<div class="dictValue2"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入上次值班员</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${transferRegistrationVo.dictValue2}" data-rule-rangelength="[1,20]" />
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>交接时间</label>
 	        <div class="col-sm-3">
 	            <input type="text" class="form-control" id="handoverTime" name="handoverTime" value="<fmt:formatDate value='${transferRegistrationVo.handoverTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" data-rule-required="true"  />
@@ -110,6 +128,26 @@
 <script type="text/javascript">
 	var winName = "${winName}";
 	var URLStr = "/datecenter/transferRegistration/transferRegistration_";
+	
+	$("#thisWatcher").change(function(){
+        var thisWatcher = $("#thisWatcher").val();
+        if(thisWatcher ==99){
+            $(".dictValue").show();
+		}else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+		}
+	});
+	
+	$("#laseWatcher").change(function(){
+        var laseWatcher = $("#laseWatcher").val();
+        if(laseWatcher ==99){
+            $(".dictValue2").show();
+		}else{
+            $(".dictValue2").hide();
+            $(".dictValue2").val(null)
+		}
+	});
 
 	//新增或编辑
 	function on_save(){
@@ -122,27 +160,33 @@
 
 	//提交表单
 	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
-                }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+		if($("#thisWatcher").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("请输入本班次值班人员", 5);
+		}else if($("#laseWatcher").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("请输入上班次值班人员", 5);
+		}else{
+			$.ajax({
+				type : 'post',
+				async:false,
+				dataType : 'json',
+				url: URLStr + 'saveOrUpdate',
+				data:$('#baseForm').serialize(),
+				success : function(data) {
+	                if (data.result) {
+	                    autoMsg("保存成功！", 1);
+	                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+	                        url : URLStr + "load"
+	                    });//加载树下的列表
+	                    parent.layer.close(index);
+	                } else {
+	                    autoAlert("保存失败，请检查！", 5);
+	                }
+	            },
+	            error : function(XMLHttpRequest, textStatus, errorThrown) {
+	                autoAlert("系统出错，请检查！", 5);
+	            }
+			});
+		}
 	}
 
 </script>

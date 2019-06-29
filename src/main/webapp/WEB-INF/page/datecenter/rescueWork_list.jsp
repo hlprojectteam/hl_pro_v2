@@ -95,21 +95,21 @@
 		           	  		return index+1;
 		              }},
     	              /*{title: "标题", field: "title",width: 200,align:"center"},*/
-    	              {title: "日期", field: "dutyDate",width: 120,align:"center",formatter:function(value,row,index){
+    	              {title: "日期", field: "dutyDate",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(0,10);
 		              }},
-    	              {title: "接报时间", field: "receiptTime",width: 100,align:"center",formatter:function(value,row,index){
+    	              {title: "接报时间", field: "receiptTime",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "到达时间", field: "arrivalTime",width: 100,align:"center",formatter:function(value,row,index){
+    	              {title: "到达时间", field: "arrivalTime",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "到场用时", field: "usedTime",width: 100,align:"center"},
-    	              {title: "清场时间", field: "evacuationTime",width: 80,align:"center",formatter:function(value,row,index){
+    	              {title: "到场用时", field: "usedTime",width: 70,align:"center"},
+    	              {title: "清场时间", field: "evacuationTime",width: 70,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
     	              {title: "地点", field: "site",width: 120,align:"center"},
-    	              {title: "故障车牌", field: "faultPlates",width: 100,align:"center"},
+    	              {title: "故障车牌", field: "faultPlates",width: 110,align:"center"},
     	              {title: "车型", field: "carType",width: 100,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_carType",value);
 		              }},
@@ -119,7 +119,7 @@
     	              {title: "车辆去向", field: "whereabouts",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_whereabouts",value);
 		              }},
-    	              {title: "拯救车牌", field: "rescuePlates",width: 100,align:"center"},
+    	              {title: "拯救车牌", field: "rescuePlates",width: 110,align:"center"},
     	              {title: "司机电话", field: "driverPhone",width: 80,align:"center"},
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){
     					  return "<a href='#' onclick='on_edit(\""+row.id+"\")'>编辑</a>";

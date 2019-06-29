@@ -197,20 +197,22 @@ public class MobileDangJianController extends BaseController{
 	@RequestMapping(value="/partyMemberList")
 	public void partyMemberList(HttpServletRequest request,HttpServletResponse response,PartyMemberVo partyMemberVo,
 			Integer page,Integer rows){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
 		Pager pager = this.partyMemberServiceImpl.queryPartyMemberEntityList(page, rows, partyMemberVo);
 		@SuppressWarnings("unchecked")
 		List<PartyMemberVo> listVo=pager.getPageList();
-		
-		JSONObject json = new JSONObject();
-		JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
-		config.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor()); // 格式化日期
-		String[] excludes = new String[] {"createTime","creatorId","creatorName","createUserId","points"
-				,"sysCode","branchId","branchName","changeRegularTime","increaseTime","increaseType"
-				,"joininTime"}; // 列表排除信息内容字段，减少传递时间
-		config.setExcludes(excludes);
-		json.put("total", pager.getRowCount());
-		json.put("curPageSize", pager.getPageList().size());
-		json.put("rows", JSONArray.fromObject(listVo, config));
+		if(listVo!=null){
+			JsonConfig config = new JsonConfig(); // 自定义JsonConfig用于过滤Hibernate配置文件所产生的递归数据
+			config.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor()); // 格式化日期
+			String[] excludes = new String[] {"createTime","creatorId","creatorName","createUserId","points"
+					,"sysCode","branchId","branchName","changeRegularTime","increaseTime","increaseType"
+					,"joininTime"}; // 列表排除信息内容字段，减少传递时间
+			config.setExcludes(excludes);
+			json.put("total", pager.getRowCount());
+			json.put("curPageSize", pager.getPageList().size());
+			json.put("rows", JSONArray.fromObject(listVo, config));
+		}
 		json.put("result", true);
 		this.print(json);
 	}

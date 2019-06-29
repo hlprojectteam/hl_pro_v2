@@ -90,7 +90,9 @@
 		              {title: "天气", field: "weather",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_weather",value);
 		              }},
-    	              {title: "本班次值班人员", field: "thisWatcher",width: 100,align:"center"},
+    	              {title: "本班次值班人员", field: "thisWatcher",width: 100,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_dutyPerson",value);
+		              }},
     	              {title: "值班时间开始", field: "watchTimeStart",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
@@ -101,7 +103,9 @@
 								return value.substr(11,5);
 							}
 		              }},
-    	              {title: "上班次值班人员", field: "laseWatcher",width: 80,align:"center"},
+    	              {title: "上班次值班人员", field: "laseWatcher",width: 100,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_dutyPerson",value);
+		              }},
     	              {title: "交接时间", field: "handoverTime",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},

@@ -80,8 +80,14 @@
 		
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="watcher" name="watcher" value="${feedBackVo.watcher}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_dutyPerson" classStyle="form-control required" name="watcher" id="watcher" value="${feedBackVo.watcher}" isDefSelect="false"/>
+			</div>
+			<div class="dictValue"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入值班员</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${feedBackVo.dictValue}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
 		</div>
 		
@@ -120,6 +126,16 @@
 <script type="text/javascript">
 	var winName = "${winName}";
 	var URLStr = "/datecenter/feedBack/feedBack_";
+	
+	$("#watcher").change(function(){
+        var watcher = $("#watcher").val();
+        if(watcher ==99){
+            $(".dictValue").show();
+		}else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+		}
+	});
 
 	//新增或编辑
 	function on_save(){
@@ -132,27 +148,31 @@
 
 	//提交表单
 	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
-                }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+		if($("#watcher").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("请输入值班人员", 5);
+		}else{
+			$.ajax({
+				type : 'post',
+				async:false,
+				dataType : 'json',
+				url: URLStr + 'saveOrUpdate',
+				data:$('#baseForm').serialize(),
+				success : function(data) {
+	                if (data.result) {
+	                    autoMsg("保存成功！", 1);
+	                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+	                        url : URLStr + "load"
+	                    });//加载树下的列表
+	                    parent.layer.close(index);
+	                } else {
+	                    autoAlert("保存失败，请检查！", 5);
+	                }
+	            },
+	            error : function(XMLHttpRequest, textStatus, errorThrown) {
+	                autoAlert("系统出错，请检查！", 5);
+	            }
+			});
+		}
 	}
 
 </script>

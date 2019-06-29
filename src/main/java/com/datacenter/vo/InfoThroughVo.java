@@ -22,6 +22,8 @@ public class InfoThroughVo extends InfoThrough{
 
 	private String dictValue;				//新增字典值_信息来源
 	private String dictValue2;				//新增字典值_通传方式
+	private String dictValue3;				//新增字典值_信息类型
+	private String dictValue4;				//新增字典值_值班人员
 
 	private String keyword;				//关键字
 
@@ -66,5 +68,21 @@ public class InfoThroughVo extends InfoThrough{
 
 	public void setDictValue2(String dictValue2) {
 		this.dictValue2 = dictValue2;
+	}
+
+	public String getDictValue3() {
+		return dictValue3;
+	}
+
+	public void setDictValue3(String dictValue3) {
+		this.dictValue3 = dictValue3;
+	}
+
+	public String getDictValue4() {
+		return dictValue4;
+	}
+
+	public void setDictValue4(String dictValue4) {
+		this.dictValue4 = dictValue4;
 	}
 }

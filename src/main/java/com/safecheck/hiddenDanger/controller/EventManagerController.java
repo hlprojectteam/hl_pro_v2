@@ -865,6 +865,12 @@ public class EventManagerController extends BaseController{
 				userVo.setOrgFrameId(user.getOrgFrame().getId());
 				userVo.setOrgFrameName(user.getOrgFrame().getOrgFrameName());
 			}
+			
+			List<Attach> listAttach= this.attachServiceImpl.queryAttchByFormIdAndOnlyPicture(user.getId());
+			for (Attach attach : listAttach) {
+				userVo.setAvatarPathUpload(attach.getPathUpload());
+			}
+			
 			userVoList.add(userVo);
 		}
 		JSONObject json = new JSONObject();

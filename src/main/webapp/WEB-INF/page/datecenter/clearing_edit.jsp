@@ -51,20 +51,35 @@
 	        <div class="col-sm-3">
 	            <input type="text" class="form-control" id="receiptTime" name="receiptTime" value="<fmt:formatDate value='${clearingVo.receiptTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" data-rule-required="true"  />
 	        </div>
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告部门 </label>
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告方式</label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="reportedDp" name="reportedDp" value="${clearingVo.reportedDp}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
+		    	<opt:select dictKey="dc_reportedWay" classStyle="form-control required" name="reportedWay" id="reportedWay" value="${clearingVo.reportedWay}" isDefSelect="true" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告部门 </label>
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_reportingDepartment" classStyle="form-control required" name="reportedDp" id="reportedDp" value="${clearingVo.reportedDp}" isDefSelect="false"/>
+			</div>
+			<div class="dictValue"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入报告部门</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${clearingVo.dictValue}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
 		</div>
 	 
 	    <div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告人员 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="reportedPerson" name="reportedPerson" value="${clearingVo.reportedPerson}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_reportingPerson" classStyle="form-control required" name="reportedPerson" id="reportedPerson" value="${clearingVo.reportedPerson}" isDefSelect="false"/>
 			</div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>报告方式</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_reportedWay" classStyle="form-control required" name="reportedWay" id="reportedWay" value="${clearingVo.reportedWay}" isDefSelect="true" />
+			<div class="dictValue2"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入报告人员</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${clearingVo.dictValue2}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
 		</div>
 		
@@ -73,9 +88,18 @@
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="trafficRoad" name="trafficRoad" value="${clearingVo.trafficRoad}" data-rule-required="true" data-rule-rangelength="[1,30]" />    
 			</div>
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>通知处理部门</label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="processingDp" name="processingDp" value="${clearingVo.processingDp}" data-rule-required="true" data-rule-rangelength="[1,30]" />    
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>通知处理部门 </label>
+			<div class="col-sm-3">
+		    	<opt:select dictKey="dc_NotificationDepartment" classStyle="form-control required" name="processingDp" id="processingDp" value="${clearingVo.processingDp}" isDefSelect="false"/>
+			</div>
+			<div class="dictValue3"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入通知处理部门</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue3" name="dictValue3" value="${clearingVo.dictValue3}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
 		</div>
 		
@@ -114,6 +138,35 @@
 <script type="text/javascript">
 	var winName = "${winName}";
 	var URLStr = "/datecenter/clearing/clearing_";
+	
+	$("#reportedDp").change(function(){
+        var reportedDp = $("#reportedDp").val();
+        if(reportedDp ==99){
+            $(".dictValue").show();
+		}else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+		}
+	});
+	
+	$("#reportedPerson").change(function(){
+        var reportedPerson = $("#reportedPerson").val();
+        if(reportedPerson ==99){
+            $(".dictValue2").show();
+		}else{
+            $(".dictValue2").hide();
+            $(".dictValue2").val(null)
+		}
+	});
+	$("#processingDp").change(function(){
+        var processingDp = $("#processingDp").val();
+        if(processingDp ==99){
+            $(".dictValue3").show();
+		}else{
+            $(".dictValue3").hide();
+            $(".dictValue3").val(null)
+		}
+	});
 
 	//新增或编辑
 	function on_save(){
@@ -125,28 +178,37 @@
 	}
 
 	//提交表单
-	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
-                }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+	function on_submit(){
+		if($("#reportedDp").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("请输入报告部门", 5);
+		}else if($("#reportedPerson").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("请输入报告人员", 5);
+		}else if($("#processingDp").val() == 99 && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
+            autoMsg("请输入通知处理部门", 5);
+		}else{
+			$.ajax({
+				type : 'post',
+				async:false,
+				dataType : 'json',
+				url: URLStr + 'saveOrUpdate',
+				data:$('#baseForm').serialize(),
+				success : function(data) {
+	                if (data.result) {
+	                    autoMsg("保存成功！", 1);
+	                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+	                        url : URLStr + "load"
+	                    });//加载树下的列表
+	                    parent.layer.close(index);
+	                } else {
+	                    autoAlert("保存失败，请检查！", 5);
+	                }
+	            },
+	            error : function(XMLHttpRequest, textStatus, errorThrown) {
+	                autoAlert("系统出错，请检查！", 5);
+	            }
+			});
+			
+		}
 	}
 
 </script>

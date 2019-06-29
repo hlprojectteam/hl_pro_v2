@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.MathUtil;
 import com.common.utils.cache.Cache;
 import com.common.utils.helper.Pager;
 import com.urms.dataDictionary.dao.IDataDictionaryDao;
@@ -492,7 +493,8 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataD
 		if(category==null)
 			return null;
 		//找到最大的key
-		String sql="SELECT t.ATTR_KEY FROM `um_categoryattribute` t where t.CATEGORY_ID='##' ORDER BY (t.ATTR_KEY+0) DESC; ";
+		String sql="SELECT t.ATTR_KEY FROM `um_categoryattribute` t ";
+		 sql+=" where t.CATEGORY_ID='##' and t.ATTR_KEY<99 ORDER BY (t.ATTR_KEY+0) DESC LIMIT 1 ";
 		sql = sql.replace("##", category.getId());
 		List<Object> listCa=dataDictionaryDaoImpl.queryBySql(sql);
 		if(listCa!=null){
@@ -512,7 +514,7 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataD
 		if(category==null)
 			return null;
 		//找到最大的order
-		String sql="SELECT MAX(t.ORDER_) FROM `um_categoryattribute` t where t.CATEGORY_ID='##' ";
+		String sql="SELECT MAX(t.ORDER_) FROM `um_categoryattribute` t where t.CATEGORY_ID='##' and t.ATTR_KEY<99 ";
 		sql = sql.replace("##", category.getId());
 		List<Object> listCa=dataDictionaryDaoImpl.queryBySql(sql);
 		if(listCa!=null){
@@ -532,6 +534,34 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl implements IDataD
 			}
 		}
 		return CategoryAttributesOrder;
+	}
+
+	@Override
+	public String updateCategoryAttributesByCode(String CategoryCode,
+			String CategoryAttributesValue) {
+		String newKey="";
+		//找到字典，如通过"sex"找到性别字典
+		Category category=this.getCategoryByCode(CategoryCode);
+		//获取字典下选项最大的选项的key，如找到性别下“女”的key是最大值，为2
+		String maxKey=this.findMaxCategoryAttributesKey(category);
+		if(MathUtil.isInt(maxKey)){
+			//如果key为数值，则新的key为key+1
+			int maxkey=Integer.parseInt(maxKey);
+			newKey=String.valueOf(maxkey+1);
+		}else{
+			//如果key不为数值，则新的key暂默认为新的CategoryAttributesValue
+			newKey=CategoryAttributesValue; 
+		}
+		int maxOrder=this.findMaxCategoryAttributesOrder(category);
+		int newOrder=maxOrder+1;
+		//插入新的字典选项
+		CategoryAttribute caNew=new CategoryAttribute();
+		caNew.setAttrKey(newKey);
+		caNew.setAttrValue(CategoryAttributesValue);
+		caNew.setCategory(category);
+		caNew.setOrder(newOrder);
+		this.saveOrUpdateCategoryAttr(caNew);
+		return newKey; 
 	}
 
 

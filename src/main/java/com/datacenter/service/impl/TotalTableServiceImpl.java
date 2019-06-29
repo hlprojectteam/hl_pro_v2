@@ -2,12 +2,14 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.cache.Cache;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.ITotalTableDao;
 import com.datacenter.module.*;
 import com.datacenter.service.*;
 import com.datacenter.vo.*;
 import com.urms.dataDictionary.module.CategoryAttribute;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.*;
@@ -424,25 +426,25 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		getRoadWorkData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 		//5.设备运行情况统计表
 		getEquipmentOperationData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//15.联网设备日常检查表
+		//6.联网设备日常检查表
 		getEquipmentStatusData(wb, ttId, mainStyle_center, r0_style, r1_style, r2_style);
-		//6.营运数据
+		//7.营运数据
 		getOperatingData(wb, ttId, mainStyle_center, r0_style, r1_style, r2_style);
-		//7.拯救作业
+		//8.拯救作业
 		getRescueWorkData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//8.清障保洁
+		//9.清障保洁
 		getClearingData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//9.营运异常记录
+		//10.营运异常记录
 		getExceptionRecordData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//10.交通事故
+		//11.交通事故
 		getTrafficAccidentData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//11.信息通传
+		//12.信息通传
 		getInfoThroughData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//12.顾客意见反馈
+		//13.顾客意见反馈
 		getFeedBackData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//13.交通阻塞
+		//14.交通阻塞
 		getTrafficJamData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
-		//14.外勤作业
+		//15.外勤作业
 		getFieldOperationsData(wb, ttId, mainStyle_center, mainStyle_left, r0_style, r1_style, r2_style);
 
 		return wb;
@@ -529,9 +531,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			row2.createCell(1).setCellValue("主管副总经理：");
 		}
 		if(StringUtils.isNotBlank(brief.getZxfzr())){
-			row2.createCell(2).setCellValue("中心副主任：" + brief.getZxfzr());
+			row2.createCell(2).setCellValue("中心主任：" + brief.getZxfzr());
 		}else{
-			row2.createCell(2).setCellValue("中心副主任：");
+			row2.createCell(2).setCellValue("中心主任：");
 		}
 		if(StringUtils.isNotBlank(brief.getFhry())){
 			row2.createCell(3).setCellValue("复核：" + brief.getFhry());
@@ -540,7 +542,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		}
 		if(brief.getCreateTime() != null){
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			row2.createCell(4).setCellValue("简报生成时间：" + sdf.format(brief.getCreateTime()));
+			row2.createCell(4).setCellValue("简报生成时间：" + sdf.format(brief.getRiseTime()));
 		}else{
 			row2.createCell(4).setCellValue("简报生成时间：");
 		}
@@ -563,7 +565,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		//第五行
 		HSSFRow row4 = sheet1.createRow(4);
-		row4.setHeightInPoints(180);			//设置行的高度
+		row4.setHeightInPoints(160);			//设置行的高度
 		row4.createCell(0).setCellValue("交通运行情况");
 		row4.getCell(0).setCellStyle(mainStyle_center);
 		row4.createCell(1).setCellValue(brief.getTrafficOperation());
@@ -574,7 +576,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		//第六行
 		HSSFRow row5 = sheet1.createRow(5);
-		row5.setHeightInPoints(250);			//设置行的高度
+		row5.setHeightInPoints(200);			//设置行的高度
 		row5.createCell(0).setCellValue("设备运行情况");
 		row5.getCell(0).setCellStyle(mainStyle_center);
 		row5.createCell(1).setCellValue(brief.getEquipmentOperation());
@@ -665,14 +667,14 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				switch (j){
 					case 0:	cell.setCellValue(getValueByDictAndKey("dc_shift", trList.get(i).getShift().toString())); break;
 					case 1: cell.setCellValue(getValueByDictAndKey("dc_weather", trList.get(i).getWeather().toString()));	break;
-					case 2: cell.setCellValue(trList.get(i).getThisWatcher()); break;
+					case 2: cell.setCellValue(getValueByDictAndKey("dc_dutyPerson", trList.get(i).getThisWatcher().toString()));	break;
 					case 3:
 						if(trList.get(i).getShift() == 3){
 							cell.setCellValue(sdf.format(trList.get(i).getWatchTimeStart()) + "--次日" + sdf.format(trList.get(i).getWatchTimeEnd()));	break;
 						}else{
 							cell.setCellValue(sdf.format(trList.get(i).getWatchTimeStart()) + "--" + sdf.format(trList.get(i).getWatchTimeEnd()));	break;
 						}
-					case 4: cell.setCellValue(trList.get(i).getLaseWatcher());	break;
+					case 4: cell.setCellValue(getValueByDictAndKey("dc_dutyPerson", trList.get(i).getLaseWatcher().toString()));	break;
 					case 5: cell.setCellValue(sdf.format(trList.get(i).getHandoverTime()));	break;
 					case 6: cell.setCellValue(trList.get(i).getHandoverMatters()); break;
 					case 7: cell.setCellValue(trList.get(i).getException()); break;
@@ -704,6 +706,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年4月2日
 	 */
 	public HSSFWorkbook getSurveillanceInspectionData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		SurveillanceInspectionVo surveillanceInspectionVo = new SurveillanceInspectionVo();
 		surveillanceInspectionVo.setTtId(ttId);
 		List<SurveillanceInspection> siList = this.surveillanceInspectionServiceImpl.queryEntityList(surveillanceInspectionVo);
@@ -740,10 +744,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		HSSFRow row2 = sheet3.createRow(2);
 		row2.setHeightInPoints(25);
 		if(siList != null && siList.size() > 0){
-			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 			row2.createCell(0).setCellValue("日期：" + sdf1.format(siList.get(0).getDutyDate()) + "         天气：" + getValueByDictAndKey("dc_weather", siList.get(0).getWeather().toString()));
 		}else{
-			row2.createCell(0).setCellValue("日期：           天气：       ");
+			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
 		}
 		row2.getCell(0).setCellStyle(r1_style);
 
@@ -781,7 +784,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				//设置单元格内容
 				switch (j){
 					case 0:	cell.setCellValue(sdf.format(siList.get(i).getInspectionTimeStart()) + "--" + sdf.format(siList.get(i).getInspectionTimeEnd()));	break;
-					case 1: cell.setCellValue(siList.get(i).getShiftSupervisor());	break;
+					case 1: cell.setCellValue(getValueByDictAndKey("dc_headOfDuty", siList.get(i).getShiftSupervisor().toString()));	break;
 					case 2: cell.setCellValue(getValueByDictAndKey("dc_inspectionlocation", siList.get(i).getInspectionlocation().toString()));	break;
 					case 3:
 						if(siList.get(i).getFailureEquipment() != null){
@@ -933,14 +936,26 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 0:	cell.setCellValue(sdf1.format(rwList.get(i).getDutyDate()));	break;
 					case 1: cell.setCellValue(sdf2.format(rwList.get(i).getApproachTime()));	break;
 					case 2: cell.setCellValue(sdf2.format(rwList.get(i).getDepartureTime()));	break;
-					case 3: cell.setCellValue(rwList.get(i).getUnitName());	break;
+					case 3: cell.setCellValue(getValueByDictAndKey("dc_ConstructionUnitName", rwList.get(i).getUnitName().toString()));	break;
 					case 4: cell.setCellValue(rwList.get(i).getRelationPerson() + rwList.get(i).getRelationPhone());	break;
-					case 5: cell.setCellValue(getValueByDictAndKey("dc_positionAttributes", rwList.get(i).getPositionAttributes().toString()));	break;
+					case 5: 
+						//cell.setCellValue(getValueByDictAndKey("dc_positionAttributes", rwList.get(i).getPositionAttributes().toString()));	break;
+						if(StringUtils.isNotBlank(rwList.get(i).getPositionAttributes())){
+							String[] paArr = rwList.get(i).getPositionAttributes().split(",");
+							String paStr = "";
+							for (int m = 0; m < paArr.length; m++) {
+								paStr += getValueByDictAndKey("dc_positionAttributes", paArr[m]) + ",";
+							}
+							cell.setCellValue(paStr.substring(0, paStr.length()-1));
+						}else{
+							cell.setCellValue("");
+						}
+						break;
 					case 6: cell.setCellValue(rwList.get(i).getSpecificLocation()); break;
 					case 7: cell.setCellValue(rwList.get(i).getConstructionContent()); break;
 					case 8: cell.setCellValue(rwList.get(i).getJeevesSituation()); break;
 					case 9: cell.setCellValue(sdf2.format(rwList.get(i).getCheckTime()));	break;
-					case 10: cell.setCellValue(rwList.get(i).getChecker()); break;
+					case 10: cell.setCellValue(getValueByDictAndKey("dc_Inspectors", rwList.get(i).getChecker().toString()));	break;
 					case 11: cell.setCellValue(rwList.get(i).getDescription()); break;
 					case 12: cell.setCellValue(rwList.get(i).getRectificationMeasures()); break;
 					case 13: cell.setCellValue(rwList.get(i).getReportedSituation()); break;
@@ -990,9 +1005,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//设置列宽
 		for (int i = 0; i < 10; i++) {
 			if(i == 8){
-				sheet5.setColumnWidth(i, sheet5.getColumnWidth(i)*5);
+				sheet5.setColumnWidth(i, sheet5.getColumnWidth(i)*4);
 			}else{
-				sheet5.setColumnWidth(i, sheet5.getColumnWidth(i)*2);
+				sheet5.setColumnWidth(i, sheet5.getColumnWidth(i)*3/2);
 			}
 		}
 
@@ -1080,13 +1095,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				//设置单元格内容
 				switch (j){
 					case 0:	cell.setCellValue(getValueByDictAndKey("dc_tollGate", eoList.get(i).getTollGate().toString()));	break;
-					case 1:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getCdgqzp().toString()));	break;
-					case 2:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getZdfkj().toString()));	break;
-					case 3:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getMtcckcd().toString()));	break;
-					case 4:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getEtcckcd().toString()));	break;
-					case 5:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getMtcrkcd().toString()));	break;
-					case 6:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getEtcckcd().toString()));	break;
-					case 7:	cell.setCellValue(getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getJzcd().toString()));	break;
+					case 1: setCell(cell,wb,mainStyle_center,eoList.get(i).getCdgqzp());  break;
+					case 2: setCell(cell,wb,mainStyle_center,eoList.get(i).getZdfkj());  	break;
+					case 3: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcckcd());  	break;
+					case 4: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
+					case 5: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcrkcd());  	break;
+					case 6: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
+					case 7: setCell(cell,wb,mainStyle_center,eoList.get(i).getJzcd());  	break;
 
 					/*case 1:
                         cell.setCellValue("●");
@@ -1183,8 +1198,10 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 						break;
 				}
 				//设置单元格样式
-				if(j == 8){
+				if(j == 8) {
 					cell.setCellStyle(mainStyle_left);
+				}else if(j>0&&j<8){
+					
 				}else{
 					cell.setCellStyle(mainStyle_center);
 				}
@@ -1193,7 +1210,207 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		return wb;
 	}
+	
+	private void setCell(HSSFCell cell,HSSFWorkbook wb,HSSFCellStyle mainStyle, int status){
+		HSSFCellStyle style_ = wb.createCellStyle();
+		if(status==1){
+			//正常样式
+			style_.cloneStyleFrom(mainStyle);
+			style_.setAlignment(HorizontalAlignment.CENTER);
+			HSSFFont r2_font = wb.createFont();
+			r2_font.setBold(true);						//字体加粗
+			r2_font.setColor(IndexedColors.GREEN.getIndex());
+			r2_font.setFontHeightInPoints((short)20);	//字体大小
+			style_.setFont(r2_font);
+		}else if(status==2){
+			//损坏但不影响样式
+			style_.cloneStyleFrom(mainStyle);
+			style_.setAlignment(HorizontalAlignment.CENTER);
+			HSSFFont r2_font = wb.createFont();
+			r2_font.setBold(true);						//字体加粗
+			r2_font.setColor(IndexedColors.YELLOW.getIndex());
+			r2_font.setFontHeightInPoints((short)20);	//字体大小
+			style_.setFont(r2_font);
+		}else if(status==3){
+			//损坏样式
+			style_.cloneStyleFrom(mainStyle);
+			style_.setAlignment(HorizontalAlignment.CENTER);
+			HSSFFont r2_font = wb.createFont();
+			r2_font.setBold(true);						//字体加粗
+			r2_font.setColor(IndexedColors.RED.getIndex());
+			r2_font.setFontHeightInPoints((short)20);	//字体大小
+			style_.setFont(r2_font);
+		}
+		cell.setCellValue("●");
+		cell.setCellStyle(style_);
+	}
 
+	/**
+	 * @intruduction 获取联网设备日常检查表数据
+	 * @param wb excel文档对象
+	 * @param ttId 主表id
+	 * @param mainStyle_center
+	 * @param r0_style
+	 * @param r1_style
+	 * @param r2_style
+	 * @return HSSFWorkbook
+	 * @author xuezb
+	 * @Date 2019年3月5日
+	 */
+	public HSSFWorkbook getEquipmentStatusData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		EquipmentStatusVo equipmentStatusVo = new EquipmentStatusVo();
+		equipmentStatusVo.setTtId(ttId);
+		List<EquipmentStatus> esList = this.equipmentStatusServiceImpl.queryEntityList(equipmentStatusVo);
+
+
+		//创建sheet
+		HSSFSheet sheet15 = wb.createSheet("联网设备日常检查表");
+
+		//设置列宽
+		for (int i = 0; i < 10; i++) {
+			sheet15.setColumnWidth(i, sheet15.getColumnWidth(i)*2);
+		}
+
+
+		//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+		sheet15.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
+		sheet15.addMergedRegion(new CellRangeAddress(1, 1, 0, 9));
+		sheet15.addMergedRegion(new CellRangeAddress(2, 2, 2, 3));
+		sheet15.addMergedRegion(new CellRangeAddress(2, 2, 5, 8));
+
+		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 0, 0));
+		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 1, 1));
+		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 9, 9));
+
+
+		//创建行（第一行）
+		HSSFRow row0 = sheet15.createRow(0 );
+		//设置行的高度
+		row0.setHeightInPoints(30);
+		//创建单元格 并 设置单元格内容
+		row0.createCell(0).setCellValue("联网关键设备运行状态日常检查表");
+		//设置单元格样式
+		row0.getCell(0).setCellStyle(r0_style);
+
+		//第二行
+		HSSFRow row1 = sheet15.createRow(1);
+		row1.createCell(0).setCellValue("表单编号：HLZXRBB-06");
+		row1.getCell(0).setCellStyle(r1_style);
+
+		//第三行
+		HSSFRow row2 = sheet15.createRow(2);
+		row2.setHeightInPoints(25);
+		row2.createCell(0).setCellValue("日期");
+		row2.createCell(1);
+		row2.createCell(2).setCellValue("RFID");
+		row2.createCell(3);
+		row2.createCell(4).setCellValue("5.8G");
+		row2.createCell(5).setCellValue("高清卡口");
+		for (int i = 6; i < 9; i++) {
+			row2.createCell(i);
+		}
+		row2.createCell(9).setCellValue("备注");
+		for (int i = 0; i < 10; i++) {
+			row2.getCell(i).setCellStyle(r2_style);	//设置单元格样式
+		}
+
+		//第四行
+		HSSFRow row3 = sheet15.createRow(3);
+		row3.setHeightInPoints(25);
+		row3.createCell(0);
+		row3.createCell(1);
+		row3.createCell(2).setCellValue("R1");
+		row3.createCell(3).setCellValue("R2");
+		row3.createCell(4).setCellValue("E1");
+		row3.createCell(5).setCellValue("10306");
+		row3.createCell(6).setCellValue("10307");
+		row3.createCell(7).setCellValue("10308");
+		row3.createCell(8).setCellValue("10309");
+		row3.createCell(9);
+		for (int i = 0; i < 10; i++) {
+			row3.getCell(i).setCellStyle(r2_style);	//设置单元格样式
+		}
+
+		int esListRows=0;
+		//数据展示
+		if(esList != null && esList.size() > 0){
+			esListRows=esList.size()*3;//占用了几行
+			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+
+			for(int tb = 0; tb < esList.size(); tb++){
+
+				//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+				sheet15.addMergedRegion(new CellRangeAddress(4 + tb*3,  6 + tb*3, 0, 0));
+
+
+				HSSFRow row4 = sheet15.createRow(4 + tb*3);
+				row4.setHeightInPoints(25);
+				row4.createCell(0).setCellValue(sdf1.format(esList.get(tb).getDutyDate()));
+				row4.createCell(1);
+				row4.createCell(2).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR1().toString()));
+				row4.createCell(3).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR2().toString()));
+				row4.createCell(4).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusE1().toString()));
+				row4.createCell(5).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusA().toString()));
+				row4.createCell(6).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusB().toString()));
+				row4.createCell(7).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusC().toString()));
+				row4.createCell(8).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusD().toString()));
+				row4.createCell(9).setCellValue(sdf2.format(esList.get(tb).getCheckTime()));
+				for (int i = 0; i < 10; i++) {
+					row4.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
+				}
+
+
+				HSSFRow row5 = sheet15.createRow(5 + tb*3);
+				row5.setHeightInPoints(25);
+				row5.createCell(0);
+				row5.createCell(1).setCellValue("标识成功率");
+				row5.createCell(2).setCellValue(esList.get(tb).getSuccessRateR1() + "%");
+				row5.createCell(3).setCellValue(esList.get(tb).getSuccessRateR2() + "%");
+				row5.createCell(4).setCellValue(esList.get(tb).getSuccessRateE1() + "%");
+				row5.createCell(5).setCellValue(esList.get(tb).getSuccessRateA() + "%");
+				row5.createCell(6).setCellValue(esList.get(tb).getSuccessRateB() + "%");
+				row5.createCell(7).setCellValue(esList.get(tb).getSuccessRateC() + "%");
+				row5.createCell(8).setCellValue(esList.get(tb).getSuccessRateD() + "%");
+				row5.createCell(9).setCellValue(esList.get(tb).getRemark());
+				for (int i = 0; i < 10; i++) {
+					row5.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
+				}
+
+
+				HSSFRow row6 = sheet15.createRow(6 + tb*3);
+				row6.setHeightInPoints(25);
+				row6.createCell(0);
+				row6.createCell(1).setCellValue("误标数量");
+				row6.createCell(2).setCellValue(esList.get(tb).getMislabelNumR1());
+				row6.createCell(3).setCellValue(esList.get(tb).getMislabelNumR2());
+				row6.createCell(4).setCellValue(0);
+				row6.createCell(5).setCellValue(0);
+				row6.createCell(6).setCellValue(0);
+				row6.createCell(7).setCellValue(0);
+				row6.createCell(8).setCellValue(0);
+				row6.createCell(9);
+				for (int i = 0; i < 10; i++) {
+					row6.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
+				}
+
+			}
+
+		}
+		int LastRowIndex=esListRows+4;
+        //合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+		sheet15.addMergedRegion(new CellRangeAddress(LastRowIndex,LastRowIndex,0,9));
+        //创建行（最后一行）
+        HSSFRow rowLast = sheet15.createRow(LastRowIndex);
+        //设置行的高度
+        rowLast.setHeightInPoints(50);
+        //创建单元格 并 设置单元格内容
+        rowLast.createCell(0).setCellValue("注：实时状态指每日早上在省营运平台进行登录。依次检查RFID、5.8G、高清卡口的运行状态情况。显示绿灯为正常运行，打√，显示红灯为设备故障，打×，需要向广交机及工程部进行设备报修，并在设备修复后记录修复时间。标识成功率指的是各联网关键设备在上一工班日的标识情况统计。误标数量指的是两个RFID标识点的疑似误标流水条数。");
+        //设置单元格样式
+        rowLast.getCell(0).setCellStyle(r2_style);	//设置单元格样式
+
+		return wb;
+	}
 
 	/**
 	 * @intruduction 获取营运数据
@@ -1208,6 +1425,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月28日
 	 */
 	public HSSFWorkbook getOperatingData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		OperatingDataVo operatingDataVo = new OperatingDataVo();
 		operatingDataVo.setTtId(ttId);
 		List<OperatingData> odList = this.operatingDataServiceImpl.queryEntityList(operatingDataVo);
@@ -1238,18 +1457,19 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//设置行的高度
 		row0.setHeightInPoints(30);
 		//创建单元格 并 设置单元格内容
-		if(odList != null && odList.size() > 0){
-			row0.createCell(0).setCellValue(odList.get(0).getTitle());
-		}else{
-			row0.createCell(0).setCellValue("各站营运数据");
-		}
+//		if(odList != null && odList.size() > 0){
+//			row0.createCell(0).setCellValue(odList.get(0).getTitle());
+//		}else{
+//			row0.createCell(0).setCellValue("各站营运数据");
+//		}
+		row0.createCell(0).setCellValue(sdf1.format(tt.getDutyDate())+"各站拆分前营运数据");
 		//设置单元格样式
 		row0.getCell(0).setCellStyle(r0_style);
 
 
 		//第二行
 		HSSFRow row1 = sheet6.createRow(1);
-		row1.createCell(0).setCellValue("表单编号：HLZXRBB-06");
+		row1.createCell(0).setCellValue("表单编号：HLZXRBB-07");
 		row1.getCell(0).setCellStyle(r1_style);
 
 
@@ -1294,7 +1514,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		Double hj_mobilePaymentIncome = 0.0;
 		for (int i = 0; i < odList.size(); i++) {
 			row = sheet6.createRow(i + 4);	//创建行
-			row.setHeightInPoints(30);					//设置行高
+			row.setHeightInPoints(26);					//设置行高
 			for (int j = 0; j < 8; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
@@ -1408,7 +1628,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		//第二行
 		HSSFRow row1 = sheet7.createRow(1);
-		row1.createCell(0).setCellValue("表单编号：HLZXRBB-07");
+		row1.createCell(0).setCellValue("表单编号：HLZXRBB-08");
 		row1.getCell(0).setCellStyle(r1_style);
 
 
@@ -1488,6 +1708,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook getClearingData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+		
 		ClearingVo clearingVo = new ClearingVo();
 		clearingVo.setTtId(ttId);
 		List<Clearing> cList = this.clearingServiceImpl.queryEntityList(clearingVo);
@@ -1531,16 +1754,16 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 				//第二行
 				HSSFRow row1 = sheet8.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-08");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-09");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+				
 				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet8.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(cList.get(0).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + sdf1.format(cList.get(tb).getDutyDate()));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -1552,11 +1775,11 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("报告部门");
 				row3.getCell(2).setCellStyle(r2_style);
-				row3.createCell(3).setCellValue(cList.get(tb).getReportedDp());
+				row3.createCell(3).setCellValue(getValueByDictAndKey("dc_reportingDepartment", cList.get(tb).getReportedDp().toString()));
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("报告人员");
 				row3.getCell(4).setCellStyle(r2_style);
-				row3.createCell(5).setCellValue(cList.get(tb).getReportedPerson());
+				row3.createCell(5).setCellValue(getValueByDictAndKey("dc_reportingPerson", cList.get(tb).getReportedPerson().toString()));
 				row3.getCell(5).setCellStyle(mainStyle_center);
 				row3.createCell(6).setCellValue("报告方式");
 				row3.getCell(6).setCellStyle(r2_style);
@@ -1572,7 +1795,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("通知处理部门");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(cList.get(tb).getProcessingDp());
+				row4.createCell(5).setCellValue(getValueByDictAndKey("dc_NotificationDepartment", cList.get(tb).getProcessingDp().toString()));
+				
 				row4.getCell(5).setCellStyle(mainStyle_center);
                 for (int i = 2; i < 8; i++) {
                     if(i != 4 && i!= 5){
@@ -1639,13 +1863,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 			//第二行
 			HSSFRow row1 = sheet8.createRow(1);
-			row1.createCell(0).setCellValue("表单编号：HLZXRBB-08");
+			row1.createCell(0).setCellValue("表单编号：HLZXRBB-09");
 			row1.getCell(0).setCellStyle(r1_style);
 
 			//第三行
 			HSSFRow row2 = sheet8.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：         ");
+			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -1723,13 +1947,15 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook getExceptionRecordData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		ExceptionRecordVo exceptionRecordVo = new ExceptionRecordVo();
 		exceptionRecordVo.setTtId(ttId);
 		List<ExceptionRecord> erList = this.exceptionRecordServiceImpl.queryEntityList(exceptionRecordVo);
 
 
 		//创建sheet
-		HSSFSheet sheet9 = wb.createSheet("异常记录");
+		HSSFSheet sheet9 = wb.createSheet("营运异常记录");
 
 		//设置列宽
 		for (int i = 0; i < 8; i++) {
@@ -1770,16 +1996,15 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 				//第二行
 				HSSFRow row1 = sheet9.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-09");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-10");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet9.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(erList.get(0).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + sdf1.format(erList.get(tb).getDutyDate()));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -1788,11 +2013,11 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					row3.setHeightInPoints(40);
 					row3.createCell(0).setCellValue("报告部门");
 					row3.getCell(0).setCellStyle(r2_style);
-					row3.createCell(1).setCellValue(erList.get(tb).getReportedDp());
+					row3.createCell(1).setCellValue(getValueByDictAndKey("dc_reportingDepartment", erList.get(tb).getReportedDp().toString()));
 					row3.getCell(1).setCellStyle(mainStyle_center);
 					row3.createCell(4).setCellValue("报告人员");
 					row3.getCell(4).setCellStyle(r2_style);
-					row3.createCell(5).setCellValue(erList.get(tb).getReportedPerson());
+					row3.createCell(5).setCellValue(getValueByDictAndKey("dc_reportingPerson", erList.get(tb).getReportedPerson().toString()));
 					row3.getCell(5).setCellStyle(mainStyle_center);
 					for (int i = 2; i < 8; i++) {
 						if(i != 4 && i!= 5){
@@ -1807,11 +2032,11 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					row3.getCell(1).setCellStyle(mainStyle_center);
 					row3.createCell(2).setCellValue("报告部门");
 					row3.getCell(2).setCellStyle(r2_style);
-					row3.createCell(3).setCellValue(erList.get(tb).getReportedDp());
+					row3.createCell(3).setCellValue(getValueByDictAndKey("dc_reportingDepartment", erList.get(tb).getReportedDp().toString()));
 					row3.getCell(3).setCellStyle(mainStyle_center);
 					row3.createCell(4).setCellValue("报告人员");
 					row3.getCell(4).setCellStyle(r2_style);
-					row3.createCell(5).setCellValue(erList.get(tb).getReportedPerson());
+					row3.createCell(5).setCellValue(getValueByDictAndKey("dc_reportingPerson", erList.get(tb).getReportedPerson().toString()));
 					row3.getCell(5).setCellStyle(mainStyle_center);
 					row3.createCell(6).setCellValue("报告方式");
 					row3.getCell(6).setCellStyle(r2_style);
@@ -1829,7 +2054,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("通知处理部门");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(erList.get(tb).getProcessingDp());
+				row4.createCell(5).setCellValue(getValueByDictAndKey("dc_NotificationDepartment", erList.get(tb).getProcessingDp().toString()));
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				for (int i = 2; i < 8; i++) {
 					if(i != 4 && i!= 5){
@@ -1895,13 +2120,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 			//第二行
 			HSSFRow row1 = sheet9.createRow(1);
-			row1.createCell(0).setCellValue("表单编号：HLZXRBB-09");
+			row1.createCell(0).setCellValue("表单编号：HLZXRBB-10");
 			row1.getCell(0).setCellStyle(r1_style);
 
 			//第三行
 			HSSFRow row2 = sheet9.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：         ");
+			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -1979,6 +2204,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook getTrafficAccidentData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		TrafficAccidentVo trafficAccidentVo = new TrafficAccidentVo();
 		trafficAccidentVo.setTtId(ttId);
 		List<TrafficAccident> taList = this.trafficAccidentServiceImpl.queryEntityList(trafficAccidentVo);
@@ -2015,16 +2242,15 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 				//第二行
 				HSSFRow row1 = sheet10.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-10");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-11");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet10.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(taList.get(0).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + sdf1.format(taList.get(tb).getDutyDate()));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -2157,13 +2383,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 			//第二行
 			HSSFRow row1 = sheet10.createRow(1);
-			row1.createCell(0).setCellValue("表单编号：HLZXRBB-10");
+			row1.createCell(0).setCellValue("表单编号：HLZXRBB-11");
 			row1.getCell(0).setCellStyle(r1_style);
 
 			//第三行
 			HSSFRow row2 = sheet10.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：          ");
+			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -2265,6 +2491,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook getInfoThroughData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		InfoThroughVo infoThroughVo = new InfoThroughVo();
 		infoThroughVo.setTtId(ttId);
 		List<InfoThrough> itList = this.infoThroughServiceImpl.queryEntityList(infoThroughVo);
@@ -2308,16 +2536,15 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 				//第二行
 				HSSFRow row1 = sheet11.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-11");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-12");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet11.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(itList.get(0).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + sdf1.format(itList.get(tb).getDutyDate()));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -2349,7 +2576,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("值班员");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(itList.get(tb).getWatcher());
+				row4.createCell(5).setCellValue(getValueByDictAndKey("dc_dutyPerson", itList.get(tb).getWatcher().toString()));
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				for (int i = 2; i < 8; i++) {
 					if(i != 4 && i!= 5){
@@ -2415,13 +2642,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 			//第二行
 			HSSFRow row1 = sheet11.createRow(1);
-			row1.createCell(0).setCellValue("表单编号：HLZXRBB-11");
+			row1.createCell(0).setCellValue("表单编号：HLZXRBB-12");
 			row1.getCell(0).setCellStyle(r1_style);
 
 			//第三行
 			HSSFRow row2 = sheet11.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：         ");
+			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -2499,6 +2726,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook getFeedBackData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		FeedBackVo feedBackVo = new FeedBackVo();
 		feedBackVo.setTtId(ttId);
 		List<FeedBack> fbList = this.feedBackServiceImpl.queryEntityList(feedBackVo);
@@ -2542,16 +2771,15 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 				//第二行
 				HSSFRow row1 = sheet12.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-12");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-13");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet12.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(fbList.get(0).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + sdf1.format(fbList.get(tb).getDutyDate()));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -2587,7 +2815,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.getCell(4).setCellStyle(mainStyle_center);
 				row4.createCell(6).setCellValue("值班员");
 				row4.getCell(6).setCellStyle(r2_style);
-				row4.createCell(7).setCellValue(fbList.get(tb).getWatcher());
+				row4.createCell(7).setCellValue(getValueByDictAndKey("dc_dutyPerson", fbList.get(tb).getWatcher().toString()));
 				row4.getCell(7).setCellStyle(mainStyle_center);
 
 				row4.createCell(2).setCellStyle(r2_style);
@@ -2652,13 +2880,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 			//第二行
 			HSSFRow row1 = sheet12.createRow(1);
-			row1.createCell(0).setCellValue("表单编号：HLZXRBB-12");
+			row1.createCell(0).setCellValue("表单编号：HLZXRBB-13");
 			row1.getCell(0).setCellStyle(r1_style);
 
 			//第三行
 			HSSFRow row2 = sheet12.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：         ");
+			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -2738,6 +2966,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook getTrafficJamData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		TrafficJamVo trafficJamVo = new TrafficJamVo();
 		trafficJamVo.setTtId(ttId);
 		List<TrafficJam> tjList = this.trafficJamServiceImpl.queryEntityList(trafficJamVo);
@@ -2777,16 +3007,15 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 				//第二行
 				HSSFRow row1 = sheet13.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-13");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-14");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet13.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(tjList.get(0).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + sdf1.format(tjList.get(tb).getDutyDate()));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -2904,13 +3133,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 			//第二行
 			HSSFRow row1 = sheet13.createRow(1);
-			row1.createCell(0).setCellValue("表单编号：HLZXRBB-13");
+			row1.createCell(0).setCellValue("表单编号：HLZXRBB-14");
 			row1.getCell(0).setCellStyle(r1_style);
 
 			//第三行
 			HSSFRow row2 = sheet13.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：         ");
+			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -2995,6 +3224,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 * @Date 2019年3月5日
 	 */
 	public HSSFWorkbook getFieldOperationsData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
+		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		FieldOperationsVo fieldOperationsVo = new FieldOperationsVo();
 		fieldOperationsVo.setTtId(ttId);
 		List<FieldOperations> foList = this.fieldOperationsServiceImpl.queryEntityList(fieldOperationsVo);
@@ -3038,16 +3269,15 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 				//第二行
 				HSSFRow row1 = sheet14.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-14");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-15");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet14.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(foList.get(0).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + sdf1.format(foList.get(tb).getDutyDate()));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -3148,13 +3378,13 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 			//第二行
 			HSSFRow row1 = sheet14.createRow(1);
-			row1.createCell(0).setCellValue("表单编号：HLZXRBB-14");
+			row1.createCell(0).setCellValue("表单编号：HLZXRBB-15");
 			row1.getCell(0).setCellStyle(r1_style);
 
 			//第三行
 			HSSFRow row2 = sheet14.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：         ");
+			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -3220,161 +3450,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	}
 
 
-	/**
-	 * @intruduction 获取联网设备日常检查表数据
-	 * @param wb excel文档对象
-	 * @param ttId 主表id
-	 * @param mainStyle_center
-	 * @param r0_style
-	 * @param r1_style
-	 * @param r2_style
-	 * @return HSSFWorkbook
-	 * @author xuezb
-	 * @Date 2019年3月5日
-	 */
-	public HSSFWorkbook getEquipmentStatusData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
-		EquipmentStatusVo equipmentStatusVo = new EquipmentStatusVo();
-		equipmentStatusVo.setTtId(ttId);
-		List<EquipmentStatus> esList = this.equipmentStatusServiceImpl.queryEntityList(equipmentStatusVo);
-
-
-		//创建sheet
-		HSSFSheet sheet15 = wb.createSheet("联网设备日常检查表");
-
-		//设置列宽
-		for (int i = 0; i < 10; i++) {
-			sheet15.setColumnWidth(i, sheet15.getColumnWidth(i)*2);
-		}
-
-
-		//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
-		sheet15.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
-		sheet15.addMergedRegion(new CellRangeAddress(1, 1, 0, 9));
-		sheet15.addMergedRegion(new CellRangeAddress(2, 2, 2, 3));
-		sheet15.addMergedRegion(new CellRangeAddress(2, 2, 5, 8));
-
-		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 0, 0));
-		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 1, 1));
-		sheet15.addMergedRegion(new CellRangeAddress(2, 3, 9, 9));
-
-
-		//创建行（第一行）
-		HSSFRow row0 = sheet15.createRow(0 );
-		//设置行的高度
-		row0.setHeightInPoints(30);
-		//创建单元格 并 设置单元格内容
-		row0.createCell(0).setCellValue("联网关键设备运行状态日常检查表");
-		//设置单元格样式
-		row0.getCell(0).setCellStyle(r0_style);
-
-		//第二行
-		HSSFRow row1 = sheet15.createRow(1);
-		row1.createCell(0).setCellValue("表单编号：HLZXRBB-15");
-		row1.getCell(0).setCellStyle(r1_style);
-
-		//第三行
-		HSSFRow row2 = sheet15.createRow(2);
-		row2.setHeightInPoints(25);
-		row2.createCell(0).setCellValue("日期");
-		row2.createCell(1);
-		row2.createCell(2).setCellValue("RFID");
-		row2.createCell(3);
-		row2.createCell(4).setCellValue("5.8G");
-		row2.createCell(5).setCellValue("高清卡口");
-		for (int i = 6; i < 9; i++) {
-			row2.createCell(i);
-		}
-		row2.createCell(9).setCellValue("备注");
-		for (int i = 0; i < 10; i++) {
-			row2.getCell(i).setCellStyle(r2_style);	//设置单元格样式
-		}
-
-		//第四行
-		HSSFRow row3 = sheet15.createRow(3);
-		row3.setHeightInPoints(25);
-		row3.createCell(0);
-		row3.createCell(1);
-		row3.createCell(2).setCellValue("R1");
-		row3.createCell(3).setCellValue("R2");
-		row3.createCell(4).setCellValue("E1");
-		row3.createCell(5).setCellValue("10306");
-		row3.createCell(6).setCellValue("10307");
-		row3.createCell(7).setCellValue("10308");
-		row3.createCell(8).setCellValue("10309");
-		row3.createCell(9);
-		for (int i = 0; i < 10; i++) {
-			row3.getCell(i).setCellStyle(r2_style);	//设置单元格样式
-		}
-
-
-		//数据展示
-		if(esList != null && esList.size() > 0){
-
-			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-			SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-
-			for(int tb = 0; tb < esList.size(); tb++){
-
-				//合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
-				sheet15.addMergedRegion(new CellRangeAddress(4 + tb*3,  6 + tb*3, 0, 0));
-
-
-				HSSFRow row4 = sheet15.createRow(4 + tb*3);
-				row4.setHeightInPoints(25);
-				row4.createCell(0).setCellValue(sdf1.format(esList.get(tb).getDutyDate()));
-				row4.createCell(1);
-				row4.createCell(2).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR1().toString()));
-				row4.createCell(3).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR2().toString()));
-				row4.createCell(4).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusE1().toString()));
-				row4.createCell(5).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusA().toString()));
-				row4.createCell(6).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusB().toString()));
-				row4.createCell(7).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusC().toString()));
-				row4.createCell(8).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusD().toString()));
-				row4.createCell(9).setCellValue(sdf2.format(esList.get(tb).getCheckTime()));
-				for (int i = 0; i < 10; i++) {
-					row4.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
-				}
-
-
-				HSSFRow row5 = sheet15.createRow(5 + tb*3);
-				row5.setHeightInPoints(25);
-				row5.createCell(0);
-				row5.createCell(1).setCellValue("标识成功率");
-				row5.createCell(2).setCellValue(esList.get(tb).getSuccessRateR1() + "%");
-				row5.createCell(3).setCellValue(esList.get(tb).getSuccessRateR2() + "%");
-				row5.createCell(4).setCellValue(esList.get(tb).getSuccessRateE1() + "%");
-				row5.createCell(5).setCellValue(esList.get(tb).getSuccessRateA() + "%");
-				row5.createCell(6).setCellValue(esList.get(tb).getSuccessRateB() + "%");
-				row5.createCell(7).setCellValue(esList.get(tb).getSuccessRateC() + "%");
-				row5.createCell(8).setCellValue(esList.get(tb).getSuccessRateD() + "%");
-				row5.createCell(9).setCellValue(esList.get(tb).getRemark());
-				for (int i = 0; i < 10; i++) {
-					row5.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
-				}
-
-
-				HSSFRow row6 = sheet15.createRow(6 + tb*3);
-				row6.setHeightInPoints(25);
-				row6.createCell(0);
-				row6.createCell(1).setCellValue("误标数量");
-				row6.createCell(2).setCellValue(esList.get(tb).getMislabelNumR1());
-				row6.createCell(3).setCellValue(esList.get(tb).getMislabelNumR2());
-				row6.createCell(4).setCellValue(0);
-				row6.createCell(5).setCellValue(0);
-				row6.createCell(6).setCellValue(0);
-				row6.createCell(7).setCellValue(0);
-				row6.createCell(8).setCellValue(0);
-				row6.createCell(9);
-				for (int i = 0; i < 10; i++) {
-					row6.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
-				}
-
-			}
-
-		}
-
-		return wb;
-	}
+	
 
 
 

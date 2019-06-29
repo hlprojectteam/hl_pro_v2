@@ -21,6 +21,8 @@ public class SurveillanceInspectionVo extends SurveillanceInspection{
 	private String dutyDateStr;				//日期字符串
 
 	private String keyword;				//关键字
+	
+	private String dictValue;				//新增字典值_值班主任
 
 
 	public String getKeyword() {
@@ -47,6 +49,14 @@ public class SurveillanceInspectionVo extends SurveillanceInspection{
 	}
 	public void setDutyDateEnd(Date dutyDateEnd) {
 		this.dutyDateEnd = dutyDateEnd;
+	}
+
+	public String getDictValue() {
+		return dictValue;
+	}
+
+	public void setDictValue(String dictValue) {
+		this.dictValue = dictValue;
 	}
 
 }

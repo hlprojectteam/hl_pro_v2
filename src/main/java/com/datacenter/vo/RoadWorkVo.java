@@ -21,6 +21,10 @@ public class RoadWorkVo extends RoadWork{
 	private String dutyDateStr;				//日期字符串
 
 	private String keyword;				//关键字
+	
+	private String dictValue;				//新增字典值_施工单位
+	
+	private String dictValue2;				//新增字典值_检查人员
 
 
 	public String getKeyword() {
@@ -47,6 +51,22 @@ public class RoadWorkVo extends RoadWork{
 	}
 	public void setDutyDateEnd(Date dutyDateEnd) {
 		this.dutyDateEnd = dutyDateEnd;
+	}
+
+	public String getDictValue() {
+		return dictValue;
+	}
+
+	public void setDictValue(String dictValue) {
+		this.dictValue = dictValue;
+	}
+
+	public String getDictValue2() {
+		return dictValue2;
+	}
+
+	public void setDictValue2(String dictValue2) {
+		this.dictValue2 = dictValue2;
 	}
 
 }

@@ -71,4 +71,31 @@ public class MessageReadedServiceImpl extends BaseServiceImpl implements IMessag
 		return null;
 	}
 
+	@Override
+	public void updateCleanMessageReaded() {
+		//定义消息的最大长度
+		int maxL=50;
+		List<MessageReaded> list= messageReadedDaoImpl.queryAllEntity(MessageReaded.class, Order.desc("createTime"));
+		for (MessageReaded messageReaded : list) {
+			String msg=messageReaded.getReadMsgs();
+			if(msg.indexOf(",")>0){
+				String[] msgArr= msg.split(",");
+				int lmsg=msgArr.length;
+				if(lmsg>maxL){
+					//长度大于50个id，进行删减
+					//index 多出的个数
+					int index=lmsg-maxL;
+					for (int i = 0; i < index; i++) {
+						msg= msg.substring(msg.indexOf(",")+1, msg.length()); 
+					}
+					messageReaded.setReadMsgs(msg);
+//					System.out.println(messageReaded.getId()+":"+messageReaded.getReadMsgs());
+					this.saveOrUpdate(messageReaded);
+				}
+			}
+			
+		}
+		
+	}
+
 }

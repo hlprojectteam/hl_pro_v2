@@ -4,8 +4,11 @@ import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.ISurveillanceInspectionDao;
 import com.datacenter.module.SurveillanceInspection;
+import com.datacenter.module.TotalTable;
 import com.datacenter.service.ISurveillanceInspectionService;
 import com.datacenter.vo.SurveillanceInspectionVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -37,6 +40,9 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
+	
+	@Autowired
+	public IDataDictionaryService dataDictionaryServiceImpl;
 
 
 	
@@ -55,6 +61,9 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 		if(surveillanceInspectionVo.getInspectionlocation() != null){		//巡检位置
 			params.add(Restrictions.eq("inspectionlocation", surveillanceInspectionVo.getInspectionlocation()));
 		}
+		if(StringUtils.isNotBlank(surveillanceInspectionVo.getShiftSupervisor())){		//值班主任
+			params.add(Restrictions.eq("shiftSupervisor", surveillanceInspectionVo.getShiftSupervisor()));
+		}
 
 		if(StringUtils.isNotBlank(surveillanceInspectionVo.getKeyword())){
 			params.add(Restrictions.sqlRestriction(" (shift_Supervisor like '%" + surveillanceInspectionVo.getKeyword() + "%' " +
@@ -66,6 +75,10 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 	@Override
 	public SurveillanceInspection saveOrUpdate(SurveillanceInspectionVo surveillanceInspectionVo) {
+		if(surveillanceInspectionVo.getShiftSupervisor().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_headOfDuty", surveillanceInspectionVo.getDictValue());
+			surveillanceInspectionVo.setShiftSupervisor(newKey);
+		}
 		SurveillanceInspection surveillanceInspection = new SurveillanceInspection();
 		BeanUtils.copyProperties(surveillanceInspectionVo, surveillanceInspection);
 		if(StringUtils.isBlank(surveillanceInspection.getId())){
@@ -124,7 +137,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 
 		//排序, 根据日期倒序排序，巡检时间Start顺序排序
-		hql.append(" order by dutyDate desc,inspectionTimeStart asc ");
+		hql.append(" order by dutyDate asc,inspectionTimeStart asc ");
 
 		return this.surveillanceInspectionDaoImpl.queryEntityHQLList(hql.toString(), objectList, SurveillanceInspection.class);
 	}
@@ -236,7 +249,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 				switch (j){
 					case 0:	cell.setCellValue(sdf1.format(siList.get(i).getDutyDate())); break;
 					case 1:	cell.setCellValue(sdf.format(siList.get(i).getInspectionTimeStart()) + "--" + sdf.format(siList.get(i).getInspectionTimeEnd()));	break;
-					case 2: cell.setCellValue(siList.get(i).getShiftSupervisor());	break;
+					case 2: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_headOfDuty", siList.get(i).getShiftSupervisor().toString()));	break;
 					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_inspectionlocation", siList.get(i).getInspectionlocation().toString()));	break;
 					case 4: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_failureEquipment", siList.get(i).getFailureEquipment().toString()));	break;
 					case 5: cell.setCellValue(siList.get(i).getInspectionDetails());	break;

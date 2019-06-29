@@ -114,7 +114,7 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 			hql.append(" and status = ? ");
 		}
 		//排序, 根据日期倒序排序
-		hql.append(" order by dutyDate desc ");
+		hql.append(" order by dutyDate asc ");
 
 		List<Brief> trList = this.briefDaoImpl.queryEntityHQLList(hql.toString(), objectList, Brief.class);
 		return trList;
@@ -265,7 +265,7 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 				row2.setHeightInPoints(40);
 				row2.createCell(0).setCellValue("常务副总经理：" + briefList.get(tb).getCwfzjl());
 				row2.createCell(1).setCellValue("主管副总经理：" + briefList.get(tb).getZgfzjl());
-				row2.createCell(2).setCellValue("中心副主任：" + briefList.get(tb).getZxfzr());
+				row2.createCell(2).setCellValue("中心主任：" + briefList.get(tb).getZxfzr());
 				row2.createCell(3).setCellValue("复核：" + briefList.get(tb).getFhry());
 				row2.createCell(4).setCellValue("简报生成时间：" + sdf.format(briefList.get(tb).getCreateTime()));
 				row2.getCell(0).setCellStyle(mainStyle_center);
@@ -287,18 +287,18 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 
 				//第五行
 				HSSFRow row4 = sheet.createRow(4 + tb*7);
-				row4.setHeightInPoints(180);			//设置行的高度
+				row4.setHeightInPoints(160);			//设置行的高度
 				row4.createCell(0).setCellValue("交通运行情况");
 				row4.getCell(0).setCellStyle(mainStyle_center);
 				row4.createCell(1).setCellValue(briefList.get(tb).getTrafficOperation());
 				row4.getCell(1).setCellStyle(mainStyle_left);
 				for (int i = 2; i < 5; i++) {
-					row4.createCell(i).setCellStyle(mainStyle_center);
+					row4.createCell(i).setCellStyle(mainStyle_left);
 				}
 
 				//第六行
 				HSSFRow row5 = sheet.createRow(5 + tb*7);
-				row5.setHeightInPoints(250);			//设置行的高度
+				row5.setHeightInPoints(200);			//设置行的高度
 				row5.createCell(0).setCellValue("设备运行情况");
 				row5.getCell(0).setCellStyle(mainStyle_center);
 				row5.createCell(1).setCellValue(briefList.get(tb).getEquipmentOperation());
@@ -342,7 +342,7 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 			row2.setHeightInPoints(40);
 			row2.createCell(0).setCellValue("常务副总经理：" );
 			row2.createCell(1).setCellValue("主管副总经理：");
-			row2.createCell(2).setCellValue("中心副主任：");
+			row2.createCell(2).setCellValue("中心主任：");
 			row2.createCell(3).setCellValue("复核：");
 			row2.createCell(4).setCellValue("简报生成时间：");
 			row2.getCell(0).setCellStyle(mainStyle_center);

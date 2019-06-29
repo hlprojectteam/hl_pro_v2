@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.dangjian.controller.ActivitiesController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -25,6 +24,7 @@ import com.datacenter.dao.IExceptionRecordDao;
 import com.datacenter.module.ExceptionRecord;
 import com.datacenter.service.IExceptionRecordService;
 import com.datacenter.vo.ExceptionRecordVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
 
 /**
  * @Description 营运异常记录 service实现
@@ -41,7 +41,7 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 	private TotalTableServiceImpl totalTableServiceImpl;
 
 	@Autowired
-	private ActivitiesController activitiesController;
+	public IDataDictionaryService dataDictionaryServiceImpl;
 
 	
 	@Override
@@ -56,18 +56,22 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 		if(exceptionRecordVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", exceptionRecordVo.getDutyDateEnd()));
 		}
+		if(exceptionRecordVo.getExceptionType() != null){		//类型
+			params.add(Restrictions.eq("exceptionType", exceptionRecordVo.getExceptionType()));
+		}
 
 		if(StringUtils.isNotBlank(exceptionRecordVo.getReportedDp())){
-			params.add(Restrictions.like("reportedDp", "%" + exceptionRecordVo.getReportedDp() + "%"));
+			params.add(Restrictions.eq("reportedDp", exceptionRecordVo.getReportedDp()));
 		}
 		if(StringUtils.isNotBlank(exceptionRecordVo.getProcessingDp())){
-			params.add(Restrictions.like("processingDp", "%" + exceptionRecordVo.getProcessingDp() + "%"));
+			params.add(Restrictions.eq("processingDp", exceptionRecordVo.getProcessingDp()));
+		}
+		if(StringUtils.isNotBlank(exceptionRecordVo.getReportedPerson())){
+			params.add(Restrictions.eq("reportedPerson", exceptionRecordVo.getReportedPerson()));
 		}
 		if(StringUtils.isNotBlank(exceptionRecordVo.getKeyword())){
-			params.add(Restrictions.sqlRestriction(" (reported_Dp like '%" + exceptionRecordVo.getKeyword() + "%' " +
-					" or reported_Person like '%" + exceptionRecordVo.getKeyword() + "%' " +
-					" or traffic_Road like '%" + exceptionRecordVo.getKeyword() + "%' " +
-					" or processing_Dp like '%" + exceptionRecordVo.getKeyword() + "%' " +
+			params.add(Restrictions.sqlRestriction(" ( " +
+					" traffic_Road like '%" + exceptionRecordVo.getKeyword() + "%' " +
 					" or brief_Introduction like '%" + exceptionRecordVo.getKeyword() + "%' " +
 					" or result_ like '%" + exceptionRecordVo.getKeyword() + "%' " +
 					" or remark_ like '%" + exceptionRecordVo.getKeyword() + "%' )"));
@@ -77,9 +81,21 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 
 	@Override
 	public ExceptionRecord saveOrUpdate(ExceptionRecordVo exceptionRecordVo) {
-		if(exceptionRecordVo.getReportedWay() != null && exceptionRecordVo.getReportedWay().equals(5)){
-			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_reportedWay_ER", exceptionRecordVo.getDictValue());
+		if(exceptionRecordVo.getReportedWay() != null && exceptionRecordVo.getReportedWay().equals(99)){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportedWay_ER", exceptionRecordVo.getDictValue());
 			exceptionRecordVo.setReportedWay(Integer.parseInt(newKey));
+		}
+		if(exceptionRecordVo.getReportedDp().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportingDepartment", exceptionRecordVo.getDictValue1());
+			exceptionRecordVo.setReportedDp(newKey);
+		}
+		if(exceptionRecordVo.getReportedPerson().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportingPerson", exceptionRecordVo.getDictValue2());
+			exceptionRecordVo.setReportedPerson(newKey);
+		}
+		if(exceptionRecordVo.getProcessingDp().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_NotificationDepartment", exceptionRecordVo.getDictValue3());
+			exceptionRecordVo.setProcessingDp(newKey);
 		}
 		ExceptionRecord exceptionRecord = new ExceptionRecord();
 		BeanUtils.copyProperties(exceptionRecordVo, exceptionRecord);
@@ -146,7 +162,7 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 					" or remark like '%" + exceptionRecordVo.getKeyword() + "%' )");
 		}
 		//排序, 根据日期倒序排序,异常类型顺序排序
-		hql.append(" order by dutyDate desc,exceptionType asc ");
+		hql.append(" order by dutyDate asc,exceptionType asc ");
 
 		List<ExceptionRecord> erList = this.exceptionRecordDaoImpl.queryEntityHQLList(hql.toString(), objectList, ExceptionRecord.class);
 		return erList;
@@ -244,7 +260,7 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 
 				//第二行
 				HSSFRow row1 = sheet.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-09");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-10");
 				row1.getCell(0).setCellStyle(r1_style);
 
 				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
@@ -262,11 +278,11 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 					row3.setHeightInPoints(40);
 					row3.createCell(0).setCellValue("报告部门 ");
 					row3.getCell(0).setCellStyle(r2_style);
-					row3.createCell(1).setCellValue(erList.get(tb).getReportedDp());
+					row3.createCell(1).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingDepartment", erList.get(tb).getReportedDp().toString()));
 					row3.getCell(1).setCellStyle(mainStyle_center);
 					row3.createCell(4).setCellValue("报告人员");
 					row3.getCell(4).setCellStyle(r2_style);
-					row3.createCell(5).setCellValue(erList.get(tb).getReportedPerson());
+					row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingPerson", erList.get(tb).getReportedPerson().toString()));
 					row3.getCell(5).setCellStyle(mainStyle_center);
 					for (int i = 2; i < 8; i++) {
 						if(i != 4 && i!= 5){
@@ -281,11 +297,11 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 					row3.getCell(1).setCellStyle(mainStyle_center);
 					row3.createCell(2).setCellValue("报告部门");
 					row3.getCell(2).setCellStyle(r2_style);
-					row3.createCell(3).setCellValue(erList.get(tb).getReportedDp());
+					row3.createCell(3).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingDepartment", erList.get(tb).getReportedDp().toString()));
 					row3.getCell(3).setCellStyle(mainStyle_center);
 					row3.createCell(4).setCellValue("报告人员");
 					row3.getCell(4).setCellStyle(r2_style);
-					row3.createCell(5).setCellValue(erList.get(tb).getReportedPerson());
+					row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingPerson", erList.get(tb).getReportedPerson().toString()));
 					row3.getCell(5).setCellStyle(mainStyle_center);
 					row3.createCell(6).setCellValue("报告方式");
 					row3.getCell(6).setCellStyle(r2_style);
@@ -303,7 +319,7 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("通知处理部门");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(erList.get(tb).getProcessingDp());
+				row4.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_NotificationDepartment", erList.get(tb).getProcessingDp().toString()));
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				for (int i = 2; i < 8; i++) {
 					if(i != 4 && i!= 5){

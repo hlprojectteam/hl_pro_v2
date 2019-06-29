@@ -2,11 +2,12 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
-import com.dangjian.controller.ActivitiesController;
 import com.datacenter.dao.IRescueWorkDao;
 import com.datacenter.module.RescueWork;
 import com.datacenter.service.IRescueWorkService;
 import com.datacenter.vo.RescueWorkVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -40,7 +41,7 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 	private TotalTableServiceImpl totalTableServiceImpl;
 
 	@Autowired
-	private ActivitiesController activitiesController;
+	public IDataDictionaryService dataDictionaryServiceImpl;
 
 
 	
@@ -81,12 +82,12 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 
 	@Override
 	public RescueWork saveOrUpdate(RescueWorkVo rescueWorkVo) {
-		if(rescueWorkVo.getCarType().equals(8)){
-			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_carType", rescueWorkVo.getDictValue());
+		if(rescueWorkVo.getCarType().equals(99)){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_carType", rescueWorkVo.getDictValue());
 			rescueWorkVo.setCarType(Integer.parseInt(newKey));
 		}
-		if(rescueWorkVo.getWhereabouts().equals(14)){
-			String newKey2 = this.activitiesController.addCategoryAttributesByCode("dc_whereabouts", rescueWorkVo.getDictValue2());
+		if(rescueWorkVo.getWhereabouts().equals(99)){
+			String newKey2 = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_whereabouts", rescueWorkVo.getDictValue2());
 			rescueWorkVo.setWhereabouts(Integer.parseInt(newKey2));
 		}
 		RescueWork rescueWork = new RescueWork();
@@ -152,7 +153,7 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 			hql.append(" and (site like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or faultPlates like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or paymentOrder like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or rescueCharge like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or trailerMileage like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or rescuePlates like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or driverPhone like '%").append(rescueWorkVo.getKeyword()).append("%' ").append(" or remark like '%").append(rescueWorkVo.getKeyword()).append("%' )");
 		}
 		//排序, 根据日期倒序排序,接报时间顺序排序
-		hql.append(" order by dutyDate desc,receiptTime asc ");
+		hql.append(" order by dutyDate asc,receiptTime asc ");
 
 		return this.rescueWorkDaoImpl.queryEntityHQLList(hql.toString(), objectList, RescueWork.class);
 	}
@@ -234,7 +235,7 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 
 		//第二行
 		HSSFRow row1 = sheet.createRow(1);
-		row1.createCell(0).setCellValue("表单编号：HLZXRBB-07");
+		row1.createCell(0).setCellValue("表单编号：HLZXRBB-08");
 		row1.getCell(0).setCellStyle(r1_style);
 
 

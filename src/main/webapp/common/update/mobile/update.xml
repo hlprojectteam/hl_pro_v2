@@ -1,11 +1,17 @@
 <root>
-	<versionCode>31</versionCode>
-	<versionName>3.1.0</versionName>
-	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/c668fa3e03bb6523473116d1ec6d5ff2_d</androidUrl>
+	<versionCode>34</versionCode>
+	<versionName>3.4.0</versionName>
+	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/5028a084a3b3fd71ec1cb66ce98a2103_d</androidUrl>
 	<iosUrl>https://itunes.apple.com/cn/app/huan-long-ying-yun-tong/id1170974616?mt=8</iosUrl>
 	<updateLog>
-		更新版本 3.1.0
-		1、页面优化
-		2、考试模块更新
+		更新版本 3.4.0
+		功能权限控制
+		1、后台字典配置
+		
+		缓存参数
+		1、后台系统参数设置更新参数
+		
+		营运动态
+		1、添加值班报表工作简报查看
   	</updateLog>
 </root>

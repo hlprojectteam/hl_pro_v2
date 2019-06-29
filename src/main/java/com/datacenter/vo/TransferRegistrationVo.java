@@ -21,6 +21,10 @@ public class TransferRegistrationVo extends TransferRegistration{
 	private String dutyDateStr;				//日期字符串
 
 	private String keyword;				//关键字
+	
+	private String dictValue;				//新增字典值_本班次值班人员
+	
+	private String dictValue2;				//新增字典值_上班次值班人员
 
 
 	public String getKeyword() {
@@ -48,6 +52,22 @@ public class TransferRegistrationVo extends TransferRegistration{
 	}
 	public void setDutyDateEnd(Date dutyDateEnd) {
 		this.dutyDateEnd = dutyDateEnd;
+	}
+
+	public String getDictValue() {
+		return dictValue;
+	}
+
+	public void setDictValue(String dictValue) {
+		this.dictValue = dictValue;
+	}
+
+	public String getDictValue2() {
+		return dictValue2;
+	}
+
+	public void setDictValue2(String dictValue2) {
+		this.dictValue2 = dictValue2;
 	}
 
 }

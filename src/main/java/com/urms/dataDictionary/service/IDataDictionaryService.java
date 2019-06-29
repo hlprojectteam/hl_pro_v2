@@ -140,6 +140,18 @@ public interface IDataDictionaryService extends IBaseService{
 	 * @date:2019年5月1日
 	 */
 	public Integer findMaxCategoryAttributesOrder(Category category);
+	
+	/**
+	 * 
+	 * @方法：@param CategoryCode 字典Code,如“sex”
+	 * @方法：@param CategoryAttributesValue 新加的字典选项value，如"中性"
+	 * @方法：@return 新加的字典选项key
+	 * @描述：如性别要加一个值，调用  addCategoryAttributesByCode("sex","中性")  返回 key 为3
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年4月30日
+	 */
+	public String updateCategoryAttributesByCode(String CategoryCode,String CategoryAttributesValue);
 
 	/**
 	 * @intruduction 行政区划五级联动所需数据

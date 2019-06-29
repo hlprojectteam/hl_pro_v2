@@ -6,10 +6,13 @@ import com.datacenter.dao.IEquipmentOperationDao;
 import com.datacenter.module.EquipmentOperation;
 import com.datacenter.service.IEquipmentOperationService;
 import com.datacenter.vo.EquipmentOperationVo;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Criterion;
@@ -57,9 +60,12 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		}
 		if(equipmentOperationVo.getIsOrNot() != null){
 			if(equipmentOperationVo.getIsOrNot() == 1){
-				params.add(Restrictions.sqlRestriction(" (cdgqzp_=3 or zdfkj_=3 or mtcckcd_=3 or etcckcd_=3 or mtcrkcd_=3 or etcrkcd_=3 or jzcd_=3) "));
-			}else{
-				params.add(Restrictions.sqlRestriction(" (cdgqzp_!=3 and zdfkj_!=3 and mtcckcd_!=3 and etcckcd_!=3 and mtcrkcd_!=3 and etcrkcd_!=3 and jzcd_!=3) "));
+				params.add(Restrictions.sqlRestriction(" (cdgqzp_=1 and zdfkj_=1 and mtcckcd_=1 and etcckcd_=1 and mtcrkcd_=1 and etcrkcd_=1 and jzcd_=1) "));
+			}else if(equipmentOperationVo.getIsOrNot() == 2){
+				params.add(Restrictions.sqlRestriction(" (cdgqzp_=2 or zdfkj_=2 or mtcckcd_=2 or etcckcd_=2 or mtcrkcd_=2 or etcrkcd_=2 or jzcd_=2) " +
+					" and (cdgqzp_ !=3 and zdfkj_ !=3 and mtcckcd_ !=3 and etcckcd_ !=3 and mtcrkcd_ !=3 and etcrkcd_ !=3 and jzcd_ !=3)"));
+			}else if(equipmentOperationVo.getIsOrNot() == 3){
+				params.add(Restrictions.sqlRestriction(" (cdgqzp_ =3 or zdfkj_ =3 or mtcckcd_ =3  or etcckcd_ =3 or mtcrkcd_ =3 or etcrkcd_ =3 or jzcd_ =3) "));
 			}
 		}
 
@@ -124,9 +130,12 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		}
 		if(equipmentOperationVo.getIsOrNot() != null){
 			if(equipmentOperationVo.getIsOrNot() == 1){
-				hql.append(" and (cdgqzp_=3 or zdfkj_=3 or mtcckcd_=3 or etcckcd_=3 or mtcrkcd_=3 or etcrkcd_=3 or jzcd_=3) ");
-			}else{
-				hql.append(" and (cdgqzp_!=3 and zdfkj_!=3 and mtcckcd_!=3 and etcckcd_!=3 and mtcrkcd_!=3 and etcrkcd_!=3 and jzcd_!=3) ");
+				hql.append(" and (cdgqzp=1 and zdfkj=1 and mtcckcd=1 and etcckcd=1 and mtcrkcd=1 and etcrkcd=1 and jzcd=1) ");
+			}else if(equipmentOperationVo.getIsOrNot() == 2){
+				hql.append(" and (cdgqzp=2 or zdfkj=2 or mtcckcd=2 or etcckcd=2 or mtcrkcd=2 or etcrkcd=2 or jzcd=2) "+ 
+						" and (cdgqzp !=3 and zdfkj !=3 and mtcckcd !=3 and etcckcd !=3 and mtcrkcd !=3 and etcrkcd !=3 and jzcd !=3)");
+			}else if(equipmentOperationVo.getIsOrNot() == 3){
+				hql.append(" and (cdgqzp =3 or zdfkj =3 or mtcckcd =3  or etcckcd =3 or mtcrkcd =3 or etcrkcd =3 or jzcd =3) ");
 			}
 		}
 
@@ -134,7 +143,7 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 			hql.append(" and remark_ like '%").append(equipmentOperationVo.getKeyword()).append("%' ");
 		}
 		//排序, 根据日期倒序排序，部门(收费站)顺序排序
-		hql.append(" order by dutyDate desc,tollGate asc ");
+		hql.append(" order by dutyDate asc,tollGate asc ");
 
 		return this.equipmentOperationDaoImpl.queryEntityHQLList(hql.toString(), objectList, EquipmentOperation.class);
 	}
@@ -201,12 +210,11 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		//设置列宽
 		for (int i = 0; i < 11; i++) {
 			if(i == 9){
-				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*5);
+				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*4);
 			}else{
-				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*2);
+				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*3/2);
 			}
 		}
-
 
 		//创建行（第一行）
 		HSSFRow row0 = sheet.createRow(0);
@@ -241,20 +249,20 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		for (int i = 0; i < eoList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
-			row.setHeightInPoints(65);					//设置行高
+			row.setHeightInPoints(45);					//设置行高
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
 					case 0:	cell.setCellValue(sdf1.format(eoList.get(i).getDutyDate())); break;
 					case 1:	cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_tollGate", eoList.get(i).getTollGate().toString()));	break;
-					case 2: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getCdgqzp().toString()));	break;
-					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getZdfkj().toString()));	break;
-					case 4: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getMtcckcd().toString()));	break;
-					case 5: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getEtcckcd().toString()));	break;
-					case 6: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getMtcrkcd().toString()));	break;
-					case 7: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getEtcckcd().toString()));	break;
-					case 8: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_equipmentStatus", eoList.get(i).getJzcd().toString()));	break;
+					case 2: setCell(cell,wb,mainStyle_center,eoList.get(i).getCdgqzp());  break;
+					case 3: setCell(cell,wb,mainStyle_center,eoList.get(i).getZdfkj());  	break;
+					case 4: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcckcd());  	break;
+					case 5: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
+					case 6: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcrkcd());  	break;
+					case 7: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
+					case 8: setCell(cell,wb,mainStyle_center,eoList.get(i).getJzcd());  	break;
 					case 9: cell.setCellValue(eoList.get(i).getRemark());	break;
 					case 10:
 					if(eoList.get(i).getDownTimeStart() != null && eoList.get(i).getDownTimeEnd() != null){
@@ -262,20 +270,52 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 					}else{
 						 cell.setCellValue("");	break;
 					}
-
 				}
 				//设置单元格样式
 				if(j == 9) {
 					cell.setCellStyle(mainStyle_left);
+				}else if(j>1&&j<9){
+					
 				}else{
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
 		}
-
 		return wb;
-
-
+	}
+	
+	private void setCell(HSSFCell cell,HSSFWorkbook wb,HSSFCellStyle mainStyle, int status){
+		HSSFCellStyle style_ = wb.createCellStyle();
+		if(status==1){
+			//正常样式
+			style_.cloneStyleFrom(mainStyle);
+			style_.setAlignment(HorizontalAlignment.CENTER);
+			HSSFFont r2_font = wb.createFont();
+			r2_font.setBold(true);						//字体加粗
+			r2_font.setColor(IndexedColors.GREEN.getIndex());
+			r2_font.setFontHeightInPoints((short)20);	//字体大小
+			style_.setFont(r2_font);
+		}else if(status==2){
+			//损坏但不影响样式
+			style_.cloneStyleFrom(mainStyle);
+			style_.setAlignment(HorizontalAlignment.CENTER);
+			HSSFFont r2_font = wb.createFont();
+			r2_font.setBold(true);						//字体加粗
+			r2_font.setColor(IndexedColors.YELLOW.getIndex());
+			r2_font.setFontHeightInPoints((short)20);	//字体大小
+			style_.setFont(r2_font);
+		}else if(status==3){
+			//损坏样式
+			style_.cloneStyleFrom(mainStyle);
+			style_.setAlignment(HorizontalAlignment.CENTER);
+			HSSFFont r2_font = wb.createFont();
+			r2_font.setBold(true);						//字体加粗
+			r2_font.setColor(IndexedColors.RED.getIndex());
+			r2_font.setFontHeightInPoints((short)20);	//字体大小
+			style_.setFont(r2_font);
+		}
+		cell.setCellValue("●");
+		cell.setCellStyle(style_);
 	}
 
 }

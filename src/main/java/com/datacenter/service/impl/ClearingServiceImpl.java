@@ -4,8 +4,11 @@ import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.IClearingDao;
 import com.datacenter.module.Clearing;
+import com.datacenter.module.TotalTable;
 import com.datacenter.service.IClearingService;
 import com.datacenter.vo.ClearingVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -37,6 +40,9 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
+	
+	@Autowired
+	public IDataDictionaryService dataDictionaryServiceImpl;
 
 	
 	@Override
@@ -53,16 +59,20 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 		}
 
 		if(StringUtils.isNotBlank(clearingVo.getReportedDp())){
-			params.add(Restrictions.like("reportedDp", "%" + clearingVo.getReportedDp() + "%"));
+			params.add(Restrictions.eq("reportedDp", clearingVo.getReportedDp()));
+		}
+		if(StringUtils.isNotBlank(clearingVo.getReportedPerson())){
+			params.add(Restrictions.eq("reportedPerson", clearingVo.getReportedPerson()));
+		}
+		if(StringUtils.isNotBlank(clearingVo.getProcessingDp())){
+			params.add(Restrictions.eq("processingDp", clearingVo.getProcessingDp()));
 		}
 		if(clearingVo.getReportedWay() != null){
 			params.add(Restrictions.eq("reportedWay", clearingVo.getReportedWay()));
 		}
 		if(StringUtils.isNotBlank(clearingVo.getKeyword())){
-			params.add(Restrictions.sqlRestriction(" (reported_Dp like '%" + clearingVo.getKeyword() + "%' " +
-					" or reported_Person like '%" + clearingVo.getKeyword() + "%' " +
-					" or traffic_Road like '%" + clearingVo.getKeyword() + "%' " +
-					" or processing_Dp like '%" + clearingVo.getKeyword() + "%' " +
+			params.add(Restrictions.sqlRestriction(" ( " +
+					" traffic_Road like '%" + clearingVo.getKeyword() + "%' " +
 					" or brief_Introduction like '%" + clearingVo.getKeyword() + "%' " +
 					" or result_ like '%" + clearingVo.getKeyword() + "%' " +
 					" or remark_ like '%" + clearingVo.getKeyword() + "%' )"));
@@ -72,6 +82,18 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 
 	@Override
 	public Clearing saveOrUpdate(ClearingVo clearingVo) {
+		if(clearingVo.getReportedDp().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportingDepartment", clearingVo.getDictValue());
+			clearingVo.setReportedDp(newKey);
+		}
+		if(clearingVo.getReportedPerson().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportingPerson", clearingVo.getDictValue2());
+			clearingVo.setReportedPerson(newKey);
+		}
+		if(clearingVo.getProcessingDp().equals("99")){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_NotificationDepartment", clearingVo.getDictValue3());
+			clearingVo.setProcessingDp(newKey);
+		}
 		Clearing clearing = new Clearing();
 		BeanUtils.copyProperties(clearingVo, clearing);
 		if(StringUtils.isBlank(clearing.getId())){
@@ -137,7 +159,7 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 					" or remark like '%" + clearingVo.getKeyword() + "%' )");
 		}
 		//排序, 根据日期倒序排序,接报时间
-		hql.append(" order by dutyDate desc,receiptTime asc ");
+		hql.append(" order by dutyDate asc,receiptTime asc ");
 
 		List<Clearing> cList = this.clearingDaoImpl.queryEntityHQLList(hql.toString(), objectList, Clearing.class);
 		return cList;
@@ -191,7 +213,7 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 		r2_font.setBold(true);						//字体加粗
 		r2_style.setFont(r2_font);
 
-
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		List<Clearing> cList = queryEntityList(clearingVo);
 
 		
@@ -235,10 +257,9 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 
 				//第二行
 				HSSFRow row1 = sheet.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-08");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-09");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
@@ -256,11 +277,11 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("报告部门");
 				row3.getCell(2).setCellStyle(r2_style);
-				row3.createCell(3).setCellValue(cList.get(tb).getReportedDp());
+				row3.createCell(3).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingDepartment", cList.get(tb).getReportedDp().toString()));
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("报告人员");
 				row3.getCell(4).setCellStyle(r2_style);
-				row3.createCell(5).setCellValue(cList.get(tb).getReportedPerson());
+				row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingPerson", cList.get(tb).getReportedPerson().toString()));
 				row3.getCell(5).setCellStyle(mainStyle_center);
 				row3.createCell(6).setCellValue("报告方式");
 				row3.getCell(6).setCellStyle(r2_style);
@@ -276,7 +297,7 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("通知处理部门");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(cList.get(tb).getProcessingDp());
+				row4.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_NotificationDepartment", cList.get(tb).getProcessingDp().toString()));
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				for (int i = 2; i < 8; i++) {
 					if(i != 4 && i!= 5){
@@ -348,7 +369,7 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 			//第三行
 			HSSFRow row2 = sheet.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：         ");
+			row2.createCell(0).setCellValue("日期：    ");
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行

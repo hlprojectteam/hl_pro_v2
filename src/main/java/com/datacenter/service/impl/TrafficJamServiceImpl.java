@@ -2,11 +2,12 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
-import com.dangjian.controller.ActivitiesController;
 import com.datacenter.dao.ITrafficJamDao;
 import com.datacenter.module.TrafficJam;
 import com.datacenter.service.ITrafficJamService;
 import com.datacenter.vo.TrafficJamVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -38,9 +39,8 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
-
 	@Autowired
-	private ActivitiesController activitiesController;
+	public IDataDictionaryService dataDictionaryServiceImpl;
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, TrafficJamVo trafficJamVo) {
@@ -70,8 +70,8 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 
 	@Override
 	public TrafficJam saveOrUpdate(TrafficJamVo trafficJamVo) {
-		if(trafficJamVo.getReceiptWay().equals(4)){
-			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_receiptWay", trafficJamVo.getDictValue());
+		if(trafficJamVo.getReceiptWay().equals(99)){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_receiptWay", trafficJamVo.getDictValue());
 			trafficJamVo.setReceiptWay(Integer.parseInt(newKey));
 		}
 		TrafficJam trafficJam = new TrafficJam();
@@ -133,7 +133,7 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 					" or remark like '%" + trafficJamVo.getKeyword() + "%' )");
 		}
 		//排序, 根据日期倒序排序,接报时间顺序排序
-		hql.append(" order by dutyDate desc,receiptTime asc ");
+		hql.append(" order by dutyDate asc,receiptTime asc ");
 
 		List<TrafficJam> tjList = this.trafficJamDaoImpl.queryEntityHQLList(hql.toString(), objectList, TrafficJam.class);
 		return tjList;
@@ -222,7 +222,7 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 
 				//第二行
 				HSSFRow row1 = sheet.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-13");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-14");
 				row1.getCell(0).setCellStyle(r1_style);
 
 				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");

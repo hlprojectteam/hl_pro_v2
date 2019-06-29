@@ -41,13 +41,19 @@
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>日期</label>
 	        <div class="col-sm-3">
 	            <input type="text" class="form-control" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${roadWorkVo.dutyDate}' pattern='yyyy-MM-dd'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" data-rule-required="true"  />
-				<%--disabled="disabled"
-				<input type="hidden" id="dutyDate" name="dutyDate" value="<fmt:formatDate value='${roadWorkVo.dutyDate}' pattern='yyyy-MM-dd'/>" />
-				--%>
 	        </div>
+        </div>
+        
+        <div class="form-group">
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>施工单位名称</label>
 			<div class="col-sm-3">
-				<input type="text" class="form-control" id="unitName" name="unitName" value="${roadWorkVo.unitName}" data-rule-required="true" data-rule-rangelength="[1,50]" />
+		    	<opt:select dictKey="dc_ConstructionUnitName" classStyle="form-control required" name="unitName" id="unitName" value="${roadWorkVo.unitName}" isDefSelect="false" />
+			</div>
+			<div class="dictValue"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入施工单位名称</label>
+			    <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${roadWorkVo.dictValue}" data-rule-rangelength="[1,20]" />
+				</div>
 			</div>
         </div>
 	  	
@@ -76,11 +82,15 @@
 		
 		<div class="form-group">
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>位置属性</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_positionAttributes" classStyle="form-control required" name="positionAttributes" id="positionAttributes" value="${roadWorkVo.positionAttributes}" isDefSelect="true" />
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_positionAttributes"  id="positionAttributes" name="positionAttributes" value="${roadWorkVo.positionAttributes}" />
 			</div>
+		</div>
+		
+		<div class="form-group">
+			
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>具体位置 </label>
-		    <div class="col-sm-3">
+		    <div class="col-sm-8">
 				<input type="text" class="form-control" id="specificLocation" name="specificLocation" value="${roadWorkVo.specificLocation}" data-rule-required="true" data-rule-rangelength="[1,50]" />    
 			</div>
 		</div>
@@ -101,20 +111,29 @@
 	  	</div>
 	  	
 	  	<div class="form-group">
-	  		<label class="col-sm-2 control-label"><span style="color: red">*</span>检查时间</label>
+	  		<label class="col-sm-2 control-label">检查时间</label>
 	        <div class="col-sm-3">
-	            <input type="text" class="form-control" id="checkTime" name="checkTime" value="<fmt:formatDate value='${roadWorkVo.checkTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" data-rule-required="true"  />
-	        </div>
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>检查人员</label>
-	        <div class="col-sm-3">
-				<input type="text" class="form-control" id="checker" name="checker" value="${roadWorkVo.checker}" data-rule-required="true" data-rule-rangelength="[1,20]" />    
+	            <input type="text" class="form-control" id="checkTime" name="checkTime" value="<fmt:formatDate value='${roadWorkVo.checkTime}' pattern='HH:mm'/>" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'HH:mm'})" />
 	        </div>
 		</div>
 		
 		<div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>施工现场情况简要描述</label>
+			<label class="col-sm-2 control-label">检查人员</label>
+		    <div class="col-sm-3">
+		    	<opt:select dictKey="dc_Inspectors" classStyle="form-control required" name="checker" id="checker" value="${roadWorkVo.checker}" isDefSelect="false" />
+			</div>
+			<div class="dictValue2"  style="display: none;">
+			  	<label class="col-sm-2 control-label">请输入检查人员</label>
+		        <div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${roadWorkVo.dictValue2}" data-rule-rangelength="[1,20]" />
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label">施工现场情况简要描述</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="5" cols="" id="description" name="description" data-rule-required="true" data-rule-rangelength="[1,300]" >${roadWorkVo.description}</textarea>
+		       <textarea class="form-control" rows="5" cols="" id="description" name="description"  data-rule-rangelength="[1,300]" >${roadWorkVo.description}</textarea>
 		    </div>
 	  	</div>
 	  	
@@ -146,6 +165,26 @@
 <script type="text/javascript">
 	var winName = "${winName}";
 	var URLStr = "/datecenter/roadWork/roadWork_";
+	
+	$("#unitName").change(function(){
+        var unitName = $("#unitName").val();
+        if(unitName ==99){
+            $(".dictValue").show();
+		}else{
+            $(".dictValue").hide();
+            $(".dictValue").val(null)
+		}
+	});
+	
+	$("#checker").change(function(){
+        var checker = $("#checker").val();
+        if(checker ==99){
+            $(".dictValue2").show();
+		}else{
+            $(".dictValue2").hide();
+            $(".dictValue2").val(null)
+		}
+	});
 
 	//新增或编辑
 	function on_save(){
@@ -157,28 +196,34 @@
 	}
 
 	//提交表单
-	function on_submit(){  
-		$.ajax({
-			type : 'post',
-			async:false,
-			dataType : 'json',
-			url: URLStr + 'saveOrUpdate',
-			data:$('#baseForm').serialize(),
-			success : function(data) {
-                if (data.result) {
-                    autoMsg("保存成功！", 1);
-                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-                        url : URLStr + "load"
-                    });//加载树下的列表
-                    parent.layer.close(index);
-                } else {
-                    autoAlert("保存失败，请检查！", 5);
-                }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                autoAlert("系统出错，请检查！", 5);
-            }
-		});
+	function on_submit(){
+		if($("#unitName").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("请输入施工单位名称", 5);
+		}else if($("#checker").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("请输入检查人员", 5);
+		}else{
+			$.ajax({
+				type : 'post',
+				async:false,
+				dataType : 'json',
+				url: URLStr + 'saveOrUpdate',
+				data:$('#baseForm').serialize(),
+				success : function(data) {
+	                if (data.result) {
+	                    autoMsg("保存成功！", 1);
+	                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
+	                        url : URLStr + "load"
+	                    });//加载树下的列表
+	                    parent.layer.close(index);
+	                } else {
+	                    autoAlert("保存失败，请检查！", 5);
+	                }
+	            },
+	            error : function(XMLHttpRequest, textStatus, errorThrown) {
+	                autoAlert("系统出错，请检查！", 5);
+	            }
+			});
+		}
 	}
 
 </script>

@@ -32,6 +32,10 @@
 					<div class="col-sm-2">
 						<input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</div>
+					<label class="col-sm-1 control-label">值班主任</label>
+					<div class="col-sm-2">
+						<opt:select dictKey="dc_headOfDuty" classStyle="form-control" id="shiftSupervisor" name="shiftSupervisor" isDefSelect="true"/>
+					</div>
 				</div>
 
 				<div class="row" style="margin-top: 10px;">
@@ -89,22 +93,24 @@
 		           	  		return index+1;
 		              }},
     	              /*{title: "标题", field: "title",width: 250,align:"center"}, */
-    	              {title: "日期", field: "dutyDate",width: 120,align:"center",formatter:function(value,row,index){
+    	              {title: "日期", field: "dutyDate",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(0,10);
 		              }},
     	              {title: "天气", field: "weather",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_weather",value);
 		              }},
-                    {title: "故障设备", field: "failureEquipment",width: 80,align:"center",formatter:function(value,row,index){
+                    {title: "故障设备", field: "failureEquipment",width: 160,align:"center",formatter:function(value,row,index){
                         return changeDataDictByKey("dc_failureEquipment",value);
                     }},
-    	              {title: "巡检时间开始", field: "inspectionTimeStart",width: 100,align:"center",formatter:function(value,row,index){
+    	              {title: "巡检时间开始", field: "inspectionTimeStart",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
     	              {title: "巡检时间结束", field: "inspectionTimeEnd",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "值班主任", field: "shiftSupervisor",width: 80,align:"center"},
+    	              {title: "值班主任", field: "shiftSupervisor",width: 80,align:"center",formatter:function(value,row,index){
+		           	  		return changeDataDictByKey("dc_headOfDuty",value);
+		              }},
     	              {title: "巡检位置", field: "inspectionlocation",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_inspectionlocation",value);
 		              }},

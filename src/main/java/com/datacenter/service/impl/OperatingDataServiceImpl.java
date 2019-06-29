@@ -3,11 +3,13 @@ package com.datacenter.service.impl;
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
+import com.dangjian.module.ActivitiesLaunch;
 import com.datacenter.dao.IOperatingDataDao;
 import com.datacenter.module.OperatingData;
 import com.datacenter.ql.datacenterQl;
 import com.datacenter.service.IOperatingDataService;
 import com.datacenter.vo.OperatingDataVo;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -132,32 +134,82 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 	@Override
 	public List<OperatingData> queryEntityList(OperatingDataVo operatingDataVo) {
 		List<Object> objectList = new ArrayList<>();
-
-		StringBuilder hql = new StringBuilder("from OperatingData where 1 = 1 ");
+		StringBuffer sql = new StringBuffer();
+		sql.append(datacenterQl.MySql.operatingTotalGroupByTollGate);
 		if(StringUtils.isNotBlank(operatingDataVo.getTtId())){
 			objectList.add(operatingDataVo.getTtId());
-			hql.append(" and ttId = ? ");
+			sql.append(" and t.ttId=? ");
 		}
 		if(operatingDataVo.getDutyDateStart() != null){		//日期Start
 			objectList.add(operatingDataVo.getDutyDateStart());
-			hql.append(" and dutyDate >= ? ");
+			sql.append(" and duty_Date >= ? ");
 		}
 		if(operatingDataVo.getDutyDateEnd() != null){		//日期End
 			objectList.add(operatingDataVo.getDutyDateEnd());
-			hql.append(" and dutyDate <= ? ");
+			sql.append(" and duty_Date <= ? ");
 		}
 
 		if(operatingDataVo.getTollGate() != null){
 			objectList.add(operatingDataVo.getTollGate());
-			hql.append(" and tollGate = ? ");
+			sql.append(" and toll_Gate = ? ");
 		}
 		if(StringUtils.isNotBlank(operatingDataVo.getKeyword())){
-			hql.append(" and (totalTraffic like '%").append(operatingDataVo.getKeyword()).append("%' ").append(" or ytkTraffic like '%").append(operatingDataVo.getKeyword()).append("%' ").append(" or generalIncome like '%").append(operatingDataVo.getKeyword()).append("%' ").append(" or ytkIncome like '%").append(operatingDataVo.getKeyword()).append("%' )");
+			sql.append(" and (total_Traffic =").append(operatingDataVo.getKeyword())
+			.append(" or ytk_Traffic = ").append(operatingDataVo.getKeyword())  
+			.append(" or mobile_Payment_Traffic = ").append(operatingDataVo.getKeyword())
+			.append(" or general_Income = ").append(operatingDataVo.getKeyword())
+			.append(" or ytk_Income = ").append(operatingDataVo.getKeyword())
+			.append(" or mobile_Payment_Income = ").append(operatingDataVo.getKeyword());
 		}
-		//排序, 根据日期倒序排序，收费站顺序排序
-		hql.append(" order by dutyDate desc,tollGate asc ");
+		sql.append(" GROUP BY t.toll_Gate "); 
+		List<Object[]> listOper=this.operatingDataDaoImpl.queryEntitySQLList(sql.toString(), objectList);
+		List<OperatingData> listArr = new ArrayList<OperatingData>();
+		if(listOper!=null){
+			for (Object[] obj : listOper) {
+				OperatingData operatingData = new OperatingData();
+	    		if(obj[0]!=null) operatingData.setTollGate(Integer.parseInt(obj[0].toString()));
+	    		if(obj[1]!=null) operatingData.setTotalTraffic(Integer.parseInt(obj[1].toString()));
+	    		if(obj[2]!=null) operatingData.setYtkTraffic(Integer.parseInt(obj[2].toString()));
+	    		if(obj[3]!=null) operatingData.setMobilePaymentTraffic(Integer.parseInt(obj[3].toString()));
+	    		
+	    		if(obj[4]!=null) operatingData.setGeneralIncome(Double.parseDouble(obj[4].toString()));
+	    		if(obj[5]!=null) operatingData.setYtkIncome(Double.parseDouble(obj[5].toString()));
+	    		if(obj[6]!=null) operatingData.setMobilePaymentIncome(Double.parseDouble(obj[6].toString()));
+	    		listArr.add(operatingData);
+			}
+		}
+		return listArr;
+		
+//		List<Object> objectList = new ArrayList<>();
 
-		return this.operatingDataDaoImpl.queryEntityHQLList(hql.toString(), objectList, OperatingData.class);
+//		StringBuilder hql = new StringBuilder("from OperatingData where 1 = 1 ");
+//		if(StringUtils.isNotBlank(operatingDataVo.getTtId())){
+//			objectList.add(operatingDataVo.getTtId());
+//			hql.append(" and ttId = ? ");
+//		}
+//		if(operatingDataVo.getDutyDateStart() != null){		//日期Start
+//			objectList.add(operatingDataVo.getDutyDateStart());
+//			hql.append(" and dutyDate >= ? ");
+//		}
+//		if(operatingDataVo.getDutyDateEnd() != null){		//日期End
+//			objectList.add(operatingDataVo.getDutyDateEnd());
+//			hql.append(" and dutyDate <= ? ");
+//		}
+//
+//		if(operatingDataVo.getTollGate() != null){
+//			objectList.add(operatingDataVo.getTollGate());
+//			hql.append(" and tollGate = ? ");
+//		}
+//		if(StringUtils.isNotBlank(operatingDataVo.getKeyword())){
+//			hql.append(" and (totalTraffic =").append(operatingDataVo.getKeyword())
+//			.append(" or ytkTraffic = ").append(operatingDataVo.getKeyword())
+//			.append(" or generalIncome = ").append(operatingDataVo.getKeyword())
+//			.append(" or ytkIncome = ").append(operatingDataVo.getKeyword());
+//		}
+//		//排序, 根据日期倒序排序，收费站顺序排序
+//		hql.append(" order by dutyDate desc,tollGate asc ");
+//
+//		return this.operatingDataDaoImpl.queryEntityHQLList(hql.toString(), objectList, OperatingData.class);
 	}
 
 	@Override
@@ -235,14 +287,20 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		//设置行的高度
 		row0.setHeightInPoints(30);
 		//创建单元格 并 设置单元格内容
-		row0.createCell(0).setCellValue("各站营运数据");
+		if(operatingDataVo.getDutyDateStart()!=null&&operatingDataVo.getDutyDateEnd()!=null){
+			String dual=DateUtil.getDateFormatString(operatingDataVo.getDutyDateStart(), DateUtil.JAVA_DATE_FORMAT_YMD);
+			dual+="-"+DateUtil.getDateFormatString(operatingDataVo.getDutyDateEnd(), DateUtil.JAVA_DATE_FORMAT_YMD);
+			row0.createCell(0).setCellValue("各站营运数据("+dual+")");
+		}else{
+			row0.createCell(0).setCellValue("各站营运数据");
+		}
 		//设置单元格样式
 		row0.getCell(0).setCellStyle(r0_style);
 
 
 		//第二行
 		HSSFRow row1 = sheet.createRow(1);
-		row1.createCell(0).setCellValue("表单编号：HLZXRBB-06");
+		row1.createCell(0).setCellValue("表单编号：HLZXRBB-07");
 		row1.getCell(0).setCellStyle(r1_style);
 
 
@@ -250,7 +308,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		HSSFRow row2 = sheet.createRow(2);
 		row2.setHeightInPoints(30);		//行高
 		HSSFCell cell;
-		String[] title1 = {"日期","收费站","出口车流量","收费额"};
+		String[] title1 = {"序号","收费站","出口车流量","收费额"};
 		row2.createCell(3).setCellStyle(r2_style);
 		row2.createCell(4).setCellStyle(r2_style);
 		row2.createCell(6).setCellStyle(r2_style);
@@ -276,8 +334,6 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 			cell.setCellStyle(r2_style);	//设置单元格样式
 		}
 
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-
 		//第五行 及 之后的行
 		HSSFRow row;
 		Integer hj_totalTraffic = 0;
@@ -288,7 +344,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		Double hj_mobilePaymentIncome = 0.0;
 		for (int i = 0; i < odList.size(); i++) {
 			row = sheet.createRow(i + 4);	//创建行
-			row.setHeightInPoints(30);				//设置行高
+			row.setHeightInPoints(26);				//设置行高
 			for (int j = 0; j < 8; j++) {
 				cell = row.createCell(j);			//创建单元格
 				//设置单元格内容

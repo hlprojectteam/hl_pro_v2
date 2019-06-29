@@ -46,7 +46,7 @@ public class DangjianQl {
 						
 		
 		//党员列表
-		public static final String partyMemberEntityListSql="SELECT pm.ID,u.USER_NAME,u.SEX_,br.BRANCH_NAME,pm.MEMBER_DUTY,pm.JOININ_TIME "
+		public static final String partyMemberEntityListSql="SELECT pm.ID,u.USER_NAME,u.SEX_,br.BRANCH_NAME,pm.MEMBER_DUTY,pm.JOININ_TIME,pm.photo "
 				+" FROM `p_dj_partymember` pm,p_dj_branch br,um_user u WHERE pm.BRANCH_ID=br.ID and pm.USER_ID=u.ID  ";
 		
 		

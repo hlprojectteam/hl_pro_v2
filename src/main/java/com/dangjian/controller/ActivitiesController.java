@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.common.utils.cache.Cache;
-import com.urms.dataDictionary.module.Category;
 import com.urms.dataDictionary.module.CategoryAttribute;
 import com.urms.dataDictionary.service.IDataDictionaryService;
 
@@ -40,7 +39,6 @@ import com.common.message.MessageJpush;
 import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
-import com.common.utils.MathUtil;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.Pager;
@@ -1180,49 +1178,6 @@ public class ActivitiesController extends BaseController{
 		System.out.println(Common.msg_platform+"-"+Common.msg_ApnsProduction+"-"+Common.msg_setMessage);
 		this.print("测试");
 	}
-	
-	@RequestMapping(value="/testAddCategoryAttributesValue")
-	public void testAddCategoryAttributesValue(HttpSession httpSession,HttpServletResponse response){
-		String CategoryCode="sex";
-		String CategoryAttributesValue="中性"; 
-		addCategoryAttributesByCode(CategoryCode,CategoryAttributesValue);
-	}
-	
-	/**
-	 * 
-	 * @方法：@param CategoryCode 字典Code,如“sex”
-	 * @方法：@param CategoryAttributesValue 新加的字典选项value，如"中性"
-	 * @方法：@return 新加的字典选项key
-	 * @描述：如性别要加一个值，调用  addCategoryAttributesByCode("sex","中性")  返回 key 为3
-	 * @return
-	 * @author: qinyongqian
-	 * @date:2019年4月30日
-	 */
-	public String addCategoryAttributesByCode(String CategoryCode,String CategoryAttributesValue){
-		String newKey="";
-		//找到字典，如通过"sex"找到性别字典
-		Category category=this.dataDictionaryServiceImpl.getCategoryByCode(CategoryCode);
-		//获取字典下选项最大的选项的key，如找到性别下“女”的key是最大值，为2
-		String maxKey=this.dataDictionaryServiceImpl.findMaxCategoryAttributesKey(category);
-		if(MathUtil.isInt(maxKey)){
-			//如果key为数值，则新的key为key+1
-			int maxkey=Integer.parseInt(maxKey);
-			newKey=String.valueOf(maxkey+1);
-		}else{
-			//如果key不为数值，则新的key暂默认为新的CategoryAttributesValue
-			newKey=CategoryAttributesValue; 
-		}
-		int maxOrder=this.dataDictionaryServiceImpl.findMaxCategoryAttributesOrder(category);
-		int newOrder=maxOrder+1;
-		//插入新的字典选项
-		CategoryAttribute caNew=new CategoryAttribute();
-		caNew.setAttrKey(newKey);
-		caNew.setAttrValue(CategoryAttributesValue);
-		caNew.setCategory(category);
-		caNew.setOrder(newOrder);
-		this.dataDictionaryServiceImpl.saveOrUpdateCategoryAttr(caNew);
-		return newKey; 
-	};
 	
 	@RequestMapping(value="/findUserIdsByUserIdAndRoleCode")
 	public void findUserIdsByUserIdAndRoleCode(HttpSession httpSession,HttpServletResponse response){

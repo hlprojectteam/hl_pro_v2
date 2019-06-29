@@ -2,11 +2,12 @@ package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.Pager;
-import com.dangjian.controller.ActivitiesController;
 import com.datacenter.dao.IFieldOperationsDao;
 import com.datacenter.module.FieldOperations;
 import com.datacenter.service.IFieldOperationsService;
 import com.datacenter.vo.FieldOperationsVo;
+import com.urms.dataDictionary.service.IDataDictionaryService;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -38,9 +39,8 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 
 	@Autowired
 	private TotalTableServiceImpl totalTableServiceImpl;
-
 	@Autowired
-	private ActivitiesController activitiesController;
+	public IDataDictionaryService dataDictionaryServiceImpl;
 
 	
 	@Override
@@ -78,8 +78,8 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 
 	@Override
 	public FieldOperations saveOrUpdate(FieldOperationsVo fieldOperationsVo) {
-		if(fieldOperationsVo.getReceiptWay().equals(4)){
-			String newKey = this.activitiesController.addCategoryAttributesByCode("dc_receiptWay", fieldOperationsVo.getDictValue());
+		if(fieldOperationsVo.getReceiptWay().equals(99)){
+			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_receiptWay", fieldOperationsVo.getDictValue());
 			fieldOperationsVo.setReceiptWay(Integer.parseInt(newKey));
 		}
 		FieldOperations fieldOperations = new FieldOperations();
@@ -148,7 +148,7 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 					" or remark like '%" + fieldOperationsVo.getKeyword() + "%' )");
 		}
 		//排序, 根据日期倒序排序,接报时间顺序排序
-		hql.append(" order by dutyDate desc,receiptTime asc ");
+		hql.append(" order by dutyDate asc,receiptTime asc ");
 
 		List<FieldOperations> trList = this.fieldOperationsDaoImpl.queryEntityHQLList(hql.toString(), objectList, FieldOperations.class);
 		return trList;
@@ -242,7 +242,7 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 
 				//第二行
 				HSSFRow row1 = sheet.createRow(1 + tb*10);
-				row1.createCell(0).setCellValue("表单编号：HLZXRBB-14");
+				row1.createCell(0).setCellValue("表单编号：HLZXRBB-15");
 				row1.getCell(0).setCellStyle(r1_style);
 
 				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");

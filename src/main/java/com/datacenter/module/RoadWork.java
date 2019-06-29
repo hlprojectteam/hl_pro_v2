@@ -30,16 +30,16 @@ public class RoadWork extends BaseModule{
 	private Date approachTime;                //进场时间
 	@DateTimeFormat(pattern="HH:mm")
 	private Date departureTime;               //撤场时间
-	private String unitName;                  //施工单位名称
+	private String unitName;                  //施工单位名称 (数据字典：dc_ConstructionUnitName)
 	private String relationPerson;            //现场负责人
 	private String relationPhone;			  //联系方式
-	private Integer positionAttributes;       //位置属性	(数据字典：dc_positionAttributes, 1:主线	2：收费站)
+	private String positionAttributes;       //位置属性	(数据字典：dc_positionAttributes, 1:主线	2：收费站) 多选
 	private String specificLocation;          //具体位置
 	private String constructionContent;       //施工内容
 	private String jeevesSituation;           //占道情况
 	@DateTimeFormat(pattern="HH:mm")
 	private Date checkTime;                   //检查时间
-	private String checker;                   //检查人员
+	private String checker;                   //检查人员 (数据字典：dc_Inspectors)
 	private String description;               //施工现场情况简要描述
 	private String rectificationMeasures;     //整改措施	(可以为空)
 	private String reportedSituation;         //施工报备情况
@@ -105,13 +105,7 @@ public class RoadWork extends BaseModule{
 		this.relationPerson = relationPerson;
 	}
 	
-	@Column(name = "position_Attributes", length=11)
-	public Integer getPositionAttributes() {
-		return positionAttributes;
-	}
-	public void setPositionAttributes(Integer positionAttributes) {
-		this.positionAttributes = positionAttributes;
-	}
+
 	
 	@Column(name = "specific_Location", length=50)
 	public String getSpecificLocation() {
@@ -208,5 +202,12 @@ public class RoadWork extends BaseModule{
 
 	public void setRelationPhone(String relationPhone) {
 		this.relationPhone = relationPhone;
+	}
+	@Column(name = "position_Attributes", length=20)
+	public String getPositionAttributes() {
+		return positionAttributes;
+	}
+	public void setPositionAttributes(String positionAttributes) {
+		this.positionAttributes = positionAttributes;
 	}
 }

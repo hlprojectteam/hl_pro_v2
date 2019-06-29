@@ -21,6 +21,8 @@ public class FeedBackVo extends FeedBack{
 	private String dutyDateStr;				//日期字符串
 
 	private String keyword;				//关键字
+	
+	private String dictValue;				//新增字典值_值班人员
 
 
 	public String getKeyword() {
@@ -48,6 +50,14 @@ public class FeedBackVo extends FeedBack{
 	}
 	public void setDutyDateEnd(Date dutyDateEnd) {
 		this.dutyDateEnd = dutyDateEnd;
+	}
+
+	public String getDictValue() {
+		return dictValue;
+	}
+
+	public void setDictValue(String dictValue) {
+		this.dictValue = dictValue;
 	}
 
 

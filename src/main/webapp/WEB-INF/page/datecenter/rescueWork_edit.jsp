@@ -85,15 +85,18 @@
 		    <div class="col-sm-3">
 		    	<opt:select dictKey="dc_carType" classStyle="form-control required" name="carType" id="carType" value="${rescueWorkVo.carType}" isDefSelect="true" />
 			</div>
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>缴费单号 </label>
-		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="paymentOrder" name="paymentOrder" value="${rescueWorkVo.paymentOrder}" data-rule-required="true" data-rule-rangelength="[1,8]" />    
+			<div class="dictValue"  style="display: none;">
+			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的车型</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
+				</div>
 			</div>
 		</div>
-		<div class="form-group dictValue"  style="display: none;">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的车型</label>
-			<div class="col-sm-3">
-				<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>缴费单号 </label>
+		    <div class="col-sm-8">
+				<input type="text" class="form-control" id="paymentOrder" name="paymentOrder" value="${rescueWorkVo.paymentOrder}" data-rule-required="true" data-rule-rangelength="[1,8]" />    
 			</div>
 		</div>
 		
@@ -156,7 +159,7 @@
 
     $("#carType").change(function(){
         var carType = $("#carType").val();
-        if(carType == 8){
+        if(carType == 99){
             $(".dictValue").show();
 		}else{
             $(".dictValue").hide();
@@ -166,7 +169,7 @@
 
     $("#whereabouts").change(function(){
         var whereabouts = $("#whereabouts").val();
-        if(whereabouts == 14){
+        if(whereabouts == 99){
             $(".dictValue2").show();
         }else{
             $(".dictValue2").hide();
@@ -186,9 +189,9 @@
 
 	//提交表单
 	function on_submit(){
-	    if($("#carType").val() == 8 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+	    if($("#carType").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
             autoMsg("新添加的字典类型不能为空", 5);
-		}else if($("#whereabouts").val() == 14 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+		}else if($("#whereabouts").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
             autoMsg("新添加的字典类型不能为空", 5);
 		}else{
             $.ajax({

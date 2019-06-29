@@ -198,7 +198,7 @@
 
     $("#receiptWay").change(function(){
         var receiptWay = $("#receiptWay").val();
-        if(receiptWay == 4){
+        if(receiptWay == 99){
             $(".dictValue").show();
         }else{
             $(".dictValue").hide();
@@ -208,7 +208,7 @@
 
     $("#source").change(function(){
         var source = $("#source").val();
-        if(source == 4){
+        if(source == 99){
             $(".dictValue2").show();
         }else{
             $(".dictValue2").hide();
@@ -218,7 +218,7 @@
 
     $("#accidentType").change(function(){
         var accidentType = $("#accidentType").val();
-        if(accidentType == 7){
+        if(accidentType == 99){
             $(".dictValue3").show();
         }else{
             $(".dictValue3").hide();
@@ -229,11 +229,11 @@
 
 	//提交表单
 	function on_submit(){
-        if($("#receiptWay").val() == 4 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+        if($("#receiptWay").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
             autoMsg("新添加的字典类型不能为空", 5);
-        }else if($("#source").val() == 4 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+        }else if($("#source").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
             autoMsg("新添加的字典类型不能为空", 5);
-        }else if($("#accidentType").val() == 7 && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
+        }else if($("#accidentType").val() == 99 && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
             autoMsg("新添加的字典类型不能为空", 5);
 		}else{
             $.ajax({

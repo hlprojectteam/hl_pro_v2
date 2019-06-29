@@ -25,7 +25,7 @@
 		<form id="baseForm" method="post" name="baseForm" class="form-horizontal" action="" >
 			<c:if test="${not empty menuCode}">
 				<div class="row">
-					<label class="col-sm-1 control-label">起始日期</label>
+					<label class="col-sm-2 control-label">起始日期</label>
 					<div class="col-sm-2">
 						<input type="text" class="form-control" id="dutyDateStart" name="dutyDateStart" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</div>
@@ -41,9 +41,9 @@
 				</div>
 
 				<div class="row"  style="margin-top: 10px;">
-					<label class="col-sm-1 control-label">是否有故障的设备</label>
+					<label class="col-sm-2 control-label">是否有故障的设备</label>
 					<div class="col-sm-2">
-						<opt:select dictKey="isNot" classStyle="form-control" id="isOrNot" name="isOrNot" isDefSelect="true"/>
+						<opt:select dictKey="dc_equipmentStatus" classStyle="form-control" id="isOrNot" name="isOrNot" isDefSelect="true"/>
 					</div>
 
 					<label class="col-sm-1 control-label">关键字</label>
@@ -82,7 +82,7 @@
     		queryParamsType: "limit",//服务器分页必须
     		striped:true,//条纹行
     		contentType: "application/x-www-form-urlencoded",
-    		pageSize:10,//每页大小
+    		pageSize:13,//每页大小
     		pageNumber:1,//开始页
     		pageList:[10,20,50],
     		pagination:true,//显示分页工具栏
@@ -93,10 +93,10 @@
 		           	  		return index+1;
 		              }},
     	              /*{title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "title",align:"center"}, */
-    	              {title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "dutyDate",align:"center",formatter:function(value,row,index){
+    	              {title: "&nbsp;&nbsp;&nbsp;&nbsp;日期&nbsp;&nbsp;&nbsp;&nbsp;", field: "dutyDate",align:"center",width:70,formatter:function(value,row,index){
 		           	  		return value.substr(0,10);
 		              }},
-    	              {title: "收费站", field: "tollGate",align:"center",formatter:function(value,row,index){
+    	              {title: "&nbsp;&nbsp;收费站&nbsp;&nbsp;", field: "tollGate",align:"center",width:100,formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_tollGate",value);
 		              }},
 		              {title: "车道高清抓拍", field: "cdgqzp",align:"center",formatter:function(value,row,index){
@@ -163,10 +163,10 @@
                                   return "<i style='color: red;' class='fa fa-circle' aria-hidden='true'></i>"
                               }
 		              }},
-    	              {title: "车道停用时间开始", field: "downTimeStart",align:"center",formatter:function(value,row,index){
+    	              {title: "停用时间开始", field: "downTimeStart",align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "车道停用时间结束", field: "downTimeEnd",align:"center",formatter:function(value,row,index){
+    	              {title: "停用时间结束", field: "downTimeEnd",align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){

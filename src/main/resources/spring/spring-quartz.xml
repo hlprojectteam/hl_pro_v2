@@ -19,7 +19,7 @@
          </property>
          <!-- cron表达式 -->
          <property name="cronExpression">
-              <value>0 0 2 * * ?</value><!-- 每天凌晨2点触发 -->
+              <value>0 0 4 * * ?</value><!-- 每天凌晨4点触发 -->
               <!-- <value>0/20 * * * * ?</value> --><!-- 每20秒触发任务 -->
          </property>
      </bean>
