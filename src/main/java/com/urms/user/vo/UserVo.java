@@ -8,6 +8,7 @@ public class UserVo extends User{
 	
 	private String orgFrameId;//组织架构id
 	private String orgFrameName;//组织架构名称
+	private String keyWord;//关键字，用于查找
 
 	
 	public String getOrgFrameNames() {
@@ -27,6 +28,12 @@ public class UserVo extends User{
 	}
 	public void setOrgFrameName(String orgFrameName) {
 		this.orgFrameName = orgFrameName;
+	}
+	public String getKeyWord() {
+		return keyWord;
+	}
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
 	}
 	
 }

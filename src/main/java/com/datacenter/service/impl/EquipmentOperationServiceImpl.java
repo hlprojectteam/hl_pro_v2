@@ -1,16 +1,18 @@
 package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.MathUtil;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.IEquipmentOperationDao;
 import com.datacenter.module.EquipmentOperation;
+import com.datacenter.ql.datacenterQl;
 import com.datacenter.service.IEquipmentOperationService;
 import com.datacenter.vo.EquipmentOperationVo;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -22,7 +24,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,35 +45,64 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 	
 	@Override
 	public Pager queryEntityList(Integer page, Integer rows, EquipmentOperationVo equipmentOperationVo) {
-		List<Criterion> params = new ArrayList<>();
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer();
+		sql.append(datacenterQl.MySql.equipmentOperationData);
+		sql.append(" where 1=1");
 		if(StringUtils.isNotBlank(equipmentOperationVo.getTtId())){
-			params.add(Restrictions.eq("ttId", equipmentOperationVo.getTtId()));
+			sql.append(" and t.ttId='"+equipmentOperationVo.getTtId()+"'");
 		}
-		if(equipmentOperationVo.getDutyDateStart() != null){		//日期Start
-			params.add(Restrictions.ge("dutyDate", equipmentOperationVo.getDutyDateStart()));
+		if(equipmentOperationVo.getDutyDateStart() != null){		//日期
+			sql.append(" and t.duty_Date>='"+ DateUtil.getDateFormatString(equipmentOperationVo.getDutyDateStart(),"yyyy-MM-dd HH:mm:ss")+"'");
 		}
 		if(equipmentOperationVo.getDutyDateEnd() != null){		//日期End
-			params.add(Restrictions.le("dutyDate", equipmentOperationVo.getDutyDateEnd()));
+			sql.append(" and t.duty_Date<='"+DateUtil.getDateFormatString(equipmentOperationVo.getDutyDateEnd(),"yyyy-MM-dd HH:mm:ss")+"'");
 		}
-
 		if(equipmentOperationVo.getTollGate() != null){
-			params.add(Restrictions.eq("tollGate", equipmentOperationVo.getTollGate()));
+			sql.append(" and t.toll_Gate ="+equipmentOperationVo.getTollGate());
 		}
 		if(equipmentOperationVo.getIsOrNot() != null){
 			if(equipmentOperationVo.getIsOrNot() == 1){
-				params.add(Restrictions.sqlRestriction(" (cdgqzp_=1 and zdfkj_=1 and mtcckcd_=1 and etcckcd_=1 and mtcrkcd_=1 and etcrkcd_=1 and jzcd_=1) "));
+				sql.append(" and (cdgqzp_=1 and zdfkj_=1 and mtcckcd_=1 and etcckcd_=1 and mtcrkcd_=1 and etcrkcd_=1 and jzcd_=1) ");
 			}else if(equipmentOperationVo.getIsOrNot() == 2){
-				params.add(Restrictions.sqlRestriction(" (cdgqzp_=2 or zdfkj_=2 or mtcckcd_=2 or etcckcd_=2 or mtcrkcd_=2 or etcrkcd_=2 or jzcd_=2) " +
-					" and (cdgqzp_ !=3 and zdfkj_ !=3 and mtcckcd_ !=3 and etcckcd_ !=3 and mtcrkcd_ !=3 and etcrkcd_ !=3 and jzcd_ !=3)"));
+				sql.append("  and (cdgqzp_=2 or zdfkj_=2 or mtcckcd_=2 or etcckcd_=2 or mtcrkcd_=2 or etcrkcd_=2 or jzcd_=2) " +
+					" and (cdgqzp_ !=3 and zdfkj_ !=3 and mtcckcd_ !=3 and etcckcd_ !=3 and mtcrkcd_ !=3 and etcrkcd_ !=3 and jzcd_ !=3)");
 			}else if(equipmentOperationVo.getIsOrNot() == 3){
-				params.add(Restrictions.sqlRestriction(" (cdgqzp_ =3 or zdfkj_ =3 or mtcckcd_ =3  or etcckcd_ =3 or mtcrkcd_ =3 or etcrkcd_ =3 or jzcd_ =3) "));
+				sql.append("  and (cdgqzp_ =3 or zdfkj_ =3 or mtcckcd_ =3  or etcckcd_ =3 or mtcrkcd_ =3 or etcrkcd_ =3 or jzcd_ =3) ");
 			}
 		}
-
 		if(StringUtils.isNotBlank(equipmentOperationVo.getKeyword())){
-			params.add(Restrictions.sqlRestriction(" remark_ like '%" + equipmentOperationVo.getKeyword() + "%' "));
+			sql.append(" and (");
+			sql.append(" t.remark_  like '%" + equipmentOperationVo.getKeyword() + "%' ");
+			sql.append(")");
 		}
-		return this.equipmentOperationDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), EquipmentOperation.class);
+		sql.append(" ORDER BY t.duty_Date DESC,t.toll_Gate ASC");//按日期倒序，收费站顺序
+		Pager pager = this.equipmentOperationDaoImpl.queryEntitySQLList(page, rows, sql.toString(), paramList);
+		if(pager!=null){
+			List<EquipmentOperation> list = new ArrayList<EquipmentOperation>();
+			for (int i = 0; i < pager.getPageList().size(); i++) {
+				Object[] obj = (Object[])pager.getPageList().get(i);
+				EquipmentOperation eo = new EquipmentOperation();
+				if(obj[0]!=null) eo.setId(obj[0].toString());
+				if(obj[1]!=null) eo.setDutyDate(DateUtil.getDateFromString(obj[1].toString()));
+				if(obj[2]!=null) eo.setTollGate(Integer.parseInt(obj[2].toString()));
+				if(obj[3]!=null) eo.setCdgqzp(Integer.parseInt(obj[3].toString()));
+				if(obj[4]!=null) eo.setZdfkj(Integer.parseInt(obj[4].toString()));
+				if(obj[5]!=null) eo.setMtcckcd(Integer.parseInt(obj[5].toString()));
+				if(obj[6]!=null) eo.setEtcckcd(Integer.parseInt(obj[6].toString()));
+				if(obj[7]!=null) eo.setMtcrkcd(Integer.parseInt(obj[7].toString()));
+				if(obj[8]!=null) eo.setEtcrkcd(Integer.parseInt(obj[8].toString()));
+				if(obj[9]!=null) eo.setJzcd(Integer.parseInt(obj[9].toString()));
+				if(obj[10]!=null) eo.setDownTimeStart(DateUtil.getDateFromString(obj[10].toString()));
+				if(obj[11]!=null) eo.setDownTimeEnd(DateUtil.getDateFromString(obj[11].toString()));
+				if(obj[12]!=null) eo.setRemark(obj[12].toString());
+				if(obj[13]!=null) eo.setTtId(obj[13].toString());
+				list.add(eo);
+			}
+			pager.setPageList(list);
+		}
+		return pager;
+	
 	}
 
 	@Override
@@ -245,28 +275,46 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 
 		//第四行 及 之后的行
 		HSSFRow row;
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		for (int i = 0; i < eoList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
-			row.setHeightInPoints(45);					//设置行高
+//			row.setHeightInPoints(45);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf1.format(eoList.get(i).getDutyDate())); break;
+					case 0:	cell.setCellValue(DateUtil.getDateFormatString(eoList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD)); break;
 					case 1:	cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_tollGate", eoList.get(i).getTollGate().toString()));	break;
 					case 2: setCell(cell,wb,mainStyle_center,eoList.get(i).getCdgqzp());  break;
 					case 3: setCell(cell,wb,mainStyle_center,eoList.get(i).getZdfkj());  	break;
 					case 4: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcckcd());  	break;
 					case 5: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
 					case 6: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcrkcd());  	break;
-					case 7: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
+					case 7: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcrkcd());  	break;
 					case 8: setCell(cell,wb,mainStyle_center,eoList.get(i).getJzcd());  	break;
-					case 9: cell.setCellValue(eoList.get(i).getRemark());	break;
+					case 9: 
+						cell.setCellValue(eoList.get(i).getRemark());	
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								eoList.get(i).getRemark(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									eoList.get(i).getRemark(),defaultRowH);
+						}
+						break;
 					case 10:
 					if(eoList.get(i).getDownTimeStart() != null && eoList.get(i).getDownTimeEnd() != null){
-						 cell.setCellValue(sdf.format(eoList.get(i).getDownTimeStart()) + "--" + sdf.format(eoList.get(i).getDownTimeEnd()));	break;
+						String cellContent=DateUtil.getDateFormatString(eoList.get(i).getDownTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) 
+								 + "--" + DateUtil.getDateFormatString(eoList.get(i).getDownTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM);
+						 cell.setCellValue(cellContent);	
+						 if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								 cellContent, defaultRowH)>realRowH){
+								realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+										cellContent,defaultRowH);
+							}
+						 
+						 break;
 					}else{
 						 cell.setCellValue("");	break;
 					}
@@ -280,6 +328,7 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
+			row.setHeightInPoints(realRowH);
 		}
 		return wb;
 	}

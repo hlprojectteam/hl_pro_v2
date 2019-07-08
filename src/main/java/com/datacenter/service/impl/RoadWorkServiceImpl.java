@@ -1,6 +1,5 @@
 package com.datacenter.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.MathUtil;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.IRoadWorkDao;
 import com.datacenter.module.RoadWork;
@@ -81,7 +82,7 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 					" or rectification_Measures like '%" + roadWorkVo.getKeyword() + "%' " +
 					" or reported_Situation like '%" + roadWorkVo.getKeyword() + "%' )"));
 		}
-		return this.roadWorkDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), RoadWork.class);
+		return this.roadWorkDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), RoadWork.class);
 	}
 
 	@Override
@@ -309,18 +310,18 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 
 		//第五行 及 之后的行
 		HSSFRow row;
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 		for (int i = 0; i < rwList.size(); i++) {
 			row = sheet.createRow(i + 4);	//创建行
-			row.setHeightInPoints(60);					//设置行高
+//			row.setHeightInPoints(60);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < 14; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf1.format(rwList.get(i).getDutyDate()));	break;
-					case 1: cell.setCellValue(sdf2.format(rwList.get(i).getApproachTime()));	break;
-					case 2: cell.setCellValue(sdf2.format(rwList.get(i).getDepartureTime()));	break;
+					case 0:	cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));	break;
+					case 1: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getApproachTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
+					case 2: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getDepartureTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_ConstructionUnitName", rwList.get(i).getUnitName().toString()));	break;
 					case 4: cell.setCellValue(rwList.get(i).getRelationPerson() + rwList.get(i).getRelationPhone());	break;
 					case 5: 
@@ -337,12 +338,33 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 						}
 						break;
 					case 6: cell.setCellValue(rwList.get(i).getSpecificLocation()); break;
-					case 7: cell.setCellValue(rwList.get(i).getConstructionContent()); break;
+					case 7: 
+						cell.setCellValue(rwList.get(i).getConstructionContent()); 
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getConstructionContent(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getConstructionContent(),defaultRowH);
+						}
+						break;
 					case 8: cell.setCellValue(rwList.get(i).getJeevesSituation()); break;
-					case 9: cell.setCellValue(sdf2.format(rwList.get(i).getCheckTime()));	break;
+					case 9: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getCheckTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 10: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_Inspectors", rwList.get(i).getChecker().toString()));	break;
-					case 11: cell.setCellValue(rwList.get(i).getDescription()); break;
-					case 12: cell.setCellValue(rwList.get(i).getRectificationMeasures()); break;
+					case 11: 
+						cell.setCellValue(rwList.get(i).getDescription()); 
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getDescription(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getDescription(),defaultRowH);
+						}
+						break;
+					case 12: 
+						cell.setCellValue(rwList.get(i).getRectificationMeasures()); 
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getRectificationMeasures(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getRectificationMeasures(),defaultRowH);
+						}
+						break;
 					case 13: cell.setCellValue(rwList.get(i).getReportedSituation()); break;
 
 				}
@@ -353,6 +375,7 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
+			row.setHeightInPoints(realRowH);
 		}
 
 		return wb;

@@ -102,7 +102,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>处理情况</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="disposalSituation" name="disposalSituation" data-rule-required="true" data-rule-rangelength="[1,250]" >${feedBackVo.disposalSituation}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="disposalSituation" name="disposalSituation" data-rule-required="true" data-rule-rangelength="[1,1000]" >${feedBackVo.disposalSituation}</textarea>
 		    </div>
 	  	</div>
 	  	

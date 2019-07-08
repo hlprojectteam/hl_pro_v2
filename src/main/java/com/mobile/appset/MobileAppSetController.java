@@ -109,7 +109,6 @@ public class MobileAppSetController extends BaseController{
 				for (CategoryAttribute categoryAttribute : catList) {
 					caArray.add(categoryAttribute.getAttrKey());
 				}
-				
 //				JSONObject attributes=getCategoryAttributes(category.getCategoryCode());
 				JSONObject jsongetCategory=new JSONObject();
 				jsongetCategory.put(category.getCategoryCode(), caArray);

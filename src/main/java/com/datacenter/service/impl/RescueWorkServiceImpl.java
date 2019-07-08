@@ -1,6 +1,8 @@
 package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.MathUtil;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.IRescueWorkDao;
 import com.datacenter.module.RescueWork;
@@ -21,7 +23,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -77,7 +78,7 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 					" or driver_Phone like '%" + rescueWorkVo.getKeyword() + "%' " +
 					" or remark_ like '%" + rescueWorkVo.getKeyword() + "%' )"));
 		}
-		return this.rescueWorkDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), RescueWork.class);
+		return this.rescueWorkDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), RescueWork.class);
 	}
 
 	@Override
@@ -252,21 +253,32 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 
 		//第四行 及 之后的行
 		HSSFRow row = null;
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 		for (int i = 0; i < rwList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
-			row.setHeightInPoints(60);					//设置行高
+			//row.setHeightInPoints(60);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf1.format(rwList.get(i).getDutyDate()));	break;
-					case 1: cell.setCellValue(sdf2.format(rwList.get(i).getReceiptTime()));	break;
-					case 2: cell.setCellValue(sdf2.format(rwList.get(i).getArrivalTime()));	break;
+					case 0:	cell.setCellValue(DateUtil.getDateFormatString
+							(rwList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_YMD));	break;
+					case 1: cell.setCellValue(DateUtil.getDateFormatString
+							(rwList.get(i).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
+					case 2: cell.setCellValue(DateUtil.getDateFormatString
+							(rwList.get(i).getArrivalTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 3: cell.setCellValue(rwList.get(i).getUsedTime());		break;
-					case 4: cell.setCellValue(sdf2.format(rwList.get(i).getEvacuationTime()));	break;
-					case 5: cell.setCellValue(rwList.get(i).getSite());		break;
+					case 4: cell.setCellValue(DateUtil.getDateFormatString
+							(rwList.get(i).getEvacuationTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
+					case 5: 
+						cell.setCellValue(rwList.get(i).getSite());		
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getSite(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getSite(),defaultRowH);
+						}
+						break;
 					case 6: cell.setCellValue(rwList.get(i).getFaultPlates());		break;
 					case 7: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_carType", rwList.get(i).getCarType().toString()));		break;
 					case 8: cell.setCellValue(rwList.get(i).getPaymentOrder());		break;
@@ -275,12 +287,20 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 					case 11: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_whereabouts", rwList.get(i).getWhereabouts().toString()));		break;
 					case 12: cell.setCellValue(rwList.get(i).getRescuePlates());		break;
 					case 13: cell.setCellValue(rwList.get(i).getDriverPhone());		break;
-					case 14: cell.setCellValue(rwList.get(i).getRemark());		break;
+					case 14: 
+						cell.setCellValue(rwList.get(i).getRemark());		
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getRemark(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getRemark(),defaultRowH);
+						}
+						break;
 				}
 
 				//设置单元格样式
 				cell.setCellStyle(mainStyle_center);
 			}
+			row.setHeightInPoints(realRowH);
 		}
 
 		//最后一行

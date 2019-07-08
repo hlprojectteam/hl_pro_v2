@@ -1,6 +1,7 @@
 package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.MathUtil;
 import com.common.utils.cache.Cache;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
@@ -23,7 +24,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
+
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -507,19 +509,20 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		bigTitle.cloneStyleFrom(r0_style);
 		HSSFFont bigFont = wb.createFont();
 		bigFont.setBold(true);						//字体加粗
-		bigFont.setFontHeightInPoints((short)24);	//字体大小
+		bigFont.setFontHeightInPoints((short)22);	//字体大小
 		bigTitle.setFont(bigFont);
 		row0.getCell(0).setCellStyle(bigTitle);
 
 
 		//第二行
 		HSSFRow row1 = sheet1.createRow(1);
+		//设置行的高度
 		row1.createCell(0).setCellValue("表单编号：HLZXRBB-01");
 		row1.getCell(0).setCellStyle(r1_style);
 
 		//第三行
 		HSSFRow row2 = sheet1.createRow(2);
-		row2.setHeightInPoints(40);
+		row2.setHeightInPoints(30);
 		if(StringUtils.isNotBlank(brief.getCwfzjl())){
 			row2.createCell(0).setCellValue("常务副总经理：" + brief.getCwfzjl());
 		}else{
@@ -541,8 +544,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			row2.createCell(3).setCellValue("复核：");
 		}
 		if(brief.getCreateTime() != null){
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			row2.createCell(4).setCellValue("简报生成时间：" + sdf.format(brief.getRiseTime()));
+			//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			row2.createCell(4).setCellValue("简报生成时间：" + DateUtil.getDateFormatString(brief.getRiseTime(), DateUtil.JAVA_DATE_FORMAT_YMDHM));
 		}else{
 			row2.createCell(4).setCellValue("简报生成时间：");
 		}
@@ -657,10 +660,11 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		//第四行 及 之后的行
 		HSSFRow row;
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		for (int i = 0; i < trList.size(); i++) {
 			row = sheet2.createRow(i + 3);	//创建行
-			row.setHeightInPoints(60);					//设置行高
+			//row.setHeightInPoints(60);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
@@ -670,14 +674,30 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 2: cell.setCellValue(getValueByDictAndKey("dc_dutyPerson", trList.get(i).getThisWatcher().toString()));	break;
 					case 3:
 						if(trList.get(i).getShift() == 3){
-							cell.setCellValue(sdf.format(trList.get(i).getWatchTimeStart()) + "--次日" + sdf.format(trList.get(i).getWatchTimeEnd()));	break;
+							cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getWatchTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) 
+									+ "--次日" + DateUtil.getDateFormatString(trList.get(i).getWatchTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 						}else{
-							cell.setCellValue(sdf.format(trList.get(i).getWatchTimeStart()) + "--" + sdf.format(trList.get(i).getWatchTimeEnd()));	break;
+							cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getWatchTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) 
+									+ "--" + DateUtil.getDateFormatString(trList.get(i).getWatchTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 						}
 					case 4: cell.setCellValue(getValueByDictAndKey("dc_dutyPerson", trList.get(i).getLaseWatcher().toString()));	break;
-					case 5: cell.setCellValue(sdf.format(trList.get(i).getHandoverTime()));	break;
-					case 6: cell.setCellValue(trList.get(i).getHandoverMatters()); break;
-					case 7: cell.setCellValue(trList.get(i).getException()); break;
+					case 5: cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getHandoverTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
+					case 6: 
+						cell.setCellValue(trList.get(i).getHandoverMatters()); 
+						if(MathUtil.getCellHeight(sheet2.getColumnWidth(row.getCell(j).getColumnIndex()),
+								trList.get(i).getHandoverMatters(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet2.getColumnWidth(row.getCell(j).getColumnIndex()),
+									trList.get(i).getHandoverMatters(),defaultRowH);
+						}
+						break;
+					case 7: 
+						cell.setCellValue(trList.get(i).getException()); 
+						if(MathUtil.getCellHeight(sheet2.getColumnWidth(row.getCell(j).getColumnIndex()),
+								trList.get(i).getException(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet2.getColumnWidth(row.getCell(j).getColumnIndex()),
+									trList.get(i).getException(),defaultRowH);
+						}
+						break;
 				}
 				//设置单元格样式
 				if(j == 6){
@@ -686,6 +706,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
+			row.setHeightInPoints(realRowH);
 		}
 
 		return wb;
@@ -707,7 +728,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getSurveillanceInspectionData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		SurveillanceInspectionVo surveillanceInspectionVo = new SurveillanceInspectionVo();
 		surveillanceInspectionVo.setTtId(ttId);
 		List<SurveillanceInspection> siList = this.surveillanceInspectionServiceImpl.queryEntityList(surveillanceInspectionVo);
@@ -744,9 +765,10 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		HSSFRow row2 = sheet3.createRow(2);
 		row2.setHeightInPoints(25);
 		if(siList != null && siList.size() > 0){
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(siList.get(0).getDutyDate()) + "         天气：" + getValueByDictAndKey("dc_weather", siList.get(0).getWeather().toString()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(siList.get(0).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD) 
+					+ "         天气：" + getValueByDictAndKey("dc_weather", siList.get(0).getWeather().toString()));
 		}else{
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 		}
 		row2.getCell(0).setCellStyle(r1_style);
 
@@ -775,15 +797,18 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		//第五行 及 之后的行
 		HSSFRow row;
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+//		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		for (int i = 0; i < siList.size(); i++) {
 			row = sheet3.createRow(i + 4);	//创建行
-			row.setHeightInPoints(60);					//设置行高
+			//row.setHeightInPoints(60);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf.format(siList.get(i).getInspectionTimeStart()) + "--" + sdf.format(siList.get(i).getInspectionTimeEnd()));	break;
+					case 0:	cell.setCellValue(DateUtil.getDateFormatString(siList.get(i).getInspectionTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) 
+							+ "--" + DateUtil.getDateFormatString(siList.get(i).getInspectionTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 1: cell.setCellValue(getValueByDictAndKey("dc_headOfDuty", siList.get(i).getShiftSupervisor().toString()));	break;
 					case 2: cell.setCellValue(getValueByDictAndKey("dc_inspectionlocation", siList.get(i).getInspectionlocation().toString()));	break;
 					case 3:
@@ -793,8 +818,22 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 							cell.setCellValue("");
 						}
 						break;
-					case 4: cell.setCellValue(siList.get(i).getInspectionDetails());	break;
-					case 5: cell.setCellValue(siList.get(i).getFollowMeasure());	break;
+					case 4: 
+						cell.setCellValue(siList.get(i).getInspectionDetails());	
+						if(MathUtil.getCellHeight(sheet3.getColumnWidth(row.getCell(j).getColumnIndex()),
+								siList.get(i).getInspectionDetails(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet3.getColumnWidth(row.getCell(j).getColumnIndex()),
+									siList.get(i).getInspectionDetails(),defaultRowH);
+						}
+						break;
+					case 5: 
+						cell.setCellValue(siList.get(i).getFollowMeasure());	
+						if(MathUtil.getCellHeight(sheet3.getColumnWidth(row.getCell(j).getColumnIndex()),
+								siList.get(i).getFollowMeasure(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet3.getColumnWidth(row.getCell(j).getColumnIndex()),
+									siList.get(i).getFollowMeasure(),defaultRowH);
+						}
+						break;
 				}
 				//设置单元格样式
 				if(j == 4){
@@ -803,6 +842,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
+			row.setHeightInPoints(realRowH);
 		}
 
 		return wb;
@@ -923,19 +963,19 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		//第五行 及 之后的行
 		HSSFRow row = null;
-		SimpleDateFormat sdf1 = new SimpleDateFormat("MM月dd日");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 		String[][] content = new String[rwList.size()][];
 		for (int i = 0; i < rwList.size(); i++) {
 			row = sheet4.createRow(i + 4);	//创建行
-			row.setHeightInPoints(60);					//设置行高
+			//row.setHeightInPoints(60);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < 14; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf1.format(rwList.get(i).getDutyDate()));	break;
-					case 1: cell.setCellValue(sdf2.format(rwList.get(i).getApproachTime()));	break;
-					case 2: cell.setCellValue(sdf2.format(rwList.get(i).getDepartureTime()));	break;
+					case 0:	cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_MD));	break;
+					case 1: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getApproachTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
+					case 2: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getDepartureTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 3: cell.setCellValue(getValueByDictAndKey("dc_ConstructionUnitName", rwList.get(i).getUnitName().toString()));	break;
 					case 4: cell.setCellValue(rwList.get(i).getRelationPerson() + rwList.get(i).getRelationPhone());	break;
 					case 5: 
@@ -952,12 +992,33 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 						}
 						break;
 					case 6: cell.setCellValue(rwList.get(i).getSpecificLocation()); break;
-					case 7: cell.setCellValue(rwList.get(i).getConstructionContent()); break;
+					case 7: 
+						cell.setCellValue(rwList.get(i).getConstructionContent()); 
+						if(MathUtil.getCellHeight(sheet4.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getConstructionContent(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet4.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getConstructionContent(),defaultRowH);
+						}
+						break;
 					case 8: cell.setCellValue(rwList.get(i).getJeevesSituation()); break;
-					case 9: cell.setCellValue(sdf2.format(rwList.get(i).getCheckTime()));	break;
+					case 9: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getCheckTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 10: cell.setCellValue(getValueByDictAndKey("dc_Inspectors", rwList.get(i).getChecker().toString()));	break;
-					case 11: cell.setCellValue(rwList.get(i).getDescription()); break;
-					case 12: cell.setCellValue(rwList.get(i).getRectificationMeasures()); break;
+					case 11: 
+						cell.setCellValue(rwList.get(i).getDescription()); 
+						if(MathUtil.getCellHeight(sheet4.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getDescription(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet4.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getDescription(),defaultRowH);
+						}
+						break;
+					case 12: 
+						cell.setCellValue(rwList.get(i).getRectificationMeasures()); 
+						if(MathUtil.getCellHeight(sheet4.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getRectificationMeasures(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet4.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getRectificationMeasures(),defaultRowH);
+						}
+						break;
 					case 13: cell.setCellValue(rwList.get(i).getReportedSituation()); break;
 
 				}
@@ -968,6 +1029,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
+			row.setHeightInPoints(realRowH);
 		}
 
 		return wb;
@@ -1035,8 +1097,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		HSSFRow row2 = sheet5.createRow(2);
 		row2.setHeightInPoints(25);
 		if(eoList != null && eoList.size() > 0){
-			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(eoList.get(0).getDutyDate()));
+//			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(eoList.get(0).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 		}else{
 			row2.createCell(0).setCellValue("日期：           ");
 		}
@@ -1085,10 +1147,11 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
         //第五行 及 之后的行
 		HSSFRow row;
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		for (int i = 0; i < eoList.size(); i++) {
 			row = sheet5.createRow(i + 4);	//创建行
-			row.setHeightInPoints(65);					//设置行高
+			//row.setHeightInPoints(65);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				Integer value = 0;
@@ -1102,93 +1165,22 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 5: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcrkcd());  	break;
 					case 6: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
 					case 7: setCell(cell,wb,mainStyle_center,eoList.get(i).getJzcd());  	break;
-
-					/*case 1:
-                        cell.setCellValue("●");
-                        value = eoList.get(i).getCdgqzp();
-                        if(value == 1){
-                            cell.setCellStyle(greenStyle);
-                        }else if(value == 2){
-                            cell.setCellStyle(yellowStyle);
-                        }else{
-                            cell.setCellStyle(redStyle);
-                        }
-                        break;
-					case 2:
-						cell.setCellValue("●");
-						value = eoList.get(i).getZdfkj();
-						if(value == 1){
-							cell.setCellStyle(greenStyle);
-						}else if(value == 2){
-							cell.setCellStyle(yellowStyle);
-						}else{
-							cell.setCellStyle(redStyle);
+					case 8: 
+						cell.setCellValue(eoList.get(i).getRemark());	
+						if(MathUtil.getCellHeight(sheet5.getColumnWidth(row.getCell(j).getColumnIndex()),
+								eoList.get(i).getRemark(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet5.getColumnWidth(row.getCell(j).getColumnIndex()),
+									eoList.get(i).getRemark(),defaultRowH);
 						}
 						break;
-					case 3:
-						cell.setCellValue("●");
-						value = eoList.get(i).getMtcckcd();
-						if(value == 1){
-							cell.setCellStyle(greenStyle);
-						}else if(value == 2){
-							cell.setCellStyle(yellowStyle);
-						}else{
-							cell.setCellStyle(redStyle);
-						}
-						break;
-					case 4:
-						cell.setCellValue("●");
-						value = eoList.get(i).getEtcckcd();
-						if(value == 1){
-							cell.setCellStyle(greenStyle);
-						}else if(value == 2){
-							cell.setCellStyle(yellowStyle);
-						}else{
-							cell.setCellStyle(redStyle);
-						}
-						break;
-					case 5:
-						cell.setCellValue("●");
-						value = eoList.get(i).getMtcrkcd();
-						if(value == 1){
-							cell.setCellStyle(greenStyle);
-						}else if(value == 2){
-							cell.setCellStyle(yellowStyle);
-						}else{
-							cell.setCellStyle(redStyle);
-						}
-						break;
-					case 6:
-						cell.setCellValue("●");
-						value = eoList.get(i).getEtcckcd();
-						if(value == 1){
-							cell.setCellStyle(greenStyle);
-						}else if(value == 2){
-							cell.setCellStyle(yellowStyle);
-						}else{
-							cell.setCellStyle(redStyle);
-						}
-						break;
-					case 7:
-						cell.setCellValue("●");
-						value = eoList.get(i).getJzcd();
-						if(value == 1){
-							cell.setCellStyle(greenStyle);
-						}else if(value == 2){
-							cell.setCellStyle(yellowStyle);
-						}else{
-							cell.setCellStyle(redStyle);
-						}
-						break;*/
-					case 8: cell.setCellValue(eoList.get(i).getRemark());	break;
 					case 9:
 						String d1 = "";
 						String d2 = "";
 						if(eoList.get(i).getDownTimeStart() != null){
-							d1 = sdf.format(eoList.get(i).getDownTimeStart());
+							d1 = DateUtil.getDateFormatString(eoList.get(i).getDownTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM);
 						}
 						if(eoList.get(i).getDownTimeEnd() != null){
-							d2 = sdf.format(eoList.get(i).getDownTimeEnd());
+							d2 = DateUtil.getDateFormatString(eoList.get(i).getDownTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM);
 						}
 						if(StringUtils.isNotBlank(d1) && StringUtils.isNotBlank(d2)){
 							cell.setCellValue(d1 + "——" + d2);
@@ -1206,6 +1198,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
+			row.setHeightInPoints(realRowH);
 		}
 
 		return wb;
@@ -1335,8 +1328,8 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//数据展示
 		if(esList != null && esList.size() > 0){
 			esListRows=esList.size()*3;//占用了几行
-			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-			SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//			SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 			for(int tb = 0; tb < esList.size(); tb++){
 
@@ -1346,7 +1339,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 				HSSFRow row4 = sheet15.createRow(4 + tb*3);
 				row4.setHeightInPoints(25);
-				row4.createCell(0).setCellValue(sdf1.format(esList.get(tb).getDutyDate()));
+				row4.createCell(0).setCellValue(DateUtil.getDateFormatString(esList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row4.createCell(1);
 				row4.createCell(2).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR1().toString()));
 				row4.createCell(3).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR2().toString()));
@@ -1355,7 +1348,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.createCell(6).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusB().toString()));
 				row4.createCell(7).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusC().toString()));
 				row4.createCell(8).setCellValue(getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusD().toString()));
-				row4.createCell(9).setCellValue(sdf2.format(esList.get(tb).getCheckTime()));
+				row4.createCell(9).setCellValue(DateUtil.getDateFormatString(esList.get(tb).getCheckTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				for (int i = 0; i < 10; i++) {
 					row4.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
 				}
@@ -1426,7 +1419,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getOperatingData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		OperatingDataVo operatingDataVo = new OperatingDataVo();
 		operatingDataVo.setTtId(ttId);
 		List<OperatingData> odList = this.operatingDataServiceImpl.queryEntityList(operatingDataVo);
@@ -1444,11 +1437,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		sheet6.addMergedRegion(new CellRangeAddress(odList.size() + 4, odList.size() + 4, 0, 1));
 
-		for (int i = 0; i < 8; i++) {
+		sheet6.setColumnWidth(0, sheet6.getColumnWidth(0));
+		for (int i = 1; i < 8; i++) {
 			//列宽自适应（该方法在老版本的POI中效果不佳）
 			/*sheet6.autoSizeColumn(i);*/
 			//设置列宽
-			sheet6.setColumnWidth(i, sheet6.getColumnWidth(i)*5/2);
+			sheet6.setColumnWidth(i, sheet6.getColumnWidth(i)*2);
 		}
 
 
@@ -1462,7 +1456,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 //		}else{
 //			row0.createCell(0).setCellValue("各站营运数据");
 //		}
-		row0.createCell(0).setCellValue(sdf1.format(tt.getDutyDate())+"各站拆分前营运数据");
+		row0.createCell(0).setCellValue(DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD)+"各站拆分前营运数据");
 		//设置单元格样式
 		row0.getCell(0).setCellStyle(r0_style);
 
@@ -1514,7 +1508,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		Double hj_mobilePaymentIncome = 0.0;
 		for (int i = 0; i < odList.size(); i++) {
 			row = sheet6.createRow(i + 4);	//创建行
-			row.setHeightInPoints(26);					//设置行高
+			row.setHeightInPoints(20);					//设置行高
 			for (int j = 0; j < 8; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
@@ -1645,21 +1639,30 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 
 		//第四行 及 之后的行
 		HSSFRow row;
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");
+//		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 		for (int i = 0; i < rwList.size(); i++) {
 			row = sheet7.createRow(i + 3);	//创建行
-			row.setHeightInPoints(60);					//设置行高
+			//row.setHeightInPoints(60);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf1.format(rwList.get(i).getDutyDate()));	break;
-					case 1: cell.setCellValue(sdf2.format(rwList.get(i).getReceiptTime()));	break;
-					case 2: cell.setCellValue(sdf2.format(rwList.get(i).getArrivalTime()));	break;
+					case 0:	cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_YMD));	break;
+					case 1: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
+					case 2: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getArrivalTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 3: cell.setCellValue(rwList.get(i).getUsedTime());		break;
-					case 4: cell.setCellValue(sdf2.format(rwList.get(i).getEvacuationTime()));	break;
-					case 5: cell.setCellValue(rwList.get(i).getSite());		break;
+					case 4: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getEvacuationTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
+					case 5: 
+						cell.setCellValue(rwList.get(i).getSite());		
+						if(MathUtil.getCellHeight(sheet7.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getSite(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet7.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getSite(),defaultRowH);
+						}
+						break;
 					case 6: cell.setCellValue(rwList.get(i).getFaultPlates());		break;
 					case 7: cell.setCellValue(getValueByDictAndKey("dc_carType", rwList.get(i).getCarType().toString()));		break;
 					case 8: cell.setCellValue(rwList.get(i).getPaymentOrder());		break;
@@ -1668,12 +1671,20 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 11: cell.setCellValue(getValueByDictAndKey("dc_whereabouts", rwList.get(i).getWhereabouts().toString()));		break;
 					case 12: cell.setCellValue(rwList.get(i).getRescuePlates());		break;
 					case 13: cell.setCellValue(rwList.get(i).getDriverPhone());		break;
-					case 14: cell.setCellValue(rwList.get(i).getRemark());		break;
+					case 14: 
+						cell.setCellValue(rwList.get(i).getRemark());		
+						if(MathUtil.getCellHeight(sheet7.getColumnWidth(row.getCell(j).getColumnIndex()),
+								rwList.get(i).getRemark(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet7.getColumnWidth(row.getCell(j).getColumnIndex()),
+									rwList.get(i).getRemark(),defaultRowH);
+						}
+						break;
 				}
 
 				//设置单元格样式
 				cell.setCellStyle(mainStyle_center);
 			}
+			row.setHeightInPoints(realRowH);
 		}
 
 		//最后一行
@@ -1709,7 +1720,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getClearingData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		
 		ClearingVo clearingVo = new ClearingVo();
 		clearingVo.setTtId(ttId);
@@ -1758,12 +1769,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row1.getCell(0).setCellStyle(r1_style);
 
 				
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet8.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(cList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(cList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -1771,7 +1782,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.setHeightInPoints(40);
 				row3.createCell(0).setCellValue("接报时间");
 				row3.getCell(0).setCellStyle(r2_style);
-				row3.createCell(1).setCellValue(sdf2.format(cList.get(tb).getReceiptTime()));
+				row3.createCell(1).setCellValue(DateUtil.getDateFormatString(cList.get(tb).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("报告部门");
 				row3.getCell(2).setCellStyle(r2_style);
@@ -1869,7 +1880,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第三行
 			HSSFRow row2 = sheet8.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -1948,7 +1959,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getExceptionRecordData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		ExceptionRecordVo exceptionRecordVo = new ExceptionRecordVo();
 		exceptionRecordVo.setTtId(ttId);
 		List<ExceptionRecord> erList = this.exceptionRecordServiceImpl.queryEntityList(exceptionRecordVo);
@@ -1999,12 +2010,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-10");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet9.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(erList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(erList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -2028,7 +2039,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					row3.setHeightInPoints(40);
 					row3.createCell(0).setCellValue("接报时间");
 					row3.getCell(0).setCellStyle(r2_style);
-					row3.createCell(1).setCellValue(sdf2.format(erList.get(tb).getReceiptTime()));
+					row3.createCell(1).setCellValue(DateUtil.getDateFormatString(erList.get(tb).getReceiptTime(), DateUtil.JAVA_DATE_FORMAT_HM));
 					row3.getCell(1).setCellStyle(mainStyle_center);
 					row3.createCell(2).setCellValue("报告部门");
 					row3.getCell(2).setCellStyle(r2_style);
@@ -2126,7 +2137,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第三行
 			HSSFRow row2 = sheet9.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -2205,7 +2216,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getTrafficAccidentData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		TrafficAccidentVo trafficAccidentVo = new TrafficAccidentVo();
 		trafficAccidentVo.setTtId(ttId);
 		List<TrafficAccident> taList = this.trafficAccidentServiceImpl.queryEntityList(trafficAccidentVo);
@@ -2245,12 +2256,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-11");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet10.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(taList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(taList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -2262,7 +2273,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("接报时间");
 				row3.getCell(2).setCellStyle(r2_style);
-				row3.createCell(3).setCellValue(sdf2.format(taList.get(0).getReceiptTime()));
+				row3.createCell(3).setCellValue(DateUtil.getDateFormatString(taList.get(0).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("接报方式");
 				row3.getCell(4).setCellStyle(r2_style);
@@ -2389,7 +2400,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第三行
 			HSSFRow row2 = sheet10.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -2492,7 +2503,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getInfoThroughData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		InfoThroughVo infoThroughVo = new InfoThroughVo();
 		infoThroughVo.setTtId(ttId);
 		List<InfoThrough> itList = this.infoThroughServiceImpl.queryEntityList(infoThroughVo);
@@ -2539,12 +2550,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-12");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet11.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(itList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(itList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -2552,7 +2563,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.setHeightInPoints(40);
 				row3.createCell(0).setCellValue("通报时间");
 				row3.getCell(0).setCellStyle(r2_style);
-				row3.createCell(1).setCellValue(sdf2.format(itList.get(tb).getThroughTime()));
+				row3.createCell(1).setCellValue(DateUtil.getDateFormatString(itList.get(tb).getThroughTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("报告人员");
 				row3.getCell(2).setCellStyle(r2_style);
@@ -2648,7 +2659,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第三行
 			HSSFRow row2 = sheet11.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -2727,7 +2738,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getFeedBackData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		FeedBackVo feedBackVo = new FeedBackVo();
 		feedBackVo.setTtId(ttId);
 		List<FeedBack> fbList = this.feedBackServiceImpl.queryEntityList(feedBackVo);
@@ -2774,12 +2785,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-13");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet12.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(fbList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(fbList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -2787,7 +2798,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.setHeightInPoints(40);
 				row3.createCell(0).setCellValue("接报时间");
 				row3.getCell(0).setCellStyle(r2_style);
-				row3.createCell(1).setCellValue(sdf2.format(fbList.get(tb).getReceiptTime()));
+				row3.createCell(1).setCellValue(DateUtil.getDateFormatString(fbList.get(tb).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("报告人员");
 				row3.getCell(2).setCellStyle(r2_style);
@@ -2886,7 +2897,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第三行
 			HSSFRow row2 = sheet12.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -2967,7 +2978,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getTrafficJamData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		TrafficJamVo trafficJamVo = new TrafficJamVo();
 		trafficJamVo.setTtId(ttId);
 		List<TrafficJam> tjList = this.trafficJamServiceImpl.queryEntityList(trafficJamVo);
@@ -3010,12 +3021,12 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-14");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet13.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(tjList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tjList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -3023,7 +3034,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.setHeightInPoints(40);
 				row3.createCell(0).setCellValue("接报时间");
 				row3.getCell(0).setCellStyle(r2_style);
-				row3.createCell(1).setCellValue(sdf2.format(tjList.get(tb).getReceiptTime()));
+				row3.createCell(1).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("接报方式");
 				row3.getCell(2).setCellStyle(r2_style);
@@ -3047,16 +3058,16 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.setHeightInPoints(40);
 				row4.createCell(0).setCellValue("开始时间");
 				row4.getCell(0).setCellStyle(r2_style);
-				row4.createCell(1).setCellValue(sdf2.format(tjList.get(tb).getStartTime()));
+				row4.createCell(1).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getStartTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(2).setCellValue("结束时间");
 				row4.getCell(2).setCellStyle(r2_style);
-				row4.createCell(3).setCellValue(sdf2.format(tjList.get(tb).getEndTime()));
+				row4.createCell(3).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getEndTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row4.getCell(3).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("交警到场时间");
 				row4.getCell(4).setCellStyle(r2_style);
 				if(tjList.get(tb).getJjdcTime() != null){
-					row4.createCell(5).setCellValue(sdf2.format(tjList.get(tb).getJjdcTime()));
+					row4.createCell(5).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getJjdcTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				}else{
 					row4.createCell(5);
 				}
@@ -3064,7 +3075,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.createCell(7).setCellValue("路管员到场时间");
 				row4.getCell(7).setCellStyle(r2_style);
 				if(tjList.get(tb).getJjdcTime() != null){
-					row4.createCell(8).setCellValue(sdf2.format(tjList.get(tb).getLgydcTime()));
+					row4.createCell(8).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getLgydcTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				}else{
 					row4.createCell(8);
 				}
@@ -3139,7 +3150,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第三行
 			HSSFRow row2 = sheet13.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行
@@ -3225,7 +3236,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 	 */
 	public HSSFWorkbook getFieldOperationsData(HSSFWorkbook wb, String ttId, HSSFCellStyle mainStyle_center, HSSFCellStyle mainStyle_left, HSSFCellStyle r0_style, HSSFCellStyle r1_style, HSSFCellStyle r2_style){
 		TotalTable tt=this.totalTableDaoImpl.getEntityById(TotalTable.class, ttId);
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		FieldOperationsVo fieldOperationsVo = new FieldOperationsVo();
 		fieldOperationsVo.setTtId(ttId);
 		List<FieldOperations> foList = this.fieldOperationsServiceImpl.queryEntityList(fieldOperationsVo);
@@ -3272,12 +3283,11 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-15");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet14.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(foList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(foList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -3285,7 +3295,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.setHeightInPoints(40);
 				row3.createCell(0).setCellValue("接报时间");
 				row3.getCell(0).setCellStyle(r2_style);
-				row3.createCell(1).setCellValue(sdf2.format(foList.get(tb).getReceiptTime()));
+				row3.createCell(1).setCellValue(DateUtil.getDateFormatString(foList.get(tb).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("报告人员");
 				row3.getCell(2).setCellStyle(r2_style);
@@ -3384,7 +3394,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			//第三行
 			HSSFRow row2 = sheet14.createRow(2);
 			row2.setHeightInPoints(25);
-			row2.createCell(0).setCellValue("日期：" + sdf1.format(tt.getDutyDate()));
+			row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(tt.getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 			row2.getCell(0).setCellStyle(r1_style);
 
 			//第四行

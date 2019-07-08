@@ -1,10 +1,13 @@
 package com.common.message.service.impl;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -21,6 +24,7 @@ import com.common.utils.helper.Pager;
 @Repository("messageReadedServiceImpl")
 public class MessageReadedServiceImpl extends BaseServiceImpl implements IMessageReadedService{
 
+	public static Logger logger = Logger.getLogger(MessageReadedServiceImpl.class);
 	@Autowired
 	public IMessageReadedDao messageReadedDaoImpl;
 	
@@ -75,6 +79,7 @@ public class MessageReadedServiceImpl extends BaseServiceImpl implements IMessag
 	public void updateCleanMessageReaded() {
 		//定义消息的最大长度
 		int maxL=50;
+		int updateCount=0;
 		List<MessageReaded> list= messageReadedDaoImpl.queryAllEntity(MessageReaded.class, Order.desc("createTime"));
 		for (MessageReaded messageReaded : list) {
 			String msg=messageReaded.getReadMsgs();
@@ -91,10 +96,11 @@ public class MessageReadedServiceImpl extends BaseServiceImpl implements IMessag
 					messageReaded.setReadMsgs(msg);
 //					System.out.println(messageReaded.getId()+":"+messageReaded.getReadMsgs());
 					this.saveOrUpdate(messageReaded);
+					updateCount++;
 				}
 			}
-			
 		}
+		logger.info("--"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"-清除已经读消息数目为："+updateCount);
 		
 	}
 

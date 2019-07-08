@@ -6,7 +6,7 @@ import com.attendance.module.Leave;
 
 /**
  * 
- * @Description
+ * @Description 请假
  * @author qinyongqian
  * @date 2019年5月19日
  *
@@ -18,8 +18,12 @@ public class LeaveVo extends Leave{
 	private String approvalUserId;// 审批人ID
 	private String approvalUserName;// 审批人
 	private String approvalUserAvatar;// 审批人头像路径
+	private String approvalContent;// 审批意见内容
 	private Date readTime;// 阅读时间
 	private Date approvalTime;// 审批时间
+	private String creatorOrgName;// 申请人部门
+	private String creatorOrgId;// 申请人部门Id
+	private String creatorAvatar;// 申请人头像路径
 	
 	public String getApprovalUserId() {
 		return approvalUserId;
@@ -63,6 +67,29 @@ public class LeaveVo extends Leave{
 	public void setApprovalUserAvatar(String approvalUserAvatar) {
 		this.approvalUserAvatar = approvalUserAvatar;
 	}
-
+	public String getCreatorOrgName() {
+		return creatorOrgName;
+	}
+	public void setCreatorOrgName(String creatorOrgName) {
+		this.creatorOrgName = creatorOrgName;
+	}
+	public String getCreatorOrgId() {
+		return creatorOrgId;
+	}
+	public void setCreatorOrgId(String creatorOrgId) {
+		this.creatorOrgId = creatorOrgId;
+	}
+	public String getCreatorAvatar() {
+		return creatorAvatar;
+	}
+	public void setCreatorAvatar(String creatorAvatar) {
+		this.creatorAvatar = creatorAvatar;
+	}
+	public String getApprovalContent() {
+		return approvalContent;
+	}
+	public void setApprovalContent(String approvalContent) {
+		this.approvalContent = approvalContent;
+	}
 
 }

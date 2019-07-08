@@ -14,6 +14,9 @@ public class datacenterQl {
 		//
 		public static final String operatingData="SELECT * FROM `dc_operatingdata` t";
 		
+		public static final String equipmentOperationData="SELECT t.ID,t.duty_Date,t.toll_Gate,t.cdgqzp_,t.zdfkj_,t.mtcckcd_,t.etcckcd_,t.mtcrkcd_,"+
+				"t.etcrkcd_,t.jzcd_,t.down_Time_Start,t.down_Time_End,t.remark_,t.ttId FROM `dc_equipmentoperation` t ";
+		
 		//计算营运数据合计SQL
 		public static final String operatingTotal="SELECT SUM(t.total_Traffic),SUM(t.ytk_Traffic),SUM(t.mobile_Payment_Traffic),"+
 				"ROUND(SUM(t.general_Income),2),ROUND(SUM(t.ytk_Income),2),ROUND(SUM(t.mobile_Payment_Income),2)"+

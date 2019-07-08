@@ -50,7 +50,6 @@ public class SuggestServiceImpl extends BaseServiceImpl implements ISuggestServi
 				//表示获取所有未回复的
 				criterionsList.add(Restrictions.or(Restrictions.eq("status", 1),Restrictions.eq("status", 2)));//字典目录
 			}
-			
 		}
 		return this.suggestDaoImpl.queryEntityList(page, rows, criterionsList, Order.desc("createTime"), Suggest.class);
 	}

@@ -16,6 +16,17 @@ import com.common.utils.helper.Pager;
  */
 public interface ILeaveService extends IBaseService {
 
+	/**
+	 * 
+	 * @方法：@param page
+	 * @方法：@param rows
+	 * @方法：@param leaveVo
+	 * @方法：@return
+	 * @描述：单表分页查询
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年7月5日
+	 */
 	public Pager queryEntityList(Integer page, Integer rows,LeaveVo leaveVo);
 	
 	public void deleteEntitys(String ids);
@@ -23,6 +34,19 @@ public interface ILeaveService extends IBaseService {
 	public void saveOrUpdate(Leave leave);
 	
 	public List<Leave> queryLeave(LeaveVo leaveVo);
+	
+	/**
+	 * 
+	 * @方法：@param page
+	 * @方法：@param rows
+	 * @方法：@param leaveVo
+	 * @方法：@return
+	 * @描述：多表分页查询
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年7月5日
+	 */
+	public Pager queryLeaveApproval(Integer page, Integer rows, LeaveVo leaveVo);
 	
 	/**
 	 * 

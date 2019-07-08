@@ -20,7 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -243,7 +243,7 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 				bigTitle.cloneStyleFrom(r0_style);
 				HSSFFont bigFont = wb.createFont();
 				bigFont.setBold(true);						//字体加粗
-				bigFont.setFontHeightInPoints((short)24);	//字体大小
+				bigFont.setFontHeightInPoints((short)22);	//字体大小
 				bigTitle.setFont(bigFont);
 				row0.getCell(0).setCellStyle(bigTitle);
 				for (int i = 1; i < 5; i++) {
@@ -258,16 +258,16 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 					row1.createCell(i).setCellStyle(r1_style);
 				}
 
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet.createRow(2 + tb*7);
-				row2.setHeightInPoints(40);
+				row2.setHeightInPoints(30);
 				row2.createCell(0).setCellValue("常务副总经理：" + briefList.get(tb).getCwfzjl());
 				row2.createCell(1).setCellValue("主管副总经理：" + briefList.get(tb).getZgfzjl());
 				row2.createCell(2).setCellValue("中心主任：" + briefList.get(tb).getZxfzr());
 				row2.createCell(3).setCellValue("复核：" + briefList.get(tb).getFhry());
-				row2.createCell(4).setCellValue("简报生成时间：" + sdf.format(briefList.get(tb).getCreateTime()));
+				row2.createCell(4).setCellValue("简报生成时间：" + DateUtil.getDateFormatString(briefList.get(tb).getCreateTime(),DateUtil.JAVA_DATE_FORMAT_YMDHM));
 				row2.getCell(0).setCellStyle(mainStyle_center);
 				row2.getCell(1).setCellStyle(mainStyle_center);
 				row2.getCell(2).setCellStyle(mainStyle_center);

@@ -113,7 +113,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>通传情况</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="8" cols="" id="throughSituation" name="throughSituation" data-rule-required="true" data-rule-rangelength="[1,300]" >${infoThroughVo.throughSituation}</textarea>
+		       <textarea class="form-control" rows="8" cols="" id="throughSituation" name="throughSituation" data-rule-required="true" data-rule-rangelength="[1,1000]" >${infoThroughVo.throughSituation}</textarea>
 		    </div>
 	  	</div>
 	  	

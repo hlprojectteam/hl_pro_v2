@@ -1,11 +1,13 @@
 package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.IEquipmentStatusDao;
 import com.datacenter.module.EquipmentStatus;
 import com.datacenter.service.IEquipmentStatusService;
 import com.datacenter.vo.EquipmentStatusVo;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -19,7 +21,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,7 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
         if(equipmentStatusVo.getDutyDateEnd() != null){		//日期End
             params.add(Restrictions.le("dutyDate", equipmentStatusVo.getDutyDateEnd()));
         }
-        return this.equipmentStatusDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), EquipmentStatus.class);
+        return this.equipmentStatusDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), EquipmentStatus.class);
     }
 
     @Override
@@ -232,8 +233,8 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
         //数据展示
         if(esList != null && esList.size() > 0){
         	esListRows=esList.size()*3;//占用了几行
-            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-            SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//            SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
             for(int tb = 0; tb < esList.size(); tb++){
 
@@ -242,7 +243,8 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
                 
                 HSSFRow row4 = sheet.createRow(4 + tb*3);
                 row4.setHeightInPoints(25);
-                row4.createCell(0).setCellValue(sdf1.format(esList.get(tb).getDutyDate()));
+                row4.createCell(0).setCellValue(DateUtil.getDateFormatString
+                		(esList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
                 row4.createCell(1);
                 row4.createCell(2).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR1().toString()));
                 row4.createCell(3).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusR2().toString()));
@@ -251,7 +253,8 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
                 row4.createCell(6).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusB().toString()));
                 row4.createCell(7).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusC().toString()));
                 row4.createCell(8).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_eqStatus", esList.get(tb).getEqStatusD().toString()));
-                row4.createCell(9).setCellValue(sdf2.format(esList.get(tb).getCheckTime()));
+                row4.createCell(9).setCellValue(DateUtil.getDateFormatString
+                		(esList.get(tb).getCheckTime(),DateUtil.JAVA_DATE_FORMAT_HM));
                 for (int i = 0; i < 10; i++) {
                     row4.getCell(i).setCellStyle(mainStyle_center);	//设置单元格样式
                 }

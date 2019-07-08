@@ -1,10 +1,10 @@
 package com.datacenter.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.common.utils.MathUtil;
 import com.common.utils.helper.DateUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -259,7 +259,7 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 			//列宽自适应（该方法在老版本的POI中效果不佳）
 			/*sheet.autoSizeColumn(i);*/
 			//设置列宽
-			if(i == 6){
+			if(i == 7){
 				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*4);
 			}else{
 				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*5/2);
@@ -268,29 +268,45 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 
 		//第四行 及 之后的行
 		HSSFRow row;
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		for (int i = 0; i < trList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
-			row.setHeightInPoints(60);					//设置行高
+//			row.setHeightInPoints(60);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf1.format(trList.get(i).getDutyDate())); break;
+					case 0:	cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD)); break;
 					case 1:	cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_shift", trList.get(i).getShift().toString())); break;
 					case 2: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_weather", trList.get(i).getWeather().toString()));	break;
 					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", trList.get(i).getThisWatcher().toString()));	break;
 					case 4:
 						if(trList.get(i).getShift() == 3){
-							cell.setCellValue(sdf.format(trList.get(i).getWatchTimeStart()) + "--次日" + sdf.format(trList.get(i).getWatchTimeEnd()));	break;
+							cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getWatchTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) 
+									+ "--次日" + DateUtil.getDateFormatString(trList.get(i).getWatchTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 						}else{
-							cell.setCellValue(sdf.format(trList.get(i).getWatchTimeStart()) + "--" + sdf.format(trList.get(i).getWatchTimeEnd()));	break;
+							cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getWatchTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) + "--" 
+						+ DateUtil.getDateFormatString(trList.get(i).getWatchTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 						}
 					case 5: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", trList.get(i).getLaseWatcher().toString()));	break;
-					case 6: cell.setCellValue(sdf.format(trList.get(i).getHandoverTime()));	break;
-					case 7: cell.setCellValue(trList.get(i).getHandoverMatters()); break;
-					case 8: cell.setCellValue(trList.get(i).getException()); break;
+					case 6: cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getHandoverTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
+					case 7: 
+						cell.setCellValue(trList.get(i).getHandoverMatters()); 
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								trList.get(i).getHandoverMatters(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									trList.get(i).getHandoverMatters(),defaultRowH);
+						}
+						break;
+					case 8: 
+						cell.setCellValue(trList.get(i).getException()); 
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								trList.get(i).getException(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									trList.get(i).getException(),defaultRowH);
+						}
+						break;
 				}
 				//设置单元格样式
 				if(j == 7){
@@ -299,6 +315,7 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
+			row.setHeightInPoints(realRowH);
 		}
 
 		return wb;

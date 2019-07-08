@@ -203,7 +203,7 @@ public class TrafficAccident extends BaseModule{
 		this.claimNote = claimNote;
 	}
 	
-	@Column(name = "accident_Details", length=500)
+	@Column(name = "accident_Details", length=1000)
 	public String getAccidentDetails() {
 		return accidentDetails;
 	}

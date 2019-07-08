@@ -1,12 +1,14 @@
 package com.attendance.controller;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
@@ -27,14 +29,15 @@ import com.attendance.vo.LeaveVo;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
-import com.common.message.MessageJpush;
-import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.MathUtil;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
+import com.common.utils.helper.Pager;
 import com.common.utils.tld.DictUtils;
+import com.urms.orgFrame.module.OrgFrame;
+import com.urms.orgFrame.service.IOrgFrameService;
 import com.urms.user.module.User;
 import com.urms.user.service.IUserService;
 
@@ -56,18 +59,48 @@ public class LeaveController extends BaseController{
 	@Autowired
 	private IUserService userServiceImpl;
 	@Autowired
+	private IOrgFrameService orgFrameServiceImpl;
+	@Autowired
 	public IMessageService messageServiceImpl;
 	@Autowired
 	public IAttachService attachServiceImpl;
 	
 	
+	@RequestMapping(value="/leave_count")
+	public void leaveCount(HttpServletRequest request,HttpServletResponse response){
+		JSONObject json = new JSONObject();
+		json.put("result",false);
+		try {
+			User user=this.getSessionUser();
+			int count= leaveServiceImpl.queryCountInMonth(user.getId());
+			json.put("val", count);
+			json.put("result",true);
+		} catch (Exception e) {
+			json.put("result",false);
+			json.put("msg",e.getMessage());
+		}
+		this.print(json);
+	}
+	
+	/**
+	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param leaveVo
+	 * @描述：提交请假申请
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年7月2日
+	 */
 	@Transactional
 	@RequestMapping(value = "/submit_leave")
 	public void submitLeave(HttpServletRequest request,HttpServletResponse response, LeaveVo leaveVo) {
 		JSONObject json = new JSONObject();
+		json.put("result", false);
 		try {
 			String Num=MathUtil.randomTwoNumber();
-			leaveVo.setApprovalNumber(DateUtil.getYYMMDDHHMMSS2(Num));
+			String approvalTypeKey="2";//请假
+			leaveVo.setApprovalNumber(DateUtil.getYYMMDDHHMMSS2(approvalTypeKey+Num));
 			leaveVo.setUserId(this.getSessionUser().getId());
 			if(StringUtils.isNotBlank(leaveVo.getStartTimeStr())){
 				leaveVo.setStartTime(DateUtil.format(leaveVo.getStartTimeStr(), "yyyy-MM-dd HH:mm:ss"));
@@ -119,7 +152,8 @@ public class LeaveController extends BaseController{
 				String roleCodes="";
 				int msgType=Common.msgKQ;
 				User nowPerson=this.getSessionUser();
-//				this.sendMsg(noticeTitle,content,userIds,roleCodes,msgType,nowPerson);
+				this.messageServiceImpl.submitSendMsg(noticeTitle,content,userIds,roleCodes,msgType,nowPerson);
+				
 				/********发送通知 end*********/
 			}
 		} catch (Exception e) {
@@ -136,6 +170,7 @@ public class LeaveController extends BaseController{
 		try {
 			Leave leave=this.leaveServiceImpl.getEntityById(Leave.class, leaveVo.getId());
 			if(leave!=null){
+				//取请假类型
 				StringBuffer leaveTypeValue=new StringBuffer();
 				String leaveType=leave.getLeaveType();
 				if(leaveType.indexOf(",")>0){
@@ -153,6 +188,21 @@ public class LeaveController extends BaseController{
 				}
 				
 				BeanUtils.copyProperties(leave, leaveVo);
+				User createUser= userServiceImpl.getEntityById(User.class, leave.getCreatorId());
+				OrgFrame org=this.orgFrameServiceImpl.getEntityById(OrgFrame.class, createUser.getOrgFrame().getId());
+				//获取申请人部门
+				if(org!=null){
+					leaveVo.setCreatorOrgName(org.getOrgFrameName());
+					leaveVo.setCreatorOrgId(org.getId());
+				}
+				//获取申请人头像
+				List<Attach> listAttach = this.attachServiceImpl.queryAttchByFormIdAndOnlyPicture(createUser.getId());
+				if(listAttach!=null){
+					if(listAttach.size()>0){
+						leaveVo.setCreatorAvatar(listAttach.get(0).getPathUpload());
+					}
+				}
+				//取审批流程记录
 				AttendanceApprovalVo avo=new AttendanceApprovalVo();
 				avo.setApprovalRecordId(leaveVo.getId());
 				List<AttendanceApproval> list= approvalServiceImpl.queryAttendanceApproval(avo);
@@ -163,6 +213,7 @@ public class LeaveController extends BaseController{
 					leaveVo.setApprovalUserName(approvalUser.getUserName());
 					leaveVo.setReadTime(list.get(0).getReadTime());
 					leaveVo.setApprovalTime(list.get(0).getApprovalTime());
+					leaveVo.setApprovalContent(list.get(0).getApprovalContent());
 					List<Attach> attachList = attachServiceImpl.queryAttchListByFormId(approvalUserId);
 					String avatarUrl = null;
 					if(attachList!=null){
@@ -190,42 +241,118 @@ public class LeaveController extends BaseController{
 		}finally{
 			this.print(json);
 		}
-		
 	}
 	
-	/******************************私有方法****************************************/
 	/**
 	 * 
-	 * @方法：@param noticeTitle 通知的提示标题
-	 * @方法：@param noticeContent 通知的简要内容
-	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
-	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
-	 * @方法：@param msgType 消息类型
-	 * @方法：@param user 会话用户
-	 * @描述：
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param leaveVo
+	 * @方法：@param page
+	 * @方法：@param rows
+	 * @描述：请假列表
 	 * @return
 	 * @author: qinyongqian
-	 * @date:2019年4月19日
+	 * @date:2019年7月4日
 	 */
-	private void sendMsg(String noticeTitle, String noticeContent,
-			String userIds, String rodeCodes, int msgType, User user) {
+	@RequestMapping(value="/leave_list")
+	public void list(HttpServletRequest request,HttpServletResponse response,LeaveVo leaveVo,
+			Integer page,Integer rows){
+		JSONObject json = new JSONObject();
+		json.put("result",false);
 		try {
-			Message msg = new Message();
-			msg.setTitle(noticeTitle);
-			msg.setContent(noticeContent);
-			msg.setAlias(userIds);
-			msg.setType(msgType);
-			msg.setTags(rodeCodes);
-			msg.setSender(user.getUserName());
-			msg.setCreatorId(user.getId());
-			msg.setCreatorName(user.getUserName());
-			msg.setSysCode(user.getSysCode());
-			this.messageServiceImpl.saveOrUpdate(msg);
-			MessageJpush.sendCommonMsg(noticeTitle, msg);
+			Pager pager=null;
+			if(StringUtils.isBlank(leaveVo.getApprovalUserId())){
+				//查看
+				pager = this.leaveServiceImpl.queryEntityList(page, rows, leaveVo);
+			}else{
+				pager = this.leaveServiceImpl.queryLeaveApproval(page, rows, leaveVo);
+			}
+			if(page!=null){
+				json.put("total", pager.getRowCount());
+				json.put("curPageSize", pager.getPageList().size());
+				JsonConfig config = new JsonConfig();
+				String[] excludes = new String[] {"creatorId","sysCode"}; // 列表排除信息内容字段，减少传递时间
+				config.setExcludes(excludes);
+				config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
+				json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
+				json.put("result",true);
+			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			json.put("result",false);
+			json.put("msg",e.getMessage());
 		}
-		
+		this.print(json);
 	}
-
+	
+	/**
+	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param leaveVo
+	 * @描述：审批请假申请
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年7月5日
+	 */
+	@RequestMapping(value="/leave_approval")
+	public void approval(HttpServletRequest request,HttpServletResponse response,AttendanceApprovalVo attendanceApprovalVo){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
+		try {
+			Leave leave=this.leaveServiceImpl.getEntityById(Leave.class, attendanceApprovalVo.getApprovalRecordId());
+			if(leave!=null){
+				if(leave.getApprovalStatus()==2){
+					json.put("msg","已经被审批通过");
+				}else{
+					if(attendanceApprovalVo.getApprovalResult()==1){
+						//同意
+						leave.setApprovalStatus(2);
+					}else if(attendanceApprovalVo.getApprovalResult()==0){
+						//不同意
+						leave.setApprovalStatus(3);
+					}
+					this.leaveServiceImpl.saveOrUpdate(leave);
+					
+					List<AttendanceApproval> listAA= approvalServiceImpl.queryAttendanceApproval(attendanceApprovalVo);
+					if(listAA!=null){
+						if(listAA.size()>0){
+							AttendanceApproval aa=listAA.get(0);
+							aa.setApprovalContent(attendanceApprovalVo.getApprovalContent());
+							aa.setApprovalTime(new Date());
+							aa.setApprovalResult(attendanceApprovalVo.getApprovalResult());
+							this.approvalServiceImpl.saveOrUpdate(aa);
+							json.put("result",true);
+							
+							/********发送通知 start*********/
+							String noticeTitle=Common.msgTitle_KQ_qj;
+							String content="收到一条请假审批回复通知";
+							String userIds=leave.getCreatorId();
+							String roleCodes="";
+							int msgType=Common.msgKQ;
+							User nowPerson=this.getSessionUser();
+							this.messageServiceImpl.submitSendMsg(noticeTitle,content,userIds,roleCodes,msgType,nowPerson);
+							/********发送通知 end*********/
+						}else{
+							json.put("msg","找不到审批记录");
+						}
+					}else{
+						json.put("msg","找不到审批记录");
+					}
+				}
+			}else{
+				json.put("msg","找不到申请记录");
+			}
+		} catch (Exception e) {
+			json.put("result",false);
+			json.put("msg",e.getMessage());
+		}finally{
+			this.print(json.toString());
+		}
+	}
+	
+	
+	
+	/******************************私有方法****************************************/
+	
 }

@@ -111,15 +111,15 @@ public class OrgFrameServiceImpl extends BaseServiceImpl implements IOrgFrameSer
 			criterionsList.add(Restrictions.eq("pId", orgFrameVo.getpId()));
 		if(orgFrameVo.getLevel()!=null)
 			criterionsList.add(Restrictions.eq("level", orgFrameVo.getLevel()));
-		if(orgFrameVo.getOrgFrameCode()!=null)
+		if(StringUtils.isNotBlank(orgFrameVo.getOrgFrameCode()))
 			criterionsList.add(Restrictions.eq("orgFrameCode", orgFrameVo.getOrgFrameCode()));
-		if(orgFrameVo.getOrgFrameName()!=null)
-			criterionsList.add(Restrictions.eq("orgFrameName", orgFrameVo.getOrgFrameName()));
-		if(orgFrameVo.getSysCode()!=null)
+		if(StringUtils.isNotBlank(orgFrameVo.getOrgFrameName()))
+			criterionsList.add(Restrictions.like("orgFrameName", "%"+orgFrameVo.getOrgFrameName()+"%"));
+		if(StringUtils.isNotBlank(orgFrameVo.getSysCode()))
 			criterionsList.add(Restrictions.eq("sysCode", orgFrameVo.getSysCode()));
 		if(orgFrameVo.getOrgFrameType()!=null)
 			criterionsList.add(Restrictions.eq("orgFrameType", orgFrameVo.getOrgFrameType()));
-		if(orgFrameVo.getpIds()!=null)
+		if(StringUtils.isNotBlank(orgFrameVo.getpIds()))
 			criterionsList.add(Restrictions.like("pIds", "%"+orgFrameVo.getpIds()+"%"));
 		return orgFrameDaoImpl.queryList(criterionsList,Order.asc("order"), OrgFrame.class);
 	}

@@ -128,7 +128,7 @@ public class FeedBack extends BaseModule{
 		this.situationDesc = situationDesc;
 	}
 	
-	@Column(name = "disposal_Situation", length=250)
+	@Column(name = "disposal_Situation", length=1000)
 	public String getDisposalSituation() {
 		return disposalSituation;
 	}

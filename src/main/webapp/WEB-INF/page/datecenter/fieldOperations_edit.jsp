@@ -98,14 +98,14 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>接报情况</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="8" cols="" id="receiptSituation" name="receiptSituation" data-rule-required="true" data-rule-rangelength="[1,300]" >${fieldOperationsVo.receiptSituation}</textarea>
+		       <textarea class="form-control" rows="8" cols="" id="receiptSituation" name="receiptSituation" data-rule-required="true" data-rule-rangelength="[1,1000]" >${fieldOperationsVo.receiptSituation}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>处置简述</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="8" cols="" id="disposeDesc" name="disposeDesc" data-rule-required="true" data-rule-rangelength="[1,300]" >${fieldOperationsVo.disposeDesc}</textarea>
+		       <textarea class="form-control" rows="8" cols="" id="disposeDesc" name="disposeDesc" data-rule-required="true" data-rule-rangelength="[1,1000]" >${fieldOperationsVo.disposeDesc}</textarea>
 		    </div>
 	  	</div>
 	  	

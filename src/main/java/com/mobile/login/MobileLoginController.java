@@ -23,12 +23,9 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
-import com.common.message.MessageJpush;
-import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.JsonDateValueProcessor;
-import com.common.utils.helper.Pager;
 import com.google.gson.Gson;
 import com.urms.loginLog.module.LoginLog;
 import com.urms.loginLog.service.ILoginLogService;
@@ -37,9 +34,7 @@ import com.urms.orgFrame.module.OrgFrame;
 import com.urms.orgFrame.service.IOrgFrameService;
 import com.urms.role.module.Role;
 import com.urms.subsystem.service.ISubsystemService;
-import com.urms.sysConfig.module.SysConfig;
 import com.urms.sysConfig.service.ISysConfigService;
-import com.urms.sysConfig.vo.SysConfigVo;
 import com.urms.user.module.User;
 import com.urms.user.service.IUserService;
 import com.urms.user.vo.UserVo;
@@ -69,6 +64,7 @@ public class MobileLoginController extends BaseController{
 	public IMessageService messageServiceImpl;
 	@Autowired
 	public ISysConfigService sysConfigServiceImpl;
+	
 	
 	/**
 	 * @intruduction：用户登录后台主页
@@ -317,7 +313,8 @@ public class MobileLoginController extends BaseController{
 			int msgType=Common.msgSYS;
 			User nowPerson=null;
 			//发送给“部门安全员”角色
-			this.sendMsg(noticeTitle,"收到新的用户注册记录",userIds,roleCodes,msgType,nowPerson);
+			this.messageServiceImpl.submitSendMsg(noticeTitle,"收到新的用户注册记录",userIds,roleCodes,msgType,nowPerson);
+			
 			/********发送事件通知 end*********/
 			
 			isSuc=true;
@@ -451,24 +448,16 @@ public class MobileLoginController extends BaseController{
 	private String updateAPPSet(String APPSettingParams){
 		String val="";
 		try {
-			SysConfigVo vo=new SysConfigVo();
-			vo.setSysKey("APPSettingParams");
-			Pager pager = this.sysConfigServiceImpl.queryEntityList(1, 1, vo);
-			List<SysConfig> list= (List<SysConfig>)pager.getPageList();
-			if(list!=null){
-				if(list.size()>0){
-					SysConfig sys= list.get(0);
-					if(sys.getSysValue()!=null){
-						int sysVal=Integer.parseInt(sys.getSysValue()); 
-						if(StringUtils.isEmpty(APPSettingParams)){
-							return sys.getSysValue();
-						}
-						int APPSettingParamsInt=Integer.parseInt(APPSettingParams);
-						if(sysVal>APPSettingParamsInt){
-							//需要更新APP参数
-							val=sys.getSysValue();
-						}
-					}
+			String configVal=this.sysConfigServiceImpl.getConfigValueByKey("APPSettingParams");
+			if(StringUtils.isNotBlank(configVal)){
+				int sysVal=Integer.parseInt(configVal); 
+				if(StringUtils.isEmpty(APPSettingParams)){
+					return configVal;
+				}
+				int APPSettingParamsInt=Integer.parseInt(APPSettingParams);
+				if(sysVal>APPSettingParamsInt){
+					//需要更新APP参数
+					val=configVal;
 				}
 			}
 		} catch (Exception e) {
@@ -477,39 +466,5 @@ public class MobileLoginController extends BaseController{
 		return val;
 	}
 	
-	/**
-	 * 
-	 * @方法：@param noticeTitle 通知的提示标题
-	 * @方法：@param noticeContent 通知的简要内容
-	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
-	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
-	 * @方法：@param msgType 消息类型
-	 * @方法：@param user 会话用户
-	 * @描述：
-	 * @return
-	 * @author: qinyongqian
-	 * @date:2019年4月19日
-	 */
-	private void sendMsg(String noticeTitle, String noticeContent,
-			String userIds, String rodeCodes, int msgType, User user) {
-		try {
-			Message msg = new Message();
-			msg.setTitle(noticeTitle);
-			msg.setContent(noticeContent);
-			msg.setAlias(userIds);
-			msg.setType(msgType);
-			msg.setTags(rodeCodes);
-			msg.setSysCode(Common.SYSCODE);
-			if(user!=null){
-				msg.setSender(user.getUserName());
-				msg.setCreatorId(user.getId());
-				msg.setCreatorName(user.getUserName());
-			}
-			this.messageServiceImpl.saveOrUpdate(msg);
-			MessageJpush.sendCommonMsg(noticeTitle, msg);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
 
 }

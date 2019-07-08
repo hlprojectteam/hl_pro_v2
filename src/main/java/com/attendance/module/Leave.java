@@ -31,7 +31,7 @@ public class Leave extends BaseModule{
 	private double timeLength;//时长
 	private String leaveReason;// 请假理由 
 	private String outAddress;// 外出地址
-	private int approvalStatus; //审批状态  字典：Approval_Status 0未审批；1审批中；2审批通过；3审批不通过；
+	private Integer approvalStatus; //审批状态  字典：Approval_Status 0未审批；1审批中；2审批通过；3审批不通过；
 	private String FryPersonIds; //抄送人ID 存在多个值用“,”隔开，最多不多于5人
 	
 	@Column(name = "LEAVE_TYPE", length = 30)
@@ -84,10 +84,10 @@ public class Leave extends BaseModule{
 		this.outAddress = outAddress;
 	}
 	@Column(name = "APPROVAL_STATUS", length = 2)
-	public int getApprovalStatus() {
+	public Integer getApprovalStatus() {
 		return approvalStatus;
 	}
-	public void setApprovalStatus(int approvalStatus) {
+	public void setApprovalStatus(Integer approvalStatus) {
 		this.approvalStatus = approvalStatus;
 	}
 	@Column(name = "FRY_PERSON_IDS", length = 200)
@@ -97,7 +97,7 @@ public class Leave extends BaseModule{
 	public void setFryPersonIds(String fryPersonIds) {
 		FryPersonIds = fryPersonIds;
 	}
-	@Column(name = "APPROVAL_NUMBER", length = 18)
+	@Column(name = "APPROVAL_NUMBER", length = 20)
 	public String getApprovalNumber() {
 		return approvalNumber;
 	}

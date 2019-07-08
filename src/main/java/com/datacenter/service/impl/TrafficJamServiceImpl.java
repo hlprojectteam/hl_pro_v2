@@ -1,6 +1,7 @@
 package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.ITrafficJamDao;
 import com.datacenter.module.TrafficJam;
@@ -21,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +65,7 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 					" or disposal_Situation like '%" + trafficJamVo.getKeyword() + "%' " +
 					" or remark_ like '%" + trafficJamVo.getKeyword() + "%' )"));
 		}
-		return this.trafficJamDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), TrafficJam.class);
+		return this.trafficJamDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), TrafficJam.class);
 	}
 
 	@Override
@@ -225,13 +225,11 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-14");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-
 				//第三行
 				HSSFRow row2 = sheet.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(tjList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString
+						(tjList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -239,7 +237,7 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 				row3.setHeightInPoints(40);
 				row3.createCell(0).setCellValue("接报时间");
 				row3.getCell(0).setCellStyle(r2_style);
-				row3.createCell(1).setCellValue(sdf2.format(tjList.get(tb).getReceiptTime()));
+				row3.createCell(1).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("接报方式");
 				row3.getCell(2).setCellStyle(r2_style);
@@ -263,19 +261,19 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 				row4.setHeightInPoints(40);
 				row4.createCell(0).setCellValue("开始时间");
 				row4.getCell(0).setCellStyle(r2_style);
-				row4.createCell(1).setCellValue(sdf2.format(tjList.get(tb).getStartTime()));
+				row4.createCell(1).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getStartTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(2).setCellValue("结束时间");
 				row4.getCell(2).setCellStyle(r2_style);
-				row4.createCell(3).setCellValue(sdf2.format(tjList.get(tb).getEndTime()));
+				row4.createCell(3).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getEndTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row4.getCell(3).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("交警到场时间");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(sdf2.format(tjList.get(tb).getJjdcTime()));
+				row4.createCell(5).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getJjdcTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				row4.createCell(7).setCellValue("路管员到场时间");
 				row4.getCell(7).setCellStyle(r2_style);
-				row4.createCell(8).setCellValue(sdf2.format(tjList.get(tb).getLgydcTime()));
+				row4.createCell(8).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getLgydcTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row4.getCell(8).setCellStyle(mainStyle_center);
 
 				row4.createCell(6).setCellStyle(r2_style);

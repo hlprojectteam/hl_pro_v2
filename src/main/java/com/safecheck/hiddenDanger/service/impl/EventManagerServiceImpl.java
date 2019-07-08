@@ -18,8 +18,6 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.service.impl.BaseServiceImpl;
-import com.common.message.MessageJpush;
-import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.DateUtil;
@@ -129,7 +127,9 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 				int msgType=Common.msgAQ;
 				User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfo.getCreatorId());
 				//发送给“部门安全员”角色
-				this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+				this.messageServiceImpl.submitSendMsg(
+						noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+				
 				/********发送事件通知 end*********/
 				
 				return eventInfo.getId();			//返回事件Id
@@ -620,7 +620,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“部门负责人”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -678,7 +679,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“安保办安全员”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -736,7 +738,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“安保办主任”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -800,7 +803,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“部门负责人”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -863,7 +867,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“处理人”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -921,7 +926,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“安保办安全员”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -987,7 +993,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			int msgType=Common.msgAQ;
 			User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 			//发送给“分管领导”角色
-			this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+			this.messageServiceImpl.submitSendMsg(
+					noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 			/********发送事件通知 end*********/
 			
 			return eventInfoVo.getId();			//返回事件Id
@@ -1043,7 +1050,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			int msgType=Common.msgAQ;
 			User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 			//发送给“常务副总经理”角色
-			this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+			this.messageServiceImpl.submitSendMsg(
+					noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 			/********发送事件通知 end*********/
 			
 			return eventInfoVo.getId();			//返回事件Id
@@ -1103,7 +1111,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“分管领导”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -1159,7 +1168,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“安保办主任”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -1218,7 +1228,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
 		//发送给“安保办主任”角色
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -1274,7 +1285,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		String roleCodes="";
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -1332,7 +1344,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		String roleCodes="";
 		int msgType=Common.msgAQ;
 		User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
-		this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(
+				noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 		/********发送事件通知 end*********/
 		
 		return eventInfoVo.getId();			//返回事件Id
@@ -1392,7 +1405,8 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			String roleCodes="";
 			int msgType=Common.msgAQ;
 			User nowPerson=this.userServiceImpl.getEntityById(User.class, eventInfoVo.getEpNowPersonId());
-			this.sendMsg(noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
+			this.messageServiceImpl.submitSendMsg(
+					noticeTitle,eventInfo.getEventContent(),userIds,roleCodes,msgType,nowPerson);
 			/********发送事件通知 end*********/
 			
 			return eventInfoVo.getId();			//返回事件Id
@@ -1602,36 +1616,4 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 	}
 	
 	
-	/**
-	 * 
-	 * @方法：@param noticeTitle 通知的提示标题
-	 * @方法：@param noticeContent 通知的简要内容
-	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
-	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
-	 * @方法：@param msgType 消息类型
-	 * @方法：@param user 会话用户
-	 * @描述：
-	 * @return
-	 * @author: qinyongqian
-	 * @date:2019年4月19日
-	 */
-	private void sendMsg(String noticeTitle, String noticeContent,
-			String userIds, String rodeCodes, int msgType, User user) {
-		try {
-			Message msg = new Message();
-			msg.setTitle(noticeTitle);
-			msg.setContent(noticeContent);
-			msg.setAlias(userIds);
-			msg.setType(msgType);
-			msg.setTags(rodeCodes);
-			msg.setSender(user.getUserName());
-			msg.setCreatorId(user.getId());
-			msg.setCreatorName(user.getUserName());
-			msg.setSysCode(user.getSysCode());
-			this.messageServiceImpl.saveOrUpdate(msg);
-			MessageJpush.sendCommonMsg(noticeTitle, msg);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
 }

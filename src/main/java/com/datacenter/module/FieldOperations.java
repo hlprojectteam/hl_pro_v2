@@ -120,7 +120,7 @@ public class FieldOperations extends BaseModule{
 		this.violationOrderNo = violationOrderNo;
 	}
 	
-	@Column(name = "receipt_Situation", length=300)
+	@Column(name = "receipt_Situation", length=1000)
 	public String getReceiptSituation() {
 		return receiptSituation;
 	}
@@ -128,7 +128,7 @@ public class FieldOperations extends BaseModule{
 		this.receiptSituation = receiptSituation;
 	}
 	
-	@Column(name = "dispose_Desc", length=300)
+	@Column(name = "dispose_Desc", length=1000)
 	public String getDisposeDesc() {
 		return disposeDesc;
 	}

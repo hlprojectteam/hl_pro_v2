@@ -37,6 +37,7 @@ public class DateUtil {
 	public static final String JAVA_DATE_FORMAT_CH_YMDHM = "yyyy年MM月dd日 HH:mm";
 	public static final String JAVA_DATE_FORMAT_CH_YMD = "yyyy年MM月dd日";
 	public static final String JAVA_DATE_FORMAT_CH_YM = "yyyy年MM月";
+	public static final String JAVA_DATE_FORMAT_CH_MD = "MM月dd日";
 	public static final String JAVA_DATE_FORMAT_CH_YMDW = "yyyy年MM月dd日EEEE";
 
 	/**
@@ -108,10 +109,20 @@ public class DateUtil {
 		try {
 			DateFormat dateFormat = new SimpleDateFormat(format);
 			result = dateFormat.parse(dateString);
-		} catch (Exception ex) {
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			throw new Exception("日期格式错误：" + format);
 		}
 
+		return result;
+	}
+	
+	public static String getDateFormatString(Date date,String formate)
+	{	
+		if(date==null)
+			return "";
+		SimpleDateFormat sf = new SimpleDateFormat(formate);
+		String result = sf.format(date);
 		return result;
 	}
 
@@ -251,12 +262,7 @@ public class DateUtil {
 		return sb.toString();
 	}
 
-	public static String getDateFormatString(Date date,String formate)
-	{		
-		SimpleDateFormat sf = new SimpleDateFormat(formate);
-		String result = sf.format(date);
-		return result;
-	}
+	
 	
 	/**
 	 * @方法：getFormatHHMM
@@ -489,6 +495,8 @@ public class DateUtil {
      * @throws ParseException 
      */
     public static Date getDate(String dateString , int beforeDays) throws ParseException{
+    	if(StringUtils.isEmpty(dateString))
+    		return null;
     	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date inputDate = dateFormat.parse(dateString);
         Calendar cal = Calendar.getInstance();
@@ -508,6 +516,8 @@ public class DateUtil {
      * @param type:day-天数;hour-小时数;minute-分钟数;其他都判断为秒数
      */
 	public static long timeDifference(Date dateOne, Date dateTwo, String type){
+		if(dateOne==null)
+			return 0;
 		long different = Math.abs(dateOne.getTime() - dateTwo.getTime());
 		long secondsInMilli = 1000;
 		long minutesInMilli = secondsInMilli * 60;
@@ -741,6 +751,8 @@ public class DateUtil {
 	 * @throws ParseException
 	 */
 	public static Date[] getDateBeginAndEnd(Date date) throws ParseException {
+		if(date==null)
+			return null;
 		Date[] list = new Date[2];
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd");
 		SimpleDateFormat formater2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");

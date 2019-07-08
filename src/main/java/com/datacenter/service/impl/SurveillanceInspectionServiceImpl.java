@@ -1,10 +1,11 @@
 package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.MathUtil;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.ISurveillanceInspectionDao;
 import com.datacenter.module.SurveillanceInspection;
-import com.datacenter.module.TotalTable;
 import com.datacenter.service.ISurveillanceInspectionService;
 import com.datacenter.vo.SurveillanceInspectionVo;
 import com.urms.dataDictionary.service.IDataDictionaryService;
@@ -22,7 +23,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,7 +70,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 					" or inspection_Details like '%" + surveillanceInspectionVo.getKeyword() + "%' " +
 					" or follow_Measure like '%" + surveillanceInspectionVo.getKeyword() + "%' )"));
 		}
-		return this.surveillanceInspectionDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), SurveillanceInspection.class);
+		return this.surveillanceInspectionDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), SurveillanceInspection.class);
 	}
 
 	@Override
@@ -238,22 +238,37 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 		//第四行 及 之后的行
 		HSSFRow row;
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		for (int i = 0; i < siList.size(); i++) {
 			row = sheet.createRow(i + 3);	//创建行
-			row.setHeightInPoints(60);					//设置行高
+//			row.setHeightInPoints(60);					//设置行高
+			float defaultRowH=30;
+			float realRowH=30;
 			for (int j = 0; j < title.length; j++) {
 				cell = row.createCell(j);				//创建单元格
 				//设置单元格内容
 				switch (j){
-					case 0:	cell.setCellValue(sdf1.format(siList.get(i).getDutyDate())); break;
-					case 1:	cell.setCellValue(sdf.format(siList.get(i).getInspectionTimeStart()) + "--" + sdf.format(siList.get(i).getInspectionTimeEnd()));	break;
+					case 0:	cell.setCellValue(DateUtil.getDateFormatString(siList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD)); break;
+					case 1:	cell.setCellValue(DateUtil.getDateFormatString(siList.get(i).getInspectionTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) 
+							+ "--" + DateUtil.getDateFormatString(siList.get(i).getInspectionTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 2: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_headOfDuty", siList.get(i).getShiftSupervisor().toString()));	break;
 					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_inspectionlocation", siList.get(i).getInspectionlocation().toString()));	break;
 					case 4: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_failureEquipment", siList.get(i).getFailureEquipment().toString()));	break;
-					case 5: cell.setCellValue(siList.get(i).getInspectionDetails());	break;
-					case 6: cell.setCellValue(siList.get(i).getFollowMeasure());	break;
+					case 5: 
+						cell.setCellValue(siList.get(i).getInspectionDetails());
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								siList.get(i).getInspectionDetails(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									siList.get(i).getInspectionDetails(),defaultRowH);
+						}
+						break;
+					case 6: 
+						cell.setCellValue(siList.get(i).getFollowMeasure());
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								siList.get(i).getFollowMeasure(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									siList.get(i).getFollowMeasure(),defaultRowH);
+						}
+					break;
 				}
 				//设置单元格样式
 				if(j == 5){
@@ -262,11 +277,9 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 					cell.setCellStyle(mainStyle_center);
 				}
 			}
+			row.setHeightInPoints(realRowH);
 		}
-
 		return wb;
-
-
 	}
 
 }

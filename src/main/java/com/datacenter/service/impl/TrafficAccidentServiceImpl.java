@@ -1,6 +1,7 @@
 package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.ITrafficAccidentDao;
 import com.datacenter.module.TrafficAccident;
@@ -21,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -84,7 +84,7 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 					" or accident_Details like '%" + trafficAccidentVo.getKeyword() + "%' " +
 					" or remark_ like '%" + trafficAccidentVo.getKeyword() + "%' )"));
 		}
-		return this.trafficAccidentDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), TrafficAccident.class);
+		return this.trafficAccidentDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), TrafficAccident.class);
 	}
 
 	@Override
@@ -271,13 +271,12 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-11");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(taList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString
+						(taList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -289,7 +288,8 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("接报时间");
 				row3.getCell(2).setCellStyle(r2_style);
-				row3.createCell(3).setCellValue(sdf2.format(taList.get(0).getReceiptTime()));
+				row3.createCell(3).setCellValue(DateUtil.getDateFormatString
+						(taList.get(0).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("接报方式");
 				row3.getCell(4).setCellStyle(r2_style);

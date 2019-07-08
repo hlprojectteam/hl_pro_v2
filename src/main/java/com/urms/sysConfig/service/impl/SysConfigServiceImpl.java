@@ -109,4 +109,17 @@ public class SysConfigServiceImpl extends BaseServiceImpl implements ISysConfigS
 		}
 		return str;
 	}
+
+	@Override
+	public String getConfigValueByKey(String key) {
+		SysConfigVo vo=new SysConfigVo();
+		vo.setSysKey(key);
+		List<SysConfig> list= this.querySysConfigList(vo);
+		if(list!=null){
+			if(list.size()>0){
+				return list.get(0).getSysValue();
+			}
+		}
+		return null;
+	}
 }

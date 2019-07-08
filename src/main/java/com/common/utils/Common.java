@@ -87,9 +87,11 @@ public class Common {
 	
 	
 	/****************************消息推送 start*********************************/
+//	public static final String msg_isSend= (String) Cache.getSysConfig.get("msgIsSend");//消息是否发送消息
 	public static final String msg_ApnsProduction= (String) Cache.getSysConfig.get("msgApnsProduction");//IOS广播消息是否在生产环境
 	public static final String msg_platform= (String) Cache.getSysConfig.get("msgPlatform");//消息在什么平台上推送 1:ios 2:android 3:android_ios
 	public static final String msg_setMessage= (String) Cache.getSysConfig.get("msgSetMessage");//消息是否在APP打开时，在前台弹出提示
+	
 
 	//消息类型 0系统管理 1教育考试 2营运动态 3规章制度 4安全管理 5党建 6考勤 
 	public static final int msgSYS = 0;
@@ -114,8 +116,9 @@ public class Common {
 	public static final String msgTitle_DT_dt_info="营运动态发布通知";
 	public static final String msgTitle_DT_zbbb_info="值班报表发布通知";
 	public static final String msgTitle_ZD_zd_info="规章制度发布通知";
-	public static final String msgTitle_KQ_dm="考勤点名";
-	public static final String msgTitle_KQ_qj="请假待办";
+	public static final String msgTitle_KQ_dm="点名通知";
+	public static final String msgTitle_KQ_qj="请假通知";
+	public static final String msgTitle_KQ_db="调班通知";
 	public static final String msgTitle_SYS_info="系统通知";
 	
 	/****************************消息推送 end*********************************/

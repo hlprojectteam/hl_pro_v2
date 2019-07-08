@@ -1,10 +1,10 @@
 package com.datacenter.service.impl;
 
 import com.common.base.service.impl.BaseServiceImpl;
+import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
 import com.datacenter.dao.IClearingDao;
 import com.datacenter.module.Clearing;
-import com.datacenter.module.TotalTable;
 import com.datacenter.service.IClearingService;
 import com.datacenter.vo.ClearingVo;
 import com.urms.dataDictionary.service.IDataDictionaryService;
@@ -22,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -77,7 +76,7 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 					" or result_ like '%" + clearingVo.getKeyword() + "%' " +
 					" or remark_ like '%" + clearingVo.getKeyword() + "%' )"));
 		}
-		return this.clearingDaoImpl.queryEntityList(page, rows, params, Order.desc("createTime"), Clearing.class);
+		return this.clearingDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), Clearing.class);
 	}
 
 	@Override
@@ -213,7 +212,7 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 		r2_font.setBold(true);						//字体加粗
 		r2_style.setFont(r2_font);
 
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		List<Clearing> cList = queryEntityList(clearingVo);
 
 		
@@ -260,12 +259,12 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 				row1.createCell(0).setCellValue("表单编号：HLZXRBB-09");
 				row1.getCell(0).setCellStyle(r1_style);
 
-				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//				SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 
 				//第三行
 				HSSFRow row2 = sheet.createRow(2 + tb*10);
 				row2.setHeightInPoints(25);
-				row2.createCell(0).setCellValue("日期：" + sdf1.format(cList.get(tb).getDutyDate()));
+				row2.createCell(0).setCellValue("日期：" + DateUtil.getDateFormatString(cList.get(tb).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));
 				row2.getCell(0).setCellStyle(r1_style);
 
 				//第四行
@@ -273,7 +272,8 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 				row3.setHeightInPoints(40);
 				row3.createCell(0).setCellValue("接报时间");
 				row3.getCell(0).setCellStyle(r2_style);
-				row3.createCell(1).setCellValue(sdf2.format(cList.get(tb).getReceiptTime()));
+				row3.createCell(1).setCellValue(DateUtil.getDateFormatString
+						(cList.get(tb).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("报告部门");
 				row3.getCell(2).setCellStyle(r2_style);

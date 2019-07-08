@@ -39,4 +39,15 @@ public interface ISysConfigService extends IBaseService{
 	public List<SysConfig> querySysConfigList(SysConfigVo sysConfigVo);
 	
 	public void getSysConfig();
+	
+	/**
+	 * 
+	 * @方法：@param key
+	 * @方法：@return
+	 * @描述：根据KEY获取Value
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月30日
+	 */
+	public String getConfigValueByKey(String key);
 }

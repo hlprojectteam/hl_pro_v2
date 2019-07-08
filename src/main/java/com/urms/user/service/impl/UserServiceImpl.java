@@ -53,6 +53,9 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService{
 			criterionsList.add(Restrictions.like("userName", "%"+userVo.getUserName()+"%"));
 		if(StringUtils.isNotBlank(userVo.getJobNumber()))
 			criterionsList.add(Restrictions.eq("jobNumber", userVo.getJobNumber()));
+		if(StringUtils.isNotBlank(userVo.getKeyWord()))//关键字
+			criterionsList.add( Restrictions.or(
+					Restrictions.like("userName", "%"+userVo.getKeyWord()+"%"),Restrictions.eq("jobNumber", userVo.getKeyWord())));
 		if(userVo.getOrgFrame()!=null){//所属组织架构
 			if(StringUtils.isNotBlank(userVo.getOrgFrame().getId())){
 				List<OrgFrame> ofList = orgFrameServiceImpl.getOrgFrameChildren(userVo.getOrgFrame().getId());
@@ -128,6 +131,9 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService{
 			criterionsList.add(Restrictions.like("userName", "%"+userVo.getUserName()+"%"));
 		if(StringUtils.isNotBlank(userVo.getSysCode()))//系统编码
 			criterionsList.add(Restrictions.eq("sysCode", userVo.getSysCode()));
+		if(StringUtils.isNotBlank(userVo.getKeyWord()))//关键字
+			criterionsList.add( Restrictions.or(
+					Restrictions.like("userName", "%"+userVo.getKeyWord()+"%"),Restrictions.eq("jobNumber", userVo.getJobNumber())));
 		return userDaoImpl.queryList(criterionsList, Order.desc("createTime") ,User.class);
 	}
 	

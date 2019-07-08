@@ -6,6 +6,7 @@ import com.common.base.service.IBaseService;
 import com.common.message.module.Message;
 import com.common.message.vo.MessageVo;
 import com.common.utils.helper.Pager;
+import com.urms.user.module.User;
 
 public interface IMessageService  extends IBaseService{
 
@@ -54,5 +55,8 @@ public interface IMessageService  extends IBaseService{
 	 * @date 2016-8-15 上午11:23:35
 	 */
 	public Message queryEntityById(String id);
+	
+	public void submitSendMsg(String noticeTitle, String noticeContent,
+			String userIds, String rodeCodes, int msgType, User user);
 
 }

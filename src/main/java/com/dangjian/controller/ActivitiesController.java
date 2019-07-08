@@ -35,8 +35,6 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
-import com.common.message.MessageJpush;
-import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.helper.DateUtil;
@@ -401,7 +399,7 @@ public class ActivitiesController extends BaseController{
 						}
 					}
 					//发送给“党委委员-初审”角色初审
-					this.sendMsg(Common.msgTitle_DJ_ldgz_todo,"亮点工作评审",null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
+					this.messageServiceImpl.submitSendMsg(Common.msgTitle_DJ_ldgz_todo,"亮点工作评审",null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
 				}
 				json.addProperty("id", activitiesLaunch.getId());
 			}else{
@@ -1011,13 +1009,16 @@ public class ActivitiesController extends BaseController{
 					//不同意给分，流程结束
 					activitiesLaunch.setStatus(4);
 					//发送活动提交者
-					this.sendMsg(Common.msgTitle_DJ_ldgz_finish,msgConent+"评审未通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
+					this.messageServiceImpl.submitSendMsg(
+							Common.msgTitle_DJ_ldgz_finish,msgConent+"评审未通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
+					
 				}else if(activitiesLaunchVo.getIsPass()==1){
 					//同意给分，流程结束
 					activitiesLaunch.setStatus(3);
 					activitiesLaunch.setPoints(activitiesLaunchVo.getPoints());
 					//发送活动提交者
-					this.sendMsg(Common.msgTitle_DJ_ldgz_finish,msgConent+"评审通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
+					this.messageServiceImpl.submitSendMsg(
+							Common.msgTitle_DJ_ldgz_finish,msgConent+"评审通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
 				}
 			}else{
 				//未评审、初审通过情况
@@ -1036,7 +1037,8 @@ public class ActivitiesController extends BaseController{
 							//初审未通过
 							activitiesLaunch.setStatus(4);
 							//发送活动提交者
-							this.sendMsg(Common.msgTitle_DJ_ldgz_finish,msgConent+"评审未通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
+							this.messageServiceImpl.submitSendMsg(
+									Common.msgTitle_DJ_ldgz_finish,msgConent+"评审未通过",activitiesLaunch.getCreatorId(),null,Common.msgDJ,this.getSessionUser());
 						}else{
 							//初审通过
 							activitiesLaunch.setStatus(1);
@@ -1057,7 +1059,8 @@ public class ActivitiesController extends BaseController{
 								}
 								String sendUserIds=userIds.substring(0, userIds.length()-1);
 								//发送给复审的党委委员
-								this.sendMsg(Common.msgTitle_DJ_ldgz_todo,msgConent+"等待评审",sendUserIds,null,Common.msgDJ,this.getSessionUser());
+								this.messageServiceImpl.submitSendMsg(
+										Common.msgTitle_DJ_ldgz_todo,msgConent+"等待评审",sendUserIds,null,Common.msgDJ,this.getSessionUser());
 							}
 						}
 						alr.setStatusNode(1);
@@ -1071,7 +1074,8 @@ public class ActivitiesController extends BaseController{
 							//所有通过
 							activitiesLaunch.setStatus(2);
 							//发送给党委委员打分
-							this.sendMsg(Common.msgTitle_DJ_ldgz_todo,msgConent+"等待评审打分",null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
+							this.messageServiceImpl.submitSendMsg(
+									Common.msgTitle_DJ_ldgz_todo,msgConent+"等待评审打分",null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
 						}
 					}
 					this.activitiesServiceImpl.saveOrUpdateALR(alr);
@@ -1120,40 +1124,6 @@ public class ActivitiesController extends BaseController{
 	
 	/***********************活动开展方法 end*******************************/
 	
-	/**
-	 * 
-	 * @方法：@param noticeTitle 通知的提示标题
-	 * @方法：@param noticeContent 通知的简要内容
-	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
-	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
-	 * @方法：@param msgType 消息类型
-	 * @方法：@param user 会话用户
-	 * @描述：
-	 * @return
-	 * @author: qinyongqian
-	 * @date:2019年4月19日
-	 */
-	private void sendMsg(String noticeTitle, String noticeContent,
-			String userIds, String rodeCodes, int msgType, User user) {
-		try {
-			Message msg = new Message();
-			msg.setTitle(noticeTitle);
-			msg.setContent(noticeContent);
-			msg.setAlias(userIds);
-			msg.setType(msgType);
-			msg.setTags(rodeCodes);
-			msg.setSender(user.getUserName());
-			msg.setCreatorId(user.getId());
-			msg.setCreatorName(user.getUserName());
-			msg.setSysCode(user.getSysCode());
-			this.messageServiceImpl.saveOrUpdate(msg);
-			MessageJpush.sendCommonMsg(noticeTitle, msg);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-	}
-	
 	@RequestMapping(value="/testJpush")
 	public void testJpush(HttpSession httpSession,HttpServletResponse response){
 //		String noticeTitle=Common.msgTitle_DJ_ldgz_todo;
@@ -1174,7 +1144,8 @@ public class ActivitiesController extends BaseController{
 		int msgType=Common.msgKQ;
 		User nowPerson=this.getSessionUser();
 		//发送给“部门安全员”角色
-		this.sendMsg(noticeTitle,"测试",userIds,roleCodes,msgType,nowPerson);
+//		this.sendMsg(noticeTitle,"测试",userIds,roleCodes,msgType,nowPerson);
+		this.messageServiceImpl.submitSendMsg(noticeTitle,"测试",userIds,roleCodes,msgType,nowPerson);
 		System.out.println(Common.msg_platform+"-"+Common.msg_ApnsProduction+"-"+Common.msg_setMessage);
 		this.print("测试");
 	}

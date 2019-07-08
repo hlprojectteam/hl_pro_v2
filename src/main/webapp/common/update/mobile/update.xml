@@ -1,17 +1,19 @@
 <root>
-	<versionCode>34</versionCode>
-	<versionName>3.4.0</versionName>
-	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/5028a084a3b3fd71ec1cb66ce98a2103_d</androidUrl>
+	<versionCode>35</versionCode>
+	<versionName>3.5.0</versionName>
+	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/4cec9eb6a10b9a9bf9d147adf2913c97_d</androidUrl>
 	<iosUrl>https://itunes.apple.com/cn/app/huan-long-ying-yun-tong/id1170974616?mt=8</iosUrl>
 	<updateLog>
-		更新版本 3.4.0
+		更新版本 3.5.0
 		功能权限控制
-		1、后台字典配置
+		1、控制中心工作报表查看
 		
-		缓存参数
-		1、后台系统参数设置更新参数
-		
-		营运动态
-		1、添加值班报表工作简报查看
+		消息通知
+		1、优化消息功能
+
+		党建
+		1、删除活动功能
+
+		图片点击放大，左右切换功能
   	</updateLog>
 </root>

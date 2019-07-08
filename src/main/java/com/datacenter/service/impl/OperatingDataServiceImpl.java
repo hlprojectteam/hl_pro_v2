@@ -3,7 +3,6 @@ package com.datacenter.service.impl;
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
-import com.dangjian.module.ActivitiesLaunch;
 import com.datacenter.dao.IOperatingDataDao;
 import com.datacenter.module.OperatingData;
 import com.datacenter.ql.datacenterQl;
@@ -23,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -69,7 +67,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 			sql.append(" or t.mobile_Payment_Income="+operatingDataVo.getKeyword());
 			sql.append(")");
 		}
-		sql.append(" ORDER BY t.CREATE_TIME DESC,t.toll_Gate ASC");//按日期倒序，收费站顺序
+		sql.append(" ORDER BY t.duty_Date DESC,t.toll_Gate ASC");//按日期倒序，收费站顺序
 		Pager pager = this.operatingDataDaoImpl.queryEntitySQLList(page, rows, sql.toString(), paramList);
 		if(pager!=null){
 			List<OperatingData> list = new ArrayList<OperatingData>();
@@ -274,11 +272,12 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 
 		sheet.addMergedRegion(new CellRangeAddress(odList.size() + 4, odList.size() + 4, 0, 1));
 
-		for (int i = 0; i < 8; i++) {
+		sheet.setColumnWidth(0, sheet.getColumnWidth(0));
+		for (int i = 1; i < 8; i++) {
 			//列宽自适应（该方法在老版本的POI中效果不佳）
 			/*sheet.autoSizeColumn(i);*/
 			//设置列宽
-			sheet.setColumnWidth(i, sheet.getColumnWidth(i)*5/2);
+			sheet.setColumnWidth(i, sheet.getColumnWidth(i)*2);
 		}
 
 
@@ -290,9 +289,9 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		if(operatingDataVo.getDutyDateStart()!=null&&operatingDataVo.getDutyDateEnd()!=null){
 			String dual=DateUtil.getDateFormatString(operatingDataVo.getDutyDateStart(), DateUtil.JAVA_DATE_FORMAT_YMD);
 			dual+="-"+DateUtil.getDateFormatString(operatingDataVo.getDutyDateEnd(), DateUtil.JAVA_DATE_FORMAT_YMD);
-			row0.createCell(0).setCellValue("各站营运数据("+dual+")");
+			row0.createCell(0).setCellValue("各站拆分前营运数据("+dual+")");
 		}else{
-			row0.createCell(0).setCellValue("各站营运数据");
+			row0.createCell(0).setCellValue("各站拆分前营运数据");
 		}
 		//设置单元格样式
 		row0.getCell(0).setCellStyle(r0_style);
@@ -344,7 +343,7 @@ public class OperatingDataServiceImpl extends BaseServiceImpl implements IOperat
 		Double hj_mobilePaymentIncome = 0.0;
 		for (int i = 0; i < odList.size(); i++) {
 			row = sheet.createRow(i + 4);	//创建行
-			row.setHeightInPoints(26);				//设置行高
+			row.setHeightInPoints(20);				//设置行高
 			for (int j = 0; j < 8; j++) {
 				cell = row.createCell(j);			//创建单元格
 				//设置单元格内容

@@ -119,7 +119,7 @@ public class InfoThrough extends BaseModule{
 		this.infoContent = infoContent;
 	}
 	
-	@Column(name = "through_Situation", length=300)
+	@Column(name = "through_Situation", length=1000)
 	public String getThroughSituation() {
 		return throughSituation;
 	}

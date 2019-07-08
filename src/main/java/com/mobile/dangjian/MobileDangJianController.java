@@ -24,8 +24,6 @@ import cn.o.common.beans.BeanUtils;
 import com.common.attach.module.Attach;
 import com.common.attach.service.IAttachService;
 import com.common.base.controller.BaseController;
-import com.common.message.MessageJpush;
-import com.common.message.module.Message;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
 import com.common.utils.StrUtils;
@@ -166,10 +164,14 @@ public class MobileDangJianController extends BaseController{
 				}
 				
 				//发送给“党委委员-初审”角色初审
-				this.sendMsg(Common.msgTitle_DJ_ldgz_todo,StrUtils.subString(alVo.getLaunchContent(), 100) ,null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
+				this.messageServiceImpl.submitSendMsg(
+						Common.msgTitle_DJ_ldgz_todo,StrUtils.subString(alVo.getLaunchContent(), 100) ,null,"dangjian_dwwy_cs",Common.msgDJ,this.getSessionUser());
+				
 			}else{
 				//普通活动，发普通给党员浏览
-				this.sendMsg(Common.msgTitle_DJ_hdfb_info,StrUtils.subString(alVo.getLaunchContent(), 100) ,null,"dangjian_dy",Common.msgDJ,this.getSessionUser());
+				this.messageServiceImpl.submitSendMsg(
+						Common.msgTitle_DJ_hdfb_info,StrUtils.subString(alVo.getLaunchContent(), 100) ,null,"dangjian_dy",Common.msgDJ,this.getSessionUser());
+				
 			}
 			json.put("result", true);
 			json.put("msg", "");
@@ -482,6 +484,42 @@ public class MobileDangJianController extends BaseController{
 	
 	/**
 	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param id
+	 * @描述：删除活动发布
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年6月29日
+	 */
+	@RequestMapping(value="/activitiesLauch_del")
+	public void activitiesLauchDelete(HttpServletRequest request,HttpServletResponse response,String id){
+		JSONObject json = new JSONObject();
+		json.put("result", false);
+		if(StringUtils.isNotBlank(id) && id.trim()!= ""){
+			try{
+				User user=this.getSessionUser();
+				ActivitiesLaunch al=activitiesServiceImpl.getEntityById(ActivitiesLaunch.class, id);
+				if(user.getId().equals(al.getCreatorId())){
+					//是自己写的活动，可以删除
+					this.activitiesServiceImpl.deleteALEntitys(id);
+					json.put("result", true);
+				}else{
+					//否则不能删除
+					json.put("msg", "不能删除别人的活动发布");
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+				json.put("msg", e.getMessage());
+			}
+		}else{
+			json.put("msg", "id为空");
+		}
+		this.print(json.toString());
+	}
+	
+	/**
+	 * 
 	 * @方法：@param httpSession
 	 * @方法：@param response
 	 * @方法：@param activitiesLaunchVo
@@ -553,39 +591,7 @@ public class MobileDangJianController extends BaseController{
 	}
 	
 	/******************************私有方法****************************************/
-	/**
-	 * 
-	 * @方法：@param noticeTitle 通知的提示标题
-	 * @方法：@param noticeContent 通知的简要内容
-	 * @方法：@param userIds 给谁发通知，用户ID的集合，用","分隔
-	 * @方法：@param rodeCodes 给哪一类人发通知，如角色的集合，用","分隔
-	 * @方法：@param msgType 消息类型
-	 * @方法：@param user 会话用户
-	 * @描述：
-	 * @return
-	 * @author: qinyongqian
-	 * @date:2019年4月19日
-	 */
-	private void sendMsg(String noticeTitle, String noticeContent,
-			String userIds, String rodeCodes, int msgType, User user) {
-		try {
-			Message msg = new Message();
-			msg.setTitle(noticeTitle);
-			msg.setContent(noticeContent);
-			msg.setAlias(userIds);
-			msg.setType(msgType);
-			msg.setTags(rodeCodes);
-			msg.setSender(user.getUserName());
-			msg.setCreatorId(user.getId());
-			msg.setCreatorName(user.getUserName());
-			msg.setSysCode(user.getSysCode());
-			this.messageServiceImpl.saveOrUpdate(msg);
-			MessageJpush.sendCommonMsg(noticeTitle, msg);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-	}
+	
 
 
 }
