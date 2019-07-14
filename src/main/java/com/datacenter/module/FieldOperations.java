@@ -29,7 +29,7 @@ public class FieldOperations extends BaseModule{
 	@DateTimeFormat(pattern="HH:mm") 
     private Date receiptTime;           //接报时间
 	private String reportedPerson;      //报告人员
-	private Integer receiptWay;         //接报方式		(数据字典：dc_receiptWay)
+	private String receiptWay;         //接报方式		(数据字典：dc_receiptWay)
 	private String outworker;           //外勤人员
 	private String scene;               //事发地点
 	private String involvedUnits;       //涉事单位
@@ -80,11 +80,11 @@ public class FieldOperations extends BaseModule{
 		this.reportedPerson = reportedPerson;
 	}
 	
-	@Column(name = "receipt_Way", length=11)
-	public Integer getReceiptWay() {
+	@Column(name = "receipt_Way", length=20)
+	public String getReceiptWay() {
 		return receiptWay;
 	}
-	public void setReceiptWay(Integer receiptWay) {
+	public void setReceiptWay(String receiptWay) {
 		this.receiptWay = receiptWay;
 	}
 	

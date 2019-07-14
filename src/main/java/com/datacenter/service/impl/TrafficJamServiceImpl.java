@@ -55,13 +55,14 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 			params.add(Restrictions.le("dutyDate", trafficJamVo.getDutyDateEnd()));
 		}
 
-		if(trafficJamVo.getReceiptWay() != null){
+		if(StringUtils.isNotBlank(trafficJamVo.getReceiptWay())){
 			params.add(Restrictions.eq("receiptWay", trafficJamVo.getReceiptWay()));
 		}
 		if(StringUtils.isNotBlank(trafficJamVo.getKeyword())){
 			params.add(Restrictions.sqlRestriction(" (reported_Person like '%" + trafficJamVo.getKeyword() + "%' " +
 					" or jam_Section like '%" + trafficJamVo.getKeyword() + "%' " +
 					" or jam_Reason like '%" + trafficJamVo.getKeyword() + "%' " +
+					" or receipt_Way like '%" + trafficJamVo.getKeyword() + "%' " +
 					" or disposal_Situation like '%" + trafficJamVo.getKeyword() + "%' " +
 					" or remark_ like '%" + trafficJamVo.getKeyword() + "%' )"));
 		}
@@ -70,9 +71,8 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 
 	@Override
 	public TrafficJam saveOrUpdate(TrafficJamVo trafficJamVo) {
-		if(trafficJamVo.getReceiptWay().equals(99)){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_receiptWay", trafficJamVo.getDictValue());
-			trafficJamVo.setReceiptWay(Integer.parseInt(newKey));
+		if(trafficJamVo.getReceiptWay().equals("其它")){
+			trafficJamVo.setReceiptWay(trafficJamVo.getDictValue());
 		}
 		TrafficJam trafficJam = new TrafficJam();
 		BeanUtils.copyProperties(trafficJamVo, trafficJam);
@@ -121,7 +121,7 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 			hql.append(" and dutyDate <= ? ");
 		}
 
-		if(trafficJamVo.getReceiptWay() != null){
+		if(StringUtils.isNotBlank(trafficJamVo.getReceiptWay())){
 			objectList.add(trafficJamVo.getReceiptWay());
 			hql.append(" and receiptWay = ? ");
 		}
@@ -241,7 +241,7 @@ public class TrafficJamServiceImpl extends BaseServiceImpl implements ITrafficJa
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("接报方式");
 				row3.getCell(2).setCellStyle(r2_style);
-				row3.createCell(3).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_receiptWay", tjList.get(tb).getReceiptWay().toString()));
+				row3.createCell(3).setCellValue(tjList.get(tb).getReceiptWay());
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("报告人员");
 				row3.getCell(4).setCellStyle(r2_style);

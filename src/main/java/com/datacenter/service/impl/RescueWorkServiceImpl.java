@@ -71,6 +71,8 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 		if(StringUtils.isNotBlank(rescueWorkVo.getKeyword())){
 			params.add(Restrictions.sqlRestriction(" (site_ like '%" + rescueWorkVo.getKeyword() + "%' " +
 					" or fault_Plates like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or car_Type like '%" + rescueWorkVo.getKeyword() + "%' " +
+					" or whereabouts_ like '%" + rescueWorkVo.getKeyword() + "%' " +
 					" or payment_Order like '%" + rescueWorkVo.getKeyword() + "%' " +
 					" or rescue_Charge like '%" + rescueWorkVo.getKeyword() + "%' " +
 					" or trailer_Mileage like '%" + rescueWorkVo.getKeyword() + "%' " +
@@ -83,13 +85,9 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 
 	@Override
 	public RescueWork saveOrUpdate(RescueWorkVo rescueWorkVo) {
-		if(rescueWorkVo.getCarType().equals(99)){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_carType", rescueWorkVo.getDictValue());
-			rescueWorkVo.setCarType(Integer.parseInt(newKey));
-		}
-		if(rescueWorkVo.getWhereabouts().equals(99)){
-			String newKey2 = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_whereabouts", rescueWorkVo.getDictValue2());
-			rescueWorkVo.setWhereabouts(Integer.parseInt(newKey2));
+		rescueWorkVo.setCarType(rescueWorkVo.getDictValue());
+		if(rescueWorkVo.getWhereabouts().equals("其它")){
+			rescueWorkVo.setWhereabouts(rescueWorkVo.getDictValue2());
 		}
 		RescueWork rescueWork = new RescueWork();
 		BeanUtils.copyProperties(rescueWorkVo, rescueWork);
@@ -280,11 +278,11 @@ public class RescueWorkServiceImpl extends BaseServiceImpl implements IRescueWor
 						}
 						break;
 					case 6: cell.setCellValue(rwList.get(i).getFaultPlates());		break;
-					case 7: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_carType", rwList.get(i).getCarType().toString()));		break;
+					case 7: cell.setCellValue(rwList.get(i).getCarType());		break;
 					case 8: cell.setCellValue(rwList.get(i).getPaymentOrder());		break;
 					case 9: cell.setCellValue(rwList.get(i).getRescueCharge());		break;
 					case 10: cell.setCellValue(rwList.get(i).getTrailerMileage());		break;
-					case 11: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_whereabouts", rwList.get(i).getWhereabouts().toString()));		break;
+					case 11: cell.setCellValue(rwList.get(i).getWhereabouts());		break;
 					case 12: cell.setCellValue(rwList.get(i).getRescuePlates());		break;
 					case 13: cell.setCellValue(rwList.get(i).getDriverPhone());		break;
 					case 14: 

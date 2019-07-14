@@ -29,9 +29,9 @@ public class InfoThrough extends BaseModule{
 	@DateTimeFormat(pattern="HH:mm")     
 	private Date throughTime;            //通报时间
 	private String reportedPerson;       //报告人员
-	private Integer infoType;            //信息类型	(数据字典：dc_infoType)
-	private Integer infoSource;          //信息来源	(数据字典：dc_infoSource  1：全路段及收费站 2：其它（人工输入）)
-	private Integer throughWay;          //通传方式	(数据字典：dc_throughWay)
+	private String infoType;            //信息类型	(数据字典：dc_infoType)
+	private String infoSource;          //信息来源	(数据字典：dc_infoSource  1：全路段及收费站 2：其它（人工输入）)
+	private String throughWay;          //通传方式	(数据字典：dc_throughWay)
 	private String watcher;              //值班员
 	private String infoContent;          //信息内容
 	private String throughSituation;     //通传情况
@@ -79,27 +79,27 @@ public class InfoThrough extends BaseModule{
 		this.reportedPerson = reportedPerson;
 	}
 	
-	@Column(name = "info_Type", length=11)
-	public Integer getInfoType() {
+	@Column(name = "info_Type", length=20)
+	public String getInfoType() {
 		return infoType;
 	}
-	public void setInfoType(Integer infoType) {
+	public void setInfoType(String infoType) {
 		this.infoType = infoType;
 	}
 	
-	@Column(name = "info_Source", length=11)
-	public Integer getInfoSource() {
+	@Column(name = "info_Source", length=20)
+	public String getInfoSource() {
 		return infoSource;
 	}
-	public void setInfoSource(Integer infoSource) {
+	public void setInfoSource(String infoSource) {
 		this.infoSource = infoSource;
 	}
 	
-	@Column(name = "through_Way", length=11)
-	public Integer getThroughWay() {
+	@Column(name = "through_Way", length=20)
+	public String getThroughWay() {
 		return throughWay;
 	}
-	public void setThroughWay(Integer throughWay) {
+	public void setThroughWay(String throughWay) {
 		this.throughWay = throughWay;
 	}
 	

@@ -56,7 +56,6 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 		if(feedBackVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", feedBackVo.getDutyDateEnd()));
 		}
-
 		if(feedBackVo.getFbType() != null){
 			params.add(Restrictions.eq("fbType", feedBackVo.getFbType()));
 		}
@@ -74,10 +73,7 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 
 	@Override
 	public FeedBack saveOrUpdate(FeedBackVo feedBackVo) {
-		if(feedBackVo.getWatcher().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_dutyPerson", feedBackVo.getDictValue());
-			feedBackVo.setWatcher(newKey);
-		}
+		feedBackVo.setWatcher(feedBackVo.getDictValue());
 		FeedBack feedBack = new FeedBack();
 		BeanUtils.copyProperties(feedBackVo, feedBack);
 		if(StringUtils.isBlank(feedBack.getId())){
@@ -280,7 +276,7 @@ public class FeedBackServiceImpl extends BaseServiceImpl implements IFeedBackSer
 				row4.createCell(6).setCellValue("值班员");
 				
 				row4.getCell(6).setCellStyle(r2_style);
-				row4.createCell(7).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", fbList.get(tb).getWatcher().toString()));
+				row4.createCell(7).setCellValue(fbList.get(tb).getWatcher());
 				row4.getCell(7).setCellStyle(mainStyle_center);
 				row4.createCell(2).setCellStyle(r2_style);
 				row4.createCell(5).setCellStyle(r2_style);

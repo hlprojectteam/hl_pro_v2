@@ -35,11 +35,11 @@ public class RescueWork extends BaseModule{
 	private Date evacuationTime;      //清场时间 
 	private String site;              //地点   
 	private String faultPlates;       //故障车牌 
-	private Integer carType;          //车型		(数据字典：dc_carType,	1:小型客车 2:中型客车 3:大型客车 4：小型货车 5：中型货车 6：大型货车 7：重型牵挂车 8：其它（人工输入）)
+	private String carType;          //车型		(数据字典：dc_carType,	1:小型客车 2:中型客车 3:大型客车 4：小型货车 5：中型货车 6：大型货车 7：重型牵挂车 8：其它（人工输入）)
 	private String paymentOrder;      //缴费单号 
 	private Double rescueCharge;      //拯救费  
 	private Double trailerMileage;    //拖车里程 
-	private Integer whereabouts;      //车辆去向	(数据字典：dc_whereabouts)
+	private String whereabouts;      //车辆去向	(数据字典：dc_whereabouts)
 	private String rescuePlates;      //拯救车牌 
     private String driverPhone;       //司机电话 
     private String remark;            //备注  	(可以为空) 
@@ -121,11 +121,11 @@ public class RescueWork extends BaseModule{
 		this.faultPlates = faultPlates;
 	}
 	
-	@Column(name = "car_Type", length=11)
-	public Integer getCarType() {
+	@Column(name = "car_Type", length=20)
+	public String getCarType() {
 		return carType;
 	}
-	public void setCarType(Integer carType) {
+	public void setCarType(String carType) {
 		this.carType = carType;
 	}
 	
@@ -153,11 +153,11 @@ public class RescueWork extends BaseModule{
 		this.trailerMileage = trailerMileage;
 	}
 	
-	@Column(name = "whereabouts_", length=11)
-	public Integer getWhereabouts() {
+	@Column(name = "whereabouts_", length=20)
+	public String getWhereabouts() {
 		return whereabouts;
 	}
-	public void setWhereabouts(Integer whereabouts) {
+	public void setWhereabouts(String whereabouts) {
 		this.whereabouts = whereabouts;
 	}
 	

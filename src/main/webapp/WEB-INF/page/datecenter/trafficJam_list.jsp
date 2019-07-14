@@ -93,9 +93,7 @@
     	              {title: "接报时间", field: "receiptTime",width: 100,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "接报方式", field: "receiptWay",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_receiptWay",value);
-		              }},
+		              {title: "接报方式", field: "receiptWay",width: 80,align:"center"},
     	              {title: "报告人员", field: "reportedPerson",width: 80,align:"center"},
     	              {title: "阻塞路段", field: "jamSection",width: 80,align:"center"},
     	              {title: "阻塞距离", field: "jamDistance",width: 80,align:"center"},

@@ -28,7 +28,7 @@ public class TrafficJam extends BaseModule{
 	private Date dutyDate;               //日期
 	@DateTimeFormat(pattern="HH:mm")   
 	private Date receiptTime;            //接报时间	
-	private Integer receiptWay;          //接报方式	(数据字典：dc_receiptWay)
+	private String receiptWay;          //接报方式	(数据字典：dc_receiptWay)
 	private String reportedPerson;       //报告人员
 	private String jamSection;           //阻塞路段
 	private double jamDistance;          //阻塞距离(单位是公里)
@@ -78,11 +78,11 @@ public class TrafficJam extends BaseModule{
 		this.receiptTime = receiptTime;
 	}
 	
-	@Column(name = "receipt_Way", length=11)
-	public Integer getReceiptWay() {
+	@Column(name = "receipt_Way", length=20)
+	public String getReceiptWay() {
 		return receiptWay;
 	}
-	public void setReceiptWay(Integer receiptWay) {
+	public void setReceiptWay(String receiptWay) {
 		this.receiptWay = receiptWay;
 	}
 	

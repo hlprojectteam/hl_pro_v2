@@ -99,9 +99,7 @@
 		           	  		return value.substr(11,5);
 		              }},
     	              {title: "报告人员", field: "reportedPerson",width: 80,align:"center"},
-    	              {title: "接报方式", field: "receiptWay",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_receiptWay",value);
-		              }},
+		              {title: "接报方式", field: "receiptWay",width: 80,align:"center"},
     	              {title: "外勤人员", field: "outworker",width: 100,align:"center"},
     	              {title: "事发地点", field: "scene",width: 80,align:"center"},
     	              {title: "涉事单位", field: "involvedUnits",width: 80,align:"center"},

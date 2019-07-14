@@ -33,26 +33,9 @@
 						<input type="text" class="form-control" id="dutyDateEnd" name="dutyDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</div>
 
-					<label class="col-sm-1 control-label">天气</label>
+					<label class="col-sm-1 control-label">车辆类型</label>
 					<div class="col-sm-2">
-						<opt:select dictKey="dc_weather" classStyle="form-control" id="weather" name="weather" isDefSelect="true"/>
-					</div>
-				</div>
-
-				<div class="row" style="margin-top: 10px;">
-					<label class="col-sm-1 control-label">事故类型</label>
-					<div class="col-sm-2">
-						<opt:select dictKey="dc_accidentType" classStyle="form-control" id="accidentType" name="accidentType" isDefSelect="true"/>
-					</div>
-
-					<label class="col-sm-1 control-label">事故地点</label>
-					<div class="col-sm-2">
-						<input type="text" class="form-control" id="accidentSite" name="accidentSite" value="" />
-					</div>
-
-					<label class="col-sm-1 control-label">关键字</label>
-					<div class="col-sm-2">
-						<input type="text" class="form-control" id="keyword" name="keyword" value="" />
+						<opt:select dictKey="dc_carType" classStyle="form-control" id="carType" name="carType" isDefSelect="true"/>
 					</div>
 				</div>
 
@@ -70,6 +53,23 @@
 					<label class="col-sm-1 control-label">死亡人数</label>
 					<div class="col-sm-2">
 						<input type="text" class="form-control" id="deathNum" name="deathNum" value="" />
+					</div>
+				</div>
+
+				<div class="row" style="margin-top: 10px;">
+					<label class="col-sm-1 control-label">事故类型</label>
+					<div class="col-sm-2">
+						<opt:select dictKey="dc_accidentType" classStyle="form-control" id="accidentType" name="accidentType" isDefSelect="true"/>
+					</div>
+
+					<label class="col-sm-1 control-label">事故地点</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="accidentSite" name="accidentSite" value="" />
+					</div>
+
+					<label class="col-sm-1 control-label">关键字</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="keyword" name="keyword" value="" />
 					</div>
 
 					<button class="btn btn-primary" type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
@@ -120,24 +120,19 @@
     	              {title: "接报时间", field: "receiptTime",width: 100,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "接报方式", field: "receiptWay",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_receiptWay",value);
-		              }},
-		              {title: "消息来源", field: "source",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_source",value);
-		              }},
+		              {title: "接报方式", field: "receiptWay",width: 80,align:"center"},
+		              {title: "消息来源", field: "source",width: 80,align:"center"},
     	              {title: "事故地点", field: "accidentSite",width: 80,align:"center"},
-    	              {title: "事故类型", field: "accidentType",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_accidentType",value);
-		              }},
-		              {title: "车辆类型", field: "carType",width: 80,align:"center",formatter:function(value,row,index){
+		              {title: "事故类型", field: "accidentType",width: 80,align:"center"},
+		             /*  {title: "车辆类型", field: "carType",width: 80,align:"center",formatter:function(value,row,index){
 		            	  	var carTypeArr = value.split(",");
 		            	  	var carTypeStr = "";
 		            	  	for (var i = 0; i < carTypeArr.length; i++) {
 		            	  		carTypeStr += changeDataDictByKey("dc_carType",carTypeArr[i]) + ",";
 							}
 		           	  		return carTypeStr.substr(0,carTypeStr.length-1);
-		              }},
+		              }}, */
+		              {title: "车辆类型", field: "carType",width: 80,align:"center"},
     	              {title: "涉及车辆", field: "involveCarNum",width: 80,align:"center"},
     	              {title: "涉事车牌", field: "involvePlates",width: 80,align:"center"},
     	              {title: "轻伤人数", field: "minorInjuryNum",width: 80,align:"center"},
@@ -146,7 +141,7 @@
     	              {title: "封闭车道", field: "laneClosedNum",width: 80,align:"center",formatter:function(value,row,index){
                               return changeDataDictByKey("dc_laneClosedNum",value);
                           }},
-    	              {title: "路产损失", field: "roadLoss",width: 80,align:"center"},
+    	              {title: "路产损失", field: "roadLoss",width: 200,align:"center"},
     	              {title: "路产赔偿", field: "roadIndemnity",width: 80,align:"center"},
     	              {title: "索赔单号", field: "claimNote",width: 80,align:"center"},
     	              /*{title: "事故详情", field: "accidentDetails",width: 80,align:"center"},*/

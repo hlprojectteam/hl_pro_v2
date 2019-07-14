@@ -118,15 +118,16 @@
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-2 control-label">检查人员</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_Inspectors" classStyle="form-control required" name="checker" id="checker" value="${roadWorkVo.checker}" isDefSelect="false" />
+			<label class="col-sm-2 control-label">检查人员列表</label>
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_Inspectors" onclick="OncheckBox(this)"  id="checker" name="checker" value="" />
 			</div>
-			<div class="dictValue2"  style="display: none;">
-			  	<label class="col-sm-2 control-label">请输入检查人员</label>
-		        <div class="col-sm-3">
-					<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${roadWorkVo.dictValue2}" data-rule-rangelength="[1,20]" />
-				</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>检查人员</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="dictValue2" name="dictValue2" placeholder="输入检查人员，多个用“,”隔开" value="${roadWorkVo.checker}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
 			</div>
 		</div>
 		
@@ -168,7 +169,7 @@
 	
 	$("#unitName").change(function(){
         var unitName = $("#unitName").val();
-        if(unitName ==99){
+        if(unitName =='其它'){
             $(".dictValue").show();
 		}else{
             $(".dictValue").hide();
@@ -176,15 +177,25 @@
 		}
 	});
 	
-	$("#checker").change(function(){
-        var checker = $("#checker").val();
-        if(checker ==99){
-            $(".dictValue2").show();
-		}else{
-            $(".dictValue2").hide();
-            $(".dictValue2").val(null)
+	function OncheckBox(index) {
+		if ($(index).attr("tag") == undefined
+				|| $(index).attr("tag") == "unChecked") {
+			//alert("选中");
+			$(index).attr("tag", "checked");
+			var val='';
+			var valtemp = $.trim($("#dictValue2").val());
+			if(valtemp==''||valtemp==undefined||valtemp==null){
+				val=$(index).val();
+			}else{
+				val=$("#dictValue2").val()+','+$(index).val();
+			}
+			$("#dictValue2").val(val);
+		} else {
+			//取消
+			//alert("取消");
+			$(index).attr("tag", "unChecked");
 		}
-	});
+	}
 
 	//新增或编辑
 	function on_save(){
@@ -197,10 +208,8 @@
 
 	//提交表单
 	function on_submit(){
-		if($("#unitName").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+		if($("#unitName").val() == '其它' && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
             autoMsg("请输入施工单位名称", 5);
-		}else if($("#checker").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
-            autoMsg("请输入检查人员", 5);
 		}else{
 			$.ajax({
 				type : 'post',

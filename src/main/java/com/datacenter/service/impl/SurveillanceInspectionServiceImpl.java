@@ -62,7 +62,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 			params.add(Restrictions.eq("inspectionlocation", surveillanceInspectionVo.getInspectionlocation()));
 		}
 		if(StringUtils.isNotBlank(surveillanceInspectionVo.getShiftSupervisor())){		//值班主任
-			params.add(Restrictions.eq("shiftSupervisor", surveillanceInspectionVo.getShiftSupervisor()));
+			params.add(Restrictions.like("shiftSupervisor","%" + surveillanceInspectionVo.getShiftSupervisor()+"%"));
 		}
 
 		if(StringUtils.isNotBlank(surveillanceInspectionVo.getKeyword())){
@@ -75,10 +75,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 	@Override
 	public SurveillanceInspection saveOrUpdate(SurveillanceInspectionVo surveillanceInspectionVo) {
-		if(surveillanceInspectionVo.getShiftSupervisor().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_headOfDuty", surveillanceInspectionVo.getDictValue());
-			surveillanceInspectionVo.setShiftSupervisor(newKey);
-		}
+		surveillanceInspectionVo.setShiftSupervisor(surveillanceInspectionVo.getDictValue());
 		SurveillanceInspection surveillanceInspection = new SurveillanceInspection();
 		BeanUtils.copyProperties(surveillanceInspectionVo, surveillanceInspection);
 		if(StringUtils.isBlank(surveillanceInspection.getId())){
@@ -130,7 +127,10 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 			objectList.add(surveillanceInspectionVo.getInspectionlocation());
 			hql.append(" and inspectionlocation = ? ");
 		}
-
+		if(StringUtils.isNotBlank(surveillanceInspectionVo.getShiftSupervisor())){		//值班主任
+			objectList.add("%"+surveillanceInspectionVo.getShiftSupervisor()+"%");
+			hql.append(" and shiftSupervisor like ? ");
+		}
 		if(StringUtils.isNotBlank(surveillanceInspectionVo.getKeyword())){
 			hql.append(" and (shiftSupervisor like '%").append(surveillanceInspectionVo.getKeyword()).append("%' ").append(" or inspectionDetails like '%").append(surveillanceInspectionVo.getKeyword()).append("%' ").append(" or followMeasure like '%").append(surveillanceInspectionVo.getKeyword()).append("%' )");
 		}
@@ -250,7 +250,7 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 					case 0:	cell.setCellValue(DateUtil.getDateFormatString(siList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD)); break;
 					case 1:	cell.setCellValue(DateUtil.getDateFormatString(siList.get(i).getInspectionTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) 
 							+ "--" + DateUtil.getDateFormatString(siList.get(i).getInspectionTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
-					case 2: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_headOfDuty", siList.get(i).getShiftSupervisor().toString()));	break;
+					case 2: cell.setCellValue(siList.get(i).getShiftSupervisor());	break;
 					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_inspectionlocation", siList.get(i).getInspectionlocation().toString()));	break;
 					case 4: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_failureEquipment", siList.get(i).getFailureEquipment().toString()));	break;
 					case 5: 

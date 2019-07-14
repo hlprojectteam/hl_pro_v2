@@ -110,15 +110,11 @@
 		              }},
     	              {title: "地点", field: "site",width: 120,align:"center"},
     	              {title: "故障车牌", field: "faultPlates",width: 110,align:"center"},
-    	              {title: "车型", field: "carType",width: 100,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_carType",value);
-		              }},
+		              {title: "车型", field: "carType",width: 100,align:"center"},
     	              {title: "缴费单号", field: "paymentOrder",width: 80,align:"center"},
     	              {title: "拯救费", field: "rescueCharge",width: 80,align:"center"},
     	              {title: "拖车里程", field: "trailerMileage",width: 80,align:"center"},
-    	              {title: "车辆去向", field: "whereabouts",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_whereabouts",value);
-		              }},
+		              {title: "车辆去向", field: "whereabouts",width: 80,align:"center"},
     	              {title: "拯救车牌", field: "rescuePlates",width: 110,align:"center"},
     	              {title: "司机电话", field: "driverPhone",width: 80,align:"center"},
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){

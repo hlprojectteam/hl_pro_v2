@@ -57,15 +57,16 @@
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>本班次值班人员 </label>
-			<div class="col-sm-3">
-		    	<opt:select dictKey="dc_dutyPerson" classStyle="form-control required" name="thisWatcher" id="thisWatcher" value="${transferRegistrationVo.thisWatcher}" isDefSelect="false"/>
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>本班次值班人员列表 </label>
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_headOfDuty"   onclick="OncheckBox(this)"  id="thisWatcher" name="thisWatcher" value="" />
 			</div>
-			<div class="dictValue"  style="display: none;">
-			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入本次值班员</label>
-			    <div class="col-sm-3">
-					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${transferRegistrationVo.dictValue}" data-rule-rangelength="[1,20]" />
-				</div>
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>本班次值班人员</label>
+		    <div class="col-sm-8">
+				<input type="text" class="form-control" id="dictValue" name="dictValue" placeholder="输入值班员，多个用“,”隔开" value="${transferRegistrationVo.thisWatcher}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
 			</div>
 		</div>
 	 
@@ -81,15 +82,16 @@
 		</div>
 		
 		<div class="form-group">
-	        <label class="col-sm-2 control-label"><span style="color: red">*</span>上班次值班人员 </label>
-			<div class="col-sm-3">
-		    	<opt:select dictKey="dc_dutyPerson" classStyle="form-control required" name="laseWatcher" id="laseWatcher" value="${transferRegistrationVo.laseWatcher}" isDefSelect="false"/>
+	        <label class="col-sm-2 control-label"><span style="color: red">*</span>上班次值班人员列表</label>
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_headOfDuty" onclick="OncheckBox2(this)"  id="laseWatcher" name="laseWatcher" value="" />
 			</div>
-			<div class="dictValue2"  style="display: none;">
-			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入上次值班员</label>
-			    <div class="col-sm-3">
-					<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${transferRegistrationVo.dictValue2}" data-rule-rangelength="[1,20]" />
-				</div>
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>上班次值班员</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="dictValue2" name="dictValue2" placeholder="输入值班员，多个用“,”隔开" value="${transferRegistrationVo.laseWatcher}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
 			</div>
 		</div>
 		
@@ -129,65 +131,79 @@
 	var winName = "${winName}";
 	var URLStr = "/datecenter/transferRegistration/transferRegistration_";
 	
-	$("#thisWatcher").change(function(){
-        var thisWatcher = $("#thisWatcher").val();
-        if(thisWatcher ==99){
-            $(".dictValue").show();
-		}else{
-            $(".dictValue").hide();
-            $(".dictValue").val(null)
+	function OncheckBox(index) {
+		if ($(index).attr("tag") == undefined
+				|| $(index).attr("tag") == "unChecked") {
+			//alert("选中");
+			$(index).attr("tag", "checked");
+			var val='';
+			var valtemp = $.trim($("#dictValue").val());
+			if(valtemp==''||valtemp==undefined||valtemp==null){
+				val=$(index).val();
+			}else{
+				val=$("#dictValue").val()+','+$(index).val();
+			}
+			$("#dictValue").val(val);
+		} else {
+			//取消
+			//alert("取消");
+			$(index).attr("tag", "unChecked");
 		}
-	});
+	}
 	
-	$("#laseWatcher").change(function(){
-        var laseWatcher = $("#laseWatcher").val();
-        if(laseWatcher ==99){
-            $(".dictValue2").show();
-		}else{
-            $(".dictValue2").hide();
-            $(".dictValue2").val(null)
+	function OncheckBox2(index) {
+		if ($(index).attr("tag") == undefined
+				|| $(index).attr("tag") == "unChecked") {
+			//alert("选中");
+			$(index).attr("tag", "checked");
+			var val='';
+			var valtemp = $.trim($("#dictValue2").val());
+			if(valtemp==''||valtemp==undefined||valtemp==null){
+				val=$(index).val();
+			}else{
+				val=$("#dictValue2").val()+','+$(index).val();
+			}
+			$("#dictValue2").val(val);
+		} else {
+			//取消
+			//alert("取消");
+			$(index).attr("tag", "unChecked");
 		}
-	});
+	}
 
 	//新增或编辑
-	function on_save(){
+	function on_save() {
 		if ($("#baseForm").valid()) {//如果表单验证成功，则进行提交。  
-	        on_submit();//提交表单.  
-	    }else{
-            autoMsg("信息提交不正确，请检查！", 5);
-        }
+			on_submit();//提交表单.  
+		} else {
+			autoMsg("信息提交不正确，请检查！", 5);
+		}
 	}
 
 	//提交表单
-	function on_submit(){  
-		if($("#thisWatcher").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
-            autoMsg("请输入本班次值班人员", 5);
-		}else if($("#laseWatcher").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
-            autoMsg("请输入上班次值班人员", 5);
-		}else{
-			$.ajax({
-				type : 'post',
-				async:false,
-				dataType : 'json',
-				url: URLStr + 'saveOrUpdate',
-				data:$('#baseForm').serialize(),
-				success : function(data) {
-	                if (data.result) {
-	                    autoMsg("保存成功！", 1);
-	                    parent.frames[winName].$("#grid").bootstrapTable("refresh", {
-	                        url : URLStr + "load"
-	                    });//加载树下的列表
-	                    parent.layer.close(index);
-	                } else {
-	                    autoAlert("保存失败，请检查！", 5);
-	                }
-	            },
-	            error : function(XMLHttpRequest, textStatus, errorThrown) {
-	                autoAlert("系统出错，请检查！", 5);
-	            }
-			});
-		}
+	function on_submit() {
+		$.ajax({
+			type : 'post',
+			async : false,
+			dataType : 'json',
+			url : URLStr + 'saveOrUpdate',
+			data : $('#baseForm').serialize(),
+			success : function(data) {
+				if (data.result) {
+					autoMsg("保存成功！", 1);
+					parent.frames[winName].$("#grid").bootstrapTable(
+							"refresh", {
+								url : URLStr + "load"
+							});//加载树下的列表
+					parent.layer.close(index);
+				} else {
+					autoAlert("保存失败，请检查！", 5);
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				autoAlert("系统出错，请检查！", 5);
+			}
+		});
 	}
-
 </script>
 </html>

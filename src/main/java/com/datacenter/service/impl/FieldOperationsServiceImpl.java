@@ -56,7 +56,7 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 			params.add(Restrictions.le("dutyDate", fieldOperationsVo.getDutyDateEnd()));
 		}
 
-		if(fieldOperationsVo.getReceiptWay() != null){
+		if(StringUtils.isNotBlank(fieldOperationsVo.getReceiptWay())){
 			params.add(Restrictions.eq("receiptWay", fieldOperationsVo.getReceiptWay()));
 		}
 		if(StringUtils.isNotBlank(fieldOperationsVo.getScene())){
@@ -67,6 +67,7 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 			params.add(Restrictions.sqlRestriction(" (reported_Person like '%" + fieldOperationsVo.getKeyword() + "%' " +
 					" or out_worker like '%" + fieldOperationsVo.getKeyword() + "%' " +
 					" or scene_ like '%" + fieldOperationsVo.getKeyword() + "%' " +
+					" or receipt_Way like '%" + fieldOperationsVo.getKeyword() + "%' " +
 					" or involved_Units like '%" + fieldOperationsVo.getKeyword() + "%' " +
 					" or violation_OrderNo like '%" + fieldOperationsVo.getKeyword() + "%' " +
 					" or receipt_Situation like '%" + fieldOperationsVo.getKeyword() + "%' " +
@@ -78,9 +79,8 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 
 	@Override
 	public FieldOperations saveOrUpdate(FieldOperationsVo fieldOperationsVo) {
-		if(fieldOperationsVo.getReceiptWay().equals(99)){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_receiptWay", fieldOperationsVo.getDictValue());
-			fieldOperationsVo.setReceiptWay(Integer.parseInt(newKey));
+		if(fieldOperationsVo.getReceiptWay().equals("其它")){
+			fieldOperationsVo.setReceiptWay(fieldOperationsVo.getDictValue());
 		}
 		FieldOperations fieldOperations = new FieldOperations();
 		BeanUtils.copyProperties(fieldOperationsVo, fieldOperations);
@@ -128,7 +128,7 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 			objectList.add(fieldOperationsVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
-		if(fieldOperationsVo.getReceiptWay() != null){
+		if(StringUtils.isNotBlank(fieldOperationsVo.getReceiptWay())){
 			objectList.add(fieldOperationsVo.getReceiptWay());
 			hql.append(" and receiptWay = ? ");
 		}
@@ -267,7 +267,7 @@ public class FieldOperationsServiceImpl extends BaseServiceImpl implements IFiel
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("接报方式");
 				row3.getCell(4).setCellStyle(r2_style);
-				row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_receiptWay", foList.get(tb).getReceiptWay().toString()));
+				row3.createCell(5).setCellValue(foList.get(tb).getReceiptWay());
 				row3.getCell(5).setCellStyle(mainStyle_center);
 				row3.createCell(6).setCellValue("外勤人员");
 				row3.getCell(6).setCellStyle(r2_style);

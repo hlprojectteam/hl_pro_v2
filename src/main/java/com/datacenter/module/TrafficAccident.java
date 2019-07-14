@@ -29,10 +29,10 @@ public class TrafficAccident extends BaseModule{
 	private Integer weather;              //天气情况	(数据字典：dc_weather, 1:晴  2:阴  3:多云  4:小雨 5:中雨 6:大雨 7:暴雨 8:雷阵雨  9:霜冻 10:雾 )
 	@DateTimeFormat(pattern="HH:mm")                     
 	private Date receiptTime;             //接报时间
-	private Integer receiptWay;           //接报方式	(数据字典：dc_receiptWay, 1：服务热线 2：内线电话 3：路面监控 4：其它（人工输入）)
-	private Integer source;               //消息来源	(数据字典：dc_source  1：服务热线 2：内线电话 3：路面监控 4：其它（人工输入）)
+	private String receiptWay;           //接报方式	(数据字典：dc_receiptWay, 1：服务热线 2：内线电话 3：路面监控 4：其它（人工输入）)
+	private String source;               //消息来源	(数据字典：dc_source  1：服务热线 2：内线电话 3：路面监控 4：其它（人工输入）)
 	private String accidentSite;          //事故地点
-	private Integer accidentType;         //事故类型	(数据字典：dc_accidentType 1：追尾 2：自撞 3：刮擦 4：碰撞 5：翻车 6：自燃 7：其它（人工输入）)
+	private String accidentType;         //事故类型	(数据字典：dc_accidentType 1：追尾 2：自撞 3：刮擦 4：碰撞 5：翻车 6：自燃 7：其它（人工输入）)
 	private String carType;               //车辆类型	(数据字典：dc_carType,	1:小型客车	2:中型货车	3:大型货车)
 	private Integer involveCarNum;        //涉及车辆
 	private String involvePlates;         //涉事车牌
@@ -91,19 +91,19 @@ public class TrafficAccident extends BaseModule{
 		this.receiptTime = receiptTime;
 	}
 	
-	@Column(name = "receipt_Way", length=11)
-	public Integer getReceiptWay() {
+	@Column(name = "receipt_Way", length=20)
+	public String getReceiptWay() {
 		return receiptWay;
 	}
-	public void setReceiptWay(Integer receiptWay) {
+	public void setReceiptWay(String receiptWay) {
 		this.receiptWay = receiptWay;
 	}
 	
-	@Column(name = "source_", length=11)
-	public Integer getSource() {
+	@Column(name = "source_", length=20)
+	public String getSource() {
 		return source;
 	}
-	public void setSource(Integer source) {
+	public void setSource(String source) {
 		this.source = source;
 	}
 	
@@ -115,11 +115,11 @@ public class TrafficAccident extends BaseModule{
 		this.accidentSite = accidentSite;
 	}
 	
-	@Column(name = "accident_Type", length=11)
-	public Integer getAccidentType() {
+	@Column(name = "accident_Type", length=20)
+	public String getAccidentType() {
 		return accidentType;
 	}
-	public void setAccidentType(Integer accidentType) {
+	public void setAccidentType(String accidentType) {
 		this.accidentType = accidentType;
 	}
 

@@ -61,7 +61,7 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 			params.add(Restrictions.eq("reportedDp", clearingVo.getReportedDp()));
 		}
 		if(StringUtils.isNotBlank(clearingVo.getReportedPerson())){
-			params.add(Restrictions.eq("reportedPerson", clearingVo.getReportedPerson()));
+			params.add(Restrictions.like("reportedPerson", "%"+clearingVo.getReportedPerson()+"%"));
 		}
 		if(StringUtils.isNotBlank(clearingVo.getProcessingDp())){
 			params.add(Restrictions.eq("processingDp", clearingVo.getProcessingDp()));
@@ -73,6 +73,9 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 			params.add(Restrictions.sqlRestriction(" ( " +
 					" traffic_Road like '%" + clearingVo.getKeyword() + "%' " +
 					" or brief_Introduction like '%" + clearingVo.getKeyword() + "%' " +
+					" or reported_Dp like '%" + clearingVo.getKeyword() + "%' " +
+					" or reported_Person like '%" + clearingVo.getKeyword() + "%' " +
+					" or processing_Dp like '%" + clearingVo.getKeyword() + "%' " +
 					" or result_ like '%" + clearingVo.getKeyword() + "%' " +
 					" or remark_ like '%" + clearingVo.getKeyword() + "%' )"));
 		}
@@ -81,17 +84,14 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 
 	@Override
 	public Clearing saveOrUpdate(ClearingVo clearingVo) {
-		if(clearingVo.getReportedDp().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportingDepartment", clearingVo.getDictValue());
-			clearingVo.setReportedDp(newKey);
+		if(clearingVo.getReportedDp().equals("其它")){
+			clearingVo.setReportedDp(clearingVo.getDictValue());
 		}
-		if(clearingVo.getReportedPerson().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportingPerson", clearingVo.getDictValue2());
-			clearingVo.setReportedPerson(newKey);
+		if(clearingVo.getReportedPerson().equals("其它")){
+			clearingVo.setReportedPerson(clearingVo.getDictValue2());
 		}
-		if(clearingVo.getProcessingDp().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_NotificationDepartment", clearingVo.getDictValue3());
-			clearingVo.setProcessingDp(newKey);
+		if(clearingVo.getProcessingDp().equals("其它")){
+			clearingVo.setProcessingDp(clearingVo.getDictValue3());
 		}
 		Clearing clearing = new Clearing();
 		BeanUtils.copyProperties(clearingVo, clearing);
@@ -139,10 +139,17 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 			objectList.add(clearingVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
-
 		if(StringUtils.isNotBlank(clearingVo.getReportedDp())){
-			objectList.add("%" + clearingVo.getReportedDp() + "%");
-			hql.append(" and reportedDp like ? ");
+			objectList.add(clearingVo.getReportedDp());
+			hql.append(" and reportedDp = ? ");
+		}
+		if(StringUtils.isNotBlank(clearingVo.getReportedPerson())){
+			objectList.add("%"+clearingVo.getReportedPerson()+"%");
+			hql.append(" and reportedPerson like ? ");
+		}
+		if(StringUtils.isNotBlank(clearingVo.getProcessingDp())){
+			objectList.add(clearingVo.getProcessingDp());
+			hql.append(" and processingDp = ? ");
 		}
 		if(clearingVo.getReportedWay() != null){
 			objectList.add(clearingVo.getReportedWay());
@@ -277,11 +284,11 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("报告部门");
 				row3.getCell(2).setCellStyle(r2_style);
-				row3.createCell(3).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingDepartment", cList.get(tb).getReportedDp().toString()));
+				row3.createCell(3).setCellValue(cList.get(tb).getReportedDp());
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("报告人员");
 				row3.getCell(4).setCellStyle(r2_style);
-				row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingPerson", cList.get(tb).getReportedPerson().toString()));
+				row3.createCell(5).setCellValue(cList.get(tb).getReportedPerson());
 				row3.getCell(5).setCellStyle(mainStyle_center);
 				row3.createCell(6).setCellValue("报告方式");
 				row3.getCell(6).setCellStyle(r2_style);
@@ -297,7 +304,7 @@ public class ClearingServiceImpl extends BaseServiceImpl implements IClearingSer
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("通知处理部门");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_NotificationDepartment", cList.get(tb).getProcessingDp().toString()));
+				row4.createCell(5).setCellValue(cList.get(tb).getProcessingDp());
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				for (int i = 2; i < 8; i++) {
 					if(i != 4 && i!= 5){

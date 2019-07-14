@@ -59,7 +59,6 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 		if(exceptionRecordVo.getExceptionType() != null){		//类型
 			params.add(Restrictions.eq("exceptionType", exceptionRecordVo.getExceptionType()));
 		}
-
 		if(StringUtils.isNotBlank(exceptionRecordVo.getReportedDp())){
 			params.add(Restrictions.eq("reportedDp", exceptionRecordVo.getReportedDp()));
 		}
@@ -67,12 +66,15 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 			params.add(Restrictions.eq("processingDp", exceptionRecordVo.getProcessingDp()));
 		}
 		if(StringUtils.isNotBlank(exceptionRecordVo.getReportedPerson())){
-			params.add(Restrictions.eq("reportedPerson", exceptionRecordVo.getReportedPerson()));
+			params.add(Restrictions.like("reportedPerson", "%"+exceptionRecordVo.getReportedPerson()+"%"));
 		}
 		if(StringUtils.isNotBlank(exceptionRecordVo.getKeyword())){
 			params.add(Restrictions.sqlRestriction(" ( " +
 					" traffic_Road like '%" + exceptionRecordVo.getKeyword() + "%' " +
 					" or brief_Introduction like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or reported_Dp like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or reported_Person like '%" + exceptionRecordVo.getKeyword() + "%' " +
+					" or processing_Dp like '%" + exceptionRecordVo.getKeyword() + "%' " +
 					" or result_ like '%" + exceptionRecordVo.getKeyword() + "%' " +
 					" or remark_ like '%" + exceptionRecordVo.getKeyword() + "%' )"));
 		}
@@ -81,22 +83,17 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 
 	@Override
 	public ExceptionRecord saveOrUpdate(ExceptionRecordVo exceptionRecordVo) {
-		if(exceptionRecordVo.getReportedWay() != null && exceptionRecordVo.getReportedWay().equals(99)){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportedWay_ER", exceptionRecordVo.getDictValue());
-			exceptionRecordVo.setReportedWay(Integer.parseInt(newKey));
+		if(exceptionRecordVo.getReportedWay().equals("其它")){
+			exceptionRecordVo.setReportedWay(exceptionRecordVo.getDictValue());
 		}
-		if(exceptionRecordVo.getReportedDp().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportingDepartment", exceptionRecordVo.getDictValue1());
-			exceptionRecordVo.setReportedDp(newKey);
+		if(exceptionRecordVo.getReportedDp().equals("其它")){
+			exceptionRecordVo.setReportedDp(exceptionRecordVo.getDictValue1());
 		}
-		if(exceptionRecordVo.getReportedPerson().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_reportingPerson", exceptionRecordVo.getDictValue2());
-			exceptionRecordVo.setReportedPerson(newKey);
+		exceptionRecordVo.setReportedPerson(exceptionRecordVo.getDictValue2());
+		if(exceptionRecordVo.getProcessingDp().equals("其它")){
+			exceptionRecordVo.setProcessingDp(exceptionRecordVo.getDictValue3());
 		}
-		if(exceptionRecordVo.getProcessingDp().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_NotificationDepartment", exceptionRecordVo.getDictValue3());
-			exceptionRecordVo.setProcessingDp(newKey);
-		}
+		
 		ExceptionRecord exceptionRecord = new ExceptionRecord();
 		BeanUtils.copyProperties(exceptionRecordVo, exceptionRecord);
 		if(StringUtils.isBlank(exceptionRecord.getId())){
@@ -143,14 +140,21 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 			objectList.add(exceptionRecordVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
-
+		if(exceptionRecordVo.getExceptionType()!=null){
+			objectList.add(exceptionRecordVo.getExceptionType());
+			hql.append(" and exceptionType = ? ");
+		}
 		if(StringUtils.isNotBlank(exceptionRecordVo.getReportedDp())){
-			objectList.add("%" + exceptionRecordVo.getReportedDp() + "%");
-			hql.append(" and reportedDp like ? ");
+			objectList.add(exceptionRecordVo.getReportedDp());
+			hql.append(" and reportedDp = ? ");
 		}
 		if(StringUtils.isNotBlank(exceptionRecordVo.getProcessingDp())){
-			objectList.add("%" + exceptionRecordVo.getProcessingDp() + "%");
-			hql.append(" and processingDp like ? ");
+			objectList.add(exceptionRecordVo.getProcessingDp());
+			hql.append(" and processingDp = ? ");
+		}
+		if(StringUtils.isNotBlank(exceptionRecordVo.getReportedPerson())){
+			objectList.add("%"+exceptionRecordVo.getReportedPerson()+"%");
+			hql.append(" and reportedPerson like ? ");
 		}
 		if(StringUtils.isNotBlank(exceptionRecordVo.getKeyword())){
 			hql.append(" and (reportedDp like '%" + exceptionRecordVo.getKeyword() + "%' " +
@@ -279,11 +283,11 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 					row3.setHeightInPoints(40);
 					row3.createCell(0).setCellValue("报告部门 ");
 					row3.getCell(0).setCellStyle(r2_style);
-					row3.createCell(1).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingDepartment", erList.get(tb).getReportedDp().toString()));
+					row3.createCell(1).setCellValue( erList.get(tb).getReportedDp());
 					row3.getCell(1).setCellStyle(mainStyle_center);
 					row3.createCell(4).setCellValue("报告人员");
 					row3.getCell(4).setCellStyle(r2_style);
-					row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingPerson", erList.get(tb).getReportedPerson().toString()));
+					row3.createCell(5).setCellValue( erList.get(tb).getReportedPerson());
 					row3.getCell(5).setCellStyle(mainStyle_center);
 					for (int i = 2; i < 8; i++) {
 						if(i != 4 && i!= 5){
@@ -299,15 +303,15 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 					row3.getCell(1).setCellStyle(mainStyle_center);
 					row3.createCell(2).setCellValue("报告部门");
 					row3.getCell(2).setCellStyle(r2_style);
-					row3.createCell(3).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingDepartment", erList.get(tb).getReportedDp().toString()));
+					row3.createCell(3).setCellValue(erList.get(tb).getReportedDp());
 					row3.getCell(3).setCellStyle(mainStyle_center);
 					row3.createCell(4).setCellValue("报告人员");
 					row3.getCell(4).setCellStyle(r2_style);
-					row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportingPerson", erList.get(tb).getReportedPerson().toString()));
+					row3.createCell(5).setCellValue(erList.get(tb).getReportedPerson());
 					row3.getCell(5).setCellStyle(mainStyle_center);
 					row3.createCell(6).setCellValue("报告方式");
 					row3.getCell(6).setCellStyle(r2_style);
-					row3.createCell(7).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_reportedWay_ER", erList.get(tb).getReportedWay().toString()));
+					row3.createCell(7).setCellValue(erList.get(tb).getReportedWay());
 					row3.getCell(7).setCellStyle(mainStyle_center);
 				}
 
@@ -321,7 +325,7 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("通知处理部门");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_NotificationDepartment", erList.get(tb).getProcessingDp().toString()));
+				row4.createCell(5).setCellValue(erList.get(tb).getProcessingDp());
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				for (int i = 2; i < 8; i++) {
 					if(i != 4 && i!= 5){

@@ -21,8 +21,6 @@ public class ExceptionRecordVo extends ExceptionRecord{
 	private String dutyDateStr;				//日期字符串
 
 	private String dictValue;				//新增字典值_报告方式
-	
-	
 
 	private String dictValue1;				//新增字典值_报告部门
 	

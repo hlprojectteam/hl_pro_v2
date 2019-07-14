@@ -90,15 +90,16 @@
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员 </label>
-			<div class="col-sm-3">
-		    	<opt:select dictKey="dc_dutyPerson" classStyle="form-control required" name="watcher" id="watcher" value="${infoThroughVo.watcher}" isDefSelect="false"/>
+	        <label class="col-sm-2 control-label"><span style="color: red">*</span>值班员列表</label>
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_headOfDuty" onclick="OncheckBox(this)"  id="watcher" name="watcher" value="" />
 			</div>
-			<div class="dictValue4"  style="display: none;">
-			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入值班员</label>
-			    <div class="col-sm-3">
-					<input type="text" class="form-control" id="dictValue4" name="dictValue4" value="${infoThroughVo.dictValue4}" data-rule-rangelength="[1,20]" />
-				</div>
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="dictValue4" name="dictValue4" placeholder="输入值班员，多个用“,”隔开" value="${infoThroughVo.watcher}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
 			</div>
 		</div>
 		
@@ -150,7 +151,7 @@
 
     $("#infoSource").change(function(){
         var infoSource = $("#infoSource").val();
-        if(infoSource == 99){
+        if(infoSource == '其它'){
             $(".dictValue").show();
         }else{
             $(".dictValue").hide();
@@ -160,7 +161,7 @@
 
     $("#throughWay").change(function(){
         var throughWay = $("#throughWay").val();
-        if(throughWay == 99){
+        if(throughWay == '其它'){
             $(".dictValue2").show();
         }else{
             $(".dictValue2").hide();
@@ -170,7 +171,7 @@
     
     $("#infoType").change(function(){
         var infoType = $("#infoType").val();
-        if(infoType == 99){
+        if(infoType == '其它'){
             $(".dictValue3").show();
         }else{
             $(".dictValue3").hide();
@@ -178,26 +179,34 @@
         }
     });
     
-    $("#watcher").change(function(){
-        var watcher = $("#watcher").val();
-        if(watcher == 99){
-            $(".dictValue4").show();
-        }else{
-            $(".dictValue4").hide();
-            $(".dictValue4").val(null)
-        }
-    });
+    function OncheckBox(index) {
+		if ($(index).attr("tag") == undefined
+				|| $(index).attr("tag") == "unChecked") {
+			//alert("选中");
+			$(index).attr("tag", "checked");
+			var val='';
+			var valtemp = $.trim($("#dictValue4").val());
+			if(valtemp==''||valtemp==undefined||valtemp==null){
+				val=$(index).val();
+			}else{
+				val=$("#dictValue4").val()+','+$(index).val();
+			}
+			$("#dictValue4").val(val);
+		} else {
+			//取消
+			//alert("取消");
+			$(index).attr("tag", "unChecked");
+		}
+	}
 
 	//提交表单
 	function on_submit(){
-        if($("#infoSource").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+        if($("#infoSource").val() == '其它' && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
             autoMsg("请输入信息来源", 5);
-        }else if($("#throughWay").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+        }else if($("#throughWay").val() == '其它' && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
             autoMsg("请输入通传方式", 5);
-        }else if($("#infoType").val() == 99 && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
+        }else if($("#infoType").val() == '其它' && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
             autoMsg("请输入信息类型", 5);
-        }else if($("#watcher").val() == 99 && ($("#dictValue4").val() == null || $("#dictValue4").val() == "")){
-            autoMsg("请输入值班员", 5);
         }else{
             $.ajax({
                 type : 'post',

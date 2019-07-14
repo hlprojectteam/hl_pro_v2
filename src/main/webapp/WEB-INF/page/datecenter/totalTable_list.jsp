@@ -181,12 +181,21 @@
     
   //撤回
 	function on_withdraw(obj){
-		changeState(obj);
+		parent.layer.confirm("确定撤回？", {
+            btn: ["确定","取消"] //按钮
+        }, function(){
+        	changeState(obj);
+        });
 	}
 	
 	//发布
 	function on_release(obj){
-		changeState(obj);
+		parent.layer.confirm("确定发布？", {
+            btn: ["确定","取消"] //按钮
+        }, function(){
+        	changeState(obj);
+        });
+		
 	}
 		
 	//更改状态	

@@ -102,9 +102,7 @@
     	              {title: "反馈类型", field: "fbType",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_fbType",value);
 		              }},
-		              {title: "值班员", field: "watcher",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_dutyPerson",value);
-		              }},
+		              {title: "值班员", field: "watcher",width: 80,align:"center"},
     				  {title: "操作", field: "", width: 60,align:"center",formatter:function(value,row,index){
     					  return "<a href='#' onclick='on_edit(\""+row.id+"\")'>编辑</a>";
 		              }}]

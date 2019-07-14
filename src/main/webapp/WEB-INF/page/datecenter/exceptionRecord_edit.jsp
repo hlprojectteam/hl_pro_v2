@@ -89,17 +89,20 @@
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>报告人员 </label>
-			<div class="col-sm-3">
-		    	<opt:select dictKey="dc_reportingPerson" classStyle="form-control required" name="reportedPerson" id="reportedPerson" value="${exceptionRecordVo.reportedPerson}" isDefSelect="false"/>
-			</div>
-			<div class="dictValue2"  style="display: none;">
-			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入报告人员</label>
-			    <div class="col-sm-3">
-					<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${exceptionRecordVo.dictValue2}" data-rule-rangelength="[1,20]" />
-				</div>
+	        <label class="col-sm-2 control-label"><span style="color: red">*</span>报告人员列表</label>
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_reportingPerson" onclick="OncheckBox(this)"  id="reportedPerson" name="reportedPerson" value="" />
 			</div>
 		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>报告人员</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="dictValue2" name="dictValue2" placeholder="输入报告人员，多个用“,”隔开" value="${exceptionRecordVo.reportedPerson}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
+			</div>
+		</div>
+		
+		
 		
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>通行路段 </label>
@@ -170,7 +173,7 @@
 	//报告类型切换
     function changeReportedWay(){
 		var reportedWay = $("#reportedWay").val();
-		if(reportedWay == 99){
+		if(reportedWay == '其它'){
 			$(".dictValue").show();
 		}else{
 			$(".dictValue").hide();
@@ -179,7 +182,7 @@
 	}
     $("#reportedDp").change(function(){
         var reportedDp = $("#reportedDp").val();
-        if(reportedDp ==99){
+        if(reportedDp =='其它'){
             $(".dictValue1").show();
 		}else{
             $(".dictValue1").hide();
@@ -187,18 +190,29 @@
 		}
 	});
 	
-	$("#reportedPerson").change(function(){
-        var reportedPerson = $("#reportedPerson").val();
-        if(reportedPerson ==99){
-            $(".dictValue2").show();
-		}else{
-            $(".dictValue2").hide();
-            $(".dictValue2").val(null)
+    function OncheckBox(index) {
+		if ($(index).attr("tag") == undefined
+				|| $(index).attr("tag") == "unChecked") {
+			//alert("选中");
+			$(index).attr("tag", "checked");
+			var val='';
+			var valtemp = $.trim($("#dictValue2").val());
+			if(valtemp==''||valtemp==undefined||valtemp==null){
+				val=$(index).val();
+			}else{
+				val=$("#dictValue2").val()+','+$(index).val();
+			}
+			$("#dictValue2").val(val);
+		} else {
+			//取消
+			//alert("取消");
+			$(index).attr("tag", "unChecked");
 		}
-	});
+	}
+    
 	$("#processingDp").change(function(){
         var processingDp = $("#processingDp").val();
-        if(processingDp ==99){
+        if(processingDp =='其它'){
             $(".dictValue3").show();
 		}else{
             $(".dictValue3").hide();
@@ -236,8 +250,12 @@
 
 	//提交表单
 	function on_submit(){
-        if($("#reportedWay").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
+        if($("#reportedWay").val() == '其它' && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("请输入报告方式", 5);
+        }else if($("#reportedDp").val() == '其它' && ($("#dictValue1").val() == null || $("#dictValue1").val() == "")){
+            autoMsg("请输入报告部门", 5);
+        }else if($("#processingDp").val() == '其它' && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
+            autoMsg("请输入通知部门", 5);
         }else{
             $.ajax({
                 type : 'post',

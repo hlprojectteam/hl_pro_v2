@@ -273,11 +273,11 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 			cell.setCellStyle(r2_style);	//设置单元格样式
 		}
 
+		int esListRows=0;
 		//第四行 及 之后的行
 		HSSFRow row;
-//		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
 		for (int i = 0; i < eoList.size(); i++) {
+			esListRows=eoList.size();//占用了几行
 			row = sheet.createRow(i + 3);	//创建行
 //			row.setHeightInPoints(45);					//设置行高
 			float defaultRowH=30;
@@ -330,6 +330,39 @@ public class EquipmentOperationServiceImpl extends BaseServiceImpl implements IE
 			}
 			row.setHeightInPoints(realRowH);
 		}
+		
+		int LastRowIndex=esListRows+3;
+        //合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
+        sheet.addMergedRegion(new CellRangeAddress(LastRowIndex,LastRowIndex,1,2));
+        sheet.addMergedRegion(new CellRangeAddress(LastRowIndex,LastRowIndex,4,6));
+        sheet.addMergedRegion(new CellRangeAddress(LastRowIndex,LastRowIndex,8,10));
+        //创建行（最后一行）
+        HSSFRow rowLast = sheet.createRow(LastRowIndex);
+        //设置行的高度
+        rowLast.setHeightInPoints(35);
+        
+        //设置最后一行样式(普通列标题样式)
+  		HSSFCellStyle r3_style = wb.createCellStyle();
+  		r3_style.cloneStyleFrom(r2_style);	
+  		r3_style.setAlignment(HorizontalAlignment.LEFT);//基础样式 水平向左
+        
+        setCell(rowLast.createCell(0),wb,mainStyle_center,1);
+        rowLast.createCell(1).setCellValue("车道使用正常");
+        rowLast.getCell(1).setCellStyle(r3_style);
+        rowLast.createCell(2).setCellStyle(r3_style);
+        
+        setCell(rowLast.createCell(3),wb,mainStyle_center,2);
+        rowLast.createCell(4).setCellValue("车道有故障，但不影响收费及发卡操作");
+        rowLast.getCell(4).setCellStyle(r3_style);
+        rowLast.createCell(5).setCellStyle(r3_style);
+        rowLast.createCell(6).setCellStyle(r3_style);
+        
+        setCell(rowLast.createCell(7),wb,mainStyle_center,3);
+        rowLast.createCell(8).setCellValue("车道故障，无法使用");
+        rowLast.getCell(8).setCellStyle(r3_style);
+        rowLast.createCell(9).setCellStyle(r3_style);
+        rowLast.createCell(10).setCellStyle(r3_style);
+		
 		return wb;
 	}
 	

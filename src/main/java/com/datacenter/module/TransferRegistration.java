@@ -28,12 +28,12 @@ public class TransferRegistration extends BaseModule{
 	private Date dutyDate;               //日期
 	private Integer shift;               //班次	(数据字典：dc_shift, 1:早 2:中 3:晚)
 	private Integer weather;             //天气	(数据字典：dc_weather, 1:晴  2:阴  3:多云  4:小雨 5:中雨 6:大雨 7:暴雨 8:雷阵雨  9:霜冻 10:雾  11:台风)
-	private String thisWatcher;     	 //本班次值班人员
+	private String thisWatcher;     	 //本班次值班人员  字典：dc_headOfDuty
 	@DateTimeFormat(pattern="HH:mm")
 	private Date watchTimeStart;         //值班时间Start
 	@DateTimeFormat(pattern="HH:mm")
 	private Date watchTimeEnd;           //值班时间End
-	private String laseWatcher;     	 //上班次值班人员
+	private String laseWatcher;     	 //上班次值班人员  字典：dc_headOfDuty
 	@DateTimeFormat(pattern="HH:mm")
 	private Date handoverTime;           //交接时间
 	private String handoverMatters;      //交接事项

@@ -142,7 +142,7 @@
 
     $("#receiptWay").change(function(){
         var receiptWay = $("#receiptWay").val();
-        if(receiptWay == 99){
+        if(receiptWay == '其它'){
             $(".dictValue").show();
         }else{
             $(".dictValue").hide();
@@ -152,8 +152,8 @@
 
 	//提交表单
 	function on_submit(){
-        if($("#receiptWay").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
+        if($("#receiptWay").val() == '其它' && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("请输入接报方式", 5);
         }else{
             $.ajax({
                 type : 'post',

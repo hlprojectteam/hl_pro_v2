@@ -56,11 +56,10 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 		if(trafficAccidentVo.getDutyDateEnd() != null){		//日期End
 			params.add(Restrictions.le("dutyDate", trafficAccidentVo.getDutyDateEnd()));
 		}
-
-		if(trafficAccidentVo.getWeather() != null){
-			params.add(Restrictions.eq("weather", trafficAccidentVo.getWeather()));
+		if(StringUtils.isNotBlank(trafficAccidentVo.getCarType())){
+			params.add(Restrictions.like("carType", "%" + trafficAccidentVo.getCarType()+"%"));
 		}
-		if(trafficAccidentVo.getAccidentType() != null){
+		if(StringUtils.isNotBlank(trafficAccidentVo.getAccidentType())){
 			params.add(Restrictions.eq("accidentType", trafficAccidentVo.getAccidentType()));
 		}
 		if(StringUtils.isNotBlank(trafficAccidentVo.getAccidentSite())){
@@ -89,17 +88,15 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 
 	@Override
 	public TrafficAccident saveOrUpdate(TrafficAccidentVo trafficAccidentVo) {
-		if(trafficAccidentVo.getReceiptWay().equals(99)){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_receiptWay", trafficAccidentVo.getDictValue());
-			trafficAccidentVo.setReceiptWay(Integer.parseInt(newKey));
+		if(trafficAccidentVo.getReceiptWay().equals("其它")){
+			trafficAccidentVo.setReceiptWay(trafficAccidentVo.getDictValue());
 		}
-		if(trafficAccidentVo.getSource().equals(99)){
-			String newKey2 = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_source", trafficAccidentVo.getDictValue2());
-			trafficAccidentVo.setSource(Integer.parseInt(newKey2));
+		trafficAccidentVo.setCarType(trafficAccidentVo.getDictValue4());
+		if(trafficAccidentVo.getSource().equals("其它")){
+			trafficAccidentVo.setSource(trafficAccidentVo.getDictValue2());
 		}
-		if(trafficAccidentVo.getAccidentType().equals(99)){
-			String newKey3 = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_accidentType", trafficAccidentVo.getDictValue3());
-			trafficAccidentVo.setAccidentType(Integer.parseInt(newKey3));
+		if(trafficAccidentVo.getAccidentType().equals("其它")){
+			trafficAccidentVo.setAccidentType(trafficAccidentVo.getDictValue3());
 		}
 		TrafficAccident trafficAccident = new TrafficAccident();
 		BeanUtils.copyProperties(trafficAccidentVo, trafficAccident);
@@ -147,12 +144,11 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 			objectList.add(trafficAccidentVo.getDutyDateEnd());
 			hql.append(" and dutyDate <= ? ");
 		}
-
-		if(trafficAccidentVo.getWeather() != null){
-			objectList.add(trafficAccidentVo.getWeather());
-			hql.append(" and weather = ? ");
+		if(StringUtils.isNotBlank(trafficAccidentVo.getCarType())){
+			objectList.add("%"+trafficAccidentVo.getCarType()+"%");
+			hql.append(" and carType like ? ");
 		}
-		if(trafficAccidentVo.getAccidentType() != null){
+		if(StringUtils.isNotBlank(trafficAccidentVo.getAccidentType())){
 			objectList.add(trafficAccidentVo.getAccidentType());
 			hql.append(" and accidentType = ? ");
 		}
@@ -293,11 +289,11 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("接报方式");
 				row3.getCell(4).setCellStyle(r2_style);
-				row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_receiptWay", taList.get(tb).getReceiptWay().toString()));
+				row3.createCell(5).setCellValue(taList.get(tb).getReceiptWay());
 				row3.getCell(5).setCellStyle(mainStyle_center);
 				row3.createCell(6).setCellValue("消息来源");
 				row3.getCell(6).setCellStyle(r2_style);
-				row3.createCell(7).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_source", taList.get(tb).getSource().toString()));
+				row3.createCell(7).setCellValue(taList.get(tb).getSource());
 				row3.getCell(7).setCellStyle(mainStyle_center);
 
 				//第五行
@@ -309,20 +305,21 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(2).setCellValue("事故类型");
 				row4.getCell(2).setCellStyle(r2_style);
-				row4.createCell(3).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_accidentType", taList.get(tb).getAccidentType().toString()));
+				row4.createCell(3).setCellValue(taList.get(tb).getAccidentType());
 				row4.getCell(3).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("车辆类型");
 				row4.getCell(4).setCellStyle(r2_style);
-				if(StringUtils.isNotBlank(taList.get(tb).getCarType())){
-					String[] carTypeArr = taList.get(tb).getCarType().split(",");
-					String carTypeStr = "";
-					for (int i = 0; i < carTypeArr.length; i++) {
-						carTypeStr += totalTableServiceImpl.getValueByDictAndKey("dc_carType", carTypeArr[i]) + ",";
-					}
-					row4.createCell(5).setCellValue(carTypeStr.substring(0, carTypeStr.length()-1));
-				}else{
-					row4.createCell(5).setCellValue("");
-				}
+				row4.createCell(5).setCellValue(taList.get(tb).getCarType());
+//				if(StringUtils.isNotBlank(taList.get(tb).getCarType())){
+//					String[] carTypeArr = taList.get(tb).getCarType().split(",");
+//					String carTypeStr = "";
+//					for (int i = 0; i < carTypeArr.length; i++) {
+//						carTypeStr += totalTableServiceImpl.getValueByDictAndKey("dc_carType", carTypeArr[i]) + ",";
+//					}
+//					row4.createCell(5).setCellValue(carTypeStr.substring(0, carTypeStr.length()-1));
+//				}else{
+//					row4.createCell(5).setCellValue("");
+//				}
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				row4.createCell(6).setCellValue("涉及车辆");
 				row4.getCell(6).setCellStyle(r2_style);
@@ -342,7 +339,7 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 				row5.getCell(3).setCellStyle(mainStyle_center);
 				row5.createCell(4).setCellValue("重伤人数");
 				row5.getCell(4).setCellStyle(r2_style);
-				row5.createCell(5).setCellValue(taList.get(tb).getMinorInjuryNum());
+				row5.createCell(5).setCellValue(taList.get(tb).getSeriousInjuryNum());
 				row5.getCell(5).setCellStyle(mainStyle_center);
 				row5.createCell(6).setCellValue("死亡人数");
 				row5.getCell(6).setCellStyle(r2_style);
@@ -354,7 +351,7 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 				row6.setHeightInPoints(40);
 				row6.createCell(0).setCellValue("封闭车道");
 				row6.getCell(0).setCellStyle(r2_style);
-				row6.createCell(1).setCellValue(taList.get(tb).getLaneClosedNum());
+				row6.createCell(1).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_laneClosedNum", taList.get(tb).getLaneClosedNum().toString()));
 				row6.getCell(1).setCellStyle(mainStyle_center);
 				row6.createCell(2).setCellValue("路产损失");
 				row6.getCell(2).setCellStyle(r2_style);

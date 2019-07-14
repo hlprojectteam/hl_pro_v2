@@ -57,16 +57,17 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 			params.add(Restrictions.le("dutyDate", infoThroughVo.getDutyDateEnd()));
 		}
 
-		if(infoThroughVo.getInfoType() != null){
+		if(StringUtils.isNotBlank(infoThroughVo.getInfoType())){
 			params.add(Restrictions.eq("infoType", infoThroughVo.getInfoType()));
 		}
-		if(infoThroughVo.getThroughWay() != null){
+		if(StringUtils.isNotBlank(infoThroughVo.getThroughWay())){
 			params.add(Restrictions.eq("throughWay", infoThroughVo.getThroughWay()));
 		}
 		if(StringUtils.isNotBlank(infoThroughVo.getKeyword())){
 			params.add(Restrictions.sqlRestriction(" (reported_Person like '%" + infoThroughVo.getKeyword() + "%' " +
 					" or info_Content like '%" + infoThroughVo.getKeyword() + "%' " +
 					" or through_Situation like '%" + infoThroughVo.getKeyword() + "%' " +
+					" or through_Way like '%" + infoThroughVo.getKeyword() + "%' " +
 					" or remark_ like '%" + infoThroughVo.getKeyword() + "%' )"));
 		}
 		return this.infoThroughDaoImpl.queryEntityList(page, rows, params, Order.desc("dutyDate"), InfoThrough.class);
@@ -74,22 +75,16 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 
 	@Override
 	public InfoThrough saveOrUpdate(InfoThroughVo infoThroughVo) {
-		if(infoThroughVo.getInfoSource().equals(99)){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_infoSource", infoThroughVo.getDictValue());
-			infoThroughVo.setInfoSource(Integer.parseInt(newKey));
+		if(infoThroughVo.getInfoSource().equals("其它")){
+			infoThroughVo.setInfoSource(infoThroughVo.getDictValue());
 		}
-		if(infoThroughVo.getThroughWay().equals(99)){
-			String newKey2 = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_throughWay", infoThroughVo.getDictValue2());
-			infoThroughVo.setThroughWay(Integer.parseInt(newKey2));
+		if(infoThroughVo.getThroughWay().equals("其它")){
+			infoThroughVo.setThroughWay(infoThroughVo.getDictValue2());
 		}
-		if(infoThroughVo.getInfoType().equals(99)){
-			String newKey3 = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_infoType", infoThroughVo.getDictValue3());
-			infoThroughVo.setInfoType(Integer.parseInt(newKey3));
+		if(infoThroughVo.getInfoType().equals("其它")){
+			infoThroughVo.setInfoType(infoThroughVo.getDictValue3());
 		}
-		if(infoThroughVo.getWatcher().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_dutyPerson", infoThroughVo.getDictValue4());
-			infoThroughVo.setWatcher(newKey);
-		}
+		infoThroughVo.setWatcher(infoThroughVo.getWatcher());
 		InfoThrough infoThrough = new InfoThrough();
 		BeanUtils.copyProperties(infoThroughVo, infoThrough);
 		if(StringUtils.isBlank(infoThrough.getId())){
@@ -272,11 +267,11 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("信息类型");
 				row3.getCell(4).setCellStyle(r2_style);
-				row3.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_infoType", itList.get(tb).getInfoType().toString()));
+				row3.createCell(5).setCellValue(itList.get(tb).getInfoType());
 				row3.getCell(5).setCellStyle(mainStyle_center);
 				row3.createCell(6).setCellValue("信息来源");
 				row3.getCell(6).setCellStyle(r2_style);
-				row3.createCell(7).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_infoSource", itList.get(tb).getInfoSource().toString()));
+				row3.createCell(7).setCellValue( itList.get(tb).getInfoSource());
 				row3.getCell(7).setCellStyle(mainStyle_center);
 
 				//第五行
@@ -284,11 +279,11 @@ public class InfoThroughServiceImpl extends BaseServiceImpl implements IInfoThro
 				row4.setHeightInPoints(40);
 				row4.createCell(0).setCellValue("通传方式");
 				row4.getCell(0).setCellStyle(r2_style);
-				row4.createCell(1).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_throughWay", itList.get(tb).getThroughWay().toString()));
+				row4.createCell(1).setCellValue(itList.get(tb).getThroughWay());
 				row4.getCell(1).setCellStyle(mainStyle_center);
 				row4.createCell(4).setCellValue("值班员");
 				row4.getCell(4).setCellStyle(r2_style);
-				row4.createCell(5).setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", itList.get(tb).getWatcher().toString()));
+				row4.createCell(5).setCellValue(itList.get(tb).getWatcher());
 				
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				for (int i = 2; i < 8; i++) {

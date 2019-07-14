@@ -97,12 +97,18 @@
 				<input type="text" class="form-control" id="accidentSite" name="accidentSite" value="${trafficAccidentVo.accidentSite}" data-rule-required="true" data-rule-rangelength="[1,50]" />
 			</div>
 		</div>
-
 		
 		<div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>车辆类型 </label>
-		    <div class="col-sm-8">
-				<opt:checkbox dictKey="dc_carType"  id="carType" name="carType" value="${trafficAccidentVo.carType}" />
+	        <label class="col-sm-2 control-label"><span style="color: red">*</span>车辆类型列表</label>
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_carType" onclick="OncheckBox(this)"  id="carType" name="carType" value="" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>车辆类型</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="dictValue4" name="dictValue4" placeholder="输入车辆类型，多个用“,”隔开" value="${trafficAccidentVo.carType}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
 			</div>
 		</div>
 		
@@ -198,7 +204,7 @@
 
     $("#receiptWay").change(function(){
         var receiptWay = $("#receiptWay").val();
-        if(receiptWay == 99){
+        if(receiptWay == '其它'){
             $(".dictValue").show();
         }else{
             $(".dictValue").hide();
@@ -208,7 +214,7 @@
 
     $("#source").change(function(){
         var source = $("#source").val();
-        if(source == 99){
+        if(source == '其它'){
             $(".dictValue2").show();
         }else{
             $(".dictValue2").hide();
@@ -218,23 +224,43 @@
 
     $("#accidentType").change(function(){
         var accidentType = $("#accidentType").val();
-        if(accidentType == 99){
+        if(accidentType == '其它'){
             $(".dictValue3").show();
         }else{
             $(".dictValue3").hide();
             $(".dictValue3").val(null)
         }
     });
+    
+    function OncheckBox(index) {
+		if ($(index).attr("tag") == undefined
+				|| $(index).attr("tag") == "unChecked") {
+			//alert("选中");
+			$(index).attr("tag", "checked");
+			var val='';
+			var valtemp = $.trim($("#dictValue4").val());
+			if(valtemp==''||valtemp==undefined||valtemp==null){
+				val=$(index).val();
+			}else{
+				val=$("#dictValue4").val()+','+$(index).val();
+			}
+			$("#dictValue4").val(val);
+		} else {
+			//取消
+			//alert("取消");
+			$(index).attr("tag", "unChecked");
+		}
+    }
 
 
 	//提交表单
 	function on_submit(){
-        if($("#receiptWay").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
-        }else if($("#source").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
-        }else if($("#accidentType").val() == 99 && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
+        if($("#receiptWay").val() == '其它' && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
+            autoMsg("请输入接报方式", 5);
+        }else if($("#source").val() == '其它' && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("请输入消息来源", 5);
+        }else if($("#accidentType").val() == '其它' && ($("#dictValue3").val() == null || $("#dictValue3").val() == "")){
+            autoMsg("请输入事故类型", 5);
 		}else{
             $.ajax({
                 type : 'post',

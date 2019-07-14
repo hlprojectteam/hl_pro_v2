@@ -108,9 +108,7 @@
     	              {title: "巡检时间结束", field: "inspectionTimeEnd",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "值班主任", field: "shiftSupervisor",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_headOfDuty",value);
-		              }},
+		              {title: "值班主任", field: "shiftSupervisor",width: 80,align:"center"},
     	              {title: "巡检位置", field: "inspectionlocation",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return changeDataDictByKey("dc_inspectionlocation",value);
 		              }},

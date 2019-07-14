@@ -81,15 +81,16 @@
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>车型</label>
-		    <div class="col-sm-3">
-		    	<opt:select dictKey="dc_carType" classStyle="form-control required" name="carType" id="carType" value="${rescueWorkVo.carType}" isDefSelect="true" />
+	        <label class="col-sm-2 control-label"><span style="color: red">*</span>车辆类型列表</label>
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_carType" onclick="OncheckBox(this)"  id="carType" name="carType" value="" />
 			</div>
-			<div class="dictValue"  style="display: none;">
-			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的车型</label>
-				<div class="col-sm-3">
-					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${rescueWorkVo.dictValue}" data-rule-rangelength="[1,15]" />
-				</div>
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>车辆类型</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="dictValue" name="dictValue" placeholder="输入车辆类型，多个用“,”隔开" value="${rescueWorkVo.carType}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
 			</div>
 		</div>
 		
@@ -116,25 +117,23 @@
 		    <div class="col-sm-3">
 		    	<opt:select dictKey="dc_whereabouts" classStyle="form-control required" name="whereabouts" id="whereabouts" value="${rescueWorkVo.whereabouts}" isDefSelect="true" />
 			</div>
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>拯救车牌 </label>
+			<div class="dictValue2"  style="display: none;">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的车辆去向</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${rescueWorkVo.dictValue2}" data-rule-rangelength="[1,20]" />
+			</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>拯救车牌 </label>
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="rescuePlates" name="rescuePlates" value="${rescueWorkVo.rescuePlates}" data-rule-required="true" data-rule-rangelength="[1,12]" />    
 			</div>
-		</div>
-		<div class="form-group dictValue2"  style="display: none;">
-			<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入要添加的车辆去向</label>
-			<div class="col-sm-3">
-				<input type="text" class="form-control" id="dictValue2" name="dictValue2" value="${rescueWorkVo.dictValue2}" data-rule-rangelength="[1,15]" />
-			</div>
-		</div>
-		
-		<div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>司机电话 </label>
+			<label class="col-sm-2 control-label"><span style="color: red">*</span>司机电话 </label>
 		    <div class="col-sm-3">
 				<input type="text" class="form-control" id="driverPhone" name="driverPhone" value="${rescueWorkVo.driverPhone}" data-rule-required="true" data-rule-phone="true" />    
 			</div>
 		</div>
-		
 		
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
@@ -157,19 +156,29 @@
 	var winName = "${winName}";
 	var URLStr = "/datecenter/rescueWork/rescueWork_";
 
-    $("#carType").change(function(){
-        var carType = $("#carType").val();
-        if(carType == 99){
-            $(".dictValue").show();
-		}else{
-            $(".dictValue").hide();
-            $(".dictValue").val(null)
+	function OncheckBox(index) {
+		if ($(index).attr("tag") == undefined
+				|| $(index).attr("tag") == "unChecked") {
+			//alert("选中");
+			$(index).attr("tag", "checked");
+			var val='';
+			var valtemp = $.trim($("#dictValue").val());
+			if(valtemp==''||valtemp==undefined||valtemp==null){
+				val=$(index).val();
+			}else{
+				val=$("#dictValue").val()+','+$(index).val();
+			}
+			$("#dictValue").val(val);
+		} else {
+			//取消
+			//alert("取消");
+			$(index).attr("tag", "unChecked");
 		}
-	});
+	}
 
     $("#whereabouts").change(function(){
         var whereabouts = $("#whereabouts").val();
-        if(whereabouts == 99){
+        if(whereabouts == '其它'){
             $(".dictValue2").show();
         }else{
             $(".dictValue2").hide();
@@ -189,10 +198,8 @@
 
 	//提交表单
 	function on_submit(){
-	    if($("#carType").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
-		}else if($("#whereabouts").val() == 99 && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
-            autoMsg("新添加的字典类型不能为空", 5);
+	    if($("#whereabouts").val() == '其它' && ($("#dictValue2").val() == null || $("#dictValue2").val() == "")){
+            autoMsg("新添加的方向不能为空", 5);
 		}else{
             $.ajax({
                 type : 'post',

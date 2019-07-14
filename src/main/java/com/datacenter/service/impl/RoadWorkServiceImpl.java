@@ -73,6 +73,7 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 		if(StringUtils.isNotBlank(roadWorkVo.getKeyword())){
 			params.add(Restrictions.sqlRestriction(" ( " +
 					" relation_Person like '%" + roadWorkVo.getKeyword() + "%' " +
+					" or unit_Name like '%" + roadWorkVo.getKeyword() + "%' " +
 					" or relation_Phone like '%" + roadWorkVo.getKeyword() + "%' " +
 					" or specific_Location like '%" + roadWorkVo.getKeyword() + "%' " +
 					" or construction_Content like '%" + roadWorkVo.getKeyword() + "%' " +
@@ -87,14 +88,10 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 
 	@Override
 	public RoadWork saveOrUpdate(RoadWorkVo roadWorkVo) {
-		if(roadWorkVo.getUnitName().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_ConstructionUnitName", roadWorkVo.getDictValue());
-			roadWorkVo.setUnitName(newKey);
+		if(roadWorkVo.getUnitName().equals("其它")){
+			roadWorkVo.setUnitName(roadWorkVo.getDictValue());
 		}
-		if(roadWorkVo.getChecker().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_Inspectors", roadWorkVo.getDictValue2());
-			roadWorkVo.setChecker(newKey);
-		}
+		roadWorkVo.setChecker(roadWorkVo.getDictValue2());
 		RoadWork roadWork = new RoadWork();
 		BeanUtils.copyProperties(roadWorkVo, roadWork);
 		if(StringUtils.isBlank(roadWork.getId())){
@@ -147,8 +144,8 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 			hql.append(" and positionAttributes = ? ");
 		}
 		if(StringUtils.isNotBlank(roadWorkVo.getUnitName())){
-			objectList.add("%" + roadWorkVo.getUnitName() + "%");
-			hql.append(" and unitName like ? ");
+			objectList.add(roadWorkVo.getUnitName());
+			hql.append(" and unitName = ? ");
 		}
 		if(StringUtils.isNotBlank(roadWorkVo.getConstructionContent())){
 			objectList.add("%" + roadWorkVo.getConstructionContent() + "%");
@@ -158,7 +155,6 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 			objectList.add("%" + roadWorkVo.getRectificationMeasures() + "%");
 			hql.append(" and rectificationMeasures like ? ");
 		}
-
 		if(StringUtils.isNotBlank(roadWorkVo.getKeyword())){
 			hql.append(" and (unitName like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or relationPerson like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or relationPhone like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or specificLocation like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or constructionContent like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or jeevesSituation like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or checker like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or description like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or rectificationMeasures like '%").append(roadWorkVo.getKeyword()).append("%' ").append(" or reportedSituation like '%").append(roadWorkVo.getKeyword()).append("%' )");
 		}
@@ -322,21 +318,22 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 					case 0:	cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD));	break;
 					case 1: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getApproachTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 2: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getDepartureTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
-					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_ConstructionUnitName", rwList.get(i).getUnitName().toString()));	break;
+					case 3: cell.setCellValue(rwList.get(i).getUnitName());	break;
 					case 4: cell.setCellValue(rwList.get(i).getRelationPerson() + rwList.get(i).getRelationPhone());	break;
-					case 5: 
-						//cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_positionAttributes", rwList.get(i).getPositionAttributes().toString()));	break;
-						if(StringUtils.isNotBlank(rwList.get(i).getPositionAttributes())){
-							String[] paArr = rwList.get(i).getPositionAttributes().split(",");
-							String paStr = "";
-							for (int m = 0; m < paArr.length; m++) {
-								paStr += totalTableServiceImpl.getValueByDictAndKey("dc_positionAttributes", paArr[m]) + ",";
-							}
-							cell.setCellValue(paStr.substring(0, paStr.length()-1));
-						}else{
-							cell.setCellValue("");
-						}
-						break;
+					case 5: cell.setCellValue(rwList.get(i).getPositionAttributes());	break;
+//					case 5: 
+//						//cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_positionAttributes", rwList.get(i).getPositionAttributes().toString()));	break;
+//						if(StringUtils.isNotBlank(rwList.get(i).getPositionAttributes())){
+//							String[] paArr = rwList.get(i).getPositionAttributes().split(",");
+//							String paStr = "";
+//							for (int m = 0; m < paArr.length; m++) {
+//								paStr += totalTableServiceImpl.getValueByDictAndKey("dc_positionAttributes", paArr[m]) + ",";
+//							}
+//							cell.setCellValue(paStr.substring(0, paStr.length()-1));
+//						}else{
+//							cell.setCellValue("");
+//						}
+//						break;
 					case 6: cell.setCellValue(rwList.get(i).getSpecificLocation()); break;
 					case 7: 
 						cell.setCellValue(rwList.get(i).getConstructionContent()); 
@@ -348,7 +345,7 @@ public class RoadWorkServiceImpl extends BaseServiceImpl implements IRoadWorkSer
 						break;
 					case 8: cell.setCellValue(rwList.get(i).getJeevesSituation()); break;
 					case 9: cell.setCellValue(DateUtil.getDateFormatString(rwList.get(i).getCheckTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
-					case 10: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_Inspectors", rwList.get(i).getChecker().toString()));	break;
+					case 10: cell.setCellValue(rwList.get(i).getChecker());	break;
 					case 11: 
 						cell.setCellValue(rwList.get(i).getDescription()); 
 						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),

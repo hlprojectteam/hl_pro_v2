@@ -33,7 +33,7 @@ public class FeedBack extends BaseModule{
 	private String plateNum;               //车辆号牌
 	private String customerPhone;          //联系电话
 	private Integer fbType;                //反馈类型		(数据字典：dc_fbType)
-	private String watcher;                //值班员 (数据字典：dc_dutyPerson)
+	private String watcher;                //值班员 (数据字典：dc_headOfDuty)
 	private String situationDesc;          //情况概述
 	private String disposalSituation;      //处理情况
 	private String remark;                 //备注

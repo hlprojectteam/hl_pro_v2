@@ -110,14 +110,8 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 
 	@Override
 	public TransferRegistration saveOrUpdate(TransferRegistrationVo transferRegistrationVo) {
-		if(transferRegistrationVo.getThisWatcher().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_dutyPerson", transferRegistrationVo.getDictValue());
-			transferRegistrationVo.setThisWatcher(newKey);
-		}
-		if(transferRegistrationVo.getLaseWatcher().equals("99")){
-			String newKey = this.dataDictionaryServiceImpl.updateCategoryAttributesByCode("dc_dutyPerson", transferRegistrationVo.getDictValue2());
-			transferRegistrationVo.setLaseWatcher(newKey);
-		}
+		transferRegistrationVo.setThisWatcher(transferRegistrationVo.getDictValue());
+		transferRegistrationVo.setLaseWatcher(transferRegistrationVo.getDictValue2());
 		TransferRegistration transferRegistration = new TransferRegistration();
 		BeanUtils.copyProperties(transferRegistrationVo, transferRegistration);
 		if(StringUtils.isBlank(transferRegistration.getId())){
@@ -280,7 +274,7 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 					case 0:	cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getDutyDate(),DateUtil.JAVA_DATE_FORMAT_CH_YMD)); break;
 					case 1:	cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_shift", trList.get(i).getShift().toString())); break;
 					case 2: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_weather", trList.get(i).getWeather().toString()));	break;
-					case 3: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", trList.get(i).getThisWatcher().toString()));	break;
+					case 3: cell.setCellValue(trList.get(i).getThisWatcher());	break;
 					case 4:
 						if(trList.get(i).getShift() == 3){
 							cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getWatchTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) 
@@ -289,7 +283,7 @@ public class TransferRegistrationServiceImpl extends BaseServiceImpl implements 
 							cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getWatchTimeStart(),DateUtil.JAVA_DATE_FORMAT_HM) + "--" 
 						+ DateUtil.getDateFormatString(trList.get(i).getWatchTimeEnd(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 						}
-					case 5: cell.setCellValue(totalTableServiceImpl.getValueByDictAndKey("dc_dutyPerson", trList.get(i).getLaseWatcher().toString()));	break;
+					case 5: cell.setCellValue(trList.get(i).getLaseWatcher());	break;
 					case 6: cell.setCellValue(DateUtil.getDateFormatString(trList.get(i).getHandoverTime(),DateUtil.JAVA_DATE_FORMAT_HM));	break;
 					case 7: 
 						cell.setCellValue(trList.get(i).getHandoverMatters()); 

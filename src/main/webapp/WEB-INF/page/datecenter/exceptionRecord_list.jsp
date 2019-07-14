@@ -107,19 +107,11 @@
   	              	  {title: "接报时间", field: "receiptTime",width: 80,align:"center",formatter:function(value,row,index){
 		           	  		return value.substr(11,5);
 		              }},
-    	              {title: "报告部门", field: "reportedDp",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_reportingDepartment",value);
-		              }},
-  	              	  {title: "报告人员", field: "reportedPerson",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_reportingPerson",value);
-		              }},
-    	              {title: "报告方式", field: "reportedWay",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_reportedWay_ER",value);
-		               }},
+		              {title: "报告部门", field: "reportedDp",width: 80,align:"center"},
+		              {title: "报告人员", field: "reportedPerson",width: 80,align:"center"},
+		               {title: "报告方式", field: "reportedWay",width: 80,align:"center"},
 		              {title: "通行路段", field: "trafficRoad",width: 150,align:"center"},
-		              {title: "通知处理部门", field: "processingDp",width: 80,align:"center",formatter:function(value,row,index){
-		           	  		return changeDataDictByKey("dc_NotificationDepartment",value);
-		              }},
+		              {title: "通知处理部门", field: "processingDp",width: 80,align:"center"},
     	             /* {title: "情况简述", field: "briefIntroduction",width: 200,align:"center"},
     	              {title: "处理结果", field: "result",width: 200,align:"center"},
     	              {title: "备注", field: "remark",width: 200,align:"center"},*/

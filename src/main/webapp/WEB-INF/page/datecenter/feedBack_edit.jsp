@@ -79,15 +79,16 @@
 		</div>
 		
 		<div class="form-group">
-		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员 </label>
-			<div class="col-sm-3">
-		    	<opt:select dictKey="dc_dutyPerson" classStyle="form-control required" name="watcher" id="watcher" value="${feedBackVo.watcher}" isDefSelect="false"/>
+	        <label class="col-sm-2 control-label"><span style="color: red">*</span>值班员列表</label>
+			<div class="col-sm-8">
+				<opt:checkbox dictKey="dc_headOfDuty" onclick="OncheckBox(this)"  id="watcher" name="watcher" value="" />
 			</div>
-			<div class="dictValue"  style="display: none;">
-			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入值班员</label>
-			    <div class="col-sm-3">
-					<input type="text" class="form-control" id="dictValue" name="dictValue" value="${feedBackVo.dictValue}" data-rule-rangelength="[1,20]" />
-				</div>
+		</div>
+		
+		<div class="form-group">
+		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>值班员</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="dictValue" name="dictValue" placeholder="输入值班员，多个用“,”隔开" value="${feedBackVo.watcher}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
 			</div>
 		</div>
 		
@@ -127,15 +128,25 @@
 	var winName = "${winName}";
 	var URLStr = "/datecenter/feedBack/feedBack_";
 	
-	$("#watcher").change(function(){
-        var watcher = $("#watcher").val();
-        if(watcher ==99){
-            $(".dictValue").show();
-		}else{
-            $(".dictValue").hide();
-            $(".dictValue").val(null)
+	function OncheckBox(index) {
+		if ($(index).attr("tag") == undefined
+				|| $(index).attr("tag") == "unChecked") {
+			//alert("选中");
+			$(index).attr("tag", "checked");
+			var val='';
+			var valtemp = $.trim($("#dictValue").val());
+			if(valtemp==''||valtemp==undefined||valtemp==null){
+				val=$(index).val();
+			}else{
+				val=$("#dictValue").val()+','+$(index).val();
+			}
+			$("#dictValue").val(val);
+		} else {
+			//取消
+			//alert("取消");
+			$(index).attr("tag", "unChecked");
 		}
-	});
+	}
 
 	//新增或编辑
 	function on_save(){
@@ -148,9 +159,6 @@
 
 	//提交表单
 	function on_submit(){  
-		if($("#watcher").val() == 99 && ($("#dictValue").val() == null || $("#dictValue").val() == "")){
-            autoMsg("请输入值班人员", 5);
-		}else{
 			$.ajax({
 				type : 'post',
 				async:false,
@@ -172,7 +180,6 @@
 	                autoAlert("系统出错，请检查！", 5);
 	            }
 			});
-		}
 	}
 
 </script>

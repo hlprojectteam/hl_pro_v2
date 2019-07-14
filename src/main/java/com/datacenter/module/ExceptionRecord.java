@@ -29,11 +29,11 @@ public class ExceptionRecord extends BaseModule{
 	private Integer exceptionType; 			  //异常类型	(数据字典: dc_exceptionType  1:营运异常  2:其他异常)
 	@DateTimeFormat(pattern="HH:mm")                      
 	private Date receiptTime;                 //接报时间      
-	private String reportedDp;                //报告部门      
+	private String reportedDp;                //报告部门      字典：dc_reportingDepartment
 	private String reportedPerson;            //报告人员      
-	private Integer reportedWay;              //报告方式	(数据字典：dc_reportedWay_ER 1：服务热线 2：内线电话 3：路面监控 4：环龙营运动态信息群 5：其它（人工输入）)
+	private String reportedWay;              //报告方式	(数据字典：dc_reportedWay_ER 1：服务热线 2：内线电话 3：路面监控 4：环龙营运动态信息群 5：其它（人工输入）)
 	private String trafficRoad;               //通行路段      
-	private String processingDp;              //通知处理部门    
+	private String processingDp;              //通知处理部门    字典：dc_NotificationDepartment
 	private String briefIntroduction;         //情况简述      
 	private String result;                    //处理结果      
 	private String remark;                    //备注        
@@ -96,11 +96,11 @@ public class ExceptionRecord extends BaseModule{
 		this.reportedPerson = reportedPerson;
 	}
 	
-	@Column(name = "reported_Way", length=11)
-	public Integer getReportedWay() {
+	@Column(name = "reported_Way", length=20)
+	public String getReportedWay() {
 		return reportedWay;
 	}
-	public void setReportedWay(Integer reportedWay) {
+	public void setReportedWay(String reportedWay) {
 		this.reportedWay = reportedWay;
 	}
 	

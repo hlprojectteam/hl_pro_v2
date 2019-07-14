@@ -45,8 +45,9 @@ public class Checkbox extends TagSupport {
 				for (CategoryAttribute ca : set) {
 					stringBuffer.append("<label class=\"checkbox-inline\"><input type=\"checkbox\" name=\""+name+"\" onchange=\""+onchange+"\" onclick=\""+onclick+"\" fieldtype=\"checkbox\" fieldlong=\"\" ");
 					stringBuffer.append(" value=\""+ca.getAttrKey()+"\" ");
-					if(value.indexOf(ca.getAttrKey())>-1)
+					if(value.indexOf(ca.getAttrKey())>-1){
 						stringBuffer.append(" checked=\"checked\" ");
+					}
 					stringBuffer.append(">");
 					stringBuffer.append(ca.getAttrValue());
 					stringBuffer.append("</label>");
