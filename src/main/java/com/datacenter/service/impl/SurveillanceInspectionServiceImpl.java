@@ -167,8 +167,8 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 		//设置第一行样式(工作表名称样式)
 		HSSFCellStyle r0_style = wb.createCellStyle();
-		r0_style.cloneStyleFrom(mainStyle);
 		r0_style.setAlignment(HorizontalAlignment.CENTER);		//水平居中
+		r0_style.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
 		HSSFFont r0_font = wb.createFont();
 		r0_font.setBold(true);						//字体加粗
 		r0_font.setFontHeightInPoints((short)12);	//字体大小
@@ -176,8 +176,8 @@ public class SurveillanceInspectionServiceImpl extends BaseServiceImpl implement
 
 		//设置第二行样式(表单编号样式)
 		HSSFCellStyle r1_style = wb.createCellStyle();
-		r1_style.cloneStyleFrom(mainStyle);
 		r1_style.setAlignment(HorizontalAlignment.RIGHT);		//水平靠右
+		r0_style.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
 		HSSFFont r1_font = wb.createFont();
 		r1_font.setBold(true);						//字体加粗
 		r1_style.setFont(r1_font);

@@ -193,12 +193,12 @@ public class BriefController extends BaseController{
 				long count_feedback = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_feedback t where t.fb_Type = 1 and t.ttId = '" + ttId + "'");
 				String jt_3 = "";
 				if(count_feedback > 0){
-					jt_3 = "二、其它情况：\n" +
+					jt_3 = "三、其它情况：\n" +
 							"	1、营运异常记录" + count_exceptionrecord + "宗；\n" +
 							"	2、信息通传" + count_infothrough + "宗；\n" +
 							"	3、顾客投诉" + count_feedback + "宗。\n";
 				}else{
-					jt_3 = "二、其它情况：\n" +
+					jt_3 = "三、其它情况：\n" +
 							"	1、营运异常记录" + count_exceptionrecord + "宗；\n" +
 							"	2、信息通传" + count_infothrough + "宗；\n" +
 							"	3、全线收费站有序开展超限非现场执法，无投诉及收费纠纷。\n";
@@ -325,12 +325,12 @@ public class BriefController extends BaseController{
 				long count_feedback = this.baseDaoImpl.queryCountBySql("select count(t.id) from dc_feedback t where t.fb_Type = 1 and t.ttId = '" + ttId + "'");
 				String jt_3 = "";
 				if(count_feedback > 0){
-					jt_3 = "二、其它情况：\n" +
+					jt_3 = "三、其它情况：\n" +
 							"	1、营运异常记录" + count_exceptionrecord + "宗；\n" +
 							"	2、信息通传" + count_infothrough + "宗；\n" +
 							"	3、顾客投诉" + count_feedback + "宗。\n";
 				}else{
-					jt_3 = "二、其它情况：\n" +
+					jt_3 = "三、其它情况：\n" +
 							"	1、营运异常记录" + count_exceptionrecord + "宗；\n" +
 							"	2、信息通传" + count_infothrough + "宗；\n" +
 							"	3、全线收费站有序开展超限非现场执法，无投诉及收费纠纷。\n";

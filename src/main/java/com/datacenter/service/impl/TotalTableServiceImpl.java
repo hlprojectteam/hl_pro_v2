@@ -360,7 +360,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		row10.createCell(0).setCellValue("营运异常记录");
 		row10.createCell(1).setCellValue(" 反映对收费站广场、车道、亭内的安全检查，对收费工作的监督和稽查,以及协助收費站处理的其它异常");
 		Hyperlink link10 = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
-		link10.setAddress("#异常记录!A1");
+		link10.setAddress("#营运异常记录!A1");
 		row10.getCell(0).setHyperlink(link10);
 		row10.setHeightInPoints(25);
 		row10.getCell(0).setCellStyle(linkStyle);
@@ -1432,6 +1432,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
         rowLast.createCell(0).setCellValue("注：实时状态指每日早上在省营运平台进行登录。依次检查RFID、5.8G、高清卡口的运行状态情况。显示绿灯为正常运行，打√，显示红灯为设备故障，打×，需要向广交机及工程部进行设备报修，并在设备修复后记录修复时间。标识成功率指的是各联网关键设备在上一工班日的标识情况统计。误标数量指的是两个RFID标识点的疑似误标流水条数。");
         //设置单元格样式
         rowLast.getCell(0).setCellStyle(r2_style);	//设置单元格样式
+		for (int i = 1; i < 10; i++) {
+			rowLast.createCell(i).setCellStyle(r2_style);
+		}
 
 		return wb;
 	}

@@ -197,8 +197,8 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 
 		//设置第一行样式(工作表名称样式)
 		HSSFCellStyle r0_style = wb.createCellStyle();
-		r0_style.cloneStyleFrom(mainStyle);
 		r0_style.setAlignment(HorizontalAlignment.CENTER);		//水平居中
+		r0_style.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
 		HSSFFont r0_font = wb.createFont();
 		r0_font.setBold(true);						//字体加粗
 		r0_font.setFontHeightInPoints((short)12);	//字体大小
@@ -206,8 +206,8 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 
 		//设置第二行样式(表单编号样式)
 		HSSFCellStyle r1_style = wb.createCellStyle();
-		r1_style.cloneStyleFrom(mainStyle);
 		r1_style.setAlignment(HorizontalAlignment.RIGHT);		//水平靠右
+		r0_style.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
 		HSSFFont r1_font = wb.createFont();
 		r1_font.setBold(true);						//字体加粗
 		r1_style.setFont(r1_font);
@@ -391,7 +391,7 @@ public class ExceptionRecordServiceImpl extends BaseServiceImpl implements IExce
 
 			//第二行
 			HSSFRow row1 = sheet.createRow(1);
-			row1.createCell(0).setCellValue("表单编号：HLZXRBB-09");
+			row1.createCell(0).setCellValue("表单编号：HLZXRBB-10");
 			row1.getCell(0).setCellStyle(r1_style);
 
 			//第三行

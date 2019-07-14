@@ -137,8 +137,8 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
 
         //设置第一行样式(工作表名称样式)
         HSSFCellStyle r0_style = wb.createCellStyle();
-        r0_style.cloneStyleFrom(mainStyle);
         r0_style.setAlignment(HorizontalAlignment.CENTER);		//水平居中
+        r0_style.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
         HSSFFont r0_font = wb.createFont();
         r0_font.setBold(true);						//字体加粗
         r0_font.setFontHeightInPoints((short)12);	//字体大小
@@ -146,8 +146,8 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
 
         //设置第二行样式(表单编号样式)
         HSSFCellStyle r1_style = wb.createCellStyle();
-        r1_style.cloneStyleFrom(mainStyle);
         r1_style.setAlignment(HorizontalAlignment.RIGHT);		//水平靠右
+        r0_style.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
         HSSFFont r1_font = wb.createFont();
         r1_font.setBold(true);						//字体加粗
         r1_style.setFont(r1_font);
@@ -305,6 +305,9 @@ public class EquipmentStatusServiceImpl extends BaseServiceImpl implements IEqui
         rowLast.createCell(0).setCellValue("注：实时状态指每日早上在省营运平台进行登录。依次检查RFID、5.8G、高清卡口的运行状态情况。显示绿灯为正常运行，打√，显示红灯为设备故障，打×，需要向广交机及工程部进行设备报修，并在设备修复后记录修复时间。标识成功率指的是各联网关键设备在上一工班日的标识情况统计。误标数量指的是两个RFID标识点的疑似误标流水条数。");
         //设置单元格样式
         rowLast.getCell(0).setCellStyle(r2_style);	//设置单元格样式
+        for (int i = 1; i < 10; i++) {
+            rowLast.createCell(i).setCellStyle(r2_style);
+        }
 
         return wb;
         
