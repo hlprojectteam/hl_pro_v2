@@ -75,8 +75,7 @@ public class LoginController extends BaseController{
 				if(user!=null){
 					if(user.getState()!=null){
 						if(user.getState()==1){//正常账号
-							//if(Common.SingleLogin.equals("1")){//配置 只能一个账号登陆
-							if(true){
+							if(Common.SingleLogin.equals("1")){//配置 只能一个账号登陆
 								boolean chk = false;
 								List<User> users = SystemWebSocketHandler.users;
 								for (User u : users) {
