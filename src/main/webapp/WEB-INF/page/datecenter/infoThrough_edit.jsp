@@ -121,7 +121,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,250]" >${infoThroughVo.remark}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,500]" >${infoThroughVo.remark}</textarea>
 		    </div>
 	  	</div>
 		<br><br><br>

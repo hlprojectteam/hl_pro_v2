@@ -79,7 +79,7 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>事发地点 </label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="scene" name="scene" value="${fieldOperationsVo.scene}" data-rule-required="true" data-rule-rangelength="[1,30]" />    
+				<input type="text" class="form-control" id="scene" name="scene" value="${fieldOperationsVo.scene}" data-rule-required="true" data-rule-rangelength="[1,50]" />    
 			</div>
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>涉事单位</label>
 		    <div class="col-sm-3">
@@ -112,7 +112,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,250]" >${fieldOperationsVo.remark}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,500]" >${fieldOperationsVo.remark}</textarea>
 		    </div>
 	  	</div>
 		<br><br><br>

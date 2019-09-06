@@ -27,7 +27,7 @@ public class Brief extends BaseModule{
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date dutyDate;                  //日期
 	private String cwfzjl;                  //常务副总经理
-	private String zgfzjl;                  //主管副总经理
+	private String zgfzjl;                  //分管领导
 	private String zxfzr;                   //中心副主任
 	private String fhry;                    //复核人员
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")

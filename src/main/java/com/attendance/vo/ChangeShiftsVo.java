@@ -2,6 +2,8 @@ package com.attendance.vo;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.attendance.module.ChangeShifts;
 
 /**
@@ -21,10 +23,16 @@ public class ChangeShiftsVo extends ChangeShifts{
 	private Date readTime;// 阅读时间
 	private Date approvalTime;// 审批时间
 	private String applyMenName;// 申请人名称 
-	private String beApplyMenName;// 被调人名称 
+	private String beApplyMenName;// 被调人名称
+	private String beApplyMenJobNumber;// 被调人工号 
 	private String creatorOrgName;// 申请人部门
 	private String creatorOrgId;// 申请人部门Id
 	private String creatorAvatar;// 申请人头像路径
+	private String creatorJobNumber;// 申请人员工号
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date recordDateStart;                 //日期Start
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date recordDateEnd;               	 //日期End
 	
 	public String getCreatorOrgName() {
 		return creatorOrgName;
@@ -97,6 +105,30 @@ public class ChangeShiftsVo extends ChangeShifts{
 	}
 	public void setApprovalContent(String approvalContent) {
 		this.approvalContent = approvalContent;
+	}
+	public Date getRecordDateStart() {
+		return recordDateStart;
+	}
+	public void setRecordDateStart(Date recordDateStart) {
+		this.recordDateStart = recordDateStart;
+	}
+	public Date getRecordDateEnd() {
+		return recordDateEnd;
+	}
+	public void setRecordDateEnd(Date recordDateEnd) {
+		this.recordDateEnd = recordDateEnd;
+	}
+	public String getCreatorJobNumber() {
+		return creatorJobNumber;
+	}
+	public void setCreatorJobNumber(String creatorJobNumber) {
+		this.creatorJobNumber = creatorJobNumber;
+	}
+	public String getBeApplyMenJobNumber() {
+		return beApplyMenJobNumber;
+	}
+	public void setBeApplyMenJobNumber(String beApplyMenJobNumber) {
+		this.beApplyMenJobNumber = beApplyMenJobNumber;
 	}
 
 

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.common.attach.service.IAttachService;
 import com.common.base.service.impl.BaseServiceImpl;
@@ -82,13 +83,16 @@ public class PartyMemberServiceImpl extends BaseServiceImpl implements IPartyMem
 	
 	}
 
+	@Transactional
 	@Override
 	public void deletePartyMemberEntitys(String ids) {
 		String[] idz = ids.split(",");
 		for (int i = 0; i < idz.length; i++) {
+			this.delete(PartyMember.class, idz[i]);
+		}
+		for (int i = 0; i < idz.length; i++) {
 			//删除附件
 			this.attachServiceImpl.deleteAttachByFormId(idz[i]);
-			this.delete(PartyMember.class, idz[i]);
 		}
 	}
 

@@ -128,21 +128,21 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>情况简述</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="8" cols="" id="briefIntroduction" name="briefIntroduction" data-rule-required="true" data-rule-rangelength="[1,300]" >${exceptionRecordVo.briefIntroduction}</textarea>
+		       <textarea class="form-control" rows="8" cols="" id="briefIntroduction" name="briefIntroduction" data-rule-required="true" data-rule-rangelength="[1,800]" >${exceptionRecordVo.briefIntroduction}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>处理结果</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="8" cols="" id="result" name="result" data-rule-required="true" data-rule-rangelength="[1,300]" >${exceptionRecordVo.result}</textarea>
+		       <textarea class="form-control" rows="8" cols="" id="result" name="result" data-rule-required="true" data-rule-rangelength="[1,800]" >${exceptionRecordVo.result}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,250]" >${exceptionRecordVo.remark}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,500]" >${exceptionRecordVo.remark}</textarea>
 		    </div>
 	  	</div>
 		<br><br><br>

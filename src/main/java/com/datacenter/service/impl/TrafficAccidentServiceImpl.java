@@ -285,7 +285,7 @@ public class TrafficAccidentServiceImpl extends BaseServiceImpl implements ITraf
 				row3.createCell(2).setCellValue("接报时间");
 				row3.getCell(2).setCellStyle(r2_style);
 				row3.createCell(3).setCellValue(DateUtil.getDateFormatString
-						(taList.get(0).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
+						(taList.get(tb).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("接报方式");
 				row3.getCell(4).setCellStyle(r2_style);

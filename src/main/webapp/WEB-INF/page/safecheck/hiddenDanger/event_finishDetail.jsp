@@ -107,7 +107,7 @@
                     </c:if>
                     
                     
-                    <li>
+                    <li style="display: none;">
                         <div>
                             <button class="btn btn-primary " type="button" onclick="look_CAR()"><i class="fa fa-search"></i>&nbsp;安全隐患整改报告</button>
                         </div>

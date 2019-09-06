@@ -88,7 +88,7 @@ public class FeedBack extends BaseModule{
 		this.customerSex = customerSex;
 	}
 	
-	@Column(name = "plate_Num", length=12)
+	@Column(name = "plate_Num", length=60)
 	public String getPlateNum() {
 		return plateNum;
 	}
@@ -96,7 +96,7 @@ public class FeedBack extends BaseModule{
 		this.plateNum = plateNum;
 	}
 	
-	@Column(name = "customer_Phone", length=16)
+	@Column(name = "customer_Phone", length=40)
 	public String getCustomerPhone() {
 		return customerPhone;
 	}
@@ -120,7 +120,7 @@ public class FeedBack extends BaseModule{
 		this.watcher = watcher;
 	}
 	
-	@Column(name = "situation_Desc", length=250)
+	@Column(name = "situation_Desc", length=800)
 	public String getSituationDesc() {
 		return situationDesc;
 	}
@@ -136,7 +136,7 @@ public class FeedBack extends BaseModule{
 		this.disposalSituation = disposalSituation;
 	}
 	
-	@Column(name = "remark_", length=250)
+	@Column(name = "remark_", length=500)
 	public String getRemark() {
 		return remark;
 	}

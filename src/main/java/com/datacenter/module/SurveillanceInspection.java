@@ -112,7 +112,7 @@ public class SurveillanceInspection extends BaseModule{
 		this.inspectionDetails = inspectionDetails;
 	}
 	
-	@Column(name = "follow_Measure", length=100)
+	@Column(name = "follow_Measure", length=500)
 	public String getFollowMeasure() {
 		return followMeasure;
 	}

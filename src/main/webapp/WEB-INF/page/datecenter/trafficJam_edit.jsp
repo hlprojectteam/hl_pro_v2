@@ -113,14 +113,14 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>处理情况</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="8" cols="" id="disposalSituation" name="disposalSituation" data-rule-required="true" data-rule-rangelength="[1,300]" >${trafficJamVo.disposalSituation}</textarea>
+		       <textarea class="form-control" rows="8" cols="" id="disposalSituation" name="disposalSituation" data-rule-required="true" data-rule-rangelength="[1,800]" >${trafficJamVo.disposalSituation}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,250]" >${trafficJamVo.remark}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,500]" >${trafficJamVo.remark}</textarea>
 		    </div>
 	  	</div>
 		<br><br><br>

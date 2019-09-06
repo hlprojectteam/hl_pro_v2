@@ -179,7 +179,7 @@ public class TrafficAccident extends BaseModule{
 		this.laneClosedNum = laneClosedNum;
 	}
 	
-	@Column(name = "road_Loss", length=50)
+	@Column(name = "road_Loss", length=500)
 	public String getRoadLoss() {
 		return roadLoss;
 	}
@@ -211,7 +211,7 @@ public class TrafficAccident extends BaseModule{
 		this.accidentDetails = accidentDetails;
 	}
 	
-	@Column(name = "remark_", length=250)
+	@Column(name = "remark_", length=500)
 	public String getRemark() {
 		return remark;
 	}

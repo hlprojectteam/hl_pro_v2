@@ -29,22 +29,43 @@ public class Test {
 //			e.printStackTrace();
 //		}
 		
-		String msg="297ef6c66b507393016b5076e0b50001,297ef6c66b507393016b508747100006,297ef6c66b507393016b507c46060005,297ef6c66b507393016b507c1aa40004";
-		if(msg.indexOf(",")>0){
-			String[] msgArr= msg.split(",");
-			int lmsg=msgArr.length;
-			if(lmsg>1){
-				//长度大于50个id，进行删减
-				//index 多出的个数
-				int index=lmsg-1;
-				for (int i = 0; i < index; i++) {
-					msg= msg.substring(msg.indexOf(",")+1, msg.length()); 
-				}
-				System.out.println(msg);
-			}
+//		String msg="297ef6c66b507393016b5076e0b50001,297ef6c66b507393016b508747100006,297ef6c66b507393016b507c46060005,297ef6c66b507393016b507c1aa40004";
+//		if(msg.indexOf(",")>0){
+//			String[] msgArr= msg.split(",");
+//			int lmsg=msgArr.length;
+//			if(lmsg>1){
+//				//长度大于50个id，进行删减
+//				//index 多出的个数
+//				int index=lmsg-1;
+//				for (int i = 0; i < index; i++) {
+//					msg= msg.substring(msg.indexOf(",")+1, msg.length()); 
+//				}
+//				System.out.println(msg);
+//			}
+//		}
+		
+		//获取指定日期的最后时刻
+//		Date date =new Date();
+//		Date dateEnd= DateUtil.getDateEndTime(date);
+//		String dateStr=DateUtil.getDateFormatString(dateEnd, DateUtil.JAVA_DATE_FORMAT_YMDHMS);
+//		System.out.println(dateStr);
+		
+		//获取指定日期的当月的第一天与最后一天
+//		Date date =new Date();
+//		String[] arr= DateUtil.getFirstday_Lastday_Month(date);
+//		System.out.println(arr[0]+"-"+arr[1]);
+		
+	}
+	
+	@org.junit.Test
+	public void testMethod(){
+		
+		for (int i = 0; i < 100; i++) {
+			int num=MathUtil.getRandomNumber(4)-1;
+			System.out.println(num+"");
 		}
 		
-
+		
 	}
 
 }

@@ -2,6 +2,8 @@ package com.attendance.service;
 
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import com.attendance.module.Leave;
 import com.attendance.vo.LeaveVo;
 import com.common.base.service.IBaseService;
@@ -58,4 +60,52 @@ public interface ILeaveService extends IBaseService {
 	 * @date:2019年5月27日
 	 */
 	public Integer queryCountInMonth(String UserId);
+	
+	/**
+	 * 
+	 * @方法：@param page
+	 * @方法：@param rows
+	 * @方法：@param leaveVo
+	 * @方法：@return
+	 * @描述：查询请假记录
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月8日
+	 */
+	public Pager queryLeaveRecord(Integer page, Integer rows,LeaveVo leaveVo);
+	
+	/**
+	 * 
+	 * @方法：@param leaveVo
+	 * @方法：@return
+	 * @描述：导出请假记录
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月25日
+	 */
+	public HSSFWorkbook exportLeaveRecord(LeaveVo leaveVo);
+	
+	/**
+	 * 
+	 * @方法：@param page
+	 * @方法：@param rows
+	 * @方法：@param leaveVo
+	 * @方法：@return
+	 * @描述：查询请假统计
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月8日
+	 */
+	public Pager queryLeaveStatistics(Integer page, Integer rows,LeaveVo leaveVo);
+	
+	/**
+	 * 
+	 * @方法：@param leaveVo
+	 * @方法：@return
+	 * @描述：导出请假统计
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月25日
+	 */
+	public HSSFWorkbook exportLeaveStatistics(LeaveVo leaveVo);
 }

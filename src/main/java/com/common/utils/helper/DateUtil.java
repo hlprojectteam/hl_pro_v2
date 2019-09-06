@@ -430,6 +430,28 @@ public class DateUtil {
 	    	return null;
        }
    }
+   
+   /**
+    * 
+    * @方法：@return
+    * @描述：获取指定日期的最后时间，如输入2019-02-01  
+    * @return 输出 2019-02-01 23:59:59
+    * @author: qinyongqian
+    * @date:2019年8月24日
+    */
+   	public static Date getDateEndTime(Date date) {
+   		try {
+   			Calendar todayEnd = Calendar.getInstance();
+   			todayEnd.setTime(date);
+   			todayEnd.set(Calendar.HOUR, 23);
+   			todayEnd.set(Calendar.MINUTE, 59);
+   			todayEnd.set(Calendar.SECOND, 59);
+   			todayEnd.set(Calendar.MILLISECOND, 999);
+   			return todayEnd.getTime();
+		} catch (Exception e) {
+			return date;
+		}
+	}
 
    /**
 	 * @方法：getSybaseDBMonthStartEnds

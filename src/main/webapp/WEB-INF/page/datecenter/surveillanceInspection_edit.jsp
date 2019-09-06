@@ -98,7 +98,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">跟进措施</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="3" cols="" id="followMeasure" name="followMeasure"  data-rule-rangelength="[0,100]" >${surveillanceInspectionVo.followMeasure}</textarea>
+		       <textarea class="form-control" rows="3" cols="" id="followMeasure" name="followMeasure"  data-rule-rangelength="[0,500]" >${surveillanceInspectionVo.followMeasure}</textarea>
 		    </div>
 	  	</div>
 	  	

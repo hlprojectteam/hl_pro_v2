@@ -148,7 +148,7 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label">路产损失</label>
 		    <div class="col-sm-8">
-				<input type="text" class="form-control" id="roadLoss" name="roadLoss" value="${trafficAccidentVo.roadLoss}" data-rule-rangelength="[1,50]" />    
+				<input type="text" class="form-control" id="roadLoss" name="roadLoss" value="${trafficAccidentVo.roadLoss}" data-rule-rangelength="[1,500]" />    
 			</div>
 		</div>
 		
@@ -174,7 +174,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,250]" >${trafficAccidentVo.remark}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,500]" >${trafficAccidentVo.remark}</textarea>
 		    </div>
 	  	</div>
 		<br><br><br>

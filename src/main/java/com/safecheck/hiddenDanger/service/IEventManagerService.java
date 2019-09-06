@@ -2,6 +2,8 @@ package com.safecheck.hiddenDanger.service;
 
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import com.common.base.service.IBaseService;
 import com.common.utils.helper.Pager;
 import com.safecheck.hiddenDanger.module.EventHandle;
@@ -290,5 +292,26 @@ public interface IEventManagerService extends IBaseService{
 	 * @Date 2018年5月24日
 	 */
 	public List<User> getUserListByRoleCode(String roleCode, String departmentId, String userName);
+	
+	/**
+	 * 
+	 * @方法：@param eventInfoVo
+	 * @方法：@return
+	 * @描述：导出事件记录
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月23日
+	 */
+	public HSSFWorkbook export(EventInfoVo eventInfoVo);
+	
+	/**
+	 * 
+	 * @方法：@param ids
+	 * @描述：删除
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月24日
+	 */
+	public void deleteEntitys(String ids);
 	
 }

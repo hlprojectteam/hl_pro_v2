@@ -96,7 +96,7 @@ public class FieldOperations extends BaseModule{
 		this.outworker = outworker;
 	}
 	
-	@Column(name = "scene_", length=30)
+	@Column(name = "scene_", length=50)
 	public String getScene() {
 		return scene;
 	}
@@ -136,7 +136,7 @@ public class FieldOperations extends BaseModule{
 		this.disposeDesc = disposeDesc;
 	}
 	
-	@Column(name = "remark_", length=250)
+	@Column(name = "remark_", length=500)
 	public String getRemark() {
 		return remark;
 	}

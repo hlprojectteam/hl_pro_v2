@@ -1,5 +1,6 @@
 package com.safecheck.hiddenDanger.controller;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,7 @@ import com.common.base.controller.BaseController;
 import com.common.utils.Common;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.Pager;
+import com.datacenter.controller.TotalTableController;
 import com.google.gson.JsonObject;
 import com.safecheck.hiddenDanger.module.EventInfo;
 import com.safecheck.hiddenDanger.module.EventProcess;
@@ -54,6 +57,9 @@ public class EventManagerController extends BaseController{
 	
 	/*@Autowired
 	public IMessageService messageServiceImpl;*/
+	
+	@Autowired
+	private TotalTableController totalTableController;
 	
 
 	/**
@@ -116,7 +122,8 @@ public class EventManagerController extends BaseController{
 	 * @Date 2018年6月6日
 	 */
 	@RequestMapping(value="/event_allList") 
-	public String allList(HttpServletRequest request,HttpServletResponse response) {
+	public String allList(HttpServletRequest request,HttpServletResponse response,String menuCode) {
+		this.getRequest().setAttribute("menuCode", menuCode);
 		return "/page/safecheck/hiddenDanger/event_allList";
 	}
 	
@@ -210,6 +217,61 @@ public class EventManagerController extends BaseController{
 		json.put("total", pager.getRowCount());
 		json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
 		this.print(json);
+	}
+	
+	/**
+	 * 
+	 * @方法：@param response
+	 * @方法：@param ids
+	 * @描述：删除事件记录，并删除事件过程记录，事件经办记录，及涉及的附件
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月24日
+	 */
+	@RequestMapping(value="/event_delete")
+	public void delete(HttpServletResponse response, String ids){
+		JsonObject json = new JsonObject();
+		try {
+			if (StringUtils.isNotBlank(ids)){
+				this.eventManagerServiceImpl.deleteEntitys(ids);
+				json.addProperty("result", true);
+			}
+		} catch (Exception e) {
+			json.addProperty("result", false);
+			logger.error(e.getMessage(), e);
+		}finally{
+			this.print(json.toString());
+		}
+	}
+	
+	/**
+	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param eventInfoVo
+	 * @描述：导出打印
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月14日
+	 */
+	@RequestMapping(value="/event_export")
+	public void export(HttpServletRequest request, HttpServletResponse response, EventInfoVo eventInfoVo){
+		//excel文件名
+		String fileName = "安全隐患记录汇总";
+
+		//获取excle文档对象
+		HSSFWorkbook wb = this.eventManagerServiceImpl.export(eventInfoVo);
+
+		//将文件存到指定位置
+		try {
+			this.totalTableController.setResponseHeader(response, fileName);
+			OutputStream os = response.getOutputStream();
+			wb.write(os);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

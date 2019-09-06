@@ -37,7 +37,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             }(),
             language : (navigator.browserLanguage || navigator.language).toLowerCase()
         }
-  	var theUrl = 'http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/4cec9eb6a10b9a9bf9d147adf2913c97_d';
+  	var theUrl = 'http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/c9e905cdd90716464fa26bf50c2203de_d';
         if(Terminal.platform.android){
         	
         }else if(Terminal.platform.iPhone){

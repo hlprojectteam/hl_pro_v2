@@ -55,13 +55,36 @@ public class EventInfoVo extends EventInfo{
 	private String epReturnReason;		//退回理由
 	
 	private List<String> imgUrls;		//图片附件的url
+	private List<String> imgHandleUrls;		//图片附件的url(处理隐患的图片)
     private String videoUrl;
     
     private String roleCode;			//上报人角色编码
     private String roleName;			//上报人角色名称
     private String loginName;			//上报人的登录账号
     
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date eventDateStart;                  //日期Start
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date eventDateEnd;               	 //日期End
+	 private String totalTime;			//办结总用时
     
+    
+	public Date getEventDateStart() {
+		return eventDateStart;
+	}
+
+	public void setEventDateStart(Date eventDateStart) {
+		this.eventDateStart = eventDateStart;
+	}
+
+	public Date getEventDateEnd() {
+		return eventDateEnd;
+	}
+
+	public void setEventDateEnd(Date eventDateEnd) {
+		this.eventDateEnd = eventDateEnd;
+	}
+
 	public String getRoleCode() {
 		return roleCode;
 	}
@@ -281,5 +304,21 @@ public class EventInfoVo extends EventInfo{
 	}
 	public void setEpNowNodeLeavleTime(Date epNowNodeLeavleTime) {
 		this.epNowNodeLeavleTime = epNowNodeLeavleTime;
+	}
+
+	public List<String> getImgHandleUrls() {
+		return imgHandleUrls;
+	}
+
+	public void setImgHandleUrls(List<String> imgHandleUrls) {
+		this.imgHandleUrls = imgHandleUrls;
+	}
+
+	public String getTotalTime() {
+		return totalTime;
+	}
+
+	public void setTotalTime(String totalTime) {
+		this.totalTime = totalTime;
 	}
 }

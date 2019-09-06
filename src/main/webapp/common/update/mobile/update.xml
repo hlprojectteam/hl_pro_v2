@@ -1,19 +1,16 @@
 <root>
-	<versionCode>35</versionCode>
-	<versionName>3.5.0</versionName>
-	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/4cec9eb6a10b9a9bf9d147adf2913c97_d</androidUrl>
+	<versionCode>37</versionCode>
+	<versionName>3.7.0</versionName>
+	<androidUrl>http://downloadpkg.apicloud.com/app/download?path=http://A6929498257526.qiniucdn.apicloud-system.com/c9e905cdd90716464fa26bf50c2203de_d</androidUrl>
 	<iosUrl>https://itunes.apple.com/cn/app/huan-long-ying-yun-tong/id1170974616?mt=8</iosUrl>
 	<updateLog>
-		更新版本 3.5.0
-		功能权限控制
-		1、控制中心工作报表查看
+		更新版本 3.7.0
+		隐患随手拍
+		1、添加查看上一节点的照片
+		2、添加隐患处理日志过程
+		3、是否办结按钮处理
 		
-		消息通知
-		1、优化消息功能
-
-		党建
-		1、删除活动功能
-
-		图片点击放大，左右切换功能
+		考勤管理
+		1、请假与调班审批流程
   	</updateLog>
 </root>

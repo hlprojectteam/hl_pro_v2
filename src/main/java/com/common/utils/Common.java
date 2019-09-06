@@ -117,8 +117,10 @@ public class Common {
 	public static final String msgTitle_DT_zbbb_info="值班报表发布通知";
 	public static final String msgTitle_ZD_zd_info="规章制度发布通知";
 	public static final String msgTitle_KQ_dm="点名通知";
-	public static final String msgTitle_KQ_qj="请假通知";
-	public static final String msgTitle_KQ_db="调班通知";
+	public static final String msgTitle_KQ_qj_todo="请假待审批";
+	public static final String msgTitle_KQ_qj_finish="请假审批回复";
+	public static final String msgTitle_KQ_db_todo="调班待审批";
+	public static final String msgTitle_KQ_db_finish="调班审批回复";
 	public static final String msgTitle_SYS_info="系统通知";
 	
 	/****************************消息推送 end*********************************/

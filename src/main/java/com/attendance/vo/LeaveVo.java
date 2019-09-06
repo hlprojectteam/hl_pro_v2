@@ -2,6 +2,8 @@ package com.attendance.vo;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.attendance.module.Leave;
 
 /**
@@ -24,6 +26,13 @@ public class LeaveVo extends Leave{
 	private String creatorOrgName;// 申请人部门
 	private String creatorOrgId;// 申请人部门Id
 	private String creatorAvatar;// 申请人头像路径
+	private String creatorJobNumber;// 申请人员工号
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date recordDateStart;                  //日期Start
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date recordDateEnd;               	 //日期End
 	
 	public String getApprovalUserId() {
 		return approvalUserId;
@@ -90,6 +99,24 @@ public class LeaveVo extends Leave{
 	}
 	public void setApprovalContent(String approvalContent) {
 		this.approvalContent = approvalContent;
+	}
+	public String getCreatorJobNumber() {
+		return creatorJobNumber;
+	}
+	public void setCreatorJobNumber(String creatorJobNumber) {
+		this.creatorJobNumber = creatorJobNumber;
+	}
+	public Date getRecordDateStart() {
+		return recordDateStart;
+	}
+	public void setRecordDateStart(Date recordDateStart) {
+		this.recordDateStart = recordDateStart;
+	}
+	public Date getRecordDateEnd() {
+		return recordDateEnd;
+	}
+	public void setRecordDateEnd(Date recordDateEnd) {
+		this.recordDateEnd = recordDateEnd;
 	}
 
 }

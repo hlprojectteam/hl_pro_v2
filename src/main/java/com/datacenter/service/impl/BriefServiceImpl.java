@@ -235,7 +235,7 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 				//创建行（第一行）
 				HSSFRow row0 = sheet.createRow(0 + tb*7);
 				//设置行的高度
-				row0.setHeightInPoints(60);
+				row0.setHeightInPoints(40);
 				//创建单元格 并 设置单元格内容
 				row0.createCell(0).setCellValue(briefList.get(tb).getTitle());
 				//设置单元格样式
@@ -264,7 +264,7 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 				HSSFRow row2 = sheet.createRow(2 + tb*7);
 				row2.setHeightInPoints(30);
 				row2.createCell(0).setCellValue("常务副总经理：" + briefList.get(tb).getCwfzjl());
-				row2.createCell(1).setCellValue("主管副总经理：" + briefList.get(tb).getZgfzjl());
+				row2.createCell(1).setCellValue("分管领导：" + briefList.get(tb).getZgfzjl());
 				row2.createCell(2).setCellValue("中心主任：" + briefList.get(tb).getZxfzr());
 				row2.createCell(3).setCellValue("复核：" + briefList.get(tb).getFhry());
 				row2.createCell(4).setCellValue("简报生成时间：" + DateUtil.getDateFormatString(briefList.get(tb).getCreateTime(),DateUtil.JAVA_DATE_FORMAT_YMDHM));
@@ -341,7 +341,7 @@ public class BriefServiceImpl extends BaseServiceImpl implements IBriefService{
 			HSSFRow row2 = sheet.createRow(2);
 			row2.setHeightInPoints(40);
 			row2.createCell(0).setCellValue("常务副总经理：" );
-			row2.createCell(1).setCellValue("主管副总经理：");
+			row2.createCell(1).setCellValue("分管领导：");
 			row2.createCell(2).setCellValue("中心主任：");
 			row2.createCell(3).setCellValue("复核：");
 			row2.createCell(4).setCellValue("简报生成时间：");

@@ -87,7 +87,7 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>通行路段 </label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="trafficRoad" name="trafficRoad" value="${clearingVo.trafficRoad}" data-rule-required="true" data-rule-rangelength="[1,30]" />    
+				<input type="text" class="form-control" id="trafficRoad" name="trafficRoad" value="${clearingVo.trafficRoad}" data-rule-required="true" data-rule-rangelength="[1,50]" />    
 			</div>
 		</div>
 		
@@ -99,7 +99,7 @@
 			<div class="dictValue3"  style="display: none;">
 			  	<label class="col-sm-2 control-label"><span style="color: red">*</span>请输入通知处理部门</label>
 			    <div class="col-sm-3">
-					<input type="text" class="form-control" id="dictValue3" name="dictValue3" value="${clearingVo.dictValue3}" data-rule-rangelength="[1,20]" />
+					<input type="text" class="form-control" id="dictValue3" name="dictValue3" value="${clearingVo.dictValue3}" data-rule-rangelength="[1,30]" />
 				</div>
 			</div>
 		</div>
@@ -108,21 +108,21 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>情况简述</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="8" cols="" id="briefIntroduction" name="briefIntroduction" data-rule-required="true" data-rule-rangelength="[1,300]" >${clearingVo.briefIntroduction}</textarea>
+		       <textarea class="form-control" rows="8" cols="" id="briefIntroduction" name="briefIntroduction" data-rule-required="true" data-rule-rangelength="[1,800]" >${clearingVo.briefIntroduction}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>处理结果</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="8" cols="" id="result" name="result" data-rule-required="true" data-rule-rangelength="[1,300]" >${clearingVo.result}</textarea>
+		       <textarea class="form-control" rows="8" cols="" id="result" name="result" data-rule-required="true" data-rule-rangelength="[1,800]" >${clearingVo.result}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,250]" >${clearingVo.remark}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,500]" >${clearingVo.remark}</textarea>
 		    </div>
 	  	</div>
 		<br><br><br>

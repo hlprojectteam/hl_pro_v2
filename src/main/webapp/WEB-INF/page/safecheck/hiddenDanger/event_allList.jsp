@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="menu" uri="/WEB-INF/taglib/menuDefinition.tld" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
+<%@ taglib prefix="opt" uri="/WEB-INF/taglib/option.tld" %>
 <jsp:include page="/common/common.jsp"></jsp:include>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,14 +33,36 @@
     <menu:definition menuCode="${menuCode }"/>
     <div class="row ibox-content" style="padding:5px 0 5px 0;">
         <form id="baseForm" method="post" name="baseForm" class="form-horizontal" action="" >
+        	 <input type="hidden" id="epNowPersonId" name="epNowPersonId" value="${epNowPersonId}" />
           <div class="row">
-            <label class="col-sm-1 control-label">隐患标题</label>
+          	<label class="col-sm-1 control-label">起始日期</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="eventDateStart" name="eventDateStart" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+			</div>
+			<label class="col-sm-1 control-label">终止日期</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="eventDateEnd" name="eventDateEnd" value="" onfocus="this.blur()" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+			</div>
+            
+            
+          </div>
+          
+          <div class="row" style="margin-top: 10px;">
+          	<label class="col-sm-1 control-label">隐患标题</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control" id="eventTitle" name="eventTitle" value="" />
             </div>
-            <input type="hidden" id="epNowPersonId" name="epNowPersonId" value="${epNowPersonId}" />
-            <button class="btn btn-primary " type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
-          </div>
+           
+			<label class="col-sm-1 control-label">是否办结</label>
+			<div class="col-sm-2">
+				<opt:select dictKey="event_WhetherFinish" classStyle="form-control" id="epWhetherFinish" name="epWhetherFinish" isDefSelect="true"/>
+			</div>
+			
+			<button class="btn btn-primary " type="button" onclick="on_search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
+            <button class="btn btn-primary" type="button" onclick="on_export()"><i class="fa fa-file-excel-o"></i>&nbsp;导出Excle</button>
+		</div>
+          
+          
         </form>
     </div>
     <!-- 搜索栏 end -->
@@ -113,10 +140,11 @@
                       {title: "序号",field: "id",align: "center",width: "3%",formatter:function(value,row,index){
                             return index+1;
                       }},
-                      {title: "隐患标题", field: "eventTitle",align: "center",width: "33%",formatter:function(value,row,index){
+                      {title: "隐患标题", field: "eventTitle",align: "center",width: "20%",formatter:function(value,row,index){
                           var url = "<a href='#' style='color:blue;text-decoration:none;' onclick=\"td_click('" + row.id + "','" + row.epNowNode + "','" + row.epDealState + "')\">" + value + "</a>";
                           return url; 
                       }},
+                      {title: "序列号", field: "eventCode",align:"center",width: "8%"},
                       /* {title: "隐患编码",field: "eventCode",align: "center",width: "12%",formatter:function(value,row,index){
                           var url = '<a href="#" style="color:blue;text-decoration:none;" onclick="td_click(\'' + row.id + '\')">' + value + '</a>'; 
                           return url; 
@@ -133,16 +161,13 @@
                           }
                          // return changeDataDictByKey("event_Urgency",value);
                       }},
-                      {title: "隐患类型", field: "eventType",align: "center",width: "8%",formatter:function(value,row,index){
-                          return changeDataDictByKey("event_Type",value);
-                      }},
                       {title: "上报人", field: "creatorName",align:"center",width: "8%"},
-                      {title: "上报时间", field: "createTime",align:"center",width: "15%"},
-                      {title: "当前节点", field: "epNowNode",align: "center",width: "8%",formatter:function(value,row,index){
+                      {title: "上报时间", field: "createTime",align:"center",width: "12%"},
+                      {title: "当前节点", field: "epNowNode",align: "center",width: "12%",formatter:function(value,row,index){
                           return changeDataDictByKey("event_EventNode",value);
                       }},
-                      {title: "处理角色", field: "epNowRoleName",align: "center",width: "8%"},
-                      {title: "处理状态", field: "epDealState",align: "center",width: "8%",formatter:function(value,row,index){
+                      {title: "处理角色", field: "epNowRoleName",align: "center",width: "10%"},
+                      {title: "处理状态", field: "epDealState",align: "center",width: "6%",formatter:function(value,row,index){
                           if(value == 1 ){
                               return "<i class=\"fa fa-circle\" style=\"color: #F96868\"></i> "+changeDataDictByKey("event_DealState",value);
                           }
@@ -166,6 +191,40 @@
 //        delete_tableData(table, url, refreshUrl);
 //    }
     
+    //删除
+  	function on_del(){
+  		var rows = $("#grid").bootstrapTable("getSelections");
+  		if(rows.length>0){
+  			parent.layer.confirm("确定删除所选数据？", {
+  				btn: ["确定","取消"] //按钮
+  			}, function(){
+		  		var ids = [];
+				$.each(rows, function(index, item){
+					ids.push(item.id);
+				});
+				$.ajax({
+					type:"post",
+					async:false,
+					dataType : "json",
+					url: "/safecheck/hiddenDanger/event_delete?ids="+ids,
+					success : function(data){
+						if(data.result){
+							$("#grid").bootstrapTable("refresh",{url: "/safecheck/hiddenDanger/event_loadAllList"});//加载树下的列表
+							autoMsg("删除成功！",1);
+						}else{
+							autoMsg("删除失败！",1);
+						}
+					},
+					error : function(result){
+						autoAlert("系统出错",5);
+					}
+				});
+  			});
+		}else{
+			autoAlert("请选择删除的记录",5);
+		}
+  	}
+    
     // 查询
     function on_search(){
         $("#grid").bootstrapTable("refresh");
@@ -182,6 +241,19 @@
             area: ["100%", "100%"],
             content: "/safecheck/hiddenDanger/event_allDetail?id="+id+"&epNowNode="+epNowNode+"&epDealState="+epDealState
           });
+    }
+    
+  //导出Excel
+    function on_export(){
+        let star = $("#eventDateStart").val();
+        let end = $("#eventDateEnd").val();
+        if(star == null || star == "" || end == null || end == ""){
+            autoAlert("注意：导出Excel时筛选条件不能为空!",5);
+        }else if((new Date(end) - new Date(star))/(24*60*60*1000) > 92){
+            autoAlert("注意：导出Excel时筛选时间区间必须三个月以内，以防数据量过大!",5);
+        }else{
+            window.location.href = "/safecheck/hiddenDanger/event_export?eventDateStart="+$("#eventDateStart").val()+"&eventDateEnd="+$("#eventDateEnd").val();
+        }
     }
 </script>
 </body>

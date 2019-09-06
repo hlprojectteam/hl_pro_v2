@@ -95,7 +95,7 @@ public class Clearing extends BaseModule{
 		this.reportedWay = reportedWay;
 	}
 	
-	@Column(name = "traffic_Road", length=30)
+	@Column(name = "traffic_Road", length=50)
 	public String getTrafficRoad() {
 		return trafficRoad;
 	}
@@ -111,7 +111,7 @@ public class Clearing extends BaseModule{
 		this.processingDp = processingDp;
 	}
 	
-	@Column(name = "brief_Introduction", length=300)
+	@Column(name = "brief_Introduction", length=800)
 	public String getBriefIntroduction() {
 		return briefIntroduction;
 	}
@@ -119,7 +119,7 @@ public class Clearing extends BaseModule{
 		this.briefIntroduction = briefIntroduction;
 	}
 	
-	@Column(name = "result_", length=300)
+	@Column(name = "result_", length=800)
 	public String getResult() {
 		return result;
 	}
@@ -127,7 +127,7 @@ public class Clearing extends BaseModule{
 		this.result = result;
 	}
 	
-	@Column(name = "remark_", length=250)
+	@Column(name = "remark_", length=500)
 	public String getRemark() {
 		return remark;
 	}

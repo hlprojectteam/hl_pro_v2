@@ -12,6 +12,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.common.attach.service.IAttachService;
 import com.common.base.service.impl.BaseServiceImpl;
@@ -61,13 +62,16 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 		// TODO Auto-generated method stub
 		return activitesDaoImpl.queryAllEntity(Activities.class, Order.asc("order"));
 	}
+	@Transactional
 	@Override
 	public void deleteEntitys(String ids) {
 		String[] idz = ids.split(",");
 		for (int i = 0; i < idz.length; i++) {
-			//删除附件
-			this.attachServiceImpl.deleteAttachByFormId(idz[i]);
 			this.delete(Activities.class, idz[i]);
+		}
+		for (int j = 0; j < idz.length; j++) {
+			//删除附件
+			this.attachServiceImpl.deleteAttachByFormId(idz[j]);
 		}
 	}
 	@Override
@@ -189,14 +193,12 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 		}
 		return listVo;
 	}
+	@Transactional
 	@Override
 	public void deleteALEntitys(String ids) {
 		// TODO Auto-generated method stub
 		String[] idz = ids.split(",");
 		for (int i = 0; i < idz.length; i++) {
-			//删除附件
-			this.attachServiceImpl.deleteAttachByFormId(idz[i]);
-			
 			//判断是否亮点工作，如果是，则要删除它的评审记录
 			ActivitiesLaunch al=this.getEntityById(ActivitiesLaunch.class, idz[i]);
 			if(al!=null){
@@ -209,6 +211,10 @@ public class ActivitiesServiceImpl extends BaseServiceImpl implements IActivitie
 				}
 			}
 			this.delete(ActivitiesLaunch.class, idz[i]);
+		}
+		for (int i = 0; i < idz.length; i++) {
+			//删除附件
+			this.attachServiceImpl.deleteAttachByFormId(idz[i]);
 		}
 		
 	}

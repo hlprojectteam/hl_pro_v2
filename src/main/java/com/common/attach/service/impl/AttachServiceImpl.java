@@ -66,7 +66,6 @@ public class AttachServiceImpl extends BaseServiceImpl implements IAttachService
 		}
 	}
 	
-	
 	@Override
 	public void deleteAttachByFormId(String formId) {
 		List<Attach> list = this.queryAttchListByFormId(formId);

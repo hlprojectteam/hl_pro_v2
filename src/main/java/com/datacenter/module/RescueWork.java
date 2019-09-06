@@ -105,7 +105,7 @@ public class RescueWork extends BaseModule{
 		this.evacuationTime = evacuationTime;
 	}
 	
-	@Column(name = "site_", length=50)
+	@Column(name = "site_", length=100)
 	public String getSite() {
 		return site;
 	}
@@ -113,7 +113,7 @@ public class RescueWork extends BaseModule{
 		this.site = site;
 	}
 	
-	@Column(name = "fault_Plates", length=12)
+	@Column(name = "fault_Plates", length=100)
 	public String getFaultPlates() {
 		return faultPlates;
 	}
@@ -121,7 +121,7 @@ public class RescueWork extends BaseModule{
 		this.faultPlates = faultPlates;
 	}
 	
-	@Column(name = "car_Type", length=20)
+	@Column(name = "car_Type", length=80)
 	public String getCarType() {
 		return carType;
 	}
@@ -129,7 +129,7 @@ public class RescueWork extends BaseModule{
 		this.carType = carType;
 	}
 	
-	@Column(name = "payment_Order", length=8)
+	@Column(name = "payment_Order", length=40)
 	public String getPaymentOrder() {
 		return paymentOrder;
 	}
@@ -161,7 +161,7 @@ public class RescueWork extends BaseModule{
 		this.whereabouts = whereabouts;
 	}
 	
-	@Column(name = "rescue_Plates", length=12)
+	@Column(name = "rescue_Plates", length=60)
 	public String getRescuePlates() {
 		return rescuePlates;
 	}
@@ -169,7 +169,7 @@ public class RescueWork extends BaseModule{
 		this.rescuePlates = rescuePlates;
 	}
 	
-	@Column(name = "driver_Phone", length=16)
+	@Column(name = "driver_Phone", length=40)
 	public String getDriverPhone() {
 		return driverPhone;
 	}
@@ -177,7 +177,7 @@ public class RescueWork extends BaseModule{
 		this.driverPhone = driverPhone;
 	}
 	
-	@Column(name = "remark_", length=250)
+	@Column(name = "remark_", length=500)
 	public String getRemark() {
 		return remark;
 	}

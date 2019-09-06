@@ -91,7 +91,7 @@
 			
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>具体位置 </label>
 		    <div class="col-sm-8">
-				<input type="text" class="form-control" id="specificLocation" name="specificLocation" value="${roadWorkVo.specificLocation}" data-rule-required="true" data-rule-rangelength="[1,50]" />    
+				<input type="text" class="form-control" id="specificLocation" name="specificLocation" value="${roadWorkVo.specificLocation}" data-rule-required="true" data-rule-rangelength="[1,2000]" />    
 			</div>
 		</div>
 		
@@ -99,14 +99,14 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>施工内容</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="3" cols="" id="constructionContent" name="constructionContent" data-rule-required="true" data-rule-rangelength="[1,100]" >${roadWorkVo.constructionContent}</textarea>
+		       <textarea class="form-control" rows="3" cols="" id="constructionContent" name="constructionContent" data-rule-required="true" data-rule-rangelength="[1,2000]" >${roadWorkVo.constructionContent}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>占道情况</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="3" cols="" id="jeevesSituation" name="jeevesSituation" data-rule-required="true" data-rule-rangelength="[1,100]" >${roadWorkVo.jeevesSituation}</textarea>
+		       <textarea class="form-control" rows="3" cols="" id="jeevesSituation" name="jeevesSituation" data-rule-required="true" data-rule-rangelength="[1,2000]" >${roadWorkVo.jeevesSituation}</textarea>
 		    </div>
 	  	</div>
 	  	
@@ -134,21 +134,21 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label">施工现场情况简要描述</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="5" cols="" id="description" name="description"  data-rule-rangelength="[1,300]" >${roadWorkVo.description}</textarea>
+		       <textarea class="form-control" rows="5" cols="" id="description" name="description"  data-rule-rangelength="[1,2000]" >${roadWorkVo.description}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">整改措施</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="4" cols="" id="rectificationMeasures" name="rectificationMeasures" data-rule-rangelength="[0,200]" >${roadWorkVo.rectificationMeasures}</textarea>
+		       <textarea class="form-control" rows="4" cols="" id="rectificationMeasures" name="rectificationMeasures" data-rule-rangelength="[0,2000]" >${roadWorkVo.rectificationMeasures}</textarea>
 		    </div>
 	  	</div>
 	  	
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>施工报备情况</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="3" cols="" id="reportedSituation" name="reportedSituation" data-rule-required="true" data-rule-rangelength="[1,100]" >${roadWorkVo.reportedSituation}</textarea>
+		       <textarea class="form-control" rows="3" cols="" id="reportedSituation" name="reportedSituation" data-rule-required="true" data-rule-rangelength="[1,2000]" >${roadWorkVo.reportedSituation}</textarea>
 		    </div>
 	  	</div>
 	  	

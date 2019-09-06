@@ -185,10 +185,20 @@
                         <%-- 当前节点是  2、3、4、5、8(部门安全员、部门负责人、安保办安全员、安保办主任)时,都可将隐患直接完结, 默认未办结    --%>
                         <c:if test="${eventInfoVo.epNowNode == '2' || eventInfoVo.epNowNode == '3' || eventInfoVo.epNowNode == '4' || eventInfoVo.epNowNode == '5' || eventInfoVo.epNowNode == '8'}">
                             <div class="form-group whether isWhetherFinish">
-	                            <label class="control-label" style="float: left;">是否办结：</label>
-	                            <div class="col-sm-3">
-	                                <opt:select dictKey="event_WhetherFinish" classStyle="form-control" id="epWhetherFinish" name="epWhetherFinish" value="2"  isDefSelect="false" />
-	                            </div>
+                            	<c:if test="${eventInfoVo.epNowNode == '8'}">
+		                            <label class="control-label" style="float: left;">是否办结：</label>
+		                            <div class="col-sm-3">
+		                                <opt:select dictKey="event_WhetherFinish" classStyle="form-control" id="epWhetherFinish" name="epWhetherFinish" value="2"  isDefSelect="false" />
+		                            </div>
+	                            </c:if>
+	                            
+	                             <c:if test="${eventInfoVo.epNowNode == '2' || eventInfoVo.epNowNode == '3' || eventInfoVo.epNowNode == '4' || eventInfoVo.epNowNode == '5'}">
+	                             	<label class="control-label" style="float: left;">是否退回：</label>
+		                            <div class="col-sm-3">
+		                                <opt:select dictKey="isBackToFinish" classStyle="form-control" id="epWhetherFinish" name="epWhetherFinish" value="2"  isDefSelect="false" />
+		                            </div>
+	                             </c:if>
+	                            
 	                            <%-- 当前节点是  8,且隐患为已办结,才会显示满意度    --%>
 	                            <c:if test="${eventInfoVo.epNowNode == '8'}">
 		                            <label class="control-label satisficing" style="float: left; display: none;">满意度：</label>

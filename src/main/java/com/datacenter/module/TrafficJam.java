@@ -150,7 +150,7 @@ public class TrafficJam extends BaseModule{
 		this.jamReason = jamReason;
 	}
 	
-	@Column(name = "disposal_Situation", length=300)
+	@Column(name = "disposal_Situation", length=800)
 	public String getDisposalSituation() {
 		return disposalSituation;
 	}
@@ -158,7 +158,7 @@ public class TrafficJam extends BaseModule{
 		this.disposalSituation = disposalSituation;
 	}
 	
-	@Column(name = "remark_", length=250)
+	@Column(name = "remark_", length=500)
 	public String getRemark() {
 		return remark;
 	}

@@ -9,6 +9,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.common.attach.service.IAttachService;
 import com.common.base.service.impl.BaseServiceImpl;
@@ -47,13 +48,16 @@ public class BranchServiceImpl extends BaseServiceImpl implements IBranchService
 		return this.branchDaoImpl.queryEntityList(page, rows, criterionsList, Order.asc("order"), Branch.class);
 	}
 
+	@Transactional
 	@Override
 	public void deleteBranchEntitys(String ids) {
 		String[] idz = ids.split(",");
 		for (int i = 0; i < idz.length; i++) {
+			this.delete(Branch.class, idz[i]);
+		}
+		for (int i = 0; i < idz.length; i++) {
 			//删除附件
 			this.attachServiceImpl.deleteAttachByFormId(idz[i]);
-			this.delete(Branch.class, idz[i]);
 		}
 		
 	}

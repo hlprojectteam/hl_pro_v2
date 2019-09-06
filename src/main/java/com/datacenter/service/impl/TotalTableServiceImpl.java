@@ -497,7 +497,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 		//创建行（第一行）
 		HSSFRow row0 = sheet1.createRow(0);
 		//设置行的高度
-		row0.setHeightInPoints(60);
+		row0.setHeightInPoints(40);
 		//创建单元格 并 设置单元格内容
 		if(brList != null && brList.size() > 0){
 			row0.createCell(0).setCellValue(brief.getTitle());
@@ -529,9 +529,9 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			row2.createCell(0).setCellValue("常务副总经理：" );
 		}
 		if(StringUtils.isNotBlank(brief.getZgfzjl())){
-			row2.createCell(1).setCellValue("主管副总经理：" + brief.getZgfzjl());
+			row2.createCell(1).setCellValue("分管领导：" + brief.getZgfzjl());
 		}else{
-			row2.createCell(1).setCellValue("主管副总经理：");
+			row2.createCell(1).setCellValue("分管领导：");
 		}
 		if(StringUtils.isNotBlank(brief.getZxfzr())){
 			row2.createCell(2).setCellValue("中心主任：" + brief.getZxfzr());
@@ -1163,7 +1163,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 					case 3: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcckcd());  	break;
 					case 4: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
 					case 5: setCell(cell,wb,mainStyle_center,eoList.get(i).getMtcrkcd());  	break;
-					case 6: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcckcd());  	break;
+					case 6: setCell(cell,wb,mainStyle_center,eoList.get(i).getEtcrkcd());  	break;
 					case 7: setCell(cell,wb,mainStyle_center,eoList.get(i).getJzcd());  	break;
 					case 8: 
 						cell.setCellValue(eoList.get(i).getRemark());	
@@ -1201,7 +1201,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 			row.setHeightInPoints(realRowH);
 		}
 		
-		int LastRowIndex=esListRows+3;
+		int LastRowIndex=esListRows+4;
         //合并单元格  CellRangeAddress构造参数依次表示起始行，截至行，起始列， 截至列
         sheet5.addMergedRegion(new CellRangeAddress(LastRowIndex,LastRowIndex,1,2));
         sheet5.addMergedRegion(new CellRangeAddress(LastRowIndex,LastRowIndex,4,6));
@@ -2307,7 +2307,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row3.getCell(1).setCellStyle(mainStyle_center);
 				row3.createCell(2).setCellValue("接报时间");
 				row3.getCell(2).setCellStyle(r2_style);
-				row3.createCell(3).setCellValue(DateUtil.getDateFormatString(taList.get(0).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
+				row3.createCell(3).setCellValue(DateUtil.getDateFormatString(taList.get(tb).getReceiptTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				row3.getCell(3).setCellStyle(mainStyle_center);
 				row3.createCell(4).setCellValue("接报方式");
 				row3.getCell(4).setCellStyle(r2_style);
@@ -3109,7 +3109,7 @@ public class TotalTableServiceImpl extends BaseServiceImpl implements ITotalTabl
 				row4.getCell(5).setCellStyle(mainStyle_center);
 				row4.createCell(7).setCellValue("路管员到场时间");
 				row4.getCell(7).setCellStyle(r2_style);
-				if(tjList.get(tb).getJjdcTime() != null){
+				if(tjList.get(tb).getLgydcTime() != null){
 					row4.createCell(8).setCellValue(DateUtil.getDateFormatString(tjList.get(tb).getLgydcTime(),DateUtil.JAVA_DATE_FORMAT_HM));
 				}else{
 					row4.createCell(8);

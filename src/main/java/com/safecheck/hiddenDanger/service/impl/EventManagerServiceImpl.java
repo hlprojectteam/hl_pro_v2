@@ -1,17 +1,37 @@
 package com.safecheck.hiddenDanger.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.o.common.beans.BeanUtils;
 
@@ -20,8 +40,13 @@ import com.common.attach.service.IAttachService;
 import com.common.base.service.impl.BaseServiceImpl;
 import com.common.message.service.IMessageService;
 import com.common.utils.Common;
+import com.common.utils.MathUtil;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.Pager;
+import com.dangjian.module.Activities;
+import com.dangjian.module.ActivitiesLaunch;
+import com.datacenter.module.RoadWork;
+import com.datacenter.module.TrafficAccident;
 import com.safecheck.hiddenDanger.dao.IEventManagerDao;
 import com.safecheck.hiddenDanger.module.EventHandle;
 import com.safecheck.hiddenDanger.module.EventInfo;
@@ -487,9 +512,17 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 
 		//所有事件 : 当前用户为超级管理员,可查看所有事件
 		//事件表,事件过程表的关联查询
-		sql.append("select * from (select ei.id,ei.EVENT_CODE,ei.EVENT_TITLE,ei.EVENT_URGENCY,ei.EVENT_TYPE,ei.CREATOR_NAME,ei.create_Time,ep.Ep_NowNode,ep.Ep_NowRoleName,ep.Ep_DealState,ei.reporter_OrgId,ei.CREATOR_ID "
+		sql.append("select * from(select * from (select ei.id,ei.EVENT_CODE,ei.EVENT_TITLE,ei.EVENT_URGENCY,ei.EVENT_TYPE,ei.CREATOR_NAME,ei.create_Time,ep.Ep_NowNode,ep.Ep_NowRoleName,ep.Ep_DealState,ei.reporter_OrgId,ei.CREATOR_ID "
 				+ "from EVENT_INFO ei,EVENT_PROCESS ep where ei.id = ep.EventInfo_ID ");
 		
+		if(eventInfoVo.getEventDateStart() != null){	//日期Start
+			sql.append(" and ei.create_Time >= ? ");
+			attributeList.add(eventInfoVo.getEventDateStart());
+		}
+		if(eventInfoVo.getEventDateEnd() != null){		//日期End
+			sql.append(" and ei.create_Time <= ? ");
+			attributeList.add(eventInfoVo.getEventDateEnd());
+		}
 		// 更多筛选条件
 		if(StringUtils.isNotEmpty(eventInfoVo.getCreatorId())){		//事件上报人ID
 			sql.append(" and ei.Creator_id = ? ");
@@ -500,7 +533,7 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			attributeList.add("%"+eventInfoVo.getCreatorName().trim()+"%");
 		}
 		if(StringUtils.isNotBlank(eventInfoVo.getEpNowNode())){		//当前节点编码
-			sql.append(" and ep.Ep_NowNode = ");
+			sql.append(" and ep.Ep_NowNode = ? ");
 			attributeList.add(eventInfoVo.getEpNowNode().trim());
 		}
 		if(StringUtils.isNotEmpty(eventInfoVo.getEventCode())){		//事件编码
@@ -519,13 +552,18 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 			sql.append(" and ei.EVENT_URGENCY = ? ");
 			attributeList.add(eventInfoVo.getEventurgency());
 		}
-		if(null != eventInfoVo.getEventType()){			//事件类型
-			sql.append(" and ei.EVENT_TYPE = ? ");
-			attributeList.add(eventInfoVo.getEventType());
-		}
 		
 		sql.append(" ORDER BY ep.create_Time DESC,ep.Ep_NowNode DESC) t GROUP BY t.id ORDER BY t.create_Time desc");		//根据 事件上报时间 倒序排列
-
+		sql.append(") tt where 1=1 ");
+		
+		if(null != eventInfoVo.getEpWhetherFinish()){		//这里是对整个事件流程是否结束 (1办结，2未办结)
+			if(eventInfoVo.getEpWhetherFinish()==1){
+				sql.append(" and tt.Ep_NowNode = ? ");
+			}else{
+				sql.append(" and tt.Ep_NowNode != ? ");
+			}
+			attributeList.add(9);
+		}
 		Pager pager = this.eventManagerDaoImpl.queryEntitySQLList(page, rows, sql.toString(), attributeList);
 		List<EventInfoVo> list = new ArrayList<EventInfoVo>();
 		
@@ -1613,6 +1651,412 @@ public class EventManagerServiceImpl extends BaseServiceImpl implements IEventMa
 		}
 		
 		return this.eventManagerDaoImpl.queryEntityList(params, Order.desc("createTime"), User.class);
+	}
+
+	@Override
+	public HSSFWorkbook export(EventInfoVo eventInfoVo) {
+		//创建HSSFWorkbook
+		HSSFWorkbook wb = new HSSFWorkbook();
+
+		//单元格 基础样式
+		HSSFCellStyle mainStyle = wb.createCellStyle();
+		mainStyle.setBorderBottom(BorderStyle.THIN); 	//下边框
+		mainStyle.setBorderLeft(BorderStyle.THIN);		//左边框
+		mainStyle.setBorderTop(BorderStyle.THIN);		//上边框
+		mainStyle.setBorderRight(BorderStyle.THIN);		//右边框
+		mainStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+		mainStyle.setWrapText(true);					//设置自动换行
+
+		//基础样式 水平居中
+		HSSFCellStyle mainStyle_center = wb.createCellStyle();
+		mainStyle_center.cloneStyleFrom(mainStyle);
+		mainStyle_center.setAlignment(HorizontalAlignment.CENTER);
+		//基础样式 水平靠左
+		HSSFCellStyle mainStyle_left = wb.createCellStyle();
+		mainStyle_left.cloneStyleFrom(mainStyle);
+		mainStyle_left.setAlignment(HorizontalAlignment.LEFT);
+
+
+		//设置第三行样式(普通列标题样式)
+		HSSFCellStyle r2_style = wb.createCellStyle();
+		r2_style.cloneStyleFrom(mainStyle_center);	//基础样式 水平居中
+		HSSFFont r2_font = wb.createFont();
+		r2_font.setBold(true);						//字体加粗
+		r2_style.setFont(r2_font);
+
+		List<EventInfoVo> rwList = this.queryExportList(eventInfoVo);
+
+		//创建sheet
+		HSSFSheet sheet = wb.createSheet("安全隐患记录汇总");
+
+		//列宽自适应（该方法在老版本的POI中效果不佳）
+		/*sheet.autoSizeColumn(i);*/
+		//设置列宽
+		for (int i = 0; i < 16; i++) {
+			if(i == 1 || i == 9||i == 6 || i == 10){
+				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*5/2);
+			}else if(i == 2||i == 3||i == 15){
+				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*3);
+			}else if(i == 4||i == 5||i == 12){
+				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*5);
+			}else if(i == 8||i == 13){
+				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*8);
+			}else{
+				sheet.setColumnWidth(i, sheet.getColumnWidth(i)*3/2);
+			}
+		}
+
+
+		//第一行
+		HSSFRow row3 = sheet.createRow(0);
+		row3.setHeightInPoints(30);		//行高
+		HSSFCell cell;
+		String[] title2 = {"序号","上报时间","隐患标题","隐患编号","发生地点","隐患内容","上报部门","上报人","隐患照片",
+				"处理时间","处理部门","处理人","处理意见","处理后照片","处理状态","总用时"};
+		for(int i=0;i<title2.length;i++){
+			cell = row3.createCell(i);		//创建单元格
+			cell.setCellValue(title2[i]);	//设置单元格内容
+			cell.setCellStyle(r2_style);	//设置单元格样式
+		}
+		
+		
+		
+		HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
+
+		//第二行 及 之后的行
+		HSSFRow row;
+		for (int i = 0; i < rwList.size(); i++) {
+			row = sheet.createRow(i + 1);	//创建行
+			float defaultRowH=30;
+			float realRowH=30;
+			EventInfoVo evo= rwList.get(i);
+			for (int j = 0; j < title2.length; j++) {
+				cell = row.createCell(j);				//创建单元格
+				//设置单元格内容
+				switch (j){
+					case 0:	cell.setCellValue(i+1);	break;
+					case 1: cell.setCellValue(DateUtil.getDateFormatString(evo.getCreateTime(),DateUtil.JAVA_DATE_FORMAT_YMDHM));	break;
+					case 2: cell.setCellValue(evo.getEventTitle());	break;
+					case 3: cell.setCellValue(evo.getEventCode());	break;
+					case 4: 
+						cell.setCellValue(evo.getEventAddress()); 
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								evo.getEventAddress(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									evo.getEventAddress(),defaultRowH);
+						}
+						break;
+					case 5: 
+						cell.setCellValue(evo.getEventContent()); 
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								evo.getEventContent(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									evo.getEventContent(),defaultRowH);
+						}
+						break;
+					case 6: cell.setCellValue(evo.getReporterOrgId()); break;
+					case 7: cell.setCellValue(evo.getCreatorName()); break;
+					case 8: 
+						cell.setCellValue("");
+						break;
+					case 9: cell.setCellValue(DateUtil.getDateFormatString(evo.getEpNowNodeLeavleTime(),DateUtil.JAVA_DATE_FORMAT_YMDHM));	break;
+					case 10: cell.setCellValue(evo.getEpNowRoleName());	break;
+					case 11: 
+						cell.setCellValue(evo.getEpNowPersonName());	break;
+					
+					case 12: 
+						cell.setCellValue(evo.getEpDealContent()); 
+						if(MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+								evo.getEpDealContent(), defaultRowH)>realRowH){
+							realRowH=MathUtil.getCellHeight(sheet.getColumnWidth(row.getCell(j).getColumnIndex()),
+									evo.getEpDealContent(),defaultRowH);
+						}
+						break;
+					case 13: cell.setCellValue("");break;
+					case 14: 
+						if(evo.getEpWhetherFinish()!=null){
+							if(evo.getEpWhetherFinish()==1){
+								cell.setCellValue("办结");
+							}else{
+								cell.setCellValue("未办结");
+							}
+						}
+						break;
+					case 15: 
+						if(StringUtils.isNotBlank(evo.getTotalTime())){
+							cell.setCellValue(evo.getTotalTime().toString());
+						}else{
+							cell.setCellValue("");
+						}
+						break;
+				}
+				cell.setCellStyle(mainStyle_center);
+			}
+			row.setHeightInPoints(realRowH);
+			
+			//导出隐患上报图片
+			if(evo.getImgUrls()!=null){
+				//如果存在图片，则行高统一为100
+				if(evo.getImgUrls().size()>0){
+					row.setHeightInPoints(100);
+					
+					List<String> imgs=evo.getImgUrls();
+					int imgCount=imgs.size();
+					int dx1, dy1, dx2, dy2;//每张图片的左上，右下坐标
+					int xx= 1023/4; //每张图片宽
+					int yy= 255; //每张图片高
+					for (int k = 0; k < imgCount; k++) {
+						String imgPath=imgs.get(k);
+						BufferedImage bufferImg = null; 
+						// 先把读进来的图片放到一个ByteArrayOutputStream中，以便产生ByteArray
+						ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+						try {
+							bufferImg = ImageIO.read(new File(imgPath));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						try {
+							ImageIO.write(bufferImg, "jpg", byteArrayOut);
+							
+							dx1=k*xx;
+							dy1=0;
+							dx2=(k+1)*xx;
+							dy2=yy;
+							
+							HSSFClientAnchor anchor =
+									new HSSFClientAnchor(dx1, dy1, dx2, dy2, (short)8, i+1, (short)8, i+1);
+							patriarch.createPicture(anchor, wb.addPicture(byteArrayOut.toByteArray(), HSSFWorkbook.PICTURE_TYPE_JPEG));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+					}
+				}
+			}
+			
+			//导出处理图片
+			if(evo.getImgHandleUrls()!=null){
+				//如果存在图片，则行高统一为100
+				if(evo.getImgHandleUrls().size()>0){
+					row.setHeightInPoints(100);
+					
+					List<String> imgs=evo.getImgHandleUrls();
+					int imgCount=imgs.size();
+					int dx1, dy1, dx2, dy2;//每张图片的左上，右下坐标
+					int xx= 1023/4; //每张图片宽
+					int yy= 255; //每张图片高
+					for (int k = 0; k < imgCount; k++) {
+						String imgPath=imgs.get(k);
+						BufferedImage bufferImg = null; 
+						// 先把读进来的图片放到一个ByteArrayOutputStream中，以便产生ByteArray
+						ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+						try {
+							bufferImg = ImageIO.read(new File(imgPath));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						try {
+							ImageIO.write(bufferImg, "jpg", byteArrayOut);
+							
+							dx1=k*xx;
+							dy1=0;
+							dx2=(k+1)*xx;
+							dy2=yy;
+							
+							HSSFClientAnchor anchor =
+									new HSSFClientAnchor(dx1, dy1, dx2, dy2, (short)13, i+1, (short)13, i+1);
+							patriarch.createPicture(anchor, wb.addPicture(byteArrayOut.toByteArray(), HSSFWorkbook.PICTURE_TYPE_JPEG));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+					}
+				}
+			}
+		}
+
+		return wb;
+	}
+	
+	private List<EventInfoVo> queryExportList(EventInfoVo eventInfoVo) {
+		List<Object> attributeList = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer();
+
+		//所有事件 : 当前用户为超级管理员,可查看所有事件
+		//事件表,事件过程表的关联查询
+		sql.append("SELECT t.ID,t.EVENT_CODE,t.CREATE_TIME,t.EVENT_TITLE,t.EVENT_ADDRESS,t.EVENT_CONTENT,o.ORG_FRAME_NAME,t.CREATOR_NAME "
+				+"FROM `event_info` t,um_orgframe o WHERE t.reporter_OrgId=o.ID ");
+		
+		if(eventInfoVo.getEventDateStart() != null){	//日期Start
+			sql.append(" and t.create_Time >= ? ");
+			attributeList.add(eventInfoVo.getEventDateStart());
+		}
+		if(eventInfoVo.getEventDateEnd() != null){		//日期End
+			sql.append(" and t.create_Time <= ? ");
+			attributeList.add(eventInfoVo.getEventDateEnd());
+		}
+		
+		if(StringUtils.isNotBlank(eventInfoVo.getCreatorName())){		//事件上报人姓名
+			sql.append(" and t.Creator_Name like ? ");
+			attributeList.add("%"+eventInfoVo.getCreatorName().trim()+"%");
+		}
+		if(StringUtils.isNotBlank(eventInfoVo.getEpNowNode())){		//当前节点编码
+			sql.append(" and ep.Ep_NowNode = ");
+			attributeList.add(eventInfoVo.getEpNowNode().trim());
+		}
+		if(StringUtils.isNotEmpty(eventInfoVo.getEventCode())){		//事件编码
+			sql.append(" and t.EVENT_CODE = ? ");
+			attributeList.add(eventInfoVo.getEventCode().trim());
+		}
+		if(StringUtils.isNotBlank(eventInfoVo.getEventTitle())){	//事件标题
+			sql.append(" and t.EVENT_TITLE like ? ");
+			attributeList.add("%"+eventInfoVo.getEventTitle().trim()+"%");
+		}
+		if(null != eventInfoVo.getEventurgency()){		//紧急程度
+			sql.append(" and t.EVENT_URGENCY = ? ");
+			attributeList.add(eventInfoVo.getEventurgency());
+		}
+		if(null != eventInfoVo.getEpWhetherFinish()){		//这里是对整个事件流程是否结束 (1办结，2未办结)
+			if(eventInfoVo.getEpWhetherFinish()==1){
+				sql.append(" and t.ID in(SELECT  p.EventInfo_ID from event_process p where p.Ep_NowNode = 9) ");
+			}else{
+				sql.append(" and t.ID not in(SELECT  p.EventInfo_ID from event_process p where p.Ep_NowNode = 9) ");
+			}
+		}
+		sql.append(" ORDER BY t.CREATE_TIME DESC");		//根据 事件上报时间 倒序排列
+
+		List<Object> objList= eventManagerDaoImpl.queryEntitySQLList(sql.toString(), attributeList);
+		
+		List<EventInfoVo> list = new ArrayList<EventInfoVo>();
+		
+		//查询节点为7，即隐患处理人节点的内容
+		String sqlPro="SELECT o.ORG_FRAME_NAME,t.Ep_NowPersonName,t.Ep_NowNodeLeavleTime,t.Ep_DealContent,t.ID FROM `event_process` t,um_user u,um_orgframe o "
+				+"where t.Ep_NowPersonId=u.ID and u.ORGFRAME_ID=o.ID AND t.EventInfo_ID='?' and t.Ep_NowNode=7 "
+				+"ORDER BY t.Ep_NowNode DESC,t.CREATE_TIME DESC LIMIT 1 ";
+		
+		String sqlEventImg="SELECT t.PATH_ FROM `p_attach` t WHERE t.FORM_ID='?'";
+		
+		//查询该事件流程是否结束，即有否第9节点
+		String sqlIsFinish="SELECT t.Ep_NowNode FROM `event_process` t where t.EventInfo_ID='?' and t.Ep_NowNode=9";
+		
+		for (int i = 0; i < objList.size(); i++) {
+			Object[] obj = (Object[])objList.get(i);
+			EventInfoVo eiVo = new EventInfoVo();
+			if(obj[0]!=null) eiVo.setId(obj[0].toString());
+			if(obj[1]!=null) eiVo.setEventCode(obj[1].toString());
+			if(obj[2]!=null) eiVo.setCreateTime(DateUtil.getDateFromString(obj[2].toString()));
+			if(obj[3]!=null) eiVo.setEventTitle(obj[3].toString());
+			if(obj[4]!=null) eiVo.setEventAddress(obj[4].toString());
+			if(obj[5]!=null) eiVo.setEventContent(obj[5].toString());
+			if(obj[6]!=null) eiVo.setReporterOrgId(obj[6].toString());
+			if(obj[7]!=null) eiVo.setCreatorName(obj[7].toString());
+			
+			//查询该事件流程是否结束，即有否第9节点
+			String  newSqlIsFinish=sqlIsFinish.replace("?", eiVo.getId());
+			List<Object> objList5= eventManagerDaoImpl.queryEntitySQLList(newSqlIsFinish,null);
+			if(objList5!=null){
+				if(objList5.size()>0){
+					eiVo.setEpWhetherFinish(1);//如果有记录，则整个事件办结结束
+				}else{
+					eiVo.setEpWhetherFinish(2);//如果无记录，则整个事件未办结结束
+				}
+			}
+			
+			//查询隐患上报时的照片
+			String newSqlEventImg=sqlEventImg.replace("?", eiVo.getId());
+			List<Object> objList3= eventManagerDaoImpl.queryEntitySQLList(newSqlEventImg,null);
+			if(objList3!=null){
+				if(objList3.size()>0){
+					List<String> listEventImgs=new ArrayList<>();
+					for (int j = 0; j < objList3.size(); j++) {
+						String obj3 = (String)objList3.get(j);
+						if(obj3!=null) listEventImgs.add(obj3);
+					}
+					eiVo.setImgUrls(listEventImgs);
+				}
+			}
+			
+			//查询过程表数据
+			String newSqlPro=sqlPro.replace("?", eiVo.getId());
+			List<Object> objList2= eventManagerDaoImpl.queryEntitySQLList(newSqlPro,null);
+			if(objList2!=null){
+				if(objList2.size()>0){
+					Object[] obj2 = (Object[])objList2.get(0);
+					if(obj2[0]!=null) eiVo.setEpNowRoleName(obj2[0].toString());
+					if(obj2[1]!=null) eiVo.setEpNowPersonName(obj2[1].toString());
+					if(obj2[2]!=null) eiVo.setEpNowNodeLeavleTime(DateUtil.getDateFromString(obj2[2].toString()));
+					if(obj2[3]!=null) eiVo.setEpDealContent(obj2[3].toString());
+					if(obj2[4]!=null) eiVo.setEpId(obj2[4].toString());
+					
+					//查询隐患处理的照片
+					String newSqlEventImg2=sqlEventImg.replace("?", eiVo.getEpId());
+					List<Object> objList4= eventManagerDaoImpl.queryEntitySQLList(newSqlEventImg2,null);
+					if(objList4!=null){
+						if(objList4.size()>0){
+							List<String> listEventHandleImgs=new ArrayList<>();
+							for (int m = 0; m < objList4.size(); m++) {
+								String obj4 = (String)objList4.get(m);
+								if(obj4!=null) listEventHandleImgs.add(obj4);
+							}
+							eiVo.setImgHandleUrls(listEventHandleImgs);
+						}
+					}
+					
+					//计算总用时
+					String totalTime="";
+					try {
+						totalTime=DateUtil.dateDiff(eiVo.getCreateTime(), eiVo.getEpNowNodeLeavleTime());
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					eiVo.setTotalTime(totalTime);
+				}
+			}
+			
+			list.add(eiVo);
+		}
+		return list;
+	}
+
+	@Transactional
+	@Override
+	public void deleteEntitys(String ids) {
+		String[] idz = ids.split(",");
+		for (int i = 0; i < idz.length; i++) {
+			String eventId=idz[i];
+			
+			//根据事件ID找到所有事件过程
+			List<EventProcess> listProcess= this.getEProcessByEId(eventId);
+			List<String> epIds=new ArrayList<>();
+			for (EventProcess eventProcess : listProcess) {
+				String epId=eventProcess.getId();
+				epIds.add(epId);
+				
+				//删除事件过程
+				this.baseDaoImpl.delete(eventProcess);
+			}
+			
+			//根据事件ID找到所有事件经办记录
+			List<EventHandle> listHandle= this.getEventHandleByEId(eventId);
+			
+			for (EventHandle eventHandle : listHandle) {
+				//删除事件经办记录
+				this.baseDaoImpl.delete(eventHandle);
+			}
+			
+			//删除事件记录
+			EventInfo eventInfo= this.getEntityById(EventInfo.class, eventId);
+			this.baseDaoImpl.delete(eventInfo);
+			
+			//执行完数据库记录删除后，才进行附件删除，因数据删除失败，可以回滚，但附件不能回滚
+			//删除事件附件
+			this.attachServiceImpl.deleteAttachByFormId(eventId);
+			//删除事件过程的附件
+			for (int j = 0; j < epIds.size(); j++) {
+				this.attachServiceImpl.deleteAttachByFormId(epIds.get(j));
+			}
+		}
+		
 	}
 	
 	

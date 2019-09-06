@@ -50,6 +50,15 @@ public class MathUtil {
 		return num;
 	}
 	
+	
+	/**
+	* 生成[1, max]之间的随机数
+	*/
+	public static Integer getRandomNumber(Integer max) {
+	    Random rd = new Random();
+	    return rd.nextInt(max)+1;
+	}
+	
 	public static int stringToInt(String str) {
 		int num=0;
 		try {

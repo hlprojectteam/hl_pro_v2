@@ -72,11 +72,11 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>地点 </label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="site" name="site" value="${rescueWorkVo.site}" data-rule-required="true" data-rule-rangelength="[1,40]" />    
+				<input type="text" class="form-control" id="site" name="site" value="${rescueWorkVo.site}" data-rule-required="true" data-rule-rangelength="[1,100]" />    
 			</div>
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>故障车牌</label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="faultPlates" name="faultPlates" value="${rescueWorkVo.faultPlates}" data-rule-required="true" data-rule-rangelength="[1,12]" />    
+				<input type="text" class="form-control" id="faultPlates" name="faultPlates" value="${rescueWorkVo.faultPlates}" data-rule-required="true" data-rule-rangelength="[1,100]" />    
 			</div>
 		</div>
 		
@@ -90,14 +90,14 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>车辆类型</label>
 			<div class="col-sm-8">
-				<input type="text" class="form-control" id="dictValue" name="dictValue" placeholder="输入车辆类型，多个用“,”隔开" value="${rescueWorkVo.carType}" data-rule-rangelength="[1,20]" data-rule-required="true"/>
+				<input type="text" class="form-control" id="dictValue" name="dictValue" placeholder="输入车辆类型，多个用“,”隔开" value="${rescueWorkVo.carType}" data-rule-rangelength="[1,80]" data-rule-required="true"/>
 			</div>
 		</div>
 		
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>缴费单号 </label>
 		    <div class="col-sm-8">
-				<input type="text" class="form-control" id="paymentOrder" name="paymentOrder" value="${rescueWorkVo.paymentOrder}" data-rule-required="true" data-rule-rangelength="[1,8]" />    
+				<input type="text" class="form-control" id="paymentOrder" name="paymentOrder" value="${rescueWorkVo.paymentOrder}" data-rule-required="true" data-rule-rangelength="[1,40]" />    
 			</div>
 		</div>
 		
@@ -127,18 +127,18 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>拯救车牌 </label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="rescuePlates" name="rescuePlates" value="${rescueWorkVo.rescuePlates}" data-rule-required="true" data-rule-rangelength="[1,12]" />    
+				<input type="text" class="form-control" id="rescuePlates" name="rescuePlates" value="${rescueWorkVo.rescuePlates}" data-rule-required="true" data-rule-rangelength="[1,60]" />    
 			</div>
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>司机电话 </label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="driverPhone" name="driverPhone" value="${rescueWorkVo.driverPhone}" data-rule-required="true" data-rule-phone="true" />    
+				<input type="text" class="form-control" id="driverPhone" name="driverPhone" value="${rescueWorkVo.driverPhone}" data-rule-required="true" data-rule-phone="true" data-rule-rangelength="[1,40]"/>    
 			</div>
 		</div>
 		
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,250]" >${rescueWorkVo.remark}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,500]" >${rescueWorkVo.remark}</textarea>
 		    </div>
 	  	</div>
 		<br><br><br>

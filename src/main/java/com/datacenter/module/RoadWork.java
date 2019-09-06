@@ -107,7 +107,7 @@ public class RoadWork extends BaseModule{
 	
 
 	
-	@Column(name = "specific_Location", length=50)
+	@Column(name = "specific_Location", length=2000)
 	public String getSpecificLocation() {
 		return specificLocation;
 	}
@@ -115,7 +115,7 @@ public class RoadWork extends BaseModule{
 		this.specificLocation = specificLocation;
 	}
 	
-	@Column(name = "construction_Content", length=100)
+	@Column(name = "construction_Content", length=2000)
 	public String getConstructionContent() {
 		return constructionContent;
 	}
@@ -123,7 +123,7 @@ public class RoadWork extends BaseModule{
 		this.constructionContent = constructionContent;
 	}
 	
-	@Column(name = "jeeves_Situation", length=100)
+	@Column(name = "jeeves_Situation", length=2000)
 	public String getJeevesSituation() {
 		return jeevesSituation;
 	}
@@ -147,7 +147,7 @@ public class RoadWork extends BaseModule{
 		this.checker = checker;
 	}
 	
-	@Column(name = "description_", length=300)
+	@Column(name = "description_", length=2000)
 	public String getDescription() {
 		return description;
 	}
@@ -155,7 +155,7 @@ public class RoadWork extends BaseModule{
 		this.description = description;
 	}
 	
-	@Column(name = "rectification_Measures", length=200)
+	@Column(name = "rectification_Measures", length=2000)
 	public String getRectificationMeasures() {
 		return rectificationMeasures;
 	}
@@ -163,7 +163,7 @@ public class RoadWork extends BaseModule{
 		this.rectificationMeasures = rectificationMeasures;
 	}
 	
-	@Column(name = "reported_Situation", length=100)
+	@Column(name = "reported_Situation", length=2000)
 	public String getReportedSituation() {
 		return reportedSituation;
 	}

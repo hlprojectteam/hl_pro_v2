@@ -1,17 +1,22 @@
 package com.attendance.controller;
 
 
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +39,10 @@ import com.common.utils.MathUtil;
 import com.common.utils.helper.DateUtil;
 import com.common.utils.helper.JsonDateTimeValueProcessor;
 import com.common.utils.helper.Pager;
+import com.datacenter.controller.TotalTableController;
 import com.urms.orgFrame.module.OrgFrame;
 import com.urms.orgFrame.service.IOrgFrameService;
+import com.urms.role.module.Role;
 import com.urms.user.module.User;
 import com.urms.user.service.IUserService;
 
@@ -63,6 +70,61 @@ public class ChangeShiftsController extends BaseController{
 	@Autowired
 	private IOrgFrameService orgFrameServiceImpl;
 	
+	@Autowired
+	private TotalTableController totalTableController;
+	
+	/****************web页面 跳转操作 start******************/
+	/**
+	 * 
+	 * @方法：@param httpSession
+	 * @方法：@param response
+	 * @方法：@param menuCode
+	 * @方法：@return
+	 * @描述：跳转到调班记录页面
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月8日
+	 */
+	@RequestMapping(value="/to_changeShifts_record")
+    public String toLeaveRecord(HttpSession httpSession, HttpServletResponse response, String menuCode) {
+        this.getRequest().setAttribute("menuCode", menuCode);
+        try {
+       	 Date date=new Date();
+            String[] dateArr=DateUtil.getFirstday_Lastday_Month(date);
+            this.getRequest().setAttribute("recordDateStart", dateArr[0]);
+            this.getRequest().setAttribute("recordDateEnd", dateArr[1]);
+		} catch (Exception e) {
+		}
+        return "/page/attendance/changeShifts/changeShifts_record";
+    }
+	
+	/**
+	 * 
+	 * @方法：@param httpSession
+	 * @方法：@param response
+	 * @方法：@param menuCode
+	 * @方法：@return
+	 * @描述：跳转到调班统计页面
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月8日
+	 */
+	@RequestMapping(value="/to_changeShifts_statistics")
+    public String toLeaveStatistics(HttpSession httpSession, HttpServletResponse response, String menuCode) {
+        this.getRequest().setAttribute("menuCode", menuCode);
+        try {
+        	 Date date=new Date();
+             String[] dateArr=DateUtil.getFirstday_Lastday_Month(date);
+             this.getRequest().setAttribute("recordDateStart", dateArr[0]);
+             this.getRequest().setAttribute("recordDateEnd", dateArr[1]);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+        return "/page/attendance/changeShifts/changeShifts_statistics";
+    }
+	
+	/****************web页面 跳转操作 end******************/
+	
 	
 	@RequestMapping(value="/changeShift_count")
 	public void changeShiftCount(HttpServletRequest request,HttpServletResponse response){
@@ -85,11 +147,12 @@ public class ChangeShiftsController extends BaseController{
 	 * @方法：@param request
 	 * @方法：@param response
 	 * @方法：@param changeShiftsVo
-	 * @描述：提交请假申请
+	 * @描述：提交调班申请
 	 * @return
 	 * @author: qinyongqian
 	 * @date:2019年7月2日
 	 */
+	@SuppressWarnings("null")
 	@Transactional
 	@RequestMapping(value = "/submit_")
 	public void submit(HttpServletRequest request,HttpServletResponse response, ChangeShiftsVo changeShiftsVo) {
@@ -110,14 +173,27 @@ public class ChangeShiftsController extends BaseController{
 			
 			//查询此人当月已调班次数，如2次内（含2次）由值班站长审批，2次以上由站长审批
 			String approvalUserId="";
-			int countMonth= this.changeShiftsService.queryCountInMonth(this.getSessionUser().getId());
-			if(countMonth>2){
-				//2次以上由站长
-				approvalUserId= userServiceImpl.findUserIdsByUserIdAndRoleCode(this.getSessionUser().getId(), "Stationmaster");
-			}else{
-				//2次内由值班站长
-				approvalUserId= userServiceImpl.findUserIdsByUserIdAndRoleCode(this.getSessionUser().getId(), "station_agent");
+			
+			//判断申请人角色，如是值班站长申请，则由站长审批，如是一般员工，则要判断申请次数决定审批者
+			Set<Role> roleSet= this.getSessionUser().getRoles();
+			for (Role role : roleSet) {
+				if(role.getRoleCode().equals("station_agent")){
+					//申请人为值班站长，提交给站长
+					approvalUserId= userServiceImpl.findUserIdsByUserIdAndRoleCode(this.getSessionUser().getId(), "Stationmaster");
+					break;
+				}
 			}
+			if(StringUtils.isEmpty(approvalUserId)){
+				int countMonth= this.changeShiftsService.queryCountInMonth(this.getSessionUser().getId());
+				if(countMonth>2){
+					//2次以上由站长
+					approvalUserId= userServiceImpl.findUserIdsByUserIdAndRoleCode(this.getSessionUser().getId(), "Stationmaster");
+				}else{
+					//2次内由值班站长
+					approvalUserId= userServiceImpl.findUserIdsByUserIdAndRoleCode(this.getSessionUser().getId(), "station_agent");
+				}
+			}
+			
 			if(StringUtils.isEmpty(approvalUserId)){
 				//找不到审批人
 				json.put("result", false);
@@ -126,9 +202,12 @@ public class ChangeShiftsController extends BaseController{
 			}else{
 				if(approvalUserId.indexOf(",")>=0){
 					//角色包括多个人，如有当前部门有两个值班站长
-					String[] ids= approvalUserId.split(",");
+					//approvalUserIds= approvalUserId.split(",");
 					//默认使用第一个id
-					approvalUserId=ids[0];
+					//approvalUserId=ids[0];
+					//角色包括多个人，如有当前部门有两个值班站长,随机选择一个发送
+					String[] approvalUserIds= approvalUserId.split(",");
+					approvalUserId=approvalUserIds[MathUtil.getRandomNumber(approvalUserIds.length)-1];
 				}
 				//同时新增一条空的审批记录，记录审批人ID
 				AttendanceApproval attendanceApproval=new AttendanceApproval();
@@ -136,12 +215,9 @@ public class ChangeShiftsController extends BaseController{
 				attendanceApproval.setApprovalType(1);//调班类型
 				attendanceApproval.setApprovalUserId(approvalUserId);
 				approvalServiceImpl.saveOrUpdate(attendanceApproval);
-				json.put("result", true);
-				json.put("msg", "");
-				json.put("id", changeShifts.getId());
 				
 				/********发送通知 start*********/
-				String noticeTitle=Common.msgTitle_KQ_db;
+				String noticeTitle=Common.msgTitle_KQ_db_todo;
 				String content="收到一条调班申请";
 				String userIds=approvalUserId;
 				String roleCodes="";
@@ -150,6 +226,10 @@ public class ChangeShiftsController extends BaseController{
 				this.messageServiceImpl.submitSendMsg(noticeTitle,content,userIds,roleCodes,msgType,nowPerson);
 				
 				/********发送通知 end*********/
+				
+				json.put("result", true);
+				json.put("msg", "");
+				json.put("id", changeShifts.getId());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -178,6 +258,12 @@ public class ChangeShiftsController extends BaseController{
 				BeanUtils.copyProperties(changeShifts, changeShiftsVo);
 				User createUser= userServiceImpl.getEntityById(User.class, changeShifts.getCreatorId());
 				OrgFrame org=this.orgFrameServiceImpl.getEntityById(OrgFrame.class, createUser.getOrgFrame().getId());
+				//调班日期
+				changeShiftsVo.setChangeDateStr(
+						DateUtil.getDateFormatString(changeShifts.getChangeDate(), DateUtil.JAVA_DATE_FORMAT_YMD) );
+				//被调班人
+				User beApplyMen= userServiceImpl.getEntityById(User.class, changeShifts.getBeApplyMenId());
+				changeShiftsVo.setBeApplyMenName(beApplyMen.getUserName());
 				//获取申请人部门
 				if(org!=null){
 					changeShiftsVo.setCreatorOrgName(org.getOrgFrameName());
@@ -243,6 +329,7 @@ public class ChangeShiftsController extends BaseController{
 	 * @author: qinyongqian
 	 * @date:2019年7月5日
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/changeShifts_list")
 	public void list(HttpServletRequest request,HttpServletResponse response,ChangeShiftsVo changeShiftsVo,
 			Integer page,Integer rows){
@@ -256,14 +343,29 @@ public class ChangeShiftsController extends BaseController{
 			}else{
 				pager = this.changeShiftsService.queryChangeShiftsApproval(page, rows, changeShiftsVo);
 			}
-			if(page!=null){
+			if(pager!=null){
+				List<ChangeShifts> list=pager.getPageList();
+				List<ChangeShiftsVo> listVo=new ArrayList<>();
+				for (ChangeShifts changeShifts : list) {
+					ChangeShiftsVo vo=new ChangeShiftsVo();
+					BeanUtils.copyProperties(changeShifts, vo);
+					//获取被申请人名称
+					User beApplyMen =userServiceImpl.getEntityById(User.class, changeShifts.getBeApplyMenId());
+					vo.setBeApplyMenName(beApplyMen.getUserName());
+					//设置调班日期格式
+					vo.setChangeDateStr(
+							DateUtil.getDateFormatString(changeShifts.getChangeDate(), DateUtil.JAVA_DATE_FORMAT_YMD) );
+					
+					listVo.add(vo);
+				}
 				json.put("total", pager.getRowCount());
 				json.put("curPageSize", pager.getPageList().size());
 				JsonConfig config = new JsonConfig();
-				String[] excludes = new String[] {"creatorId","sysCode"}; // 列表排除信息内容字段，减少传递时间
+				String[] excludes = new String[] {"creatorId","sysCode","fryPersonIds","approvalContent","approvalUserAvatar"
+						,"changeReason","creatorAvatar","creatorOrgId","creatorOrgName","readTime"}; // 列表排除信息内容字段，减少传递时间
 				config.setExcludes(excludes);
 				config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
-				json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
+				json.put("rows", JSONArray.fromObject(listVo,config));
 				json.put("result",true);
 			}
 		} catch (Exception e) {
@@ -313,7 +415,7 @@ public class ChangeShiftsController extends BaseController{
 							json.put("result",true);
 							
 							/********发送通知 start*********/
-							String noticeTitle=Common.msgTitle_KQ_db;
+							String noticeTitle=Common.msgTitle_KQ_db_finish;
 							String content="收到一条调班审批回复通知";
 							String userIds=changeShifts.getCreatorId();
 							String roleCodes="";
@@ -336,6 +438,145 @@ public class ChangeShiftsController extends BaseController{
 			json.put("msg",e.getMessage());
 		}finally{
 			this.print(json.toString());
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param changeShiftsVo
+	 * @方法：@param page
+	 * @方法：@param rows
+	 * @描述：查询调班记录
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月19日
+	 */
+	@RequestMapping(value="/changeShifts_record")
+	public void leaveRecord(HttpServletRequest request,HttpServletResponse response,ChangeShiftsVo changeShiftsVo,
+			Integer page,Integer rows){
+		JSONObject json = new JSONObject();
+		json.put("result",false);
+		try {
+			Pager pager=null;
+			pager = this.changeShiftsService.queryChangeShiftsRecord(page, rows, changeShiftsVo);
+			if(page!=null){
+				json.put("total", pager.getRowCount());
+				json.put("curPageSize", pager.getPageList().size());
+				JsonConfig config = new JsonConfig();
+				String[] excludes = new String[] {"sysCode","applyMenId","applyMenName","approvalUserAvatar",
+						"approvalUserId","beApplyMenId","changeDate","creatorAvatar",
+						"creatorId","creatorOrgId","fryPersonIds","recordDateEnd","readTime","recordDateStart"}; // 列表排除信息内容字段，减少传递时间
+				config.setExcludes(excludes);
+				config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
+				json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
+				json.put("result",true);
+			}else{
+				json.put("result",false);
+			}
+		} catch (Exception e) {
+			json.put("result",false);
+			json.put("msg",e.getMessage());
+		}
+		this.print(json);
+	}
+	
+	/**
+	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param changeShiftsVo
+	 * @描述：导出调班记录
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月25日
+	 */
+	@RequestMapping(value="/changeShifts_record_export")
+	public void leaveRecordExport(HttpServletRequest request, HttpServletResponse response,ChangeShiftsVo changeShiftsVo){
+		//excel文件名
+		String fileName = "调班记录汇总";
+
+		//获取excle文档对象
+		HSSFWorkbook wb = this.changeShiftsService.exportChangeShiftsRecord(changeShiftsVo);
+
+		//将文件存到指定位置
+		try {
+			this.totalTableController.setResponseHeader(response, fileName);
+			OutputStream os = response.getOutputStream();
+			wb.write(os);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param changeShiftsVo
+	 * @方法：@param page
+	 * @方法：@param rows
+	 * @描述：调班统计
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月19日
+	 */
+	@RequestMapping(value="/changeShifts_statistics")
+	public void leaveStatistics(HttpServletRequest request,HttpServletResponse response,ChangeShiftsVo changeShiftsVo,
+			Integer page,Integer rows){
+		JSONObject json = new JSONObject();
+		json.put("result",false);
+		try {
+			Pager pager=null;
+			pager = this.changeShiftsService.queryChangeShiftsStatistics(page, rows, changeShiftsVo);
+			if(page!=null){
+				json.put("total", pager.getRowCount());
+				json.put("curPageSize", pager.getPageList().size());
+				JsonConfig config = new JsonConfig();
+				String[] excludes = new String[] {"sysCode"}; // 列表排除信息内容字段，减少传递时间
+				config.setExcludes(excludes);
+				config.registerJsonValueProcessor(Date.class,new JsonDateTimeValueProcessor()); // 格式化日期
+				json.put("rows", JSONArray.fromObject(pager.getPageList(),config));
+				json.put("result",true);
+			}
+		} catch (Exception e) {
+			json.put("result",false);
+			json.put("msg",e.getMessage());
+		}
+		this.print(json);
+	}
+	
+	/**
+	 * 
+	 * @方法：@param request
+	 * @方法：@param response
+	 * @方法：@param changeShiftsVo
+	 * @描述：调班统计导出
+	 * @return
+	 * @author: qinyongqian
+	 * @date:2019年8月25日
+	 */
+	@RequestMapping(value="/changeShifts_statistics_export")
+	public void leaveStatisticsExport(HttpServletRequest request, HttpServletResponse response,ChangeShiftsVo changeShiftsVo){
+		//excel文件名
+		String fileName = "调班统计汇总";
+
+		//获取excle文档对象
+		HSSFWorkbook wb = this.changeShiftsService.exportChangeShiftsStatistics(changeShiftsVo);
+
+		//将文件存到指定位置
+		try {
+			this.totalTableController.setResponseHeader(response, fileName);
+			OutputStream os = response.getOutputStream();
+			wb.write(os);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

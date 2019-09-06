@@ -63,14 +63,14 @@
 			</div>
 			<label class="col-sm-2 control-label">车辆号牌 </label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="plateNum" name="plateNum" value="${feedBackVo.plateNum}" data-rule-rangelength="[0,12]" />
+				<input type="text" class="form-control" id="plateNum" name="plateNum" value="${feedBackVo.plateNum}" data-rule-rangelength="[0,60]" />
 			</div>
 		</div>
 		
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>联系电话 </label>
 		    <div class="col-sm-3">
-				<input type="text" class="form-control" id="customerPhone" name="customerPhone" value="${feedBackVo.customerPhone}" data-rule-required="true" data-rule-phone="true" />    
+				<input type="text" class="form-control" id="customerPhone" name="customerPhone" value="${feedBackVo.customerPhone}" data-rule-required="true" data-rule-phone="true" data-rule-rangelength="[0,40]" />    
 			</div>
 			<label class="col-sm-2 control-label"><span style="color: red">*</span>反馈类型</label>
 		    <div class="col-sm-3">
@@ -96,7 +96,7 @@
 		<div class="form-group">
 		  	<label class="col-sm-2 control-label"><span style="color: red">*</span>情况概述</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="situationDesc" name="situationDesc" data-rule-required="true" data-rule-rangelength="[1,250]" >${feedBackVo.situationDesc}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="situationDesc" name="situationDesc" data-rule-required="true" data-rule-rangelength="[1,800]" >${feedBackVo.situationDesc}</textarea>
 		    </div>
 	  	</div>
 	  	
@@ -110,7 +110,7 @@
 	  	<div class="form-group">
 		  	<label class="col-sm-2 control-label">备注</label>
 		    <div class="col-sm-8">
-		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,250]" >${feedBackVo.remark}</textarea>
+		       <textarea class="form-control" rows="6" cols="" id="remark" name="remark" data-rule-rangelength="[0,500]" >${feedBackVo.remark}</textarea>
 		    </div>
 	  	</div>
 		<br><br><br>
